@@ -4,17 +4,33 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
+import { useState } from "react";
+import { useEffect } from "react";
 
 function HeaderBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
 
-  const currentTime = new Date().toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+const [currentTime, setCurrentTime] = useState("");
+
+useEffect(() => {
+  const update = () => {
+    setCurrentTime(
+      new Date().toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      })
+    );
+  };
+
+  update(); // first run
+  const interval = setInterval(update, 1000); 
+
+  return () => clearInterval(interval);
+}, []);
+
   const newsList = ["this is sample news!!", "this is also a sample news!!"];
 const handleLogout = async () => {
   const userId = localStorage.getItem("userId");

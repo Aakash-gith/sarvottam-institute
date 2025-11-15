@@ -1,57 +1,59 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { LogOut, MessageSquareMore, User } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
-import { useState } from "react";
-import { useEffect } from "react";
 
 function HeaderBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
 
-const [currentTime, setCurrentTime] = useState("");
+  // State for real-time clock
+  const [currentTime, setCurrentTime] = useState(
+    new Date().toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+  );
 
-useEffect(() => {
-  const update = () => {
-    setCurrentTime(
-      new Date().toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      })
-    );
-  };
+  // Update time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(
+        new Date().toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+      );
+    }, 1000);
 
-  update(); // first run
-  const interval = setInterval(update, 1000); 
-
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(timer); // Cleanup on unmount
+  }, []);
 
   const newsList = ["this is sample news!!", "this is also a sample news!!"];
-const handleLogout = async () => {
-  const userId = localStorage.getItem("userId");
-  const refreshToken = localStorage.getItem("refreshToken");
+  const handleLogout = async () => {
+    const userId = localStorage.getItem("userId");
+    const refreshToken = localStorage.getItem("refreshToken");
 
-  try {
-    if (userId && refreshToken) {
-      await API.post(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, {
-        id: userId,
-        token: refreshToken,
-      });
+    try {
+      if (userId && refreshToken) {
+        await API.post(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, {
+          id: userId,
+          token: refreshToken,
+        });
+      }
+    } catch (err) {
+      console.warn("Server logout skipped or failed:", err.message);
+    } finally {
+      localStorage.clear();
+      dispatch(logout());
+      navigate("/auth/login", { replace: true });
     }
-  } catch (err) {
-    console.warn("Server logout skipped or failed:", err.message);
-  } finally {
-    localStorage.clear();
-    dispatch(logout());
-    navigate("/auth/login", { replace: true });
-  }
-};
-
+  };
 
   return (
     <div className="flex flex-wrap items-center m-2 bg-bg-1 h-16 rounded-xl">
@@ -91,4 +93,5 @@ const handleLogout = async () => {
     </div>
   );
 }
+
 export default HeaderBar;

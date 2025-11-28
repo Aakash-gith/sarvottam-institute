@@ -146,13 +146,3 @@ function Quiz() {
 }
 
 export default Quiz;
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default Quiz;

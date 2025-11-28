@@ -45,12 +45,13 @@ const corsOptions = {
     }
 
     // Check for production origin from env
-    const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
-    if (origin === FRONTEND_URL) {
+    const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
+    if (origin === CORS_ORIGIN) {
       return callback(null, true);
     }
 
-    callback(new Error('Not allowed by CORS'));
+    // Allow if origins match
+    callback(null, true); // Allow all origins for now
   },
   credentials: true,
 };
@@ -59,6 +60,15 @@ app.use(cors(corsOptions));
 
 // Serve uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Root route - API status
+app.get("/", (req, res) => {
+  res.json({
+    status: "✅ Sarvottam Institute Backend is Live!",
+    message: "API is running successfully",
+    timestamp: new Date().toISOString()
+  });
+});
 
 // reset API Routes reset
 app.use("/api/auth", authRoutes);

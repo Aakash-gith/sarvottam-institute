@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "dev": "cd frontend && npm run dev",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
   "dependencies": {
     "framer-motion": "^12.23.24",
     "lucide-react": "^0.555.0"

@@ -158,10 +158,28 @@ export const resendOtp = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
-    // Call existing sendOtp function
-    const result = await sendOtp({ email }, type);
-
-    return res.status(result.status).json(result);
+    // Generate new OTP - don't require all fields for resend
+    try {
+      const otp = otpGenerator.generate(6, {
+        digits: true,
+        lowerCaseAlphabets: false,
+        upperCaseAlphabets: false,
+        specialChars: false,
+      });
+      await redis.setex(`otp:${email}`, 300, otp); // 5 min expiry
+      await sendOtpEmail(email, otp);
+      
+      return res.status(200).json({ 
+        success: true, 
+        message: "OTP sent to email" 
+      });
+    } catch (err) {
+      console.error("Failed to generate and send OTP:", err);
+      return res.status(500).json({ 
+        success: false, 
+        message: "Failed to send OTP" 
+      });
+    }
   } catch (err) {
     console.error("resendOtp error:", err);
     return res
@@ -184,7 +202,7 @@ export const verifyOtp = async (req, res) => {
       if (!tempUserData)
         return res.status(400).json({ message: "Session expired" });
 
-      const userData = tempUserData;
+      const userData = JSON.parse(tempUserData);
 
       // Create the user
       const newUser = new User(userData); // create a Mongoose document
@@ -216,7 +234,7 @@ export const verifyOtp = async (req, res) => {
       if (!tempUserData)
         return res.status(400).json({ message: "Session expired" });
 
-      const { password } = tempUserData;
+      const { password } = JSON.parse(tempUserData);
       const user = await User.findOne({ email });
       if (!user) return res.status(404).json({ message: "User not found" });
 

@@ -100,7 +100,7 @@ export default function Signup() {
       return;
     }
     try {
-      const response = await API.post("/api/auth/signup", formData);
+      const response = await API.post("/auth/signup", formData);
 
       localStorage.setItem("emailVerify", formData.email);
 

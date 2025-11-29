@@ -33,7 +33,7 @@ export default function ForgotPass() {
     }
 
     try {
-      const response = await API.post("/api/auth/forgotPass", formData);
+      const response = await API.post("/auth/forgotPass", formData);
 
       localStorage.setItem("emailVerify", formData.email);
       if (response.status === 200) {

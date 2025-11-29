@@ -46,7 +46,7 @@ export default function VerifyOTP() {
       return;
     }
     try {
-      const response = await API.post("/api/auth/verify", {
+      const response = await API.post("/auth/verify", {
         email,
         otp,
         type: location.state?.type,
@@ -78,7 +78,7 @@ export default function VerifyOTP() {
     setTimeLeft(30);
 
     try {
-      await API.post("/api/auth/resendotp", {
+      await API.post("/auth/resendotp", {
         email,
         type: location.state?.type,
       });

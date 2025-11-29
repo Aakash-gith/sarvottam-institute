@@ -14,7 +14,7 @@ export const initSemesterProgress = async (req, res) => {
     const semId = parseInt(semesterId, 10);
     const newSubjectIds = subjects.map((s) => s.id);
 
-    
+
     const existingProgress = await Progress.find({
       studentId: userId,
       semesterId: semId,
@@ -22,7 +22,7 @@ export const initSemesterProgress = async (req, res) => {
 
     const existingIds = existingProgress.map((p) => p.subjectId);
 
-    
+
     const toAdd = newSubjectIds.filter((id) => !existingIds.includes(id));
 
     const toRemove = existingIds.filter((id) => !newSubjectIds.includes(id));
@@ -270,7 +270,12 @@ export const markNoteRead = async (req, res) => {
     }
 
     progress.lastUpdated = new Date();
+
+    // Force Mongoose to recognize the array change
+    progress.notesCompleted = [...progress.notesCompleted];
+
     await progress.save();
+    console.log("Note marked as read and saved:", { noteId, notesCompleted: progress.notesCompleted });
 
     return res.status(200).json({ message: "Note marked as read", progress });
   } catch (error) {
@@ -361,7 +366,12 @@ export const markLectureWatched = async (req, res) => {
     }
 
     progress.lastUpdated = new Date();
+
+    // Force Mongoose to recognize the array change
+    progress.videosCompleted = [...progress.videosCompleted];
+
     await progress.save();
+    console.log("Lecture marked as watched and saved:", { videoId, videosCompleted: progress.videosCompleted });
 
     return res
       .status(200)

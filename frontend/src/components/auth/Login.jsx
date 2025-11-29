@@ -98,7 +98,7 @@ export default function Login() {
     }
 
     try {
-      const { data } = await API.post("/api/auth/login", formData);
+      const { data } = await API.post("/auth/login", formData);
       const { user, accessToken, refreshToken } = data;
       dispatch(login({ user, accessToken, refreshToken }));
       navigate("/");

@@ -140,6 +140,29 @@ function SingleNotes() {
     return match && match[2].length === 11 ? match[2] : null;
   };
 
+  // Reload progress data from backend
+  const reloadProgress = async () => {
+    try {
+      const progressResp = await API.get(
+        `/progress/getSubjectProgress?semesterId=${currentClass}`
+      );
+
+      const subjectProg = Array.isArray(progressResp.data)
+        ? progressResp.data.find((p) => p.subjectId === parseInt(subjectId, 10))
+        : null;
+
+      if (subjectProg) {
+        setSubjectProgress(subjectProg.completion ?? 0);
+        setTrackedItems({
+          notes: Array.isArray(subjectProg.notesCompleted) ? subjectProg.notesCompleted : [],
+          videos: Array.isArray(subjectProg.videosCompleted) ? subjectProg.videosCompleted : [],
+        });
+      }
+    } catch (error) {
+      console.error("Error reloading progress:", error);
+    }
+  };
+
   // Mark note handler
   const handleMarkNote = async (noteId) => {
     console.log("handleMarkNote called with noteId:", noteId);
@@ -167,20 +190,11 @@ function SingleNotes() {
 
       console.log("markNoteRead response:", resp);
 
-      // Update tracked items
-      setTrackedItems((prev) => ({
-        ...prev,
-        notes: [...(prev.notes || []), noteId],
-      }));
-
-      // Extract progress from response
-      const progress = resp?.progress || resp;
-      if (progress && typeof progress.completion === "number") {
-        setSubjectProgress(progress.completion);
-      }
+      // Reload progress from backend to ensure data is persisted
+      await reloadProgress();
     } catch (err) {
       console.error("Error marking note as read:", err);
-      // Still update UI even if API fails (optimistic update)
+      // Still update UI optimistically even if API fails
       setTrackedItems((prev) => ({
         ...prev,
         notes: [...(prev.notes || []), noteId],
@@ -212,20 +226,15 @@ function SingleNotes() {
         totalLectures: content.videos.length,
       });
 
-      const progress = resp?.data?.progress ?? resp?.data ?? resp?.progress;
-
+      // Reload progress from backend to ensure data is persisted
+      await reloadProgress();
+    } catch (err) {
+      console.error("Error marking video as watched:", err);
+      // Still update UI optimistically even if API fails
       setTrackedItems((prev) => ({
         ...prev,
         videos: [...(prev.videos || []), videoId],
       }));
-
-      if (progress && typeof progress.completion === "number") {
-        setSubjectProgress(progress.completion);
-      } else if (resp?.data?.completion && typeof resp.data.completion === "number") {
-        setSubjectProgress(resp.data.completion);
-      }
-    } catch (err) {
-      console.error("Error marking video as watched:", err);
     } finally {
       setPendingMarks((p) => {
         const next = { ...(p || {}) };

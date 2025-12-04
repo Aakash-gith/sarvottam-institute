@@ -35,12 +35,6 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 
-// Global Request Logger
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] INCOMING REQUEST: ${req.method} ${req.url}`);
-  next();
-});
-
 // CORS configuration - accept localhost on any port for development
 const corsOptions = {
   origin: function (origin, callback) {
@@ -110,9 +104,6 @@ const startServer = async () => {
   await connectDB();
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
-    console.log("--------------------------------------------------");
-    console.log("DEBUG: SERVER STARTED WITH NEW CODE");
-    console.log("--------------------------------------------------");
   });
 };
 

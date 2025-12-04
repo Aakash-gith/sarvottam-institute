@@ -543,7 +543,19 @@ export const verifyLoginOTP = async (req, res) => {
         // Verify OTP from Redis
         const storedOtp = await redis.get(`admin_otp:${email}`);
 
-        if (!storedOtp || storedOtp !== otp) {
+        console.log("DEBUG: verifyLoginOTP");
+        console.log(`DEBUG: Received OTP: '${otp}' (Type: ${typeof otp}, Length: ${otp?.length})`);
+        console.log(`DEBUG: Stored OTP: '${storedOtp}' (Type: ${typeof storedOtp}, Length: ${storedOtp?.length})`);
+
+        // Normalize values for comparison
+        const normalizedInputOtp = String(otp).trim();
+        const normalizedStoredOtp = String(storedOtp).trim();
+
+        if (!normalizedStoredOtp || normalizedStoredOtp !== normalizedInputOtp) {
+            console.log("DEBUG: OTP verification failed after normalization");
+            console.log(`DEBUG: Normalized Input: '${normalizedInputOtp}'`);
+            console.log(`DEBUG: Normalized Stored: '${normalizedStoredOtp}'`);
+
             return res.status(400).json({
                 success: false,
                 message: "Invalid or expired OTP",
@@ -691,7 +703,11 @@ export const verifyOTPAndResetPassword = async (req, res) => {
         // Verify OTP from Redis
         const storedOtp = await redis.get(`admin_reset_otp:${email}`);
 
-        if (!storedOtp || storedOtp !== otp) {
+        // Normalize values for comparison
+        const normalizedInputOtp = String(otp).trim();
+        const normalizedStoredOtp = String(storedOtp).trim();
+
+        if (!normalizedStoredOtp || normalizedStoredOtp !== normalizedInputOtp) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid or expired OTP",

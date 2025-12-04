@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, ArrowRight, AlertCircle, Clock } from "lucide-react";
+import { Mail, Lock, ArrowRight, AlertCircle, Clock, Eye, EyeOff } from "lucide-react";
 import API from "../../api/axios";
 import toast from "react-hot-toast";
 
@@ -9,9 +9,10 @@ function AdminLogin() {
     const [password, setPassword] = useState("");
     const [otp, setOtp] = useState("");
     const [loading, setLoading] = useState(false);
-    const [step, setStep] = useState("login"); // "login", "otp", or completed
+    const [step, setStep] = useState("login"); // "login", "otp"
     const [requiresOTP, setRequiresOTP] = useState(false);
     const [otpTimer, setOtpTimer] = useState(0);
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     // OTP Timer countdown
@@ -34,10 +35,10 @@ function AdminLogin() {
 
             if (response.data.success) {
                 if (response.data.data.requiresOTP) {
-                    // Master admin - requires OTP
+                    // All admins - requires OTP
                     setRequiresOTP(true);
                     setStep("otp");
-                    
+
                     // Send OTP
                     try {
                         await API.post("/admin/login/send-otp", { email });
@@ -48,7 +49,7 @@ function AdminLogin() {
                         setStep("login");
                     }
                 } else {
-                    // Regular admin
+                    // Fallback for legacy behavior (should not happen with new enforcement)
                     const { token, role } = response.data.data;
                     localStorage.setItem("adminEmail", email);
                     localStorage.setItem("accessToken", token);
@@ -93,7 +94,7 @@ function AdminLogin() {
                 localStorage.setItem("accessToken", token);
                 localStorage.setItem("adminRole", role);
                 navigate("/admin/dashboard");
-                toast.success("🔐 Master Admin Panel - Secured Access!");
+                toast.success("🔐 Admin Panel - Secured Access!");
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Invalid OTP");
@@ -121,178 +122,206 @@ function AdminLogin() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
-                {/* Header */}
-                <div className="text-center mb-8">
-                    <div className="text-4xl font-bold text-blue-600 mb-2">
-                        {step === "login" ? "🔐" : "✓🔐"}
-                    </div>
-                    <h1 className="text-3xl font-bold text-gray-900">
+        <div className="min-h-screen flex">
+            {/* Left Side - Login Form */}
+            <div className="w-full lg:w-2/5 bg-white flex items-center justify-center p-8">
+                <div className="w-full max-w-md">
+                    <h1 className="text-gray-900 text-4xl font-bold mb-2">
                         {step === "login" ? "Admin Login" : "Verify OTP"}
                     </h1>
-                    <p className="text-gray-600 mt-2">Sarvottam Institute</p>
-                </div>
+                    <p className="text-gray-600 text-sm mb-8">
+                        {step === "login" ? "Enter your admin credentials" : "Enter the OTP sent to your email"}
+                    </p>
 
-                {/* Login Form */}
-                {step === "login" && (
-                    <form onSubmit={handleLogin} className="space-y-6">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Email Address
-                            </label>
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="your.email@example.com"
-                                    required
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Password
-                            </label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Enter your password"
-                                    required
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 flex items-center justify-center gap-2"
-                        >
-                            {loading ? "Logging in..." : "Login to Admin Panel"}
-                            {!loading && <ArrowRight size={20} />}
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={() => navigate("/admin/forgot-password")}
-                            className="w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium py-2"
-                        >
-                            Forgot Password?
-                        </button>
-                    </form>
-                )}
-
-                {/* OTP Verification Form */}
-                {step === "otp" && (
-                    <form onSubmit={handleOTPSubmit} className="space-y-6">
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                            <div className="flex gap-3">
-                                <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
-                                <div className="text-sm text-red-700">
-                                    <p className="font-semibold mb-1">⚠️ Master Admin Verification</p>
-                                    <p>
-                                        This is a security feature for master admin access. An OTP has been sent to your registered email.
-                                    </p>
+                    {/* Login Form */}
+                    {step === "login" && (
+                        <form onSubmit={handleLogin} className="space-y-6">
+                            <div>
+                                <label className="text-gray-700 text-sm block mb-2 font-semibold">
+                                    Email Address
+                                </label>
+                                <div className="relative">
+                                    <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="your.email@example.com"
+                                        required
+                                        className="w-full pl-10 pr-4 py-3 bg-white text-gray-900 rounded-lg border border-gray-300 hover:border-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all shadow-sm hover:shadow-md"
+                                    />
                                 </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Enter OTP
-                            </label>
-                            <input
-                                type="text"
-                                value={otp}
-                                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                                placeholder="Enter 6-digit OTP"
-                                maxLength="6"
-                                required
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-center text-2xl tracking-widest font-mono"
-                            />
-                            <p className="text-xs text-gray-500 mt-2">
-                                Check your email ({email}) for the OTP
-                            </p>
-                        </div>
+                            <div>
+                                <label className="text-gray-700 text-sm block mb-2 font-semibold">
+                                    Password
+                                </label>
+                                <div className="relative">
+                                    <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="Enter your password"
+                                        required
+                                        className="w-full pl-10 pr-12 py-3 bg-white text-gray-900 rounded-lg border border-gray-300 hover:border-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all shadow-sm hover:shadow-md"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-blue-600 transition-all duration-200 cursor-pointer"
+                                    >
+                                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </button>
+                                </div>
+                            </div>
 
-                        <button
-                            type="submit"
-                            disabled={loading || otp.length !== 6}
-                            className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition disabled:opacity-50 flex items-center justify-center gap-2"
-                        >
-                            {loading ? "Verifying..." : "Verify OTP"}
-                            {!loading && <ArrowRight size={20} />}
-                        </button>
-
-                        <div className="flex items-center justify-between gap-2 text-sm">
-                            {otpTimer > 0 ? (
-                                <span className="flex items-center gap-1 text-gray-600">
-                                    <Clock size={16} />
-                                    OTP expires in {Math.floor(otpTimer / 60)}:{String(otpTimer % 60).padStart(2, "0")}
-                                </span>
-                            ) : (
+                            <div className="text-left">
                                 <button
                                     type="button"
-                                    onClick={handleResendOTP}
-                                    className="text-red-600 hover:text-red-700 font-medium"
+                                    onClick={() => navigate("/admin/forgot-password")}
+                                    className="text-blue-600 text-sm hover:text-blue-700 font-medium transition-colors cursor-pointer"
                                 >
-                                    Resend OTP
+                                    Forgot Password?
                                 </button>
-                            )}
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={handleBackToLogin}
-                            className="w-full text-center text-sm text-gray-600 hover:text-gray-700 font-medium py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-                        >
-                            Back to Login
-                        </button>
-                    </form>
-                )}
-
-                {/* Divider */}
-                {step === "login" && (
-                    <>
-                        <div className="relative my-8">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-300"></div>
                             </div>
-                            <div className="relative flex justify-center text-sm">
-                                <span className="px-2 bg-white text-gray-500">New here?</span>
-                            </div>
-                        </div>
 
-                        {/* Sign up link */}
-                        <button
-                            onClick={() => navigate("/admin/signup")}
-                            className="w-full border-2 border-blue-600 text-blue-600 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
-                        >
-                            Request Admin Access
-                        </button>
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            >
+                                {loading ? "Logging in..." : "Login to Admin Panel"}
+                                {!loading && <ArrowRight size={20} />}
+                            </button>
+                        </form>
+                    )}
 
-                        {/* Info Box */}
-                        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <div className="flex gap-3">
-                                <AlertCircle size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
-                                <div className="text-sm text-gray-700">
-                                    <p className="font-semibold mb-1">First time?</p>
-                                    <p>
-                                        Request admin access and wait for approval from the master admin.
-                                    </p>
+                    {/* OTP Form */}
+                    {step === "otp" && (
+                        <form onSubmit={handleOTPSubmit} className="space-y-6">
+                            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                                <div className="flex gap-3">
+                                    <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
+                                    <div className="text-sm text-red-700">
+                                        <p className="font-semibold mb-1">⚠️ Admin Verification</p>
+                                        <p>
+                                            This is a security feature for admin access. An OTP has been sent to your registered email.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </>
-                )}
+
+                            <div>
+                                <label className="text-gray-700 text-sm block mb-2 font-semibold">
+                                    Enter OTP
+                                </label>
+                                <input
+                                    type="text"
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                                    placeholder="Enter 6-digit OTP"
+                                    maxLength="6"
+                                    required
+                                    className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border border-gray-300 hover:border-gray-400 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition-all shadow-sm hover:shadow-md text-center text-2xl tracking-widest font-mono"
+                                />
+                                <p className="text-xs text-gray-500 mt-2 text-center">
+                                    Check your email ({email})
+                                </p>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading || otp.length !== 6}
+                                className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            >
+                                {loading ? "Verifying..." : "Verify OTP"}
+                                {!loading && <ArrowRight size={20} />}
+                            </button>
+
+                            <div className="flex items-center justify-between gap-2 text-sm">
+                                {otpTimer > 0 ? (
+                                    <span className="flex items-center gap-1 text-gray-600">
+                                        <Clock size={16} />
+                                        OTP expires in {Math.floor(otpTimer / 60)}:{String(otpTimer % 60).padStart(2, "0")}
+                                    </span>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={handleResendOTP}
+                                        className="text-red-600 hover:text-red-700 font-medium cursor-pointer"
+                                    >
+                                        Resend OTP
+                                    </button>
+                                )}
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={handleBackToLogin}
+                                className="w-full text-center text-sm text-gray-600 hover:text-gray-700 font-medium py-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer"
+                            >
+                                Back to Login
+                            </button>
+                        </form>
+                    )}
+
+                    {/* Footer Links */}
+                    {step === "login" && (
+                        <>
+                            <div className="mt-8 text-center">
+                                <span className="text-gray-600 text-sm">
+                                    New Admin?{" "}
+                                </span>
+                                <button
+                                    onClick={() => navigate("/admin/signup")}
+                                    className="bg-blue-600 text-white px-6 py-2 rounded-lg text-sm hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95 ml-2 cursor-pointer"
+                                >
+                                    Request Access
+                                </button>
+                            </div>
+
+                            {/* Student Login Link */}
+                            <div className="mt-6 pt-6 border-t border-gray-300">
+                                <p className="text-gray-600 text-sm text-center mb-3">
+                                    Are you a student?
+                                </p>
+                                <button
+                                    type="button"
+                                    onClick={() => navigate("/auth/login")}
+                                    className="w-full bg-white border-2 border-blue-600 text-blue-600 font-semibold py-3 rounded-lg transition-all duration-200 hover:bg-blue-50 shadow-sm hover:shadow-md"
+                                >
+                                    Student Login
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+
+            {/* Right Side - Welcome Section */}
+            <div
+                className="hidden lg:flex w-3/5 bg-blue-900 p-12 relative overflow-hidden"
+                style={{
+                    backgroundImage: `url("/assets/auth_bg.jpeg")`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                }}
+            >
+                <div className="absolute inset-0 bg-blue-900/40 mix-blend-multiply"></div>
+                <div className="relative z-10 max-w-md self-center lg:mt-[-80px] xl:mt-[-60px]">
+                    <h2 className="text-white text-xl lg:text-2xl xl:text-3xl font-bold mb-2 leading-tight">
+                        Welcome to
+                    </h2>
+                    <h2 className="text-white text-xl lg:text-2xl xl:text-3xl font-bold mb-3 leading-tight">
+                        Admin Portal
+                    </h2>
+                    <p className="text-blue-100 text-xs lg:text-sm">
+                        Manage your institute efficiently and securely.
+                    </p>
+                </div>
             </div>
         </div>
     );

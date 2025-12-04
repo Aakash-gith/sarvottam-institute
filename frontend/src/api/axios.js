@@ -51,7 +51,11 @@ API.interceptors.request.use(async (config) => {
     if (!refreshToken) {
       console.log("No refresh token, clearing storage");
       localStorage.clear();
-      window.location.href = "/auth/login";
+      if (window.location.pathname.startsWith("/admin")) {
+        window.location.href = "/admin/login";
+      } else {
+        window.location.href = "/auth/login";
+      }
       throw new Error("Missing refresh token");
     }
 
@@ -96,7 +100,11 @@ API.interceptors.request.use(async (config) => {
 
       localStorage.clear();
       isRefreshing = false;
-      window.location.href = "/auth/login";
+      if (window.location.pathname.startsWith("/admin")) {
+        window.location.href = "/admin/login";
+      } else {
+        window.location.href = "/auth/login";
+      }
       throw err;
     }
   } catch (error) {
@@ -111,7 +119,11 @@ API.interceptors.response.use(
     if (err.response?.status === 403 || err.response?.status === 401) {
       console.warn("Unauthorized — forcing logout");
       localStorage.clear();
-      window.location.href = "/auth/login";
+      if (window.location.pathname.startsWith("/admin")) {
+        window.location.href = "/admin/login";
+      } else {
+        window.location.href = "/auth/login";
+      }
     }
     return Promise.reject(err);
   }

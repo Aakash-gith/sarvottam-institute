@@ -12,6 +12,11 @@ const passwordResetSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        type: {
+            type: String,
+            enum: ["password_reset", "master_admin_login"],
+            default: "password_reset",
+        },
         otpExpires: {
             type: Date,
             required: true,

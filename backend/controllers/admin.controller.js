@@ -196,11 +196,37 @@ export const approveAdminRequest = async (req, res) => {
         // Find or create user with this email
         let user = await User.findOne({ email: adminRequest.email });
         if (!user) {
+            // Generate temporary password
+            const tempPassword = Math.random().toString(36).slice(-12); // Random 12-char password
+            const hashedPassword = await bcryptjs.hash(tempPassword, 10);
+            
             user = new User({
                 email: adminRequest.email,
                 name: adminRequest.fullName,
+                password: hashedPassword,
+                class: 10, // Default class for admin
             });
             await user.save();
+
+            // Send temporary password email
+            const tempPasswordEmail = `
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2>Admin Access Approved!</h2>
+                <p>Congratulations! Your admin access request has been approved.</p>
+                <p>Your temporary password is:</p>
+                <div style="background: #f0f0f0; padding: 10px; border-radius: 5px; text-align: center; margin: 20px 0;">
+                    <h1 style="letter-spacing: 2px; color: #2563eb; font-family: monospace;">${tempPassword}</h1>
+                </div>
+                <p style="color: #d32f2f;"><strong>⚠️ Please change this password after your first login.</strong></p>
+                <p>You can now log in to the admin panel using your email and this password.</p>
+            </div>
+            `;
+            
+            await sendEmail(
+                adminRequest.email,
+                "Admin Access Approved - Temporary Password",
+                tempPasswordEmail
+            );
         }
 
         // Create admin user
@@ -225,24 +251,29 @@ export const approveAdminRequest = async (req, res) => {
         adminRequest.approvedDate = new Date();
         await adminRequest.save();
 
-        // Send approval email
-        const loginLink = `${process.env.FRONTEND_URL || "http://localhost:5174"}/admin/login`;
-        const emailHtml = `
-      <h2>Admin Access Approved!</h2>
-      <p>Congratulations! Your admin access request has been approved.</p>
-      <p>You can now log in to the admin panel using your email.</p>
-      <p>
-        <a href="${loginLink}" style="background-color: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
-          Login to Admin Panel
-        </a>
-      </p>
-    `;
+        // If user was just created, password email was already sent above
+        // If user already existed, send login link
+        if (await User.findOne({ email: adminRequest.email, createdAt: { $lt: new Date(Date.now() - 60000) } })) {
+            const loginLink = `${process.env.FRONTEND_URL || "http://localhost:5174"}/admin/login`;
+            const emailHtml = `
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2>Admin Access Approved!</h2>
+                <p>Your admin access request has been approved.</p>
+                <p>You can now log in to the admin panel using your existing credentials.</p>
+                <p>
+                    <a href="${loginLink}" style="background-color: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                        Login to Admin Panel
+                    </a>
+                </p>
+            </div>
+            `;
 
-        await sendEmail(
-            adminRequest.email,
-            "Admin Access Approved",
-            emailHtml
-        );
+            await sendEmail(
+                adminRequest.email,
+                "Admin Access Approved",
+                emailHtml
+            );
+        }
 
         res.json({
             success: true,
@@ -337,12 +368,12 @@ export const getAdminInfo = async (req, res) => {
 // Admin login (verify email has admin access)
 export const adminLogin = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email, password } = req.body;
 
-        if (!email) {
+        if (!email || !password) {
             return res.status(400).json({
                 success: false,
-                message: "Email is required",
+                message: "Email and password are required",
             });
         }
 
@@ -393,7 +424,29 @@ export const adminLogin = async (req, res) => {
             });
         }
 
-        // Generate JWT token for the admin user
+        // Verify password
+        const isPasswordValid = await bcryptjs.compare(password, adminUser.userId.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid email or password",
+            });
+        }
+
+        // For master admin, require OTP verification
+        if (adminUser.role === "master_admin") {
+            return res.json({
+                success: true,
+                message: "Password verified. OTP required for master admin.",
+                data: {
+                    requiresOTP: true,
+                    email: adminUser.email,
+                    role: adminUser.role,
+                },
+            });
+        }
+
+        // Generate JWT token for regular admin users
         const token = jwt.sign(
             {
                 _id: adminUser.userId._id,
@@ -418,6 +471,188 @@ export const adminLogin = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Error during admin login",
+        });
+    }
+};
+
+// Master admin OTP - Send OTP
+export const masterAdminSendOTP = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required",
+            });
+        }
+
+        // Check if user is master admin
+        const adminUser = await AdminUser.findOne({ email, role: "master_admin", isActive: true });
+        if (!adminUser) {
+            return res.status(404).json({
+                success: false,
+                message: "Master admin not found",
+            });
+        }
+
+        // Generate 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // Save OTP to database (using PasswordReset collection for master admin OTP as well)
+        await PasswordReset.deleteMany({ email, type: "master_admin_login" });
+        await PasswordReset.create({
+            email,
+            otp,
+            type: "master_admin_login",
+            otpExpires: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+        });
+
+        // Send OTP via email
+        await sendEmail(
+            email,
+            "Master Admin Login OTP",
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2>Master Admin Login Verification</h2>
+                <p>Your OTP for master admin login is:</p>
+                <div style="background: #f0f0f0; padding: 10px; border-radius: 5px; text-align: center; margin: 20px 0;">
+                    <h1 style="letter-spacing: 5px; color: #dc2626;">${otp}</h1>
+                </div>
+                <p><strong>⚠️ Security Notice:</strong> This OTP is required for master admin access.</p>
+                <p>This OTP will expire in 10 minutes.</p>
+                <p style="color: #666; font-size: 12px;">If you didn't attempt to login, please change your password immediately.</p>
+            </div>
+            `
+        );
+
+        // For development: log OTP to console
+        if (process.env.NODE_ENV !== "production") {
+            console.log(`✓ Master Admin OTP for ${email}: ${otp}`);
+        }
+
+        res.json({
+            success: true,
+            message: "OTP sent to master admin email",
+            data: {
+                email,
+                // In development, return OTP for testing
+                otp: process.env.NODE_ENV !== "production" ? otp : undefined,
+            },
+        });
+    } catch (error) {
+        console.error("Master admin send OTP error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error sending OTP",
+        });
+    }
+};
+
+// Master admin OTP - Verify OTP and login
+export const masterAdminVerifyOTP = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        if (!email || !otp) {
+            return res.status(400).json({
+                success: false,
+                message: "Email and OTP are required",
+            });
+        }
+
+        // Check if user is master admin
+        const adminUser = await AdminUser.findOne({ email, role: "master_admin", isActive: true }).populate("userId");
+        if (!adminUser) {
+            return res.status(404).json({
+                success: false,
+                message: "Master admin not found",
+            });
+        }
+
+        // Check OTP
+        const passwordReset = await PasswordReset.findOne({
+            email,
+            otp,
+            type: "master_admin_login",
+            isUsed: false,
+        });
+
+        if (!passwordReset) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid OTP",
+            });
+        }
+
+        // Check if OTP expired
+        if (new Date() > passwordReset.otpExpires) {
+            return res.status(400).json({
+                success: false,
+                message: "OTP has expired",
+            });
+        }
+
+        // Check attempts
+        if (passwordReset.attempts >= 5) {
+            return res.status(400).json({
+                success: false,
+                message: "Too many failed attempts. Please request a new OTP",
+            });
+        }
+
+        // Mark OTP as used
+        passwordReset.isUsed = true;
+        await passwordReset.save();
+
+        // Generate JWT token for master admin
+        const token = jwt.sign(
+            {
+                _id: adminUser.userId._id,
+                email: adminUser.userId.email,
+                role: "master_admin",
+            },
+            process.env.JWT_SECRET || "default-secret",
+            { expiresIn: "30d" }
+        );
+
+        // Send login confirmation email
+        await sendEmail(
+            email,
+            "Master Admin Login Successful",
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2>Master Admin Login Confirmed</h2>
+                <p>You have successfully logged in to the master admin panel.</p>
+                <p>If this wasn't you, please change your password immediately.</p>
+                <p style="color: #666; font-size: 12px;">Login Time: ${new Date().toLocaleString()}</p>
+            </div>
+            `
+        );
+
+        res.json({
+            success: true,
+            message: "Master admin verified with OTP",
+            data: {
+                ...adminUser.toObject(),
+                token,
+                user: adminUser.userId,
+            },
+        });
+    } catch (error) {
+        console.error("Master admin verify OTP error:", error);
+
+        // Increment attempts on invalid OTP
+        if (error.message !== "Invalid OTP") {
+            await PasswordReset.updateOne(
+                { email: req.body.email, otp: req.body.otp, type: "master_admin_login" },
+                { $inc: { attempts: 1 } }
+            );
+        }
+
+        res.status(500).json({
+            success: false,
+            message: "Error verifying OTP",
         });
     }
 };

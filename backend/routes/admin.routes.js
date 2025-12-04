@@ -7,6 +7,8 @@ import {
     rejectAdminRequest,
     getAdminInfo,
     adminLogin,
+    masterAdminSendOTP,
+    masterAdminVerifyOTP,
     forgotPasswordSendOTP,
     verifyOTPAndResetPassword,
 } from "../controllers/admin.controller.js";
@@ -19,6 +21,8 @@ const router = Router();
 router.post("/request-access", requestAdminAccess);
 router.get("/request-status", getAdminRequestStatus);
 router.post("/login", adminLogin);
+router.post("/login/send-otp", masterAdminSendOTP);
+router.post("/login/verify-otp", masterAdminVerifyOTP);
 router.post("/forgot-password/send-otp", forgotPasswordSendOTP);
 router.post("/forgot-password/verify-otp", verifyOTPAndResetPassword);
 

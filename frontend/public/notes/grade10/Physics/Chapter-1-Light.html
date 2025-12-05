@@ -1,156 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 1 - Light (Reflection and Refraction)</title>
+    <title>Chapter 9 - Light (Reflection and Refraction)</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            line-height: 1.6;
-            color: #333;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        h1 {
-            color: #667eea;
-            margin-bottom: 10px;
-            text-align: center;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 15px;
-        }
-
-        h2 {
-            color: #764ba2;
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-
-        .important-box {
-            background: #fff3cd;
-            border-left: 5px solid #ffc107;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-        }
-
-        .formula-box {
-            background: #e7f3ff;
-            border-left: 5px solid #2196F3;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .example-box {
-            background: #e8f5e9;
-            border-left: 5px solid #4caf50;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-        }
-
-        p {
-            margin-bottom: 10px;
-        }
-
-        ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        li {
-            margin-bottom: 8px;
-        }
-
-        .center-text {
-            text-align: center;
-            margin: 20px 0;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); line-height: 1.6; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
+        h1 { color: #667eea; margin-bottom: 10px; text-align: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+        h2 { color: #764ba2; margin-top: 30px; margin-bottom: 15px; }
+        .important-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        .formula-box { background: #e7f3ff; border-left: 5px solid #2196F3; padding: 15px; margin: 20px 0; border-radius: 5px; font-family: 'Courier New', monospace; }
+        .example-box { background: #e8f5e9; border-left: 5px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        p { margin-bottom: 10px; }
+        ul { margin-left: 20px; margin-bottom: 15px; }
+        li { margin-bottom: 8px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #667eea; color: white; }
     </style>
 </head>
-
 <body>
     <div class="container">
-        <h1>Chapter 1 - Light (Reflection and Refraction)</h1>
+        <h1>Chapter 9 - Light (Reflection and Refraction)</h1>
         <p style="text-align: center; color: #999; margin-bottom: 30px;">Class X Physics | CBSE</p>
 
         <h2>Introduction to Light</h2>
-        <p>Light is a form of electromagnetic radiation that enables us to see objects. It is a transverse wave that
-            travels in straight lines and has a finite speed of approximately 3 × 10⁸ m/s in vacuum.</p>
+        <p>Light is a form of electromagnetic radiation that enables us to see objects. It is a transverse wave that travels in straight lines and has a speed of approximately 3 × 10⁸ m/s in vacuum.</p>
 
         <div class="important-box">
-            <strong>Key Point:</strong> Light exhibits both wave and particle nature (wave-particle duality). It can be
-            reflected, refracted, and diffracted.
+            <strong>Key Properties of Light:</strong>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>Travels in straight lines (rectilinear propagation)</li>
+                <li>Exhibits both wave and particle nature (wave-particle duality)</li>
+                <li>Can be reflected, refracted, and diffracted</li>
+                <li>Travels fastest in vacuum</li>
+            </ul>
         </div>
 
         <h2>Reflection of Light</h2>
-        <p>Reflection is the phenomenon in which light bounces off a surface. The law of reflection states:</p>
-        <ul>
-            <li>Angle of incidence = Angle of reflection</li>
-            <li>The incident ray, reflected ray, and normal all lie in the same plane</li>
-        </ul>
+        <p>Reflection is the phenomenon in which light bounces off a surface. The law of reflection governs how light behaves when it strikes a surface.</p>
 
+        <h2>Laws of Reflection</h2>
         <div class="formula-box">
-            <strong>Law of Reflection:</strong><br>
+            <strong>First Law:</strong> The incident ray, reflected ray, and normal to the surface all lie in the same plane.<br>
+            <br>
+            <strong>Second Law:</strong> Angle of incidence = Angle of reflection<br>
             ∠i = ∠r<br>
-            where i = angle of incidence, r = angle of reflection
+            <br>
+            <strong>Normal:</strong> A line perpendicular to the reflecting surface at the point of incidence
         </div>
 
         <h2>Types of Reflection</h2>
         <ul>
-            <li><strong>Regular Reflection:</strong> Occurs on smooth, polished surfaces. Parallel rays remain parallel
-                after reflection.</li>
-            <li><strong>Diffuse Reflection:</strong> Occurs on rough, uneven surfaces. Parallel rays are reflected in
-                different directions.</li>
+            <li><strong>Regular (Specular) Reflection:</strong> Occurs on smooth, polished surfaces
+                <ul style="margin-left: 20px;">
+                    <li>Parallel rays remain parallel after reflection</li>
+                    <li>Sharp, clear image formed</li>
+                    <li>Example: Mirror, calm water surface</li>
+                </ul>
+            </li>
+            <li><strong>Diffuse (Irregular) Reflection:</strong> Occurs on rough, uneven surfaces
+                <ul style="margin-left: 20px;">
+                    <li>Parallel rays are reflected in different directions</li>
+                    <li>No clear image formed</li>
+                    <li>Example: Wall, paper, ground</li>
+                </ul>
+            </li>
         </ul>
-
-        <div class="example-box">
-            <strong>Example:</strong> A mirror produces regular reflection, while a wall produces diffuse reflection.
-        </div>
 
         <h2>Spherical Mirrors</h2>
-        <p>Mirrors that have curved surfaces are called spherical mirrors. They are of two types:</p>
+        <p>Mirrors that have curved surfaces are called spherical mirrors. They are parts of a sphere with one polished surface.</p>
         <ul>
-            <li><strong>Concave Mirror:</strong> Converging mirror - reflects light towards a point</li>
-            <li><strong>Convex Mirror:</strong> Diverging mirror - reflects light away from a point</li>
+            <li><strong>Concave Mirror (Converging Mirror):</strong> Reflects light towards a focus
+                <ul style="margin-left: 20px;">
+                    <li>Center of curvature (C): Center of sphere</li>
+                    <li>Focal length (f) = R/2 (where R = radius)</li>
+                    <li>Forms real or virtual images</li>
+                    <li>Used in: Torches, telescopes, shaving mirrors</li>
+                </ul>
+            </li>
+            <li><strong>Convex Mirror (Diverging Mirror):</strong> Reflects light away from mirror
+                <ul style="margin-left: 20px;">
+                    <li>Always forms virtual, erect, diminished image</li>
+                    <li>Used in: Car rear-view mirrors, street lights</li>
+                </ul>
+            </li>
         </ul>
 
-        <div class="important-box">
-            <strong>Note:</strong> This chapter covers basic principles. For detailed formulas and ray diagrams, refer
-            to NCERT textbook.
+        <h2>Terms Related to Spherical Mirrors</h2>
+        <ul>
+            <li><strong>Pole (P):</strong> Center of reflecting surface</li>
+            <li><strong>Center of Curvature (C):</strong> Center of sphere</li>
+            <li><strong>Principal Axis:</strong> Line joining pole and center of curvature</li>
+            <li><strong>Focal Point (F):</strong> Point where parallel rays converge/diverge</li>
+            <li><strong>Focal Length (f):</strong> Distance from pole to focal point</li>
+            <li><strong>Radius of Curvature (R):</strong> Distance from pole to center of curvature</li>
+            <li><strong>Aperture:</strong> Size of the mirror</li>
+        </ul>
+
+        <h2>Mirror Formula and Magnification</h2>
+        <div class="formula-box">
+            <strong>Mirror Formula:</strong><br>
+            1/f = 1/u + 1/v<br>
+            <br>
+            <strong>Magnification:</strong><br>
+            m = -v/u = h'/h<br>
+            where h = object height, h' = image height<br>
+            <br>
+            <strong>Sign Convention:</strong><br>
+            • Distances from pole: Real distances (same side as object) = positive<br>
+            • Virtual distances (opposite side) = negative<br>
+            • Concave mirror: f is positive, Convex mirror: f is negative
+        </div>
+
+        <h2>Refraction of Light</h2>
+        <p>Refraction is the bending of light when it passes from one transparent medium to another with different optical densities.</p>
+
+        <h2>Causes of Refraction</h2>
+        <p>Light travels at different speeds in different media. When light enters a new medium, its speed changes, causing the direction to change (unless perpendicular to surface).</p>
+
+        <h2>Laws of Refraction (Snell's Law)</h2>
+        <div class="formula-box">
+            <strong>First Law:</strong> The incident ray, refracted ray, and normal all lie in the same plane.<br>
+            <br>
+            <strong>Second Law (Snell's Law):</strong><br>
+            n₁ sin θ₁ = n₂ sin θ₂<br>
+            <br>
+            where n₁, n₂ are refractive indices and θ₁, θ₂ are angles of incidence and refraction
+        </div>
+
+        <h2>Refractive Index</h2>
+        <p>The refractive index (n) of a medium is the ratio of speed of light in vacuum to speed in that medium.</p>
+        <div class="formula-box">
+            n = c/v<br>
+            where c = speed in vacuum (3×10⁸ m/s), v = speed in medium<br>
+            <br>
+            <strong>Common Refractive Indices:</strong><br>
+            Vacuum: 1.00, Air: 1.0003 ≈ 1.00, Water: 1.33, Glass: 1.50, Diamond: 2.42
+        </div>
+
+        <h2>Total Internal Reflection</h2>
+        <p>When light travels from a denser to a less dense medium, it bends away from normal. If angle of incidence exceeds critical angle (θc), total internal reflection occurs.</p>
+        <div class="formula-box">
+            <strong>Critical Angle:</strong><br>
+            sin θc = n₂/n₁<br>
+            <br>
+            <strong>Conditions:</strong><br>
+            • Light travels from denser to less dense medium<br>
+            • Angle of incidence > Critical angle<br>
+            <br>
+            <strong>Applications:</strong> Optical fibers, fiber optic cables, diamond sparkle, mirages
+        </div>
+
+        <h2>Lens</h2>
+        <p>A lens is a transparent medium bounded by two curved surfaces (or one curved and one plane). Used to converge or diverge light rays.</p>
+        <ul>
+            <li><strong>Convex (Converging) Lens:</strong> Bulges outward (thicker at center)
+                <ul style="margin-left: 20px;">
+                    <li>Converges parallel rays to a point (focal point)</li>
+                    <li>Forms real or virtual images</li>
+                    <li>Used in: Magnifying glass, cameras, projectors</li>
+                </ul>
+            </li>
+            <li><strong>Concave (Diverging) Lens:</strong> Curves inward (thinner at center)
+                <ul style="margin-left: 20px;">
+                    <li>Diverges parallel rays away</li>
+                    <li>Always forms virtual, erect, diminished image</li>
+                    <li>Used in: Glasses for myopia, peepholes</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>Lens Formula and Magnification</h2>
+        <div class="formula-box">
+            <strong>Lens Formula:</strong><br>
+            1/f = 1/v + 1/u<br>
+            <br>
+            <strong>Power of Lens:</strong><br>
+            P = 1/f (in meters), Power in Diopters (D)<br>
+            <br>
+            <strong>Magnification:</strong><br>
+            m = -v/u = h'/h
         </div>
 
         <div style="margin-top: 40px; padding: 20px; background: #f0f4ff; border-radius: 8px; text-align: center;">
             <h3 style="color: #667eea; margin-bottom: 15px;">Key Takeaways</h3>
             <ul style="list-style: none; margin: 0;">
-                <li>✓ Light travels in straight lines</li>
-                <li>✓ Reflection follows the law of incidence = reflection</li>
-                <li>✓ Two types of reflection: Regular and Diffuse</li>
-                <li>✓ Spherical mirrors can be concave or convex</li>
+                <li>✓ Laws of reflection: ∠i = ∠r</li>
+                <li>✓ Regular reflection on smooth surfaces, diffuse on rough</li>
+                <li>✓ Snell's Law: n₁ sin θ₁ = n₂ sin θ₂</li>
+                <li>✓ Refractive index: n = c/v</li>
+                <li>✓ Total internal reflection when θᵢ > θc</li>
+                <li>✓ Convex lens converges, concave diverges</li>
             </ul>
-            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">
-                CBSE | NCERT | Class X Physics
-            </p>
+            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">CBSE | NCERT | Class X Physics</p>
         </div>
     </div>
 </body>
-
 </html>

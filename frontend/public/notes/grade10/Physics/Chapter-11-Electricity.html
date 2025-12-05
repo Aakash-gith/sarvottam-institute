@@ -1,895 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class 10 Physics - Chapter 12: Electricity</title>
+    <title>Chapter 11 - Electricity</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .content {
-            padding: 40px;
-        }
-
-        .toc {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-        }
-
-        .toc h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-
-        .toc ol {
-            margin-left: 20px;
-        }
-
-        .toc li {
-            margin-bottom: 8px;
-            color: #555;
-        }
-
-        .toc a {
-            color: #667eea;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .toc a:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
-
-        .section {
-            margin-bottom: 40px;
-            scroll-margin-top: 20px;
-        }
-
-        .section h2 {
-            color: #667eea;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #667eea;
-        }
-
-        .section h3 {
-            color: #764ba2;
-            font-size: 1.3em;
-            margin-top: 20px;
-            margin-bottom: 12px;
-        }
-
-        .section h4 {
-            color: #666;
-            font-size: 1.1em;
-            margin-top: 15px;
-            margin-bottom: 10px;
-        }
-
-        .content p {
-            margin-bottom: 15px;
-            text-align: justify;
-            font-size: 1em;
-        }
-
-        .formula {
-            background: #f0f4ff;
-            border-left: 4px solid #667eea;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 6px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.05em;
-            color: #333;
-            overflow-x: auto;
-        }
-
-        .formula strong {
-            color: #667eea;
-        }
-
-        .important {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 6px;
-        }
-
-        .important strong {
-            color: #856404;
-        }
-
-        .tip {
-            background: #d4edda;
-            border-left: 4px solid #28a745;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 6px;
-        }
-
-        .tip strong {
-            color: #155724;
-        }
-
-        .key-points {
-            background: #e2e3e5;
-            border-left: 4px solid #6c757d;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 6px;
-        }
-
-        .key-points ul {
-            margin-left: 20px;
-            margin-top: 10px;
-        }
-
-        .key-points li {
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        table th {
-            background: #667eea;
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        table td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        table tr:hover {
-            background: #f8f9fa;
-        }
-
-        .diagram {
-            background: #f8f9fa;
-            border: 2px dashed #667eea;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            border-radius: 8px;
-            color: #666;
-            font-style: italic;
-        }
-
-        .comparison {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .comparison-box {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            border: 2px solid #667eea;
-        }
-
-        .comparison-box h4 {
-            color: #667eea;
-            margin-top: 0;
-        }
-
-        .comparison-box ul {
-            margin-left: 20px;
-        }
-
-        .comparison-box li {
-            margin-bottom: 8px;
-        }
-
-        .footer {
-            background: #f8f9fa;
-            padding: 20px 40px;
-            border-top: 1px solid #ddd;
-            text-align: center;
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-
-            .content {
-                padding: 20px;
-            }
-
-            .comparison {
-                grid-template-columns: 1fr;
-            }
-
-            .section h2 {
-                font-size: 1.5em;
-            }
-        }
-
-        .back-to-top {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
-            margin-top: 20px;
-            transition: background 0.3s;
-        }
-
-        .back-to-top:hover {
-            background: #764ba2;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); line-height: 1.6; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
+        h1 { color: #667eea; margin-bottom: 10px; text-align: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+        h2 { color: #764ba2; margin-top: 30px; margin-bottom: 15px; }
+        .important-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        .formula-box { background: #e7f3ff; border-left: 5px solid #2196F3; padding: 15px; margin: 20px 0; border-radius: 5px; font-family: 'Courier New', monospace; }
+        p { margin-bottom: 10px; }
+        ul { margin-left: 20px; margin-bottom: 15px; }
+        li { margin-bottom: 8px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #667eea; color: white; }
     </style>
 </head>
-
 <body>
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>⚡ ELECTRICITY</h1>
-            <p>Class 10 Physics - Chapter 12</p>
-            <p style="font-size: 0.95em; margin-top: 10px;">CBSE | NCERT</p>
+        <h1>Chapter 11 - Electricity</h1>
+        <p style="text-align: center; color: #999; margin-bottom: 30px;">Class X Physics | CBSE</p>
+
+        <h2>Electric Charge</h2>
+        <p>Electric charge is the physical property of matter that causes it to experience a force in an electromagnetic field. It is measured in Coulombs (C).</p>
+
+        <h2>Types of Electric Charge</h2>
+        <ul>
+            <li><strong>Positive Charge:</strong> Produced by loss of electrons (deficiency)</li>
+            <li><strong>Negative Charge:</strong> Produced by gain of electrons (excess)</li>
+            <li><strong>Elementary Charge (e):</strong> 1.6 × 10⁻¹⁹ C (charge on one electron/proton)</li>
+        </ul>
+
+        <h2>Coulomb's Law</h2>
+        <div class="formula-box">
+            F = k(q₁q₂)/r²<br>
+            where k = 9 × 10⁹ N·m²/C², q₁, q₂ are charges, r is distance<br>
+            <br>
+            <strong>OR:</strong><br>
+            F = (q₁q₂)/(4πε₀r²)<br>
+            where ε₀ = permittivity of free space
         </div>
 
-        <!-- Content -->
-        <div class="content">
-            <!-- Table of Contents -->
-            <div class="toc">
-                <h2>📚 Table of Contents</h2>
-                <ol>
-                    <li><a href="#what-is">What is Electricity?</a></li>
-                    <li><a href="#types">Types of Electricity</a></li>
-                    <li><a href="#basic-concepts">Basic Concepts of Electricity</a></li>
-                    <li><a href="#factors">Factors Affecting Resistance</a></li>
-                    <li><a href="#combination">Combination of Resistors</a></li>
-                    <li><a href="#power">Electric Power in a Circuit</a></li>
-                    <li><a href="#circuits">Circuit Diagrams</a></li>
-                    <li><a href="#mistakes">Common Mistakes to Avoid</a></li>
-                </ol>
-            </div>
+        <h2>Electric Field and Electric Potential</h2>
+        <ul>
+            <li><strong>Electric Field (E):</strong> Force per unit charge. E = F/q</li>
+            <li><strong>Electric Potential (V):</strong> Energy per unit charge. V = W/q</li>
+            <li><strong>Potential Difference:</strong> Difference in potential between two points: V = V₁ - V₂</li>
+            <li><strong>Unit:</strong> Volt (V) or J/C</li>
+        </ul>
 
-            <!-- Section 1: What is Electricity -->
-            <div class="section" id="what-is">
-                <h2>1. What is Electricity?</h2>
-                <p>
-                    Electricity is the flow of electric charge and a form of energy that can be easily converted into
-                    other forms, such as light, heat, or mechanical work. On a microscopic level, electricity refers to
-                    the movement of electrons—tiny negatively charged particles—through a conductor. When electrons flow
-                    in a particular direction, an electric current is generated.
-                </p>
-                <p>
-                    Electricity is an essential part of our daily lives. It provides power to our homes, schools,
-                    workplaces, and industries. Understanding the concept of electricity helps us learn about various
-                    devices we use every day and how to use them safely and efficiently.
-                </p>
-                <div class="important">
-                    <strong>💡 Key Fact:</strong> Electric current is measured in Amperes (A), and it represents the
-                    flow of charges through a conductor.
-                </div>
-            </div>
+        <h2>Electric Current</h2>
+        <p>Electric current is the flow of electric charge in a conductor.</p>
 
-            <!-- Section 2: Types of Electricity -->
-            <div class="section" id="types">
-                <h2>2. Types of Electricity</h2>
-                <p>Electricity can be classified into two main types:</p>
-
-                <h3>Static Electricity</h3>
-                <p>
-                    Static electricity occurs due to an uneven distribution of electric charges on the surface of an
-                    object. This leads to effects such as sparks and lightning. Examples include:
-                </p>
-                <div class="key-points">
-                    <ul>
-                        <li>Lightning during thunderstorms</li>
-                        <li>Sparks when removing a sweater</li>
-                        <li>Static shock when touching a doorknob</li>
-                        <li>Attraction of small paper pieces to a charged comb</li>
-                    </ul>
-                </div>
-
-                <h3>Current Electricity</h3>
-                <p>
-                    Current electricity is the electricity used to power electrical devices. It involves the continuous
-                    flow of electric charges (electrons) through conductors, such as wires and metallic paths.
-                </p>
-                <div class="key-points">
-                    <ul>
-                        <li>Powers household appliances</li>
-                        <li>Used in industrial machinery</li>
-                        <li>Lights our homes and streets</li>
-                        <li>Powers electronic devices and computers</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Section 3: Basic Concepts -->
-            <div class="section" id="basic-concepts">
-                <h2>3. Basic Concepts of Electricity</h2>
-
-                <h3>Electric Current (I)</h3>
-                <p>
-                    Electric current refers to the flow of electric charges through a conductor. It is the rate at which
-                    charge flows through a cross-section of a conductor.
-                </p>
-                <div class="formula">
-                    <strong>Formula:</strong> I = Q / t<br>
-                    Where:<br>
-                    • I = electric current (Amperes, A)<br>
-                    • Q = charge (Coulombs, C)<br>
-                    • t = time (seconds, s)
-                </div>
-                <p>
-                    <strong>Note:</strong> While conventional current flows from positive to negative terminals, the
-                    actual movement of electrons is in the opposite direction (from negative to positive).
-                </p>
-
-                <h3>Voltage (Potential Difference) (V)</h3>
-                <p>
-                    Voltage, or potential difference, is the force that drives electrons through a conductor. It
-                    represents the difference in electric potential energy per unit charge between two points in a
-                    circuit. It is measured in Volts (V).
-                </p>
-                <div class="formula">
-                    <strong>Formula:</strong> V = W / Q<br>
-                    Where:<br>
-                    • V = voltage (Volts, V)<br>
-                    • W = work done (Joules, J)<br>
-                    • Q = charge (Coulombs, C)
-                </div>
-
-                <h3>Resistance (R)</h3>
-                <p>
-                    Resistance is the opposition that a conductor offers to the flow of electric current. It depends on
-                    the material, length, and cross-sectional area of the conductor. Resistance is measured in Ohms (Ω).
-                </p>
-                <div class="formula">
-                    <strong>Formula:</strong> R = ρL / A<br>
-                    Where:<br>
-                    • R = resistance (Ohms, Ω)<br>
-                    • ρ = resistivity of the material (Ω·m)<br>
-                    • L = length of the conductor (m)<br>
-                    • A = cross-sectional area (m²)
-                </div>
-
-                <h3>Ohm's Law</h3>
-                <p>
-                    Ohm's Law establishes a fundamental relationship between voltage (V), current (I), and resistance
-                    (R). It states that the current passing through a conductor is directly proportional to the voltage
-                    across it and inversely proportional to its resistance.
-                </p>
-                <div class="formula">
-                    <strong>Formula:</strong> V = I × R<br>
-                    <br>
-                    <strong>Rearrangements:</strong><br>
-                    • I = V / R (to find current)<br>
-                    • R = V / I (to find resistance)
-                </div>
-                <div class="tip">
-                    <strong>💡 Tip - Triangle Method:</strong> To use Ohm's Law easily, remember the triangle:<br>
-                    V = I × R<br>
-                    Cover the value you need to find, and use the remaining values.
-                </div>
-            </div>
-
-            <!-- Section 4: Factors Affecting Resistance -->
-            <div class="section" id="factors">
-                <h2>4. Factors Affecting Resistance</h2>
-                <p>Several factors influence the resistance of a conductor:</p>
-
-                <h3>1. Material of the Conductor</h3>
-                <p>
-                    Different materials have different resistivities. Conductors like copper and aluminium have low
-                    resistance and allow current to flow easily. Insulators like rubber and wood have high resistance
-                    and prevent current flow.
-                </p>
-
-                <h3>2. Length of the Conductor (L)</h3>
-                <p>
-                    Resistance is directly proportional to the length of the conductor. Longer conductors have higher
-                    resistance because electrons have to travel a greater distance and experience more collisions.
-                </p>
-                <div class="important">
-                    <strong>⚡ Remember:</strong> If you double the length, resistance doubles.
-                </div>
-
-                <h3>3. Cross-sectional Area (A)</h3>
-                <p>
-                    Resistance is inversely proportional to the conductor's cross-sectional area. A thicker wire has
-                    lower resistance because there are more paths for electrons to flow. A thinner wire has higher
-                    resistance.
-                </p>
-                <div class="important">
-                    <strong>⚡ Remember:</strong> If you double the cross-sectional area, resistance is halved.
-                </div>
-
-                <h3>4. Temperature</h3>
-                <p>
-                    Generally, resistance increases with temperature in metals and semiconductors. At higher
-                    temperatures, atoms vibrate more vigorously, causing more collisions with electrons, thus increasing
-                    resistance.
-                </p>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Material</th>
-                            <th>Resistivity (Ω·m) at 20°C</th>
-                            <th>Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Silver</td>
-                            <td>1.60 × 10⁻⁸</td>
-                            <td>Excellent Conductor</td>
-                        </tr>
-                        <tr>
-                            <td>Copper</td>
-                            <td>1.62 × 10⁻⁸</td>
-                            <td>Excellent Conductor</td>
-                        </tr>
-                        <tr>
-                            <td>Aluminium</td>
-                            <td>2.63 × 10⁻⁸</td>
-                            <td>Good Conductor</td>
-                        </tr>
-                        <tr>
-                            <td>Tungsten</td>
-                            <td>5.20 × 10⁻⁸</td>
-                            <td>Conductor</td>
-                        </tr>
-                        <tr>
-                            <td>Nichrome</td>
-                            <td>1.00 × 10⁻⁶</td>
-                            <td>High Resistance</td>
-                        </tr>
-                        <tr>
-                            <td>Rubber</td>
-                            <td>1.00 × 10¹¹</td>
-                            <td>Insulator</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Section 5: Combination of Resistors -->
-            <div class="section" id="combination">
-                <h2>5. Combination of Resistors</h2>
-                <p>
-                    Resistors can be connected in two main ways in a circuit to either increase or decrease the total
-                    resistance:
-                </p>
-
-                <h3>Series Connection</h3>
-                <p>
-                    When resistors are connected end-to-end in a single path, they are said to be in series. In this
-                    configuration:
-                </p>
-                <div class="key-points">
-                    <ul>
-                        <li>Same current flows through all resistors</li>
-                        <li>Voltage is divided among resistors</li>
-                        <li>Total resistance increases</li>
-                        <li>If one resistor fails, entire circuit stops</li>
-                    </ul>
-                </div>
-                <div class="formula">
-                    <strong>Formula for Resistors in Series:</strong><br>
-                    R<sub>total</sub> = R₁ + R₂ + R₃ + ...<br>
-                    <br>
-                    Example: If R₁ = 5Ω, R₂ = 10Ω, R₃ = 15Ω<br>
-                    R<sub>total</sub> = 5 + 10 + 15 = 30Ω
-                </div>
-
-                <h3>Parallel Connection</h3>
-                <p>
-                    When resistors are connected in parallel, the electric current is divided into multiple paths. In
-                    this configuration:
-                </p>
-                <div class="key-points">
-                    <ul>
-                        <li>Voltage across all resistors is the same</li>
-                        <li>Current is divided among resistors</li>
-                        <li>Total resistance decreases</li>
-                        <li>If one resistor fails, others continue working</li>
-                    </ul>
-                </div>
-                <div class="formula">
-                    <strong>Formula for Resistors in Parallel:</strong><br>
-                    1/R<sub>total</sub> = 1/R₁ + 1/R₂ + 1/R₃ + ...<br>
-                    <br>
-                    Example: If R₁ = 2Ω, R₂ = 3Ω, R₃ = 6Ω<br>
-                    1/R<sub>total</sub> = 1/2 + 1/3 + 1/6 = 3/6 + 2/6 + 1/6 = 6/6 = 1<br>
-                    R<sub>total</sub> = 1Ω
-                </div>
-
-                <div class="comparison">
-                    <div class="comparison-box">
-                        <h4>Series Connection</h4>
-                        <ul>
-                            <li>✓ Increases total resistance</li>
-                            <li>✓ Simple to understand</li>
-                            <li>✗ One failure stops all</li>
-                            <li>✗ Less effective for powering multiple devices</li>
-                        </ul>
-                    </div>
-                    <div class="comparison-box">
-                        <h4>Parallel Connection</h4>
-                        <ul>
-                            <li>✓ Decreases total resistance</li>
-                            <li>✓ Independent operation</li>
-                            <li>✓ Used in homes</li>
-                            <li>✗ More complex wiring</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 6: Electric Power -->
-            <div class="section" id="power">
-                <h2>6. Electric Power in a Circuit</h2>
-                <p>
-                    Power refers to the rate at which electrical energy is converted into other forms, such as heat,
-                    light, or mechanical energy. It is measured in Watts (W).
-                </p>
-
-                <h3>Power Formulas</h3>
-                <div class="formula">
-                    <strong>Primary Formula:</strong><br>
-                    P = V × I<br>
-                    Where:<br>
-                    • P = power (Watts, W)<br>
-                    • V = voltage (Volts, V)<br>
-                    • I = current (Amperes, A)
-                </div>
-
-                <p>Using Ohm's Law (V = I × R), power can also be expressed as:</p>
-
-                <div class="formula">
-                    <strong>Alternative Formulas:</strong><br>
-                    P = I² × R (when current and resistance are known)<br>
-                    P = V² / R (when voltage and resistance are known)<br>
-                    <br>
-                    Example: If V = 230V and I = 10A<br>
-                    P = 230 × 10 = 2300W = 2.3 kW
-                </div>
-
-                <h3>Energy and Power</h3>
-                <p>
-                    The energy consumed by an appliance depends on both its power rating and the time for which it
-                    operates:
-                </p>
-                <div class="formula">
-                    <strong>Energy Formula:</strong><br>
-                    E = P × t<br>
-                    Where:<br>
-                    • E = energy (Joules, J or kilowatt-hours, kWh)<br>
-                    • P = power (Watts, W)<br>
-                    • t = time (seconds, s or hours, h)
-                </div>
-
-                <h3>Applications of Electric Power</h3>
-                <div class="key-points">
-                    <ul>
-                        <li><strong>Household Appliances:</strong> Fans, refrigerators, air conditioners, lighting</li>
-                        <li><strong>Industrial Machinery:</strong> Motors, transformers, and production equipment</li>
-                        <li><strong>Transportation:</strong> Electric trains, buses, and vehicles</li>
-                        <li><strong>Medical Devices:</strong> ECG machines, X-ray machines, ventilators</li>
-                        <li><strong>Communication:</strong> Computers, mobile phones, networks</li>
-                    </ul>
-                </div>
-
-                <div class="tip">
-                    <strong>💡 Real-world Example:</strong> A 100W bulb consumes 100J of energy every second. If it runs
-                    for 1 hour (3600 seconds), the total energy consumed is 100 × 3600 = 360,000J = 0.1 kWh.
-                </div>
-            </div>
-
-            <!-- Section 7: Circuit Diagrams -->
-            <div class="section" id="circuits">
-                <h2>7. Circuit Diagrams</h2>
-                <p>
-                    A circuit diagram visually represents an electrical circuit using standard symbols for different
-                    components. Understanding circuit diagrams is essential for analyzing and building electrical
-                    circuits.
-                </p>
-
-                <h3>Important Components in a Circuit Diagram</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Component</th>
-                            <th>Symbol</th>
-                            <th>Function</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Battery/Cell</td>
-                            <td>Two parallel lines (long and short)</td>
-                            <td>Provides electrical energy</td>
-                        </tr>
-                        <tr>
-                            <td>Resistor</td>
-                            <td>Zig-zag line or rectangle</td>
-                            <td>Opposes current flow</td>
-                        </tr>
-                        <tr>
-                            <td>Switch</td>
-                            <td>Break in line with angle</td>
-                            <td>Opens/closes circuit</td>
-                        </tr>
-                        <tr>
-                            <td>Light Bulb/Lamp</td>
-                            <td>Circle with cross inside</td>
-                            <td>Produces light</td>
-                        </tr>
-                        <tr>
-                            <td>Wire</td>
-                            <td>Straight line</td>
-                            <td>Connects components</td>
-                        </tr>
-                        <tr>
-                            <td>Ammeter</td>
-                            <td>Circle with 'A'</td>
-                            <td>Measures current</td>
-                        </tr>
-                        <tr>
-                            <td>Voltmeter</td>
-                            <td>Circle with 'V'</td>
-                            <td>Measures voltage</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>Types of Circuits</h3>
-
-                <h4>Series Circuit</h4>
-                <p>
-                    In a series circuit, components are connected in a single continuous path. The same current flows
-                    through all components.
-                </p>
-                <div class="key-points">
-                    <ul>
-                        <li>Advantages: Simple design, easy to control</li>
-                        <li>Disadvantages: If one component fails, entire circuit stops</li>
-                        <li>Uses: Decorative lights (older designs), simple models</li>
-                    </ul>
-                </div>
-
-                <h4>Parallel Circuit</h4>
-                <p>
-                    In a parallel circuit, components are arranged in multiple independent paths. Each component has the
-                    same voltage across it.
-                </p>
-                <div class="key-points">
-                    <ul>
-                        <li>Advantages: Each appliance works independently, failure of one doesn't affect others</li>
-                        <li>Disadvantages: More complex wiring required</li>
-                        <li>Uses: Household wiring, electronic devices</li>
-                    </ul>
-                </div>
-
-                <div class="diagram">
-                    <strong>Circuit Diagrams:</strong><br>
-                    Series: Battery — Switch — Resistor — Lamp — (back to Battery)<br>
-                    Parallel: Multiple paths from Battery to different components and back
-                </div>
-
-                <h3>Ammeter and Voltmeter Connection</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Instrument</th>
-                            <th>Measures</th>
-                            <th>Connection</th>
-                            <th>Resistance</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Ammeter</td>
-                            <td>Current (A)</td>
-                            <td>In Series</td>
-                            <td>Very Low (ideally 0Ω)</td>
-                        </tr>
-                        <tr>
-                            <td>Voltmeter</td>
-                            <td>Voltage (V)</td>
-                            <td>In Parallel</td>
-                            <td>Very High (ideally ∞Ω)</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Section 8: Common Mistakes -->
-            <div class="section" id="mistakes">
-                <h2>8. Common Mistakes to Avoid</h2>
-
-                <h3>1. Confusing Current Flow Direction</h3>
-                <p>
-                    Students often mix up conventional current direction and electron flow direction.
-                </p>
-                <div class="tip">
-                    <strong>✓ Remember:</strong> Conventional current flows from positive to negative terminal, while
-                    electrons actually move from negative to positive terminal. Always use conventional current
-                    direction in circuit diagrams.
-                </div>
-
-                <h3>2. Misunderstanding Ohm's Law</h3>
-                <p>
-                    A common mistake is using the wrong formula rearrangement. For example:
-                </p>
-                <div class="important">
-                    <strong>❌ Wrong:</strong> R = V × I<br>
-                    <strong>✓ Correct:</strong> R = V / I
-                </div>
-                <div class="tip">
-                    <strong>💡 Tip:</strong> Use the triangle method. Cover the value you need, and use the remaining
-                    values.
-                </div>
-
-                <h3>3. Incorrect Use of Units</h3>
-                <p>
-                    Forgetting SI units is a frequent error. Always convert to standard units before solving problems.
-                </p>
-                <div class="key-points">
-                    <ul>
-                        <li>Current (I): Amperes (A), not milliamperes (mA)</li>
-                        <li>Voltage (V): Volts (V), not millivolts (mV)</li>
-                        <li>Resistance (R): Ohms (Ω), not kilo-ohms (kΩ)</li>
-                        <li>Power (P): Watts (W), not kilowatts (kW)</li>
-                    </ul>
-                </div>
-
-                <h3>4. Confusion Between Series and Parallel Circuits</h3>
-                <div class="comparison">
-                    <div class="comparison-box">
-                        <h4>Series</h4>
-                        <ul>
-                            <li>R<sub>t</sub> = R₁ + R₂ + R₃</li>
-                            <li>Increases resistance</li>
-                            <li>Single path</li>
-                        </ul>
-                    </div>
-                    <div class="comparison-box">
-                        <h4>Parallel</h4>
-                        <ul>
-                            <li>1/R<sub>t</sub> = 1/R₁ + 1/R₂ + 1/R₃</li>
-                            <li>Decreases resistance</li>
-                            <li>Multiple paths</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <h3>5. Forgetting Power Formula Variations</h3>
-                <p>
-                    Power can be calculated using three different formulas depending on what information is available:
-                </p>
-                <div class="key-points">
-                    <ul>
-                        <li>P = V × I (when voltage and current are known)</li>
-                        <li>P = I² × R (when current and resistance are known)</li>
-                        <li>P = V² / R (when voltage and resistance are known)</li>
-                    </ul>
-                </div>
-
-                <h3>6. Temperature Effects on Resistance</h3>
-                <p>
-                    Students often assume resistance remains constant, but it actually changes with temperature.
-                </p>
-                <div class="tip">
-                    <strong>✓ Remember:</strong> In metals, resistance increases with temperature. In semiconductors,
-                    resistance decreases with temperature. Always check if temperature changes are mentioned in the
-                    question.
-                </div>
-
-                <h3>7. Misinterpreting Circuit Diagrams</h3>
-                <div class="key-points">
-                    <ul>
-                        <li>Correctly identify resistors (zig-zag) and batteries (parallel lines)</li>
-                        <li>Recognize open circuits (broken switch) vs. closed circuits (complete path)</li>
-                        <li>Remember that parallel circuits divide current but not voltage</li>
-                        <li>Series circuits divide voltage but not current</li>
-                    </ul>
-                </div>
-
-                <h3>8. Not Checking Answers for Logic</h3>
-                <p>
-                    Always verify if your calculated answer makes sense in the real world.
-                </p>
-                <div class="tip">
-                    <strong>✓ Tip:</strong> If you get negative resistance, zero current, or unrealistic values, rework
-                    the problem. Your answer should be physically possible.
-                </div>
-            </div>
-
-            <div style="margin-top: 40px; padding: 20px; background: #f0f4ff; border-radius: 8px; text-align: center;">
-                <h3 style="color: #667eea; margin-bottom: 15px;">Key Takeaways</h3>
-                <div class="key-points">
-                    <ul style="list-style: none; margin: 0;">
-                        <li>✓ Electricity is the flow of electrons creating current and energy</li>
-                        <li>✓ Ohm's Law: V = I × R connects voltage, current, and resistance</li>
-                        <li>✓ Power = V × I represents rate of energy conversion</li>
-                        <li>✓ Series circuits add resistances; parallel circuits reduce total resistance</li>
-                        <li>✓ Real-world devices use parallel connections for independent operation</li>
-                    </ul>
-                </div>
-            </div>
+        <div class="formula-box">
+            I = Q/t<br>
+            where I = current (Amperes), Q = charge (Coulombs), t = time (seconds)<br>
+            <br>
+            <strong>Direction:</strong> Conventional current flows from positive to negative terminal<br>
+            <strong>Actual flow:</strong> Electrons flow from negative to positive terminal
         </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            <p>📖 <strong>Sarvottam Institute - Physics Notes</strong></p>
-            <p>Class 10 CBSE | Chapter 12: Electricity</p>
-            <p>⚡ Understanding electricity is fundamental to modern physics and everyday technology</p>
-            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">
-                Last Updated: December 2024 | Physics Department
-            </p>
+        <h2>Ohm's Law</h2>
+        <p>At constant temperature, current through a conductor is directly proportional to potential difference and inversely proportional to resistance.</p>
+
+        <div class="formula-box">
+            V = IR<br>
+            where V = potential difference (Volts), I = current (Amperes), R = resistance (Ohms - Ω)<br>
+            <br>
+            <strong>Resistance:</strong> R = ρl/A<br>
+            where ρ = resistivity, l = length, A = cross-sectional area
+        </div>
+
+        <h2>Resistivity and Conductivity</h2>
+        <ul>
+            <li><strong>Resistivity (ρ):</strong> Property of material that opposes current flow. Measured in Ω·m</li>
+            <li><strong>Conductivity (σ):</strong> Ability of material to conduct current. σ = 1/ρ</li>
+            <li><strong>Good Conductors:</strong> Low resistivity (Copper: 1.7×10⁻⁸ Ω·m)</li>
+            <li><strong>Good Insulators:</strong> High resistivity (Glass: 10¹¹ Ω·m)</li>
+        </ul>
+
+        <h2>Effect of Temperature on Resistance</h2>
+        <div class="formula-box">
+            Rₜ = R₀(1 + αΔT)<br>
+            where Rₜ = resistance at temperature T, R₀ = resistance at 0°C, α = temperature coefficient
+        </div>
+
+        <h2>Electrical Power and Energy</h2>
+        <div class="formula-box">
+            <strong>Power:</strong><br>
+            P = VI = I²R = V²/R<br>
+            Unit: Watt (W) = Joule/second<br>
+            <br>
+            <strong>Electrical Energy:</strong><br>
+            W = Pt = VIt<br>
+            Unit: Joule (J) or Kilowatt-hour (kWh)<br>
+            1 kWh = 3.6 × 10⁶ J
+        </div>
+
+        <h2>Joule's Law of Heating</h2>
+        <p>When current flows through a conductor, heat is produced.</p>
+        <div class="formula-box">
+            H = I²Rt<br>
+            where H = heat produced (Joules), I = current, R = resistance, t = time<br>
+            <br>
+            Also: H = Pt = VIt
+        </div>
+
+        <h2>Combination of Resistances</h2>
+        <ul>
+            <li><strong>Series Connection:</strong> Resistances connected one after another
+                <ul style="margin-left: 20px;">
+                    <li>Total Resistance: R_total = R₁ + R₂ + R₃ + ...</li>
+                    <li>Same current through all resistors</li>
+                    <li>Voltages add up</li>
+                </ul>
+            </li>
+            <li><strong>Parallel Connection:</strong> Resistances connected side by side
+                <ul style="margin-left: 20px;">
+                    <li>Total Resistance: 1/R_total = 1/R₁ + 1/R₂ + 1/R₃ + ...</li>
+                    <li>Same voltage across all resistors</li>
+                    <li>Currents add up</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>Electromotive Force (EMF)</h2>
+        <p>EMF is the total energy per unit charge provided by a battery or power source.</p>
+        <div class="formula-box">
+            ε = E/Q<br>
+            where ε = EMF, E = total energy, Q = charge<br>
+            <br>
+            <strong>Terminal Voltage:</strong><br>
+            V = ε - Ir<br>
+            where r = internal resistance of battery
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; background: #f0f4ff; border-radius: 8px; text-align: center;">
+            <h3 style="color: #667eea; margin-bottom: 15px;">Key Takeaways</h3>
+            <ul style="list-style: none; margin: 0;">
+                <li>✓ I = Q/t (Current)</li>
+                <li>✓ V = IR (Ohm's Law)</li>
+                <li>✓ P = VI = I²R (Power)</li>
+                <li>✓ H = I²Rt (Joule's Law)</li>
+                <li>✓ Series: R_total = R₁ + R₂</li>
+                <li>✓ Parallel: 1/R_total = 1/R₁ + 1/R₂</li>
+            </ul>
+            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">CBSE | NCERT | Class X Physics</p>
         </div>
     </div>
 </body>
-
 </html>

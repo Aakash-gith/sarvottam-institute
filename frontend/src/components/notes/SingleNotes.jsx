@@ -1,7 +1,7 @@
 // src/components/SingleNotes.jsx
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, FileText, Play, CheckCircle, BookOpen, Video } from "lucide-react";
+import { ArrowLeft, FileText, Play, CheckCircle, BookOpen, Video, X, Lock } from "lucide-react";
 import { classData, markLectureWatched, markNoteRead } from "../../classData";
 import API from "../../api/axios";
 
@@ -14,6 +14,14 @@ function SingleNotes() {
   const [subjectProgress, setSubjectProgress] = useState(0);
   const [trackedItems, setTrackedItems] = useState({ notes: [], videos: [] });
   const [pendingMarks, setPendingMarks] = useState({ notes: {}, videos: {} });
+
+  // PDF Viewer State
+  const [showPdfModal, setShowPdfModal] = useState(false);
+  const [currentPdfUrl, setCurrentPdfUrl] = useState(null);
+  const [currentPdfTitle, setCurrentPdfTitle] = useState("");
+
+  // Enable security when modal is open
+  useSecurity(showPdfModal);
 
   const currentClass = useMemo(() => {
     if (typeof window !== "undefined") {
@@ -95,6 +103,25 @@ function SingleNotes() {
       loadContent();
     }
   }, [subjectId, currentClass, subject]);
+
+  const handleViewPdf = (url, title) => {
+    // Ensure absolute URL for local files
+    let fileUrl = url;
+    if (fileUrl && !fileUrl.startsWith("http") && !fileUrl.startsWith("blob:")) {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace("/api", "") || "http://localhost:3000";
+      fileUrl = `${baseUrl}${fileUrl.startsWith("/") ? "" : "/"}${fileUrl}`;
+    }
+
+    setCurrentPdfUrl(fileUrl);
+    setCurrentPdfTitle(title);
+    setShowPdfModal(true);
+  };
+
+  const closePdfModal = () => {
+    setShowPdfModal(false);
+    setCurrentPdfUrl(null);
+    setCurrentPdfTitle("");
+  };
 
   if (!subject) {
     return (
@@ -351,14 +378,14 @@ function SingleNotes() {
                   const driveId = getGoogleDriveId(note.fileUrl);
                   const localFile = note.file; // For local PDFs
                   const driveUrl = driveId ? `https://drive.google.com/file/d/${driveId}/view` : null;
-                  const pdfUrl = localFile || driveUrl;
+                  const pdfUrl = localFile || driveUrl || note.fileUrl;
                   const isDone = trackedItems.notes.some(id => String(id) === String(noteId));
                   const isPending = pendingMarks.notes && pendingMarks.notes[noteId];
 
                   return (
                     <div
                       key={noteId}
-                      onClick={() => pdfUrl && window.open(pdfUrl, '_blank')}
+                      onClick={() => pdfUrl && handleViewPdf(pdfUrl, note.title)}
                       className={`bg-white rounded-xl p-4 border transition-all duration-300 hover:shadow-md cursor-pointer group ${isDone ? "border-green-300 bg-green-50/50" : "border-gray-200 hover:border-blue-400"
                         }`}
                     >
@@ -480,8 +507,110 @@ function SingleNotes() {
           )}
         </div>
       </div>
-    </div>
+
+      {/* Secure PDF Viewer Modal */}
+      {showPdfModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-white w-full max-w-5xl h-[90vh] rounded-2xl overflow-hidden flex flex-col shadow-2xl relative">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50 select-none">
+              <div className="flex items-center gap-2 text-gray-700">
+                <Lock size={16} className="text-green-600" />
+                <h3 className="font-semibold truncate max-w-md">{currentPdfTitle}</h3>
+              </div>
+              <button
+                onClick={closePdfModal}
+                className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+              >
+                <X size={24} className="text-gray-500" />
+              </button>
+            </div>
+
+            {/* PDF Container */}
+            <div
+              className="flex-1 relative bg-gray-200 overflow-hidden"
+              onContextMenu={(e) => e.preventDefault()} // Disable right click
+            >
+              {/* Transparent Overlay to discourage dragging/saving */}
+              <div className="absolute inset-0 z-10 bg-transparent" style={{ pointerEvents: 'none' }}></div>
+
+              {/* Dynamic Watermark */}
+              <div className="absolute inset-0 z-20 pointer-events-none flex flex-wrap content-center justify-center overflow-hidden opacity-10 select-none">
+                {Array.from({ length: 6 }).map((_, i) => {
+                  const user = JSON.parse(localStorage.getItem("user") || "{}");
+                  return (
+                    <div key={i} className="w-full flex justify-around my-20 transform -rotate-45">
+                      <span className="text-xl font-medium text-gray-400 whitespace-nowrap">
+                        Issued to: {user.name || "Student"} • {user.phone || user.email || "ID: " + (user._id || "Unknown")}
+                      </span>
+                      <span className="text-xl font-medium text-gray-400 whitespace-nowrap">
+                        Issued to: {user.name || "Student"} • {user.phone || user.email || "ID: " + (user._id || "Unknown")}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <iframe
+                src={`${currentPdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                className="w-full h-full"
+                title="PDF Viewer"
+                style={{ border: 'none' }}
+              />
+            </div>
+
+            {/* Security Footer */}
+            <div className="p-2 bg-gray-900 text-white text-xs text-center select-none">
+              Educational Material • Distributed by Sarvottam Institute • For Personal Use Only
+            </div>
+          </div>
+        </div>
+      )
+      }
+    </div >
   );
 }
+
+// Security Hook for Anti-Screenshot
+const useSecurity = (isActive) => {
+  useEffect(() => {
+    if (!isActive) return;
+
+    const handleKeyDown = (e) => {
+      // Block PrintScreen
+      if (e.key === "PrintScreen") {
+        e.preventDefault();
+        alert("Screenshots are disabled for security reasons.");
+        return;
+      }
+
+      // Block Ctrl+P (Print), Ctrl+S (Save), Ctrl+Shift+S (Snipping Tool shortcut on some OS)
+      if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s" || (e.shiftKey && e.key === "s"))) {
+        e.preventDefault();
+        alert("This action is disabled.");
+        return;
+      }
+    };
+
+    const handleBlur = () => {
+      document.body.style.filter = "blur(10px)";
+    };
+
+    const handleFocus = () => {
+      document.body.style.filter = "none";
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("blur", handleBlur);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("blur", handleBlur);
+      window.removeEventListener("focus", handleFocus);
+      document.body.style.filter = "none"; // Cleanup
+    };
+  }, [isActive]);
+};
 
 export default SingleNotes;

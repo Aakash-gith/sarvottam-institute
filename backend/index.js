@@ -85,10 +85,14 @@ app.use("/api/progress", authMiddleware, progressRoutes);
 app.use("/api/subjectNotes", subjectNotesRoutes); //TODO add admin and auth middleware
 app.use("/api/pyq", pyqRoutes);
 
+const grade10Path = path.join(__dirname, "../grade10");
+const grade9Path = path.join(__dirname, "../grade9");
+
+app.use("/grade10", express.static(grade10Path));
+app.use("/grade9", express.static(grade9Path));
+
 const frontendPath = path.join(__dirname, "../frontend/dist");
 app.use(express.static(frontendPath));
-app.use("/grade10", express.static(path.join(__dirname, "../grade10")));
-app.use("/grade9", express.static(path.join(__dirname, "../grade9")));
 
 // app.get(/.*/, (req, res) => {
 //   res.sendFile(path.join(frontendPath, "index.html"));
@@ -109,3 +113,4 @@ const startServer = async () => {
 };
 
 startServer();
+// Trigger restart

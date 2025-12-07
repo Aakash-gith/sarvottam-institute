@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Chapter 3 Activities – Metals and Non-metals</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --accent-strong: #2563eb;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 4rem;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Layout */
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            transition: transform var(--transition-fast);
+        }
+
+        .back-link:hover {
+            transform: translateX(-3px);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-soft);
+            font-size: 1.1rem;
+        }
+
+        /* Activity Card */
+        .activity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .activity-title h2 {
+            font-size: 1.5rem;
+            color: #f1f5f9;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-number {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-soft);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+        }
+
+        .procedure-list {
+            list-style: none;
+            counter-reset: step;
+        }
+
+        .procedure-list li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        .procedure-list li::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0.1rem;
+            width: 1.4rem;
+            height: 1.4rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .observation-box {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .observation-box strong {
+            display: block;
+            color: #34d399;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .conclusion-box {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .conclusion-box strong {
+            display: block;
+            color: #fbbf24;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .diagram-container {
+            background: #000;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .diagram-container img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .equation {
+            font-family: "JetBrains Mono", monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            color: #93c5fd;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <header>
+            <a href="Chapter-3-Metals-Non-metals.html" class="back-link">&larr; Back to Notes</a>
+            <h1>NCERT Activities</h1>
+            <p class="subtitle">Detailed breakdown of Activity 3.1 to 3.14</p>
+        </header>
+
+        <!-- Activity 3.1 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.1</div>
+                    <h2>Metallic Lustre</h2>
+                </div>
+                <span class="tag">Physical Property</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Take samples of Iron, Copper, Aluminium, and Magnesium.</li>
+                        <li>Note the appearance of each sample.</li>
+                        <li>Clean the surface of each sample by rubbing them with sand paper and note their appearance
+                            again.</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p>The metals appear dull initially due to oxide layers. After rubbing with sandpaper, they
+                            become shiny and reflective.</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Metals, in their pure state, have a shining surface. This property is called <strong>Metallic
+                                Lustre</strong>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.2 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.2</div>
+                    <h2>Malleability</h2>
+                </div>
+                <span class="tag">Physical Property</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Take small pieces of Iron, Copper, Aluminium, and Magnesium.</li>
+                        <li>Place the metal on a block of iron and strike it four or five times with a hammer.</li>
+                        <li>Observe the change in the shape of these metals.</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p>The metals flatten into thin sheets without breaking.</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Metals can be beaten into thin sheets. This property is called <strong>Malleability</strong>.
+                            Gold and Silver are the most malleable metals.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.3 & 3.4 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.3 & 3.4</div>
+                    <h2>Hardness & Ductility</h2>
+                </div>
+                <span class="tag">Physical Property</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li><strong>Hardness:</strong> Try to cut metals with a sharp knife. Try cutting Sodium with a
+                            knife.</li>
+                        <li><strong>Ductility:</strong> Consider which metals are available in the form of wires.</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p>Most metals are hard and cannot be cut (Fe, Cu). Sodium (Na) is soft and can be cut easily.
+                            Metals like Cu, Al, Ag can be drawn into wires.</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Metals are generally hard (Exception: Alkali metals). Metals can be drawn into thin wires
+                            (<strong>Ductility</strong>). Gold is the most ductile metal.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.5 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.5</div>
+                    <h2>Thermal Conductivity</h2>
+                </div>
+                <span class="tag">Heat Transfer</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Clamp a metal rod (Aluminium or Copper) on a stand.</li>
+                        <li>Fix a pin to the free end of the rod using wax.</li>
+                        <li>Heat the rod with a burner near the clamped end.</li>
+                        <li>Observe what happens to the wax and the pin.</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p>The heat travels along the rod, melting the wax. The pin falls down. The metal rod does not
+                            melt.</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Metals are good conductors of heat and have high melting points. Silver and Copper are the
+                            best conductors.</p>
+                    </div>
+                </div>
+                <div class="diagram-container">
+                    <img src="images/conductivity_heat_metal.png" alt="Thermal Conductivity Setup">
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.6 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.6</div>
+                    <h2>Electrical Conductivity</h2>
+                </div>
+                <span class="tag">Electricity</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Set up an electric circuit with a battery, bulb, and switch.</li>
+                        <li>Place the metal to be tested between the terminals (clips).</li>
+                        <li>Switch on the current and observe the bulb.</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p>The bulb glows when metals are placed in the circuit.</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Metals are good conductors of electricity.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.8 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.8</div>
+                    <h2>Burning of Metals (Oxides)</h2>
+                </div>
+                <span class="tag">Chemical Property</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Hold a Magnesium ribbon with tongs and burn it.</li>
+                        <li>Collect the ash formed.</li>
+                        <li>Dissolve the ash in water and test with litmus paper.</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p>Magnesium burns with a dazzling white flame. White powder (MgO) is formed. The solution turns
+                            Red Litmus Blue.</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Metals react with oxygen to form Metal Oxides. Metal oxides are generally basic in nature.
+                        </p>
+                        <span class="equation">2Mg + O<sub>2</sub> &rarr; 2MgO</span>
+                    </div>
+                </div>
+                <div class="diagram-container">
+                    <img src="images/magnesium_ribbon_burning.png" alt="Burning Magnesium Ribbon">
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.9 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.9</div>
+                    <h2>Reaction with Oxygen (Reactivity)</h2>
+                </div>
+                <span class="tag">Reactivity Series</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Heat samples of various metals (Al, Cu, Fe, Pb, Mg, Zn, Na) over a flame.</li>
+                        <li>Observe the reaction intensity and flame color.</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p><strong>Na:</strong> Burns vigorously (kept in kerosene).<br><strong>Mg:</strong> Burns with
+                            white flame.<br><strong>Al, Zn, Pb:</strong> Do not burn, form oxide
+                            layer.<br><strong>Fe:</strong> Does not burn, filings burn
+                            vigorously.<br><strong>Cu:</strong> Does not burn, coated with black oxide.</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Metals show different reactivities towards oxygen. Order: Na > Mg > Zn > Fe > Cu.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.10 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.10</div>
+                    <h2>Reaction with Water</h2>
+                </div>
+                <span class="tag">Chemical Property</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Put small pieces of metals in cold water.</li>
+                        <li>If no reaction, put them in hot water.</li>
+                        <li>If still no reaction, treat with steam (using the setup shown).</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p><strong>Na, K:</strong> React violently with cold water (Exothermic).<br><strong>Ca:</strong>
+                            Reacts less violently, floats.<br><strong>Mg:</strong> Reacts with hot water,
+                            floats.<br><strong>Al, Fe, Zn:</strong> React only with steam.</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Metals react with water to form Metal Oxide/Hydroxide and Hydrogen. Reactivity decreases from
+                            K to Fe.</p>
+                    </div>
+                </div>
+                <div class="diagram-container">
+                    <img src="images/steam_action_on_metal.png" alt="Action of Steam on Metal">
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.11 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.11</div>
+                    <h2>Reaction with Acids</h2>
+                </div>
+                <span class="tag">Chemical Property</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Collect metals (Mg, Al, Zn, Fe, Cu).</li>
+                        <li>Add dilute Hydrochloric Acid (HCl) to test tubes containing metals.</li>
+                        <li>Observe the rate of bubble formation (Hydrogen gas).</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p><strong>Mg:</strong> Vigorous bubbling (Fastest).<br><strong>Al, Zn, Fe:</strong> Rate
+                            decreases in this order.<br><strong>Cu:</strong> No bubbles (No reaction).</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Metals react with dilute acids to give Salt + Hydrogen. Cu is less reactive than Hydrogen.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.12 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.12</div>
+                    <h2>Displacement Reaction</h2>
+                </div>
+                <span class="tag">Reactivity Series</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Take a clean Copper wire and an Iron nail.</li>
+                        <li>Put Copper wire in Iron Sulphate solution and Iron nail in Copper Sulphate solution.</li>
+                        <li>Observe after 20 minutes.</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p>In the test tube with Iron nail + CuSO<sub>4</sub>, the blue color fades to green
+                            (FeSO<sub>4</sub>) and a brown coating (Cu) forms on the nail. No change in the other tube.
+                        </p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Iron is more reactive than Copper and displaces it from its salt solution.</p>
+                        <span class="equation">Fe(s) + CuSO<sub>4</sub>(aq) &rarr; FeSO<sub>4</sub>(aq) + Cu(s)</span>
+                    </div>
+                </div>
+                <div class="diagram-container">
+                    <img src="images/iron_nails_copper_sulphate.png" alt="Iron Nail in Copper Sulphate">
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.13 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.13</div>
+                    <h2>Properties of Ionic Compounds</h2>
+                </div>
+                <span class="tag">Ionic Bonding</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Take samples of NaCl, KCl, BaCl<sub>2</sub>.</li>
+                        <li>Heat a small amount on a spatula.</li>
+                        <li>Dissolve in water.</li>
+                        <li>Test electrical conductivity in solution.</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p>They have high melting points (do not melt easily). They are soluble in water. Their
+                            solutions conduct electricity (bulb glows).</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Ionic compounds are hard solids, have high MP/BP, are soluble in water, and conduct
+                            electricity in aqueous state.</p>
+                    </div>
+                </div>
+                <div class="diagram-container">
+                    <img src="images/ionic_bond_formation.png" alt="Ionic Bond Formation">
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 3.14 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 3.14</div>
+                    <h2>Corrosion</h2>
+                </div>
+                <span class="tag">Degradation</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="section-title">Procedure</div>
+                    <ol class="procedure-list">
+                        <li>Take 3 test tubes with Iron nails.</li>
+                        <li><strong>A:</strong> Water + Air.</li>
+                        <li><strong>B:</strong> Boiled water + Oil (No Air).</li>
+                        <li><strong>C:</strong> Anhydrous CaCl<sub>2</sub> (Dry Air).</li>
+                        <li>Leave for a few days.</li>
+                    </ol>
+                    <div class="observation-box">
+                        <strong>Observation</strong>
+                        <p>Nails rust only in test tube A. Nails in B and C do not rust.</p>
+                    </div>
+                    <div class="conclusion-box">
+                        <strong>Conclusion</strong>
+                        <p>Both <strong>Air (Oxygen)</strong> and <strong>Moisture (Water)</strong> are essential for
+                            rusting of iron.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

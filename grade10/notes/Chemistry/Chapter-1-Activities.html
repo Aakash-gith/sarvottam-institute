@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>NCERT Activities – Chemical Reactions and Equations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --accent: #3b82f6;
+            /* Blue for Chemistry */
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --accent-strong: #2563eb;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+            border-radius: var(--radius-lg);
+        }
+
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(14px);
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.9));
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+            margin-bottom: 2rem;
+        }
+
+        .nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0.8rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            transition: color var(--transition-fast);
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .page-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #e5e7eb;
+        }
+
+        /* Activity Card */
+        .activity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .activity-number {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-title {
+            font-size: 1.8rem;
+            line-height: 1.2;
+            color: #f1f5f9;
+        }
+
+        .activity-type {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-content {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-content ul,
+        .section-content ol {
+            padding-left: 1.2rem;
+        }
+
+        .section-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .observation-box {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 1.2rem;
+            border-radius: var(--radius-lg);
+            color: #d1fae5;
+        }
+
+        .observation-box strong {
+            color: #34d399;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .equation-box {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: "JetBrains Mono", monospace;
+            color: #93c5fd;
+            border: 1px solid #1e293b;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .visual-container {
+            background: #0f172a;
+            border: 1px dashed #334155;
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .visual-container img {
+            max-height: 300px;
+            object-fit: contain;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-soft);
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <header>
+            <div class="nav-inner">
+                <a href="Chapter-1-Chemical-Reactions.html" class="back-link">
+                    &larr; Back to Notes
+                </a>
+                <div class="page-title">NCERT Lab Activities</div>
+                <div style="width: 80px;"></div> <!-- Spacer -->
+            </div>
+        </header>
+
+        <main>
+            <!-- Activity 1.1 -->
+            <div class="activity-card" id="act-1.1">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.1</div>
+                        <h2 class="activity-title">Burning of Magnesium Ribbon</h2>
+                    </div>
+                    <span class="activity-type">Combination Reaction</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To study the reaction of Magnesium with Oxygen (burning in air).</p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Clean a magnesium ribbon about 2 cm long by rubbing it with sandpaper (to remove the
+                                    oxide layer).</li>
+                                <li>Hold it with a pair of tongs.</li>
+                                <li>Burn it using a spirit lamp or burner.</li>
+                                <li>Collect the ash formed in a watch-glass.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <img src="images/magnesium_burning.png" alt="Magnesium Burning">
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>Magnesium burns with a <strong>dazzling white flame</strong> and changes into a white powder.
+                        This powder is <strong>Magnesium Oxide</strong>.</p>
+                    <div class="equation-box">2Mg(s) + O<sub>2</sub>(g) &rarr; 2MgO(s)</div>
+                </div>
+            </div>
+
+            <!-- Activity 1.2 -->
+            <div class="activity-card" id="act-1.2">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.2</div>
+                        <h2 class="activity-title">Lead Nitrate & Potassium Iodide</h2>
+                    </div>
+                    <span class="activity-type">Double Displacement</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To observe the reaction between Lead Nitrate and Potassium Iodide
+                            solutions.</p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Take Lead Nitrate solution in a test tube.</li>
+                                <li>Add Potassium Iodide solution to this.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <img src="images/lead_iodide_precipitate.png" alt="Yellow Precipitate">
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>A <strong>yellow precipitate</strong> of Lead Iodide (PbI<sub>2</sub>) is formed immediately.
+                        This is a precipitation reaction.</p>
+                    <div class="equation-box">Pb(NO<sub>3</sub>)<sub>2</sub>(aq) + 2KI(aq) &rarr; PbI<sub>2</sub>(s) +
+                        2KNO<sub>3</sub>(aq)</div>
+                </div>
+            </div>
+
+            <!-- Activity 1.3 -->
+            <div class="activity-card" id="act-1.3">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.3</div>
+                        <h2 class="activity-title">Zinc Granules & Acid</h2>
+                    </div>
+                    <span class="activity-type">Displacement / Exothermic</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To observe the reaction of Zinc with dilute Sulphuric Acid or
+                            Hydrochloric Acid.</p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Take a few zinc granules in a conical flask.</li>
+                                <li>Add dilute Hydrochloric Acid or Sulphuric Acid.</li>
+                                <li>Touch the conical flask.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <img src="images/zinc_acid_reaction.png" alt="Zinc and Acid">
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>Bubbles of <strong>Hydrogen gas</strong> are evolved. The flask becomes <strong>hot</strong>,
+                        indicating an exothermic reaction.</p>
+                    <div class="equation-box">Zn(s) + H<sub>2</sub>SO<sub>4</sub>(aq) &rarr; ZnSO<sub>4</sub>(aq) +
+                        H<sub>2</sub>(g)</div>
+                </div>
+            </div>
+
+            <!-- Activity 1.4 -->
+            <div class="activity-card" id="act-1.4">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.4</div>
+                        <h2 class="activity-title">Formation of Slaked Lime</h2>
+                    </div>
+                    <span class="activity-type">Combination / Exothermic</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To observe the reaction between Calcium Oxide (Quick Lime) and Water.
+                        </p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Take a small amount of Calcium Oxide in a beaker.</li>
+                                <li>Slowly add water to it.</li>
+                                <li>Touch the beaker.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <div style="color: #64748b; font-style: italic;">(Visual: Beaker releasing steam)</div>
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>Calcium Oxide reacts vigorously with water to produce Calcium Hydroxide (Slaked Lime) releasing a
+                        large amount of heat (Exothermic).</p>
+                    <div class="equation-box">CaO(s) + H<sub>2</sub>O(l) &rarr; Ca(OH)<sub>2</sub>(aq) + Heat</div>
+                </div>
+            </div>
+
+            <!-- Activity 1.5 -->
+            <div class="activity-card" id="act-1.5">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.5</div>
+                        <h2 class="activity-title">Heating Ferrous Sulphate</h2>
+                    </div>
+                    <span class="activity-type">Thermal Decomposition</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To observe the decomposition of Ferrous Sulphate crystals.</p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Take about 2g ferrous sulphate crystals in a dry boiling tube.</li>
+                                <li>Note the colour (Green).</li>
+                                <li>Heat the boiling tube over a burner.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <div style="color: #64748b; font-style: italic;">(Visual: Green crystals turning brown)</div>
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>The green colour changes to reddish-brown (Ferric Oxide). A characteristic smell of burning
+                        sulphur is observed (SO<sub>2</sub> and SO<sub>3</sub> gases).</p>
+                    <div class="equation-box">2FeSO<sub>4</sub>(s) &rarr; Fe<sub>2</sub>O<sub>3</sub>(s) +
+                        SO<sub>2</sub>(g) + SO<sub>3</sub>(g)</div>
+                </div>
+            </div>
+
+            <!-- Activity 1.6 -->
+            <div class="activity-card" id="act-1.6">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.6</div>
+                        <h2 class="activity-title">Heating Lead Nitrate</h2>
+                    </div>
+                    <span class="activity-type">Thermal Decomposition</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To observe the decomposition of Lead Nitrate powder.</p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Take about 2g lead nitrate powder in a boiling tube.</li>
+                                <li>Hold it with tongs and heat it over a flame.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <div style="color: #64748b; font-style: italic;">(Visual: Brown fumes evolving)</div>
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>Emission of <strong>brown fumes</strong> of Nitrogen Dioxide (NO<sub>2</sub>). A yellow residue
+                        of Lead Oxide (PbO) is left.</p>
+                    <div class="equation-box">2Pb(NO<sub>3</sub>)<sub>2</sub>(s) &rarr; 2PbO(s) + 4NO<sub>2</sub>(g) +
+                        O<sub>2</sub>(g)</div>
+                </div>
+            </div>
+
+            <!-- Activity 1.7 -->
+            <div class="activity-card" id="act-1.7">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.7</div>
+                        <h2 class="activity-title">Electrolysis of Water</h2>
+                    </div>
+                    <span class="activity-type">Electrolytic Decomposition</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To decompose water into Hydrogen and Oxygen using electricity.</p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Take a plastic mug, drill two holes, insert carbon electrodes.</li>
+                                <li>Fill with water, add drops of H<sub>2</sub>SO<sub>4</sub>.</li>
+                                <li>Connect to 6V battery.</li>
+                                <li>Collect gas in inverted test tubes.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <img src="images/electrolysis_water.png" alt="Electrolysis">
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>Bubbles form at both electrodes. The volume of gas at the cathode (Hydrogen) is
+                        <strong>double</strong> that at the anode (Oxygen).</p>
+                    <div class="equation-box">2H<sub>2</sub>O(l) &rarr; 2H<sub>2</sub>(g) + O<sub>2</sub>(g)</div>
+                </div>
+            </div>
+
+            <!-- Activity 1.8 -->
+            <div class="activity-card" id="act-1.8">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.8</div>
+                        <h2 class="activity-title">Silver Chloride in Sunlight</h2>
+                    </div>
+                    <span class="activity-type">Photolytic Decomposition</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To observe the effect of sunlight on Silver Chloride.</p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Take about 2g silver chloride in a china dish.</li>
+                                <li>Place it in sunlight for some time.</li>
+                                <li>Observe the colour change.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <img src="images/silver_chloride_sunlight.png" alt="Silver Chloride">
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>White silver chloride turns <strong>grey</strong> in sunlight. This is due to the decomposition
+                        of silver chloride into silver and chlorine by light.</p>
+                    <div class="equation-box">2AgCl(s) &rarr; 2Ag(s) + Cl<sub>2</sub>(g)</div>
+                </div>
+            </div>
+
+            <!-- Activity 1.9 -->
+            <div class="activity-card" id="act-1.9">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.9</div>
+                        <h2 class="activity-title">Iron Nail in Copper Sulphate</h2>
+                    </div>
+                    <span class="activity-type">Displacement Reaction</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To compare the reactivity of Iron and Copper.</p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Take three iron nails and clean them.</li>
+                                <li>Take Copper Sulphate solution (blue) in a test tube.</li>
+                                <li>Dip two nails in the solution for 20 mins.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <img src="images/iron_copper_sulphate.png" alt="Iron Displacement">
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>The blue colour of the solution fades to <strong>pale green</strong> (Ferrous Sulphate). A
+                        <strong>brownish coating</strong> (Copper) deposits on the iron nail. Iron is more reactive than
+                        Copper.</p>
+                    <div class="equation-box">Fe(s) + CuSO<sub>4</sub>(aq) &rarr; FeSO<sub>4</sub>(aq) + Cu(s)</div>
+                </div>
+            </div>
+
+            <!-- Activity 1.10 -->
+            <div class="activity-card" id="act-1.10">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.10</div>
+                        <h2 class="activity-title">Double Displacement Reaction</h2>
+                    </div>
+                    <span class="activity-type">Precipitation</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To observe the reaction between Sodium Sulphate and Barium Chloride.
+                        </p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Take Sodium Sulphate solution in a test tube.</li>
+                                <li>Take Barium Chloride solution in another test tube.</li>
+                                <li>Mix the two solutions.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <div style="color: #64748b; font-style: italic;">(Visual: White precipitate forming)</div>
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>A <strong>white precipitate</strong> of Barium Sulphate is formed. This is a double displacement
+                        reaction.</p>
+                    <div class="equation-box">Na<sub>2</sub>SO<sub>4</sub>(aq) + BaCl<sub>2</sub>(aq) &rarr;
+                        BaSO<sub>4</sub>(s) + 2NaCl(aq)</div>
+                </div>
+            </div>
+
+            <!-- Activity 1.11 -->
+            <div class="activity-card" id="act-1.11">
+                <div class="activity-header">
+                    <div>
+                        <div class="activity-number">Activity 1.11</div>
+                        <h2 class="activity-title">Oxidation of Copper</h2>
+                    </div>
+                    <span class="activity-type">Oxidation</span>
+                </div>
+                <div class="activity-grid">
+                    <div>
+                        <div class="section-title">Aim</div>
+                        <p class="section-content">To study the oxidation of copper.</p>
+
+                        <div class="section-title">Procedure</div>
+                        <div class="section-content">
+                            <ol>
+                                <li>Heat a china dish containing about 1g copper powder.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <div style="color: #64748b; font-style: italic;">(Visual: Copper turning black)</div>
+                    </div>
+                </div>
+                <div class="observation-box">
+                    <strong>Observation & Conclusion</strong>
+                    <p>The surface of copper powder becomes coated with a <strong>black substance</strong> (Copper(II)
+                        Oxide). This is because oxygen is added to copper.</p>
+                    <div class="equation-box">2Cu + O<sub>2</sub> &rarr; 2CuO</div>
+                </div>
+            </div>
+
+        </main>
+
+        <footer>
+            &copy; Sarvottam Institute - Class 10 Chemistry
+        </footer>
+    </div>
+</body>
+
+</html>

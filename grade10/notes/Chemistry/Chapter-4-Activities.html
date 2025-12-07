@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Chapter 4 Activities – Carbon and its Compounds</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --accent: #8b5cf6;
+            --accent-soft: rgba(139, 92, 246, 0.15);
+            --accent-strong: #7c3aed;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 4rem;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Layout */
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            transition: transform var(--transition-fast);
+        }
+
+        .back-link:hover {
+            transform: translateX(-3px);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-soft);
+            font-size: 1.1rem;
+        }
+
+        /* Activity Card */
+        .activity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .activity-title h2 {
+            font-size: 1.5rem;
+            color: #f1f5f9;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-number {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            background: rgba(139, 92, 246, 0.1);
+            color: #a78bfa;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-soft);
+            margin: 1.2rem 0 0.8rem 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .procedure-list {
+            list-style: none;
+            counter-reset: step;
+        }
+
+        .procedure-list li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        .procedure-list li::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0.1rem;
+            width: 1.4rem;
+            height: 1.4rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .observation-box {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .observation-box strong {
+            display: block;
+            color: #34d399;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .conclusion-box {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .conclusion-box strong {
+            display: block;
+            color: #fbbf24;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .equation {
+            font-family: "JetBrains Mono", monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.4rem 0.7rem;
+            border-radius: 6px;
+            color: #c4b5fd;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .diagram-placeholder {
+            width: 100%;
+            min-height: 200px;
+            background: #0f172a;
+            border: 1px dashed #334155;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .diagram-placeholder img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <header>
+            <a href="Chapter-4-Carbon.html" class="back-link">&larr; Back to Notes</a>
+            <h1>NCERT Activities</h1>
+            <p class="subtitle">Detailed breakdown of practical activities from Chapter 4</p>
+        </header>
+
+        <!-- Activity 4.1 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.1</div>
+                    <h2>Properties of Covalent Compounds</h2>
+                </div>
+                <span class="tag">Physical Properties</span>
+            </div>
+            <div>
+                <div class="section-title">🧪 Procedure</div>
+                <ol class="procedure-list">
+                    <li>Take samples of sugar, salt (NaCl), and naphthalene balls.</li>
+                    <li>Heat small quantities of each on separate spoons.</li>
+                    <li>Note the melting behavior and temperature.</li>
+                    <li>Test their solubility in water and kerosene separately.</li>
+                </ol>
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p>Sugar and naphthalene melt easily at low temperature. Salt requires very high temperature.
+                        Sugar dissolves in water but not in kerosene. Naphthalene dissolves in kerosene but not in
+                        water.</p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Covalent compounds (sugar, naphthalene) have low melting points due to weak intermolecular
+                        forces.
+                        Ionic compounds (salt) have high melting points due to strong electrostatic attractions.</p>
+                    <p style="margin-top: 0.8rem; font-size: 0.9rem;"><strong>Solubility Rule:</strong> "Like dissolves
+                        like" -
+                        Polar compounds dissolve in polar solvents (water), non-polar in non-polar solvents (kerosene).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 4.2 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.2</div>
+                    <h2>Versatility of Carbon - Saturated Compounds</h2>
+                </div>
+                <span class="tag">Structural Models</span>
+            </div>
+            <div>
+                <div class="section-title">🔬 Procedure</div>
+                <ol class="procedure-list">
+                    <li>Build ball-and-stick models of methane (CH₄), ethane (C₂H₆), and propane (C₃H₈).</li>
+                    <li>Observe the tetrahedral arrangement around each carbon atom.</li>
+                    <li>Note the increasing chain length with each successive member.</li>
+                </ol>
+
+                <div class="diagram-placeholder">
+                    <span style="font-size: 2rem;">📐 Molecular Models</span>
+                </div>
+
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p>Each carbon forms 4 single bonds at 109.5° angles. Models show 3D tetrahedral geometry.
+                        Chains can extend indefinitely by adding CH₂ units.</p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Carbon's tetravalency and strong C–C bonds allow formation of long saturated chains (alkanes).
+                    </p>
+                    <p style="margin-top: 0.8rem;"><strong>Molecular Formulas:</strong></p>
+                    <span class="equation">CH₄ (Methane - 1 carbon)</span><br>
+                    <span class="equation">C₂H₆ (Ethane - 2 carbons)</span><br>
+                    <span class="equation">C₃H₈ (Propane - 3 carbons)</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8; margin-top: 0.5rem; display: block;">
+                        General formula: CₙH₂ₙ₊₂
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 4.3 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.3</div>
+                    <h2>Unsaturated Compounds - Multiple Bonds</h2>
+                </div>
+                <span class="tag">Structural Models</span>
+            </div>
+            <div>
+                <div class="section-title">🔬 Procedure</div>
+                <ol class="procedure-list">
+                    <li>Build models of ethene (C₂H₄) using double bonds.</li>
+                    <li>Build models of ethyne (C₂H₂) using triple bonds.</li>
+                    <li>Use two/three sticks to represent multiple bonds.</li>
+                    <li>Compare hydrogen count with saturated compounds.</li>
+                </ol>
+
+                <div class="diagram-placeholder">
+                    <span style="font-size: 2rem;">🔗 Double & Triple Bonds</span>
+                </div>
+
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p>Ethene has C=C double bond (2 shared electron pairs). Ethyne has C≡C triple bond (3 shared
+                        pairs).
+                        Both have fewer hydrogen atoms than saturated compounds with same carbon count.</p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Unsaturated compounds contain multiple bonds (double/triple) between carbon atoms.</p>
+                    <p style="margin-top: 0.8rem;"><strong>Structures:</strong></p>
+                    <span class="equation">C₂H₄: CH₂=CH₂ (Ethene - Alkene)</span><br>
+                    <span class="equation">C₂H₂: HC≡CH (Ethyne - Alkyne)</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8; margin-top: 0.5rem; display: block;">
+                        Alkenes: CₙH₂ₙ | Alkynes: CₙH₂ₙ₋₂
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 4.4 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.4</div>
+                    <h2>Combustion - Clean vs Sooty Flame</h2>
+                </div>
+                <span class="tag">Chemical Reaction</span>
+            </div>
+            <div>
+                <div class="section-title">🔥 Procedure</div>
+                <ol class="procedure-list">
+                    <li>Light a candle and observe the different flame zones.</li>
+                    <li>Hold a clean glass plate in the yellow luminous zone (middle part).</li>
+                    <li>Hold another clean plate in the blue non-luminous zone (outer part).</li>
+                    <li>Observe and compare the deposits on both plates.</li>
+                </ol>
+
+                <div class="diagram-placeholder">
+                    <span style="font-size: 2rem;">🕯️ Candle Flame Zones</span>
+                </div>
+
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p>Plate held in luminous zone gets covered with black soot (carbon particles).
+                        Plate in outer blue zone remains clean. Luminous zone is yellow/bright, outer zone is
+                        blue/transparent.</p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Incomplete combustion (limited O₂) in luminous zone produces carbon black (soot).
+                        Complete combustion in outer zone produces CO₂ and is clean.</p>
+                    <p style="margin-top: 0.8rem;"><strong>Chemical Equations:</strong></p>
+                    <span class="equation">CH₄ + 2O₂ → CO₂ + 2H₂O + Heat (Complete)</span><br>
+                    <span class="equation">2CH₄ + 3O₂ → 2CO + 4H₂O + C (Incomplete)</span><br>
+                    <span class="equation">C + O₂ → CO₂ (Carbon oxidation)</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8; margin-top: 0.5rem; display: block;">
+                        In limited air: Incomplete combustion → C (soot) + CO (poisonous)
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 4.5 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.5</div>
+                    <h2>Oxidation of Ethanol</h2>
+                </div>
+                <span class="tag">Oxidation Reaction</span>
+            </div>
+            <div>
+                <div class="section-title">⚗️ Procedure</div>
+                <ol class="procedure-list">
+                    <li>Take 3 ml ethanol (C₂H₅OH) in a test tube.</li>
+                    <li>Add 2-3 drops of alkaline potassium permanganate (KMnO₄) solution.</li>
+                    <li>Warm the test tube gently in a water bath.</li>
+                    <li>Observe color change and smell carefully.</li>
+                </ol>
+
+                <div class="diagram-placeholder">
+                    <span style="font-size: 2rem;">🧪 Oxidation Setup</span>
+                </div>
+
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p>Purple color of KMnO₄ gradually disappears or fades.
+                        A sharp, pungent vinegar-like smell develops (characteristic of ethanoic acid).</p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Ethanol is oxidized to ethanoic acid (acetic acid) by alkaline KMnO₄ which acts as an oxidizing
+                        agent.</p>
+                    <p style="margin-top: 0.8rem;"><strong>Chemical Equation:</strong></p>
+                    <span class="equation">CH₃CH₂OH + 2[O] → CH₃COOH + H₂O</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8;">Ethanol + Oxidizing agent → Ethanoic acid +
+                        Water</span><br>
+                    <span class="equation" style="margin-top: 0.5rem;">Alternatively: C₂H₅OH → CH₃COOH</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 4.6 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.6</div>
+                    <h2>Reaction of Ethanol with Sodium</h2>
+                </div>
+                <span class="tag">Chemical Property</span>
+            </div>
+            <div>
+                <div class="section-title">🔬 Procedure</div>
+                <ol class="procedure-list">
+                    <li>Take 2 ml ethanol in a DRY test tube (moisture-free).</li>
+                    <li>Add a small piece of sodium metal carefully (CAUTION: Reactive!).</li>
+                    <li>Observe the reaction and collect gas evolved.</li>
+                    <li>Test the gas by bringing a burning splinter near it.</li>
+                </ol>
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p>Brisk effervescence (rapid bubble formation). Sodium piece floats and gradually disappears.
+                        Gas collected burns with a characteristic "pop" sound (hydrogen test positive).</p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Ethanol reacts with sodium to produce sodium ethoxide and hydrogen gas.
+                        This confirms the presence of –OH group (similar to water's reaction with Na).</p>
+                    <p style="margin-top: 0.8rem;"><strong>Chemical Equation:</strong></p>
+                    <span class="equation">2C₂H₅OH + 2Na → 2C₂H₅ONa + H₂↑</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8;">
+                        Ethanol + Sodium → Sodium ethoxide + Hydrogen
+                    </span><br>
+                    <p style="margin-top: 0.8rem; font-size: 0.9rem; color: #cbd5e1;">
+                        <strong>Test:</strong> Gas burns with pop sound → confirms H₂<br>
+                        <strong>Comparison:</strong> 2H₂O + 2Na → 2NaOH + H₂ (similar reaction)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 4.7 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.7</div>
+                    <h2>Esterification Reaction</h2>
+                </div>
+                <span class="tag">Important Reaction</span>
+            </div>
+            <div>
+                <div class="section-title">🧪 Procedure</div>
+                <ol class="procedure-list">
+                    <li>Mix 1 ml ethanol and 1 ml glacial acetic acid in a test tube.</li>
+                    <li>Add 2-3 drops of concentrated sulphuric acid (H₂SO₄) as catalyst.</li>
+                    <li>Warm the mixture in a water bath (60-70°C) for 5-10 minutes.</li>
+                    <li>Pour the contents into a beaker containing sodium bicarbonate solution.</li>
+                    <li>Smell carefully by wafting (don't inhale directly).</li>
+                </ol>
+
+                <div class="diagram-placeholder">
+                    <span style="font-size: 2rem;">⚗️ Esterification Setup</span>
+                </div>
+
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p>A sweet, pleasant fruity smell develops (like nail polish remover, pear drops, or banana
+                        essence).
+                        The smell intensifies after pouring into NaHCO₃ solution.</p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Ethanol reacts with ethanoic acid to form ethyl acetate (an ester) and water.
+                        Concentrated H₂SO₄ acts as both catalyst and dehydrating agent (removes water to drive reaction
+                        forward).</p>
+                    <p style="margin-top: 0.8rem;"><strong>Chemical Equation:</strong></p>
+                    <span class="equation">CH₃COOH + C₂H₅OH ⇌[Conc. H₂SO₄] CH₃COOC₂H₅ + H₂O</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8;">
+                        Ethanoic acid + Ethanol ⇌ Ethyl acetate (Ester) + Water
+                    </span><br>
+                    <p style="margin-top: 0.8rem; font-size: 0.9rem; color: #cbd5e1;">
+                        <strong>Uses:</strong> Esters are used in perfumes, flavoring agents, and solvents.<br>
+                        <strong>Note:</strong> This is a reversible reaction (equilibrium ⇌)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 4.8 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.8</div>
+                    <h2>Reaction of Ethanoic Acid with Base</h2>
+                </div>
+                <span class="tag">Acid-Base Reaction</span>
+            </div>
+            <div>
+                <div class="section-title">⚗️ Procedure</div>
+                <ol class="procedure-list">
+                    <li>Take 2 ml dilute ethanoic acid (acetic acid) in a test tube.</li>
+                    <li>Add a few drops of sodium hydroxide (NaOH) solution drop by drop.</li>
+                    <li>Touch the test tube exterior and note any temperature change.</li>
+                    <li>Test the final solution with litmus paper.</li>
+                </ol>
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p>Test tube becomes warm to touch (exothermic reaction). No visible gas evolution.
+                        Solution becomes neutral when tested with litmus (turns neither red nor blue).</p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Ethanoic acid reacts with sodium hydroxide to form sodium acetate (salt) and water
+                        through neutralization reaction. Heat is released.</p>
+                    <p style="margin-top: 0.8rem;"><strong>Chemical Equation:</strong></p>
+                    <span class="equation">CH₃COOH + NaOH → CH₃COONa + H₂O + Heat</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8;">
+                        Ethanoic acid + Sodium hydroxide → Sodium acetate (Salt) + Water
+                    </span><br>
+                    <p style="margin-top: 0.8rem; font-size: 0.9rem; color: #cbd5e1;">
+                        <strong>General form:</strong> Acid + Base → Salt + Water (Neutralization)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 4.9 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.9</div>
+                    <h2>Reaction with Sodium Carbonate</h2>
+                </div>
+                <span class="tag">Acid Property</span>
+            </div>
+            <div>
+                <div class="section-title">🧪 Procedure</div>
+                <ol class="procedure-list">
+                    <li>Take 2 ml dilute ethanoic acid in a test tube.</li>
+                    <li>Add a pinch of sodium carbonate (Na₂CO₃) or bicarbonate (NaHCO₃) powder.</li>
+                    <li>Observe the reaction and collect gas in another tube.</li>
+                    <li>Pass the gas through lime water (Ca(OH)₂) to identify it.</li>
+                </ol>
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p>Brisk effervescence (rapid bubbling) immediately on adding carbonate.
+                        Gas collected turns lime water milky (confirms CO₂). Fizzing sound heard.</p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Ethanoic acid reacts with carbonates/bicarbonates to produce carbon dioxide gas, water, and salt.
+                        This strongly confirms the acidic nature of ethanoic acid.</p>
+                    <p style="margin-top: 0.8rem;"><strong>Chemical Equations:</strong></p>
+                    <span class="equation">2CH₃COOH + Na₂CO₃ → 2CH₃COONa + H₂O + CO₂↑</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8;">With Sodium carbonate</span><br>
+                    <span class="equation" style="margin-top: 0.5rem;">CH₃COOH + NaHCO₃ → CH₃COONa + H₂O +
+                        CO₂↑</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8;">With Sodium bicarbonate</span><br>
+                    <span class="equation" style="margin-top: 0.5rem;">CO₂ + Ca(OH)₂ → CaCO₃↓ + H₂O</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8;">Lime water test (milkiness due to CaCO₃)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 4.10 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.10</div>
+                    <h2>Cleaning Action of Soap - Micelle Formation</h2>
+                </div>
+                <span class="tag">Practical Application</span>
+            </div>
+            <div>
+                <div class="section-title">🧼 Procedure</div>
+                <ol class="procedure-list">
+                    <li>Add 2-3 drops of cooking oil to water in a test tube.</li>
+                    <li>Shake vigorously and observe if oil mixes with water.</li>
+                    <li>Now add 5-6 drops of soap solution to the same tube.</li>
+                    <li>Shake again and observe the mixture.</li>
+                </ol>
+
+                <div class="diagram-placeholder">
+                    <span style="font-size: 2rem;">🫧 Micelle Structure</span>
+                </div>
+
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p>Without soap: Oil and water separate into two layers (oil floats on top).<br>
+                        With soap: Oil disperses into tiny droplets forming a cloudy, milky mixture (emulsion).
+                        Oil doesn't separate even after standing.</p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Soap molecules form spherical structures called <strong>micelles</strong> around oil droplets.
+                        Hydrophobic tails (non-polar) attach to oil inside, hydrophilic heads (polar) face water
+                        outside,
+                        making oil soluble in water and allowing it to be washed away.</p>
+                    <p style="margin-top: 0.8rem; font-size: 0.9rem; color: #cbd5e1;">
+                        <strong>Mechanism:</strong><br>
+                        ① Soap molecules surround oil droplets<br>
+                        ② Form spherical micelles (tail inward, head outward)<br>
+                        ③ Oil trapped inside becomes water-soluble<br>
+                        ④ Micelles wash away with water
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 4.11 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 4.11</div>
+                    <h2>Soap in Hard Water</h2>
+                </div>
+                <span class="tag">Practical Issue</span>
+            </div>
+            <div>
+                <div class="section-title">💧 Procedure</div>
+                <ol class="procedure-list">
+                    <li>Take two test tubes with equal amounts (5 ml) of soap solution.</li>
+                    <li>Add distilled water to tube A.</li>
+                    <li>Add hard water (containing dissolved calcium/magnesium salts) to tube B.</li>
+                    <li>Shake both tubes vigorously and observe lather formation.</li>
+                </ol>
+                <div class="observation-box">
+                    <strong>Observation</strong>
+                    <p><strong>Tube A (Distilled water):</strong> Good, thick lather forms easily.<br>
+                        <strong>Tube B (Hard water):</strong> White curdy precipitate (scum) forms.
+                        Very little or no lather. Solution becomes cloudy.
+                    </p>
+                </div>
+                <div class="conclusion-box">
+                    <strong>Conclusion</strong>
+                    <p>Soap reacts with Ca²⁺/Mg²⁺ ions in hard water to form insoluble calcium/magnesium salts (scum),
+                        reducing cleaning efficiency. Soap is wasted in forming scum.
+                        Detergents do not form scum as their Ca/Mg salts are soluble.</p>
+                    <p style="margin-top: 0.8rem;"><strong>Chemical Equations:</strong></p>
+                    <span class="equation">2C₁₇H₃₅COONa + Ca²⁺ → (C₁₇H₃₅COO)₂Ca↓ + 2Na⁺</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8;">
+                        Soap (Sodium stearate) + Calcium ions → Calcium stearate (Scum) + Sodium ions
+                    </span><br>
+                    <span class="equation" style="margin-top: 0.5rem;">2C₁₇H₃₅COONa + Mg²⁺ → (C₁₇H₃₅COO)₂Mg↓ +
+                        2Na⁺</span><br>
+                    <span style="font-size: 0.85rem; color: #94a3b8;">With Magnesium ions (also forms scum)</span><br>
+                    <p style="margin-top: 0.8rem; font-size: 0.9rem; color: #cbd5e1;">
+                        <strong>Solution:</strong> Use detergents instead - their Ca/Mg salts remain soluble in water,
+                        so they work well even in hard water without forming scum.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

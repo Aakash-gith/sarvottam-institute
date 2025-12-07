@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2 Activities - Acids, Bases and Salts</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #f59e0b;
+            /* Amber for Acids/Bases */
+            --accent-glow: rgba(245, 158, 11, 0.3);
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(to right, #fcd34d, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-title h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .activity-number {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        h3 {
+            font-size: 1rem;
+            color: #fbbf24;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        p,
+        li {
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        ul {
+            padding-left: 1.2rem;
+        }
+
+        .equation {
+            font-family: "JetBrains Mono", monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            color: #93c5fd;
+            display: inline-block;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .observation-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .observation-box strong {
+            color: #fcd34d;
+        }
+
+        .img-container {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-top: 1rem;
+            background: #000;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem;">NCERT Class 10 Science
+                </div>
+                <h1>Lab Activities: Acids, Bases & Salts</h1>
+            </div>
+            <a href="Chapter-2-Acids-Bases.html" class="back-link">&larr; Back to Notes</a>
+        </header>
+
+        <!-- Activity 2.1 -->
+        <div class="activity-card" id="act-2.1">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.1</div>
+                    <h2>Testing with Indicators</h2>
+                </div>
+            </div>
+            <div class="grid-layout">
+                <div>
+                    <h3>Aim</h3>
+                    <p>To test various solutions with Blue/Red Litmus, Phenolphthalein, and Methyl Orange.</p>
+                    <h3>Procedure</h3>
+                    <p>Collect samples of HCl, H<sub>2</sub>SO<sub>4</sub>, HNO<sub>3</sub>, CH<sub>3</sub>COOH, NaOH,
+                        Ca(OH)<sub>2</sub>, KOH, Mg(OH)<sub>2</sub>, and NH<sub>4</sub>OH. Test each with the
+                        indicators.</p>
+                </div>
+                <div>
+                    <h3>Observation Table</h3>
+                    <table style="width:100%; border-collapse:collapse; font-size:0.85rem; color:var(--text-muted);">
+                        <tr style="border-bottom:1px solid var(--border); text-align:left;">
+                            <th style="padding:0.5rem;">Sample</th>
+                            <th style="padding:0.5rem;">Red Litmus</th>
+                            <th style="padding:0.5rem;">Blue Litmus</th>
+                            <th style="padding:0.5rem;">Phenol.</th>
+                            <th style="padding:0.5rem;">M. Orange</th>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:0.5rem;">Acid</td>
+                            <td style="padding:0.5rem;">No Change</td>
+                            <td style="padding:0.5rem; color:#f87171;">Red</td>
+                            <td style="padding:0.5rem;">Colourless</td>
+                            <td style="padding:0.5rem; color:#f87171;">Red</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:0.5rem;">Base</td>
+                            <td style="padding:0.5rem; color:#60a5fa;">Blue</td>
+                            <td style="padding:0.5rem;">No Change</td>
+                            <td style="padding:0.5rem; color:#f472b6;">Pink</td>
+                            <td style="padding:0.5rem; color:#facc15;">Yellow</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.2 -->
+        <div class="activity-card" id="act-2.2">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.2</div>
+                    <h2>Olfactory Indicators</h2>
+                </div>
+            </div>
+            <div>
+                <h3>Aim</h3>
+                <p>To check if smell changes in acidic or basic medium using Onion, Vanilla, and Clove oil.</p>
+                <div class="observation-box">
+                    <strong>Observation:</strong>
+                    <ul>
+                        <li><strong>Acidic Medium:</strong> Smell of onion/vanilla/clove <strong>remains</strong>.</li>
+                        <li><strong>Basic Medium:</strong> Smell <strong>vanishes</strong> (cannot be detected).</li>
+                    </ul>
+                    <p><strong>Conclusion:</strong> These substances can be used as olfactory indicators by visually
+                        impaired students.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.3 & 2.4 -->
+        <div class="activity-card" id="act-2.3">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.3 & 2.4</div>
+                    <h2>Reaction with Metals</h2>
+                </div>
+            </div>
+            <div class="grid-layout">
+                <div>
+                    <h3>Procedure</h3>
+                    <p>Take dilute H<sub>2</sub>SO<sub>4</sub> in a test tube and add Zinc granules. Pass the gas
+                        through soap solution.</p>
+                    <p>Repeat with NaOH solution and Zinc granules (warm it).</p>
+                    <h3>Chemical Equations</h3>
+                    <div class="equation">Zn + H<sub>2</sub>SO<sub>4</sub> &rarr; ZnSO<sub>4</sub> + H<sub>2</sub></div>
+                    <div class="equation">Zn + 2NaOH &rarr; Na<sub>2</sub>ZnO<sub>2</sub> + H<sub>2</sub></div>
+                </div>
+                <div>
+                    <div class="observation-box">
+                        <strong>Observation:</strong>
+                        <p>Bubbles are seen on zinc granules. Gas evolved burns with a <strong>pop sound</strong>.</p>
+                        <strong>Conclusion:</strong>
+                        <p>Metals react with acids and bases to produce Hydrogen gas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.5 -->
+        <div class="activity-card" id="act-2.5">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.5</div>
+                    <h2>Metal Carbonates with Acid</h2>
+                </div>
+            </div>
+            <div class="grid-layout">
+                <div>
+                    <h3>Procedure</h3>
+                    <p>Take Na<sub>2</sub>CO<sub>3</sub> and NaHCO<sub>3</sub> in separate test tubes. Add dilute HCl.
+                        Pass the gas through Lime Water.</p>
+                    <div class="img-container">
+                        <img src="images/lime_water_test_setup.png" alt="Lime Water Test Setup">
+                    </div>
+                </div>
+                <div>
+                    <h3>Reactions</h3>
+                    <div class="equation">Na<sub>2</sub>CO<sub>3</sub> + 2HCl &rarr; 2NaCl + H<sub>2</sub>O +
+                        CO<sub>2</sub></div>
+                    <div class="equation">Ca(OH)<sub>2</sub> + CO<sub>2</sub> &rarr; CaCO<sub>3</sub>(s) +
+                        H<sub>2</sub>O</div>
+                    <div class="observation-box">
+                        <strong>Observation:</strong>
+                        <p>Brisk effervescence is observed. Lime water turns <strong>milky</strong> due to formation of
+                            white precipitate of CaCO<sub>3</sub>.</p>
+                        <p>On passing excess CO<sub>2</sub>, milkiness disappears (forms soluble
+                            Ca(HCO<sub>3</sub>)<sub>2</sub>).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.6 -->
+        <div class="activity-card" id="act-2.6">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.6</div>
+                    <h2>Neutralization Reaction</h2>
+                </div>
+            </div>
+            <div>
+                <h3>Procedure</h3>
+                <p>Take NaOH solution (Pink with Phenolphthalein). Add dilute HCl drop by drop.</p>
+                <div class="observation-box">
+                    <strong>Observation:</strong>
+                    <p>The pink colour disappears when enough acid is added. The solution becomes colourless.</p>
+                    <p>Adding NaOH again makes it pink.</p>
+                    <strong>Conclusion:</strong>
+                    <p>Acid neutralizes the effect of Base.</p>
+                    <div class="equation">NaOH + HCl &rarr; NaCl + H<sub>2</sub>O</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.7 -->
+        <div class="activity-card" id="act-2.7">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.7</div>
+                    <h2>Metal Oxide with Acid</h2>
+                </div>
+            </div>
+            <div>
+                <h3>Procedure</h3>
+                <p>Take Copper Oxide (Black) in a beaker. Add dilute HCl and stir.</p>
+                <div class="observation-box">
+                    <strong>Observation:</strong>
+                    <p>The black oxide dissolves and the solution turns <strong>blue-green</strong>.</p>
+                    <strong>Conclusion:</strong>
+                    <p>Metal oxides are basic in nature.</p>
+                    <div class="equation">CuO + 2HCl &rarr; CuCl<sub>2</sub> (Blue-Green) + H<sub>2</sub>O</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.8 -->
+        <div class="activity-card" id="act-2.8">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.8</div>
+                    <h2>Electrical Conductivity</h2>
+                </div>
+            </div>
+            <div>
+                <h3>Procedure</h3>
+                <p>Connect electrodes to a bulb and battery. Dip in solutions of Glucose, Alcohol, HCl, and NaOH.</p>
+                <div class="observation-box">
+                    <strong>Observation:</strong>
+                    <ul>
+                        <li><strong>Bulb Glows:</strong> HCl, NaOH (Conduct electricity).</li>
+                        <li><strong>Bulb does NOT Glow:</strong> Glucose, Alcohol (Do not conduct).</li>
+                    </ul>
+                    <strong>Conclusion:</strong>
+                    <p>Acids and Bases produce ions (H<sup>+</sup> / OH<sup>-</sup>) in water which conduct electricity.
+                        Glucose/Alcohol do not ionize.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.9 -->
+        <div class="activity-card" id="act-2.9">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.9</div>
+                    <h2>Preparation of HCl Gas</h2>
+                </div>
+            </div>
+            <div>
+                <h3>Procedure</h3>
+                <p>React solid NaCl with Conc. H<sub>2</sub>SO<sub>4</sub>. Test evolved gas with dry and wet blue
+                    litmus paper.</p>
+                <div class="equation">2NaCl + H<sub>2</sub>SO<sub>4</sub> &rarr; Na<sub>2</sub>SO<sub>4</sub> + 2HCl(g)
+                </div>
+                <div class="observation-box">
+                    <strong>Observation:</strong>
+                    <ul>
+                        <li><strong>Dry Litmus:</strong> No colour change.</li>
+                        <li><strong>Wet Litmus:</strong> Turns Red.</li>
+                    </ul>
+                    <strong>Conclusion:</strong>
+                    <p>Acids show acidic properties only in the presence of water (formation of
+                        H<sub>3</sub>O<sup>+</sup> ions).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.10 -->
+        <div class="activity-card" id="act-2.10">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.10</div>
+                    <h2>Dilution of Acid</h2>
+                </div>
+            </div>
+            <div>
+                <h3>Procedure</h3>
+                <p>Take water in a beaker. Add Conc. H<sub>2</sub>SO<sub>4</sub> slowly with stirring. Touch the beaker.
+                </p>
+                <div class="observation-box">
+                    <strong>Observation:</strong>
+                    <p>The beaker becomes hot.</p>
+                    <strong>Conclusion:</strong>
+                    <p>Dilution of acid is a highly <strong>exothermic</strong> process. Always add Acid to Water, never
+                        Water to Acid.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.11 & 2.12 -->
+        <div class="activity-card" id="act-2.11">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.11 & 2.12</div>
+                    <h2>pH of Solutions and Soil</h2>
+                </div>
+            </div>
+            <div>
+                <h3>Procedure</h3>
+                <p>Test pH of saliva, lemon juice, coffee, tomato juice, tap water, NaOH, and HCl using Universal
+                    Indicator.</p>
+                <p>Collect soil sample, dissolve in water, filter, and check pH.</p>
+                <div class="observation-box">
+                    <strong>Conclusion:</strong>
+                    <p>Plants require a specific pH range for healthy growth. If soil is acidic, treat with Quick Lime
+                        (CaO) or Slaked Lime.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.13 & 2.14 -->
+        <div class="activity-card" id="act-2.13">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.13 & 2.14</div>
+                    <h2>Family and pH of Salts</h2>
+                </div>
+            </div>
+            <div>
+                <h3>Procedure</h3>
+                <p>Check formula and pH of various salts: NaCl, KNO<sub>3</sub>, AlCl<sub>3</sub>, ZnSO<sub>4</sub>,
+                    CuSO<sub>4</sub>, CH<sub>3</sub>COONa, Na<sub>2</sub>CO<sub>3</sub>.</p>
+                <div class="observation-box">
+                    <strong>Observation:</strong>
+                    <ul>
+                        <li><strong>Neutral Salts (pH 7):</strong> NaCl, KNO<sub>3</sub> (Strong Acid + Strong Base).
+                        </li>
+                        <li><strong>Acidic Salts (pH < 7):</strong> NH<sub>4</sub>Cl, CuSO<sub>4</sub> (Strong Acid +
+                                    Weak Base).</li>
+                        <li><strong>Basic Salts (pH > 7):</strong> Na<sub>2</sub>CO<sub>3</sub>, CH<sub>3</sub>COONa
+                            (Weak Acid + Strong Base).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 2.15 -->
+        <div class="activity-card" id="act-2.15">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <div class="activity-number">Activity 2.15</div>
+                    <h2>Water of Crystallization</h2>
+                </div>
+            </div>
+            <div class="grid-layout">
+                <div>
+                    <h3>Procedure</h3>
+                    <p>Heat blue crystals of Copper Sulphate in a dry test tube. Observe colour change and water
+                        droplets.</p>
+                    <p>Add 2-3 drops of water to the white powder obtained.</p>
+                    <div class="img-container">
+                        <!-- Placeholder for water_of_crystallization image -->
+                        <img src="images/water_of_crystallization.png" alt="Heating Copper Sulphate"
+                            onerror="this.style.display='none'">
+                        <div style="padding:1rem; text-align:center; color:var(--text-muted); font-size:0.8rem;">
+                            (Diagram: Heating CuSO<sub>4</sub> crystals)</div>
+                    </div>
+                </div>
+                <div>
+                    <h3>Reaction</h3>
+                    <div class="equation">CuSO<sub>4</sub>.5H<sub>2</sub>O (Blue) &rarr; CuSO<sub>4</sub> (White) +
+                        5H<sub>2</sub>O</div>
+                    <div class="observation-box">
+                        <strong>Observation:</strong>
+                        <p>Blue crystals turn <strong>white</strong> on heating. Water droplets appear on test tube
+                            walls.</p>
+                        <p>On adding water, blue colour is restored.</p>
+                        <strong>Conclusion:</strong>
+                        <p>Salts contain fixed number of water molecules (Water of Crystallization).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

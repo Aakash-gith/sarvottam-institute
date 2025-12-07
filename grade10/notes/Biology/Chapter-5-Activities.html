@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Processes - Activities | Sarvottam Institute</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --accent: #10b981;
+            /* Emerald Green */
+            --accent-soft: rgba(16, 185, 129, 0.15);
+            --accent-strong: #059669;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 4rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-soft);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #34d399, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-soft);
+            font-size: 1.1rem;
+        }
+
+        /* Activity Cards */
+        .activity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-number {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .activity-title {
+            font-size: 1.5rem;
+            color: #f1f5f9;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-soft);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .observation-box {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #d1fae5;
+        }
+
+        .observation-box strong {
+            color: #34d399;
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0.5rem;
+        }
+
+        li {
+            position: relative;
+            padding-left: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+        }
+
+        li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        .diagram-placeholder {
+            width: 100%;
+            height: 250px;
+            background: #0f172a;
+            border-radius: var(--radius-lg);
+            border: 1px dashed #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            margin-top: 1.5rem;
+        }
+
+        .diagram-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <a href="Chapter-5-Life-Processes.html" class="back-link">← Back to Notes</a>
+                <h1 style="margin-top: 1rem;">NCERT Activities</h1>
+                <p class="subtitle">Chapter 5: Life Processes</p>
+            </div>
+        </header>
+
+        <!-- Activity 5.1 -->
+        <div class="activity-card" id="activity-5.1">
+            <span class="activity-number">Activity 5.1</span>
+            <h2 class="activity-title">Chlorophyll is Essential for Photosynthesis</h2>
+
+            <div class="section-title">Procedure</div>
+            <ul>
+                <li>Take a potted plant with variegated leaves (e.g., Money plant or Crotons).</li>
+                <li>Keep it in a dark room for 3 days to destarch it.</li>
+                <li>Keep it in sunlight for 6 hours.</li>
+                <li>Pluck a leaf, mark green areas, boil in water, then in alcohol (water bath).</li>
+                <li>Wash and dip in Iodine solution.</li>
+            </ul>
+
+            <div class="observation-box">
+                <strong>Observation & Conclusion</strong>
+                <p>Only the green parts of the leaf (which contained chlorophyll) turn blue-black with iodine. The
+                    non-green parts remain colorless/brown. This proves that <strong>Chlorophyll is necessary for
+                        photosynthesis</strong> (starch formation).</p>
+            </div>
+        </div>
+
+        <!-- Activity 5.2 -->
+        <div class="activity-card" id="activity-5.2">
+            <span class="activity-number">Activity 5.2</span>
+            <h2 class="activity-title">CO₂ is Essential for Photosynthesis</h2>
+
+            <div class="section-title">Procedure</div>
+            <ul>
+                <li>Take two healthy potted plants. Keep in dark for 3 days.</li>
+                <li>Place separate glass plates. Place a watch-glass with Potassium Hydroxide (KOH) near one plant
+                    (Plant A).</li>
+                <li>Cover both with bell jars and seal with vaseline.</li>
+                <li>Keep in sunlight for 2 hours. Test leaves for starch with Iodine.</li>
+            </ul>
+
+            <div class="observation-box">
+                <strong>Observation & Conclusion</strong>
+                <p>Leaf from Plant A (with KOH) does not turn blue-black. Leaf from Plant B turns blue-black. KOH
+                    absorbs CO₂. Lack of starch in Plant A proves that <strong>Carbon Dioxide is necessary for
+                        photosynthesis</strong>.</p>
+            </div>
+        </div>
+
+        <!-- Activity 5.3 -->
+        <div class="activity-card" id="activity-5.3">
+            <span class="activity-number">Activity 5.3</span>
+            <h2 class="activity-title">Action of Saliva on Starch</h2>
+
+            <div class="section-title">Procedure</div>
+            <ul>
+                <li>Take 1ml starch solution in two test tubes (A and B).</li>
+                <li>Add 1ml saliva to tube A. Leave both for 20 mins.</li>
+                <li>Add dilute Iodine solution to both.</li>
+            </ul>
+
+            <div class="observation-box">
+                <strong>Observation & Conclusion</strong>
+                <p>Tube B (Starch only) turns blue-black. Tube A (Starch + Saliva) does NOT turn blue-black. This shows
+                    that saliva contains an enzyme (Salivary Amylase) that breaks down starch into sugar.</p>
+            </div>
+        </div>
+
+        <!-- Activity 5.4 -->
+        <div class="activity-card" id="activity-5.4">
+            <span class="activity-number">Activity 5.4</span>
+            <h2 class="activity-title">CO₂ is Released During Respiration</h2>
+
+            <div class="section-title">Procedure</div>
+            <ul>
+                <li>Take some freshly prepared lime water in a test tube.</li>
+                <li>Blow air into it through a straw.</li>
+                <li>Note how long it takes to turn milky. Compare with air passed via syringe.</li>
+            </ul>
+
+            <div class="observation-box">
+                <strong>Observation & Conclusion</strong>
+                <p>Lime water turns milky much faster when air is blown from the mouth compared to atmospheric air. This
+                    proves that <strong>exhaled air contains a higher percentage of Carbon Dioxide</strong>.</p>
+            </div>
+        </div>
+
+        <!-- Activity 5.5 -->
+        <div class="activity-card" id="activity-5.5">
+            <span class="activity-number">Activity 5.5</span>
+            <h2 class="activity-title">Transpiration in Plants</h2>
+
+            <div class="section-title">Procedure</div>
+            <ul>
+                <li>Take a healthy potted plant and cover a leaf/branch with a plastic bag.</li>
+                <li>Place in sunlight.</li>
+            </ul>
+
+            <div class="observation-box">
+                <strong>Observation & Conclusion</strong>
+                <p>Droplets of water appear on the inner side of the plastic bag. This shows that plants lose water in
+                    the form of vapor through stomata, a process called <strong>Transpiration</strong>.</p>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

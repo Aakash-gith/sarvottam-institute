@@ -65,7 +65,7 @@ export const classData = {
                         icon: "🌿",
                         color: "green",
                         notes: [
-                            { id: 1, title: "Chapter 1 - The Fundamental Unit of Life", file: "/grade9/notes/Biology/Chapter - 1 The_Fundamental_Unit_of_Life.pdf" },
+                            { id: 1, title: "Chapter 1 - The Fundamental Unit of Life", file: "/grade9/notes/Biology/Chapter-1-The-Fundamental-Unit-of-Life.html", isHTML: true },
                             { id: 2, title: "Chapter 2 - Tissues", file: "/grade9/notes/Biology/Chapter - 2 Tissues.pdf" },
                             { id: 3, title: "Chapter 3 - Diversity in Living Organisms", file: "/grade9/notes/Biology/Chapter - 3 Diversity_in_Living_Organisms.pdf" },
                             { id: 4, title: "Chapter 4 - Why Do We Fall Ill", file: "/grade9/notes/Biology/Chapter - 4 Why_Do_We_Fall_Ill.pdf" },
@@ -114,7 +114,7 @@ export const classData = {
                         notes: [
                             { id: 1, title: "Chapter 1 - Chemical Reactions and Equations", file: "/grade10/notes/Chemistry/Chapter-1-Chemical-Reactions.html", isHTML: true },
                             { id: 2, title: "Chapter 2 - Acids, Bases and Salts", file: "/grade10/notes/Chemistry/Chapter-2-Acids-Bases.html", isHTML: true },
-                            { id: 3, title: "Chapter 3 - Metals and Non-metals", file: "/grade10/notes/Chemistry/Chapter-3-Metals-Nonmetals.html", isHTML: true },
+                            { id: 3, title: "Chapter 3 - Metals and Non-metals", file: "/grade10/notes/Chemistry/Chapter-3-Metals-Non-metals.html", isHTML: true },
                             { id: 4, title: "Chapter 4 - Carbon and its Compounds", file: "/grade10/notes/Chemistry/Chapter-4-Carbon.html", isHTML: true },
                         ],
                     },

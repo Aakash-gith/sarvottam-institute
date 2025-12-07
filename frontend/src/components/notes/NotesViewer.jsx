@@ -87,19 +87,19 @@ function NotesViewer() {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
             {/* Top Navigation Bar */}
-            <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+            <div className="sticky top-0 z-50 bg-slate-900 border-b border-slate-800 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => navigate(-1)}
-                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
                         >
-                            <ArrowLeft size={20} className="text-gray-600" />
+                            <ArrowLeft size={20} className="text-slate-400" />
                         </button>
                         <div className="flex items-center gap-2">
-                            <Lock size={16} className="text-green-600" />
+                            <Lock size={16} className="text-green-500" />
                             <div>
-                                <h1 className="text-lg font-bold text-gray-900 line-clamp-1">
+                                <h1 className="text-lg font-bold text-gray-100 line-clamp-1">
                                     {title}
                                 </h1>
                             </div>
@@ -111,7 +111,7 @@ function NotesViewer() {
                             onClick={handleBookmark}
                             className={`p-2 rounded-lg transition-colors ${isBookmarked
                                 ? "bg-amber-100 text-amber-600 hover:bg-amber-200"
-                                : "hover:bg-gray-100 text-gray-600"
+                                : "hover:bg-slate-800 text-gray-400"
                                 }`}
                             title="Bookmark"
                         >
@@ -119,14 +119,14 @@ function NotesViewer() {
                         </button>
                         <button
                             onClick={handleShare}
-                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-600"
+                            className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-gray-400"
                             title="Share"
                         >
                             <Share2 size={20} />
                         </button>
                         <button
                             onClick={handleDownload}
-                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-600"
+                            className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-gray-400"
                             title="Download"
                         >
                             <Download size={20} />
@@ -193,23 +193,10 @@ const useSecurity = (isActive) => {
             }
         };
 
-        const handleBlur = () => {
-            document.body.style.filter = "blur(10px)";
-        };
-
-        const handleFocus = () => {
-            document.body.style.filter = "none";
-        };
-
         window.addEventListener("keydown", handleKeyDown);
-        window.addEventListener("blur", handleBlur);
-        window.addEventListener("focus", handleFocus);
 
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
-            window.removeEventListener("blur", handleBlur);
-            window.removeEventListener("focus", handleFocus);
-            document.body.style.filter = "none"; // Cleanup
         };
     }, [isActive]);
 };

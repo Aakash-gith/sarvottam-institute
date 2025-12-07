@@ -2,176 +2,1189 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 1 - Chemical Reactions and Equations</title>
+    <meta charset="UTF-8" />
+    <title>Chemical Reactions and Equations – Interactive Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --accent: #3b82f6;
+            /* Blue for Chemistry */
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --accent-strong: #2563eb;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --danger: #f97373;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+            --transition-med: 260ms ease-out;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
             line-height: 1.6;
-            color: #333;
+            min-height: 100vh;
+            scroll-behavior: smooth;
         }
 
-        .container {
-            max-width: 900px;
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Layout */
+
+        .page {
+            max-width: 1120px;
             margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 1.5rem 1.25rem 3rem;
         }
 
-        h1 { color: #d35400;
-            margin-bottom: 10px;
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(14px);
+            background: linear-gradient(to right,
+                    rgba(15, 23, 42, 0.96),
+                    rgba(15, 23, 42, 0.9));
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }
+
+        .nav-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0.7rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            color: #e5e7eb;
+        }
+
+        .logo-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 12px;
+            background: radial-gradient(circle at 20% 20%, #60a5fa, #2563eb 60%, #1d4ed8);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #fff;
+            font-weight: 800;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            font-size: 0.78rem;
+            padding: 0.35rem 0.8rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid transparent;
+            color: var(--text-soft);
+            transition: background var(--transition-fast), color var(--transition-fast),
+                border-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .nav-links a:hover {
+            background: rgba(31, 41, 55, 0.85);
+            border-color: rgba(55, 65, 81, 0.9);
+            color: #e5e7eb;
+            transform: translateY(-1px);
+        }
+
+        .nav-links a.primary-link {
+            border-color: rgba(59, 130, 246, 0.7);
+            background: linear-gradient(135deg,
+                    rgba(59, 130, 246, 0.15),
+                    rgba(37, 99, 235, 0.12));
+            color: #bfdbfe;
+        }
+
+        .nav-links a.primary-link:hover {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.5);
+        }
+
+        /* Hero */
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+            gap: 2.5rem;
+            align-items: center;
+            margin-top: 2.3rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.1rem, 3vw + 1.2rem, 3.2rem);
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-subtitle {
+            font-size: 0.98rem;
+            color: var(--text-soft);
+            max-width: 33rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            color: #cbd5f5;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.4rem;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-med);
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-strong);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(31, 41, 55, 0.6);
+            color: #e5e7eb;
+            border: 1px solid rgba(75, 85, 99, 0.5);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(55, 65, 81, 0.8);
+            border-color: #9ca3af;
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #3b82f6, #2563eb);
+        }
+
+        .diagram-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #0f172a;
+            border-radius: var(--radius-lg);
+            border: 1px dashed #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .diagram-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Sections */
+
+        section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 6rem;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .section-title-row {
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #f1f5f9;
+        }
+
+        .section-hint {
+            color: var(--text-soft);
+            font-size: 1rem;
+            max-width: 38rem;
+        }
+
+        /* Cards & Grid */
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(31, 41, 55, 0.6);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: transform var(--transition-fast), border-color var(--transition-fast);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(55, 65, 81, 0.9);
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.8rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            line-height: 1.65;
+        }
+
+        .card ul,
+        .card ol {
+            list-style: none;
+            padding-left: 0.4rem;
+        }
+
+        .card li {
+            position: relative;
+            padding-left: 1.2rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.92rem;
+            color: #cbd5e1;
+        }
+
+        .card li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .equation {
+            font-family: "JetBrains Mono", "Fira Code", monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: #93c5fd;
+            font-size: 0.9em;
+        }
+
+        /* Feature Boxes */
+
+        .tip-box,
+        .question-box,
+        .activity-box {
+            margin-top: 1.2rem;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .tip-box {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #dbeafe;
+        }
+
+        .tip-box strong {
+            display: block;
+            color: #60a5fa;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .question-box {
+            background: rgba(234, 179, 8, 0.08);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            color: #fef08a;
+        }
+
+        .question-box strong {
+            display: block;
+            color: #facc15;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-box {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #d1fae5;
+        }
+
+        .activity-box strong {
+            display: block;
+            color: #34d399;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.07);
+            color: #9ca3af;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Tables */
+
+        .table-wrap {
+            overflow-x: auto;
+            margin-top: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-soft);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text-soft);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #e2e8f0;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Accordion */
+
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .accordion-item {
+            background: rgba(17, 24, 39, 0.4);
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: background var(--transition-fast);
+        }
+
+        .accordion-item:hover {
+            background: rgba(17, 24, 39, 0.7);
+        }
+
+        .accordion-header {
+            padding: 1rem 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #f1f5f9;
+        }
+
+        .accordion-toggle {
+            font-size: 1.2rem;
+            color: var(--text-soft);
+            transition: transform var(--transition-fast);
+        }
+
+        .accordion-item.open .accordion-toggle {
+            transform: rotate(45deg);
+            color: var(--accent);
+        }
+
+        .accordion-body {
+            padding: 0 1.2rem 1.2rem;
+            color: #cbd5e1;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            display: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+        }
+
+        .accordion-item.open .accordion-body {
+            display: block;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Quiz Buttons */
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: var(--bg-soft);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            color: var(--text-soft);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: #1e293b;
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .quiz-option.correct {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .quiz-option.wrong {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        footer {
+            margin-top: 6rem;
+            border-top: 1px solid var(--border-soft);
+            padding: 2rem;
             text-align: center;
-            border-bottom: 3px solid #d35400;
-            padding-bottom: 15px;
+            color: var(--text-soft);
+            font-size: 0.85rem;
         }
 
-        h2 { color: #a04000;
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
 
-        .important-box {
-            background: #fff3cd;
-            border-left: 5px solid #ffc107;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-        }
+            .hero-subtitle {
+                margin: 0 auto 1.5rem;
+            }
 
-        .formula-box {
-            background: #e7f3ff;
-            border-left: 5px solid #2196F3;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-            font-family: 'Courier New', monospace;
-        }
+            .badge-row,
+            .hero-actions {
+                justify-content: center;
+            }
 
-        .example-box {
-            background: #e8f5e9;
-            border-left: 5px solid #4caf50;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-        }
-
-        p {
-            margin-bottom: 10px;
-        }
-
-        ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        li {
-            margin-bottom: 8px;
+            .nav-inner {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Chapter 1 - Chemical Reactions and Equations</h1>
-        <p style="text-align: center; color: #999; margin-bottom: 30px;">Class X Chemistry | CBSE</p>
+    <div class="page">
+        <header>
+            <div class="nav-inner">
+                <div class="logo">
+                    <div class="logo-badge">10</div>
+                    <span>Sarvottam Institute</span>
+                </div>
+                <nav class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#">Class 10</a>
+                    <a href="#" class="primary-link">Chemistry Notes</a>
+                </nav>
+            </div>
+        </header>
 
-        <h2>What is a Chemical Reaction?</h2>
-        <p>A chemical reaction is a process where one or more substances (reactants) are transformed into different
-            substances (products). In a chemical reaction, bonds are broken and new bonds are formed.</p>
+        <main>
+            <!-- HERO -->
+            <div class="hero">
+                <div class="hero-text">
+                    <div class="badge-row">
+                        <div class="badge">
+                            <span class="badge-dot"></span>
+                            Chemistry
+                        </div>
+                        <div class="badge">Chapter 1</div>
+                    </div>
+                    <h1>Chemical Reactions and Equations</h1>
+                    <p class="hero-subtitle">
+                        Master the fundamentals of chemical changes, balancing equations, and reaction types with these
+                        comprehensive, exam-oriented notes.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#intro" class="btn btn-secondary">Start Learning</a>
+                        <a href="#quiz-section" class="btn btn-primary">Take Quiz</a>
+                    </div>
+                </div>
 
-        <div class="important-box">
-            <strong>Characteristics of a Chemical Reaction:</strong>
-            <ul style="margin-left: 20px; margin-top: 10px;">
-                <li>Change in color</li>
-                <li>Evolution of gas</li>
-                <li>Change in temperature</li>
-                <li>Formation of precipitate</li>
-                <li>Change in physical state</li>
-            </ul>
-        </div>
+                <div class="hero-visual">
+                    <div class="hero-card">
+                        <div class="diagram-placeholder">
+                            <img src="images/magnesium_burning.png" alt="Chemical Reaction Visual">
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <div style="font-size:0.8rem; color:#94a3b8">Topic Coverage</div>
+                            <div style="font-size:0.8rem; color:var(--accent); font-weight:700">100%</div>
+                        </div>
+                        <div
+                            style="height:4px; background:#1e293b; border-radius:2px; margin-top:0.5rem; overflow:hidden">
+                            <div style="width:100%; height:100%; background:var(--accent)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <h2>Types of Chemical Reactions</h2>
-        <ul>
-            <li><strong>Combination Reaction (A + B â†’ AB):</strong> Two or more substances combine to form a single
-                product. Example: C + Oâ‚‚ â†’ COâ‚‚</li>
-            <li><strong>Decomposition Reaction (AB â†’ A + B):</strong> A single substance breaks down into two or more
-                products. Example: 2Hâ‚‚Oâ‚‚ â†’ 2Hâ‚‚O + Oâ‚‚ (with catalyst)</li>
-            <li><strong>Displacement Reaction (AB + C â†’ AC + B):</strong> An element displaces another element from a
-                compound. Example: Fe + CuSOâ‚„ â†’ FeSOâ‚„ + Cu</li>
-            <li><strong>Double Displacement Reaction (AB + CD â†’ AD + CB):</strong> Two compounds exchange ions to form
-                new compounds. Example: AgNOâ‚ƒ + NaCl â†’ AgClâ†“ + NaNOâ‚ƒ</li>
-            <li><strong>Redox Reaction:</strong> Involves transfer of electrons between substances</li>
-        </ul>
+            <!-- 1. INTRODUCTION -->
+            <section id="intro">
+                <div class="section-label">Fundamentals</div>
+                <div class="section-title-row">
+                    <h2>Introduction to Chemical Reactions</h2>
+                    <div class="section-hint">
+                        Understanding how substances transform into new materials.
+                    </div>
+                </div>
 
-        <h2>Chemical Equations</h2>
-        <p>A chemical equation is a representation of a chemical reaction using chemical formulas and symbols. It shows
-            the reactants on the left and products on the right.</p>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>What is a Chemical Reaction?</h3>
+                        <p>
+                            A process in which one or more substances (<strong>reactants</strong>) are converted into
+                            new substances (<strong>products</strong>) with new chemical properties.
+                        </p>
+                        <ul>
+                            <li>Atoms are rearranged, not created or destroyed (Law of Conservation of Mass).</li>
+                            <li>Occurs to achieve stable electronic configuration.</li>
+                        </ul>
+                    </div>
 
-        <div class="formula-box">
-            <strong>General Form:</strong><br>
-            Reactants â†’ Products<br>
-            Example: 2Hâ‚‚ + Oâ‚‚ â†’ 2Hâ‚‚O<br>
-            <br>
-            <strong>Symbols Used:</strong><br>
-            â†’ indicates formation of products<br>
-            â†“ indicates precipitate formation<br>
-            â†‘ indicates gas evolution<br>
-            (s) - solid, (l) - liquid, (g) - gas, (aq) - aqueous
-        </div>
+                    <div class="card">
+                        <h3>Chemical Changes in Daily Life</h3>
+                        <p>Chemical reactions happen around us all the time:</p>
+                        <ul>
+                            <li><strong>Souring of Milk:</strong> When left at room temperature in summer.</li>
+                            <li><strong>Rusting of Iron:</strong> Tawa/pan/nail left exposed to humid atmosphere.</li>
+                            <li><strong>Fermentation:</strong> Grapes getting fermented.</li>
+                            <li><strong>Cooking:</strong> Food is cooked.</li>
+                            <li><strong>Digestion:</strong> Food gets digested in our body.</li>
+                            <li><strong>Respiration:</strong> We respire.</li>
+                        </ul>
+                    </div>
 
-        <h2>Balancing Chemical Equations</h2>
-        <p>In a balanced equation, the number of atoms of each element is the same on both sides. This is done by adding
-            coefficients (not changing subscripts).</p>
+                    <div class="card" style="grid-column: 1 / -1;">
+                        <h3>Key Features</h3>
+                        <p>
+                            A chemical reaction is characterized by:
+                        </p>
+                        <div class="grid-2" style="gap: 1rem;">
+                            <ul>
+                                <li><strong>Change in State:</strong> Solid &rarr; Liquid &rarr; Gas.</li>
+                                <li><strong>Change in Colour:</strong> New substance has different colour.</li>
+                            </ul>
+                            <ul>
+                                <li><strong>Evolution of Gas:</strong> Bubbles or fumes.</li>
+                                <li><strong>Change in Temperature:</strong> Heat released or absorbed.</li>
+                            </ul>
+                        </div>
+                        <div class="tip-box">
+                            <strong>Exam Reminder</strong>
+                            If <span>new substances</span> are formed, it is a chemical change, not just physical.
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <div class="important-box">
-            <strong>Steps to Balance an Equation:</strong>
-            <ul style="margin-left: 20px; margin-top: 10px;">
-                <li>List the number of each type of atom on both sides</li>
-                <li>Find atoms that are not balanced</li>
-                <li>Adjust coefficients to balance</li>
-                <li>Check that all atoms are balanced</li>
-            </ul>
-            <strong>Law of Conservation of Mass:</strong> Matter is neither created nor destroyed in a chemical reaction
-        </div>
+            <!-- 2. INDICATORS -->
+            <section id="indicators">
+                <div class="section-label">Observations</div>
+                <div class="section-title-row">
+                    <h2>Indicators of a Chemical Reaction</h2>
+                    <div class="section-hint">
+                        How do we know a reaction has taken place?
+                    </div>
+                </div>
 
-        <h2>Oxidation and Reduction (Redox Reactions)</h2>
-        <ul>
-            <li><strong>Oxidation:</strong> Loss of electrons or gain of oxygen (or loss of hydrogen)</li>
-            <li><strong>Reduction:</strong> Gain of electrons or loss of oxygen (or gain of hydrogen)</li>
-            <li><strong>Oxidizing Agent:</strong> Substance that gets reduced (gains electrons)</li>
-            <li><strong>Reducing Agent:</strong> Substance that gets oxidized (loses electrons)</li>
-        </ul>
+                <div class="grid-3">
+                    <div class="card">
+                        <h3>1. Change in Colour</h3>
+                        <p>Example: Brown <span class="equation">Fe<sup>3+</sup></span> ions react with colourless
+                            OH<sup>-</sup> to form brown <span class="equation">Fe(OH)<sub>3</sub></span>.</p>
+                    </div>
+                    <div class="card">
+                        <h3>2. Formation of Precipitate</h3>
+                        <p>Example: <span class="equation">AgNO<sub>3</sub> + NaCl &rarr; AgCl(s) +
+                                NaNO<sub>3</sub></span> (White ppt).</p>
+                    </div>
+                    <div class="card">
+                        <h3>3. Evolution of Gas</h3>
+                        <p>Example: <span class="equation">Zn + H<sub>2</sub>SO<sub>4</sub> &rarr; ZnSO<sub>4</sub> +
+                                H<sub>2</sub>&uarr;</span></p>
+                    </div>
+                    <div class="card">
+                        <h3>4. Change in Temperature</h3>
+                        <ul>
+                            <li><strong>Exothermic:</strong> Heat released (e.g., combustion).</li>
+                            <li><strong>Endothermic:</strong> Heat absorbed (e.g., decomposition).</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>5. Change in State</h3>
+                        <p>Solid &rarr; Liquid &rarr; Gas transformations during chemical changes.</p>
+                    </div>
+                </div>
+            </section>
 
-        <div class="example-box">
-            <strong>Example:</strong> In the reaction Zn + CuSOâ‚„ â†’ ZnSOâ‚„ + Cu<br>
-            Zn is oxidized (loses 2 electrons)<br>
-            CuÂ²âº is reduced (gains 2 electrons)<br>
-            Zn is the reducing agent, CuÂ²âº is the oxidizing agent
-        </div>
+            <!-- 3. EQUATIONS -->
+            <section id="equations">
+                <div class="section-label">Representation</div>
+                <div class="section-title-row">
+                    <h2>Chemical Equations & Balancing</h2>
+                    <div class="section-hint">
+                        The language of chemistry.
+                    </div>
+                </div>
 
-        <div style="margin-top: 40px; padding: 20px; background: #f0f4ff; border-radius: 8px; text-align: center;">
-            <h3 style="color: #d35400; margin-bottom: 15px;">Key Takeaways</h3>
-            <ul style="list-style: none; margin: 0;">
-                <li>âœ“ Chemical reactions transform substances</li>
-                <li>âœ“ Four types of chemical reactions</li>
-                <li>âœ“ Chemical equations must be balanced</li>
-                <li>âœ“ Oxidation and reduction occur together</li>
-            </ul>
-            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">CBSE | NCERT | Class X Chemistry</p>
-        </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>Types of Equations</h3>
+                        <ul>
+                            <li><strong>Word Equation:</strong> Magnesium + Oxygen &rarr; Magnesium Oxide</li>
+                            <li><strong>Skeletal Equation:</strong> <span class="equation">Mg + O<sub>2</sub> &rarr;
+                                    MgO</span> (Unbalanced)</li>
+                            <li><strong>Balanced Equation:</strong> <span class="equation">2Mg + O<sub>2</sub> &rarr;
+                                    2MgO</span></li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>Why Balance?</strong>
+                            To satisfy the <span>Law of Conservation of Mass</span>.
+                        </div>
+                    </div>
+
+                    <div class="card" style="grid-column: 1 / -1;">
+                        <h3>Balancing Chemical Equations (NCERT Method)</h3>
+                        <p>Follow these steps to balance any equation:</p>
+                        <ol style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <li><strong>Step I:</strong> Draw boxes around each formula. Do not change anything inside
+                                the boxes.</li>
+                            <li><strong>Step II:</strong> List the number of atoms of different elements.</li>
+                            <li><strong>Step III:</strong> Start balancing with the compound having the maximum number
+                                of atoms.</li>
+                            <li><strong>Step IV:</strong> Balance the other elements one by one.</li>
+                            <li><strong>Step V:</strong> Check the correctness by counting atoms on both sides.</li>
+                            <li><strong>Step VI:</strong> Write symbols of physical states (s, l, g, aq).</li>
+                            <li><strong>Step VII:</strong> Write reaction conditions (temp, pressure, catalyst)
+                                above/below the arrow.</li>
+                        </ol>
+                        <div class="question-box">
+                            <strong>Example: Steam on Iron</strong>
+                            <span class="equation">3Fe(s) + 4H<sub>2</sub>O(g) &rarr; Fe<sub>3</sub>O<sub>4</sub>(s) +
+                                4H<sub>2</sub>(g)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. TYPES OF CHEMICAL REACTIONS -->
+            <section id="types">
+                <div class="section-label">Classification</div>
+                <div class="section-title-row">
+                    <h2>Types of Chemical Reactions</h2>
+                    <div class="section-hint">
+                        Classifying reactions based on how atoms are rearranged.
+                    </div>
+                </div>
+
+                <!-- 1. Combination -->
+                <h3 style="color: var(--accent); margin-bottom: 1rem;">1. Combination Reaction</h3>
+                <div class="grid-2" style="margin-bottom: 2rem;">
+                    <div class="card">
+                        <p>Two or more reactants combine to form a <strong>single product</strong>.</p>
+                        <p class="equation">A + B &rarr; AB</p>
+                        <div class="activity-box">
+                            <strong>Examples</strong>
+                            <ul>
+                                <li><strong>Burning of Coal:</strong> <span class="equation">C(s) + O<sub>2</sub>(g)
+                                        &rarr; CO<sub>2</sub>(g)</span></li>
+                                <li><strong>Formation of Water:</strong> <span class="equation">2H<sub>2</sub>(g) +
+                                        O<sub>2</sub>(g) &rarr; 2H<sub>2</sub>O(l)</span></li>
+                                <li><strong>Slaked Lime:</strong> <span class="equation">CaO(s) + H<sub>2</sub>O(l)
+                                        &rarr; Ca(OH)<sub>2</sub>(aq)</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Exothermic Reactions</h3>
+                        <p>Reactions in which heat is released along with the formation of products.</p>
+                        <ul>
+                            <li><strong>Burning of Natural Gas:</strong> <span class="equation">CH<sub>4</sub> +
+                                    2O<sub>2</sub> &rarr; CO<sub>2</sub> + 2H<sub>2</sub>O</span></li>
+                            <li><strong>Respiration:</strong> Glucose breaks down to release energy.
+                                <br><span class="equation">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub>
+                                    &rarr; 6CO<sub>2</sub> + 6H<sub>2</sub>O + Energy</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 2. Decomposition -->
+                <h3 style="color: var(--accent); margin-bottom: 1rem;">2. Decomposition Reaction</h3>
+                <div class="grid-2" style="margin-bottom: 2rem;">
+                    <div class="card">
+                        <p>A single reactant breaks down to give simpler products.</p>
+                        <p class="equation">AB &rarr; A + B</p>
+                        <div class="tip-box">
+                            <strong>Endothermic</strong>
+                            These reactions require energy in the form of heat, light, or electricity to break bonds.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Types of Decomposition</h3>
+                        <ul>
+                            <li><strong>Thermal (Heat):</strong> FeSO<sub>4</sub>, CaCO<sub>3</sub>,
+                                Pb(NO<sub>3</sub>)<sub>2</sub>.</li>
+                            <li><strong>Electrolytic (Electricity):</strong> Electrolysis of Water (<span
+                                    class="equation">2H<sub>2</sub>O &rarr; 2H<sub>2</sub> + O<sub>2</sub></span>).</li>
+                            <li><strong>Photolytic (Light):</strong> AgCl, AgBr (Used in B&W photography).
+                                <br><span class="equation">2AgCl &rarr; 2Ag + Cl<sub>2</sub></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 3. Displacement -->
+                <h3 style="color: var(--accent); margin-bottom: 1rem;">3. Displacement Reaction</h3>
+                <div class="grid-2" style="margin-bottom: 2rem;">
+                    <div class="card">
+                        <p>A more reactive element displaces a less reactive element from its compound.</p>
+                        <p class="equation">A + BC &rarr; AC + B</p>
+                    </div>
+                    <div class="card">
+                        <h3>Examples</h3>
+                        <ul>
+                            <li><strong>Iron + Copper Sulphate:</strong>
+                                <br><span class="equation">Fe(s) + CuSO<sub>4</sub>(aq) &rarr; FeSO<sub>4</sub>(aq) +
+                                    Cu(s)</span>
+                            </li>
+                            <li><strong>Zinc + Copper Sulphate:</strong>
+                                <br><span class="equation">Zn(s) + CuSO<sub>4</sub>(aq) &rarr; ZnSO<sub>4</sub>(aq) +
+                                    Cu(s)</span>
+                            </li>
+                            <li><strong>Lead + Copper Chloride:</strong>
+                                <br><span class="equation">Pb(s) + CuCl<sub>2</sub>(aq) &rarr; PbCl<sub>2</sub>(aq) +
+                                    Cu(s)</span>
+                            </li>
+                        </ul>
+                        <p style="font-size: 0.85rem; color: var(--text-soft); margin-top: 0.5rem;">Zn and Pb are more
+                            reactive than Cu.</p>
+                    </div>
+                </div>
+
+                <!-- 4. Double Displacement -->
+                <h3 style="color: var(--accent); margin-bottom: 1rem;">4. Double Displacement Reaction</h3>
+                <div class="grid-2" style="margin-bottom: 2rem;">
+                    <div class="card">
+                        <p>Exchange of ions between reactants.</p>
+                        <p class="equation">AB + CD &rarr; AD + CB</p>
+                    </div>
+                    <div class="card">
+                        <h3>Precipitation Reaction</h3>
+                        <p>Any reaction that produces a precipitate (insoluble solid).</p>
+                        <div class="activity-box">
+                            <strong>Example</strong>
+                            <span class="equation">Na<sub>2</sub>SO<sub>4</sub> + BaCl<sub>2</sub> &rarr;
+                                BaSO<sub>4</sub>(s) + 2NaCl</span>
+                            <br>White ppt of Barium Sulphate is formed.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Redox -->
+                <h3 style="color: var(--accent); margin-bottom: 1rem;">5. Oxidation and Reduction (Redox)</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>Definitions</h3>
+                        <ul>
+                            <li><strong>Oxidation:</strong> Gain of Oxygen OR Loss of Hydrogen.</li>
+                            <li><strong>Reduction:</strong> Loss of Oxygen OR Gain of Hydrogen.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Examples</h3>
+                        <ul>
+                            <li><strong>Copper Oxide + Hydrogen:</strong>
+                                <br><span class="equation">CuO + H<sub>2</sub> &rarr; Cu + H<sub>2</sub>O</span>
+                                <br>(CuO reduced to Cu, H<sub>2</sub> oxidized to H<sub>2</sub>O)
+                            </li>
+                            <li><strong>Zinc Oxide + Carbon:</strong>
+                                <br><span class="equation">ZnO + C &rarr; Zn + CO</span>
+                            </li>
+                            <li><strong>Manganese Dioxide + HCl:</strong>
+                                <br><span class="equation">MnO<sub>2</sub> + 4HCl &rarr; MnCl<sub>2</sub> +
+                                    2H<sub>2</sub>O + Cl<sub>2</sub></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NCERT ACTIVITIES LINK -->
+            <section id="ncert-activities">
+                <div class="section-label">NCERT Lab</div>
+                <div class="section-title-row">
+                    <h2>Key Activities (1.1 to 1.11)</h2>
+                    <div class="section-hint">
+                        Explore detailed observations and conclusions for all textbook activities.
+                    </div>
+                </div>
+
+                <div class="hero-card"
+                    style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 78, 59, 0.2)); border-color: rgba(16, 185, 129, 0.3);">
+                    <div
+                        style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem;">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">🔬 Interactive Lab Activities
+                        </h3>
+                        <p style="max-width: 600px; color: #d1fae5; margin-bottom: 2rem; font-size: 1.1rem;">
+                            Dive deep into all 11 NCERT activities. Understand the Aim, Procedure, Observations, and
+                            Conclusions with visual diagrams for each experiment.
+                        </p>
+                        <a href="Chapter-1-Activities.html" class="btn btn-primary"
+                            style="background: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                            Explore All Activities &rarr;
+                        </a>
+                        <div class="tag-row" style="justify-content: center; margin-top: 2rem;">
+                            <span class="tag">Magnesium Ribbon</span>
+                            <span class="tag">Lead Iodide Ppt</span>
+                            <span class="tag">Zinc + Acid</span>
+                            <span class="tag">Electrolysis</span>
+                            <span class="tag">Silver Chloride</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. EVERYDAY LIFE -->
+            <section id="everyday">
+                <div class="section-label">Applications</div>
+                <div class="section-title-row">
+                    <h2>Oxidation in Everyday Life</h2>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>1. Corrosion</h3>
+                        <p>Gradual deterioration of metals due to reaction with air, moisture, or chemicals.</p>
+                        <div class="diagram-placeholder">
+                            <img src="images/rusting_iron.png" alt="Rusting Iron">
+                        </div>
+                        <p><strong>Examples:</strong> Rusting of Iron (Reddish-brown), Black coating on Silver, Green
+                            coating on Copper.</p>
+                        <p><strong>Prevention:</strong> Painting, Oiling, Greasing, Galvanization, Chrome plating,
+                            Anodizing, Alloying.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>2. Rancidity</h3>
+                        <p>Oxidation of fats and oils in food causing unpleasant smell and taste.</p>
+                        <p><strong>Prevention Methods:</strong></p>
+                        <ul>
+                            <li>Adding <strong>antioxidants</strong> (BHA, BHT).</li>
+                            <li>Storing food in <strong>air-tight containers</strong>.</li>
+                            <li>Flushing bags of chips with <strong>Nitrogen</strong> gas.</li>
+                            <li>Keeping food away from direct sunlight.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. REVISION / QUIZ -->
+            <section id="revision">
+                <div class="section-label">Active Recall</div>
+                <div class="section-title-row">
+                    <h2>Practice Questions</h2>
+                    <div class="section-hint">
+                        Click to reveal answers.
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>1. Why is respiration considered an exothermic reaction?</span>
+                            <div class="accordion-toggle">+</div>
+                        </div>
+                        <div class="accordion-body">
+                            Because energy is released during the breakdown of glucose in our cells.
+                            <span class="equation">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub> &rarr;
+                                6CO<sub>2</sub> + 6H<sub>2</sub>O + Energy</span>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>2. Why do we apply paint on iron articles?</span>
+                            <div class="accordion-toggle">+</div>
+                        </div>
+                        <div class="accordion-body">
+                            To prevent rusting. Paint cuts off the contact of iron with air and moisture.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>3. Oil and fat containing food items are flushed with Nitrogen. Why?</span>
+                            <div class="accordion-toggle">+</div>
+                        </div>
+                        <div class="accordion-body">
+                            To prevent rancidity. Nitrogen is an inert gas and prevents oxidation of fats and oils.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>4. What is the colour of Copper Sulphate solution?</span>
+                            <div class="accordion-toggle">+</div>
+                        </div>
+                        <div class="accordion-body">
+                            Blue. When iron is added, it turns pale green due to formation of Ferrous Sulphate.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- INTERACTIVE QUIZ -->
+            <section id="quiz-section">
+                <div class="section-label">Test Yourself</div>
+                <div class="section-title-row">
+                    <h2>⚡ Quick Quiz</h2>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <p><strong>Q1. Which gas is evolved when Magnesium burns in air?</strong></p>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">A. Hydrogen</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">B. Carbon Dioxide</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">C. Nitrogen</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, true)">D. None (It forms a solid
+                            oxide)</button>
+                    </div>
+
+                    <div class="card">
+                        <p><strong>Q2. The reaction of Iron with Copper Sulphate is an example of:</strong></p>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">A. Combination Reaction</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, true)">B. Displacement Reaction</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">C. Decomposition
+                            Reaction</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">D. Double Displacement
+                            Reaction</button>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                <div>Made as a study companion for "Chemical Reactions and Equations".</div>
+            </footer>
+        </main>
     </div>
+
+    <script>
+        // Accordion Logic
+        document.querySelectorAll(".accordion-header").forEach((header) => {
+            header.addEventListener("click", () => {
+                const item = header.parentElement;
+                const isOpen = item.classList.contains("open");
+                // Close all
+                document
+                    .querySelectorAll(".accordion-item")
+                    .forEach((el) => el.classList.remove("open"));
+                // Toggle current
+                if (!isOpen) item.classList.add("open");
+            });
+        });
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('.quiz-option');
+
+            // Reset all buttons in this card
+            buttons.forEach(b => {
+                b.classList.remove('correct', 'wrong');
+                b.style.pointerEvents = 'none'; // Disable further clicks
+            });
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                btn.innerHTML += ' ✅';
+            } else {
+                btn.classList.add('wrong');
+                btn.innerHTML += ' ❌';
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 
 </html>
-
-
-
-

@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+
+const fs = require('fs');
+const path = require('path');
+
+const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -284,10 +288,6 @@
             height: 100%;
             object-fit: cover;
         }
-        
-        .diagram-placeholder.fit-contain img {
-            object-fit: contain;
-        }
 
         /* Sections */
 
@@ -415,6 +415,7 @@
         }
 
         .tip-box strong {
+            display: block;
             color: #60a5fa;
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -429,6 +430,7 @@
         }
 
         .question-box strong {
+            display: block;
             color: #facc15;
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -443,6 +445,7 @@
         }
 
         .activity-box strong {
+            display: block;
             color: #34d399;
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -596,7 +599,7 @@
             </div>
             <div class="hero-visual">
                 <div class="hero-card">
-                    <div class="diagram-placeholder fit-contain">
+                    <div class="diagram-placeholder">
                         <img src="images/electron_dot_structures.png" alt="Electron Dot Structures" />
                     </div>
                     <h3>At a Glance</h3>
@@ -604,7 +607,7 @@
                         <li><strong>Symbol:</strong> C (Atomic No. 6)</li>
                         <li><strong>Valency:</strong> 4 (Tetravalent)</li>
                         <li><strong>Bonding:</strong> Covalent bonds</li>
-                        <li><strong>Allotropes:</strong> Diamond, Graphite, Fullerene</li>
+                        <li><strong>Allotropes:</strong> Diamond, Graphite, Buckminsterfullerene</li>
                     </ul>
                 </div>
             </div>
@@ -641,7 +644,7 @@
                         <li><strong>N₂:</strong> Triple bond (N≡N)</li>
                         <li><strong>CH₄ (Methane):</strong> Carbon shares 4 electrons with 4 Hydrogen atoms.</li>
                     </ul>
-                    <div class="diagram-placeholder fit-contain" style="height: 150px; margin-top: 1rem;">
+                    <div class="diagram-placeholder" style="height: 150px; margin-top: 1rem;">
                         <img src="images/electron_dot_structures.png" alt="Electron Dot Structures Diagram">
                     </div>
                 </div>
@@ -662,7 +665,7 @@
                             <p style="font-size: 0.9rem; margin-top: 0.5rem;">C-60 (Buckminsterfullerene). Football shape.</p>
                         </div>
                     </div>
-                    <div class="diagram-placeholder fit-contain" style="height: 200px; margin-top: 1rem;">
+                    <div class="diagram-placeholder" style="height: 200px; margin-top: 1rem;">
                         <img src="images/carbon_allotropes.png" alt="Allotropes of Carbon">
                     </div>
                 </div>
@@ -750,7 +753,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="diagram-placeholder fit-contain" style="height: 150px; margin-top: 1rem;">
+                    <div class="diagram-placeholder" style="height: 150px; margin-top: 1rem;">
                         <img src="images/functional_groups_table.png" alt="Functional Groups Table">
                     </div>
                 </div>
@@ -763,66 +766,81 @@
                         <li>Differ by <strong>14u</strong> mass.</li>
                         <li>Similar chemical properties, graduating physical properties.</li>
                     </ul>
-                    <div class="diagram-placeholder fit-contain" style="height: 150px; margin-top: 1rem;">
+                    <div class="diagram-placeholder" style="height: 150px; margin-top: 1rem;">
                         <img src="images/homologous_series.png" alt="Homologous Series">
                     </div>
                 </div>
                 
-                <!-- Detailed Nomenclature Section -->
+                <!-- Detailed Nomenclature Section Added Here -->
                 <div class="card" style="grid-column: 1 / -1;">
-                    <h3>Detailed Nomenclature (IUPAC Rules)</h3>
+                    <h3>Detailed Nomenclature Examples</h3>
+                    <p><strong>Step-by-step IUPAC naming:</strong></p>
                     
-                    <div class="tip-box" style="margin-top: 0; margin-bottom: 1.5rem;">
-                        <strong>The Golden Formula</strong>
-                        <p style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: #fff;">
-                            Prefix + Word Root + Primary Suffix + Secondary Suffix
-                        </p>
-                        <ul style="margin-top: 0.5rem; font-size: 0.9rem;">
-                            <li><strong>Prefix:</strong> Substituents (e.g., Chloro-, Methyl-)</li>
-                            <li><strong>Word Root:</strong> No. of Carbons (Meth-, Eth-, Prop-)</li>
-                            <li><strong>Pri. Suffix:</strong> Saturation (ane, ene, yne)</li>
-                            <li><strong>Sec. Suffix:</strong> Functional Group (-ol, -al, -oic acid)</li>
-                        </ul>
-                    </div>
-
                     <div class="grid-2">
                         <div>
-                            <h4 style="color: #93c5fd; margin-bottom: 0.5rem; font-size: 1rem;">Key Rules</h4>
-                            <ol style="font-size: 0.9rem; margin-left: 1rem;">
-                                <li><strong>Longest Chain:</strong> Select the longest continuous carbon chain containing the functional group.</li>
-                                <li><strong>Lowest Number:</strong> Number from the end giving the substituent/functional group the lowest number.</li>
-                                <li><strong>Alphabetical Order:</strong> If multiple substituents, list them alphabetically (e.g., Bromo before Chloro).</li>
-                                <li><strong>Priority Order:</strong> Carboxylic Acid > Aldehyde > Ketone > Alcohol > Alkene/Alkyne.</li>
-                            </ol>
+                            <p><strong>1. CH₃CH₂CH₂OH</strong></p>
+                            <ul>
+                                <li>3 carbons → Prop</li>
+                                <li>Single bonds → -an</li>
+                                <li>–OH group → -ol</li>
+                                <li>Name: <strong>Propanol</strong></li>
+                            </ul>
                         </div>
                         <div>
-                            <h4 style="color: #93c5fd; margin-bottom: 0.5rem; font-size: 1rem;">Step-by-Step Examples</h4>
-                            <div style="font-size: 0.9rem;">
-                                <p style="margin-bottom: 0.8rem;">
-                                    <strong>1. CH₃-CH₂-CH₂-OH</strong><br>
-                                    <span style="color: var(--text-soft);">Prop (3C) + an (single) + ol (Alcohol)</span><br>
-                                    = <strong>Propanol</strong>
-                                </p>
-                                <p style="margin-bottom: 0.8rem;">
-                                    <strong>2. CH₃-CO-CH₃</strong><br>
-                                    <span style="color: var(--text-soft);">Prop (3C) + an + one (Ketone)</span><br>
-                                    = <strong>Propanone</strong>
-                                </p>
-                                <p>
-                                    <strong>3. CH₃-CH(Cl)-CH₃</strong><br>
-                                    <span style="color: var(--text-soft);">2-Chloro (Prefix) + Prop (3C) + ane</span><br>
-                                    = <strong>2-Chloropropane</strong>
-                                </p>
-                            </div>
+                            <p><strong>2. CH₃COCH₃</strong></p>
+                            <ul>
+                                <li>3 carbons → Prop</li>
+                                <li>Ketone group → -one</li>
+                                <li>Name: <strong>Propanone</strong></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p><strong>3. CH₃CH₂COOH</strong></p>
+                            <ul>
+                                <li>3 carbons → Prop</li>
+                                <li>Acid group → -oic acid</li>
+                                <li>Name: <strong>Propanoic acid</strong></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p><strong>4. CH₂=CH₂</strong></p>
+                            <ul>
+                                <li>2 carbons → Eth</li>
+                                <li>Double bond → -ene</li>
+                                <li>Name: <strong>Ethene</strong></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p><strong>5. CH₃CHO</strong></p>
+                            <ul>
+                                <li>2 carbons → Eth</li>
+                                <li>Aldehyde group → -al</li>
+                                <li>Name: <strong>Ethanal</strong></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p><strong>6. CH₃CH₂Cl</strong></p>
+                            <ul>
+                                <li>2 carbons → Eth</li>
+                                <li>Chloro prefix</li>
+                                <li>Name: <strong>Chloroethane</strong></li>
+                            </ul>
                         </div>
                     </div>
                     
                     <div class="tag-row" style="margin-top: 1.5rem;">
-                        <span class="tag">Acid: -oic acid</span>
-                        <span class="tag">Aldehyde: -al</span>
-                        <span class="tag">Ketone: -one</span>
-                        <span class="tag">Alcohol: -ol</span>
-                        <span class="tag">Double Bond: -ene</span>
+                        <span class="tag">Alkanes: -ane</span>
+                        <span class="tag">Alkenes: -ene</span>
+                        <span class="tag">Alkynes: -yne</span>
+                        <span class="tag">Alcohols: -ol</span>
+                        <span class="tag">Aldehydes: -al</span>
+                        <span class="tag">Ketones: -one</span>
+                        <span class="tag">Acids: -oic acid</span>
+                    </div>
+                    
+                    <div class="question-box">
+                        <strong>Practice</strong>
+                        Try naming: CH₃CH₂CH₂COOH → <strong>Butanoic acid</strong> (4 carbons + -oic acid)
                     </div>
                 </div>
             </div>
@@ -909,7 +927,7 @@
                         <p style="margin-top:0.5rem;">2. <strong>Saponification:</strong> Ester + Base → Alcohol + Soap</p>
                         <p style="margin-top:0.5rem;">3. <strong>With Carbonates:</strong> Gives CO₂ gas (brisk effervescence).</p>
                     </div>
-                    <div class="diagram-placeholder fit-contain" style="height: 150px; margin-top: 1rem;">
+                    <div class="diagram-placeholder" style="height: 150px; margin-top: 1rem;">
                         <img src="images/esterification_reaction.png" alt="Esterification Reaction">
                     </div>
                 </div>
@@ -931,7 +949,7 @@
                         <li><strong>Ionic End:</strong> Hydrophilic (water-loving).</li>
                         <li><strong>Carbon Chain:</strong> Hydrophobic (oil-loving).</li>
                     </ul>
-                    <div class="diagram-placeholder fit-contain" style="height: 200px; margin-top: 1rem;">
+                    <div class="diagram-placeholder" style="height: 200px; margin-top: 1rem;">
                         <img src="images/micelle_formation.png" alt="Micelle Formation">
                     </div>
                 </div>
@@ -971,112 +989,89 @@
             </div>
         </section>
 
-        <!-- NCERT ACTIVITIES LINK -->
-        <section id="ncert-activities">
-            <div class="section-label">NCERT Lab</div>
-            <div class="section-title-row">
-                <h2>Key Activities (4.1 to 4.2)</h2>
-                <div class="section-hint">
-                    Explore detailed observations for all textbook activities.
-                </div>
-            </div>
-
-            <div class="hero-card"
-                style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(180, 83, 9, 0.2)); border-color: rgba(245, 158, 11, 0.3);">
-                <div
-                    style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem;">
-                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">🔬 Interactive Lab Activities
-                    </h3>
-                    <p style="max-width: 600px; color: #fcd34d; margin-bottom: 2rem; font-size: 1.1rem;">
-                        Dive deep into all NCERT activities. Understand the Aim, Procedure, Observations, and
-                        Conclusions for experiments like Oxidation of Ethanol and Saponification.
-                    </p>
-                    <a href="Chapter-4-Activities.html" class="btn btn-primary"
-                        style="background: #f59e0b; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
-                        Explore All Activities &rarr;
-                    </a>
-                    <div class="tag-row" style="justify-content: center; margin-top: 2rem;">
-                        <span class="tag">Combustion</span>
-                        <span class="tag">Oxidation</span>
-                        <span class="tag">Esterification</span>
-                        <span class="tag">Saponification</span>
-                        <span class="tag">Foam Formation</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Quiz -->
-        <section id="quiz-section">
-            <div class="section-label">Test Yourself</div>
-            <div class="section-title-row">
-                <h2>⚡ Quick Quiz</h2>
-            </div>
-
-            <div class="grid-2">
-                <div class="card">
-                    <p><strong>Q1. Which allotrope of carbon is the hardest natural substance?</strong></p>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Graphite</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true)">B. Diamond</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. Fullerene</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Coal</button>
-                </div>
-
-                <div class="card">
-                    <p><strong>Q2. The functional group -CHO represents:</strong></p>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Alcohol</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">B. Ketone</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true)">C. Aldehyde</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Carboxylic Acid</button>
-                </div>
-
-                <div class="card">
-                    <p><strong>Q3. Saturated hydrocarbons burn with a:</strong></p>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Yellow sooty flame</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true)">B. Clean blue flame</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. Red flame</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. White flame</button>
-                </div>
-
-                <div class="card">
-                    <p><strong>Q4. Ethanol reacts with sodium to produce:</strong></p>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Sodium Ethanoate</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true)">B. Sodium Ethoxide</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. Ethene</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Ethane</button>
+        <section id="quiz">
+            <div class="section-label">Check Your Knowledge</div>
+            <h2>Quick Quiz</h2>
+            <div class="card">
+                <div id="quiz-container">
+                    <!-- Quiz content loaded by JS -->
                 </div>
             </div>
         </section>
-        
     </div>
 
     <script>
-        // Quiz Logic
-        function checkAnswer(btn, isCorrect) {
+        const quizData = [
+            {
+                question: "Which allotrope of carbon is the hardest natural substance?",
+                options: ["Graphite", "Diamond", "Fullerene", "Coal"],
+                correct: 1
+            },
+            {
+                question: "The functional group -CHO represents:",
+                options: ["Alcohol", "Ketone", "Aldehyde", "Carboxylic Acid"],
+                correct: 2
+            },
+            {
+                question: "Saturated hydrocarbons burn with a:",
+                options: ["Yellow sooty flame", "Clean blue flame", "Red flame", "White flame"],
+                correct: 1
+            },
+            {
+                question: "Ethanol reacts with sodium to produce:",
+                options: ["Sodium Ethanoate", "Sodium Ethoxide", "Ethene", "Ethane"],
+                correct: 1
+            },
+            {
+                question: "Soaps are formed by saponification of:",
+                options: ["Alcohols", "Esters", "Carboxylic Acids", "Ketones"],
+                correct: 1
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+
+        function loadQuiz() {
+            let html = '';
+            quizData.forEach((q, index) => {
+                html += \`<div style="margin-bottom: 1.5rem;">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">\${index + 1}. \${q.question}</p>
+                    \${q.options.map((opt, i) => \`
+                        <button class="quiz-option" onclick="checkAnswer(this, \${index}, \${i})">\${opt}</button>
+                    \`).join('')}
+                    <p class="feedback" id="feedback-\${index}" style="font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.2em;"></p>
+                </div>\`;
+            });
+            quizContainer.innerHTML = html;
+        }
+
+        function checkAnswer(btn, qIndex, optIndex) {
+            const feedback = document.getElementById(\`feedback-\${qIndex}\`);
+            const correctIndex = quizData[qIndex].correct;
             const parent = btn.parentElement;
             const buttons = parent.querySelectorAll('.quiz-option');
 
-            // Reset all buttons in this card
-            buttons.forEach(b => {
-                b.classList.remove('correct', 'wrong');
-                b.style.pointerEvents = 'none'; // Disable further clicks
-            });
+            buttons.forEach(b => b.disabled = true);
 
-            if (isCorrect) {
+            if (optIndex === correctIndex) {
                 btn.classList.add('correct');
-                btn.innerHTML += ' ✅';
+                feedback.textContent = "Correct! 🎉";
+                feedback.style.color = "#22c55e";
             } else {
                 btn.classList.add('wrong');
-                btn.innerHTML += ' ❌';
-                // Highlight the correct one
-                buttons.forEach(b => {
-                    if (b.getAttribute('onclick').includes('true')) {
-                        b.classList.add('correct');
-                    }
-                });
+                buttons[correctIndex].classList.add('correct');
+                feedback.textContent = "Incorrect. The correct answer is " + quizData[qIndex].options[correctIndex];
+                feedback.style.color = "#f43f5e";
             }
         }
+
+        loadQuiz();
     </script>
 </body>
 
-</html>
+</html>`;
+
+const filePath = path.join(__dirname, 'grade10', 'notes', 'Chemistry', 'Chapter-4-Carbon.html');
+fs.writeFileSync(filePath, htmlContent, 'utf8');
+console.log('Chapter 4 restored to original design with nomenclature section added.');

@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+
+const fs = require('fs');
+const path = require('path');
+
+const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -1048,6 +1052,9 @@
             </div>
         </section>
         
+        <footer>
+            <div>Made as a study companion for "Carbon and its Compounds".</div>
+        </footer>
     </div>
 
     <script>
@@ -1079,4 +1086,8 @@
     </script>
 </body>
 
-</html>
+</html>`;
+
+const filePath = path.join(__dirname, 'grade10', 'notes', 'Chemistry', 'Chapter-4-Carbon.html');
+fs.writeFileSync(filePath, htmlContent, 'utf8');
+console.log('Chapter 4 quiz updated to match Chapter 3 design.');

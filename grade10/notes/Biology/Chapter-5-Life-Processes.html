@@ -457,6 +457,52 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* Comparison Tables */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th {
+            padding: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-soft);
+            color: #cbd5e1;
+            vertical-align: top;
+            line-height: 1.6;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Vertical Divider */
+        th:not(:last-child),
+        td:not(:last-child) {
+            border-right: 1px solid var(--border-soft);
+        }
+
+        /* Alternating Rows */
+        tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
         /* Quiz Buttons */
         .quiz-option {
             display: block;
@@ -504,6 +550,47 @@
             h1 {
                 font-size: 2.2rem;
             }
+        }
+
+        /* Lightbox */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-overlay.active .lightbox-image {
+            transform: scale(1);
+        }
+
+        .diagram-placeholder img {
+            cursor: zoom-in;
         }
     </style>
 </head>
@@ -830,108 +917,541 @@
             <div class="section-label">5.2 Respiration</div>
             <div class="section-title-row">
                 <h2>Respiration</h2>
-                <p class="section-hint">Release of energy from food.</p>
+                <p class="section-hint">The process of releasing energy from food.</p>
             </div>
 
+            <!-- Intro -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>What is Respiration?</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 0.8rem;">
+                        <strong>(i) Gaseous Exchange:</strong> Intake of oxygen from the atmosphere and release of CO₂ →
+                        <strong>Breathing</strong>.
+                    </li>
+                    <li>
+                        <strong>(ii) Cellular Respiration:</strong> Breakdown of simple food in order to release energy
+                        inside the cell.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Breakdown of Glucose -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>Breakdown of Glucose by Various Pathways</h3>
+                <div
+                    style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
+                    <div
+                        style="display: inline-block; background: #1e3a8a; color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: bold; margin-bottom: 0.5rem;">
+                        Glucose</div>
+                    <div style="color: #9ca3af; font-size: 0.9rem; margin-bottom: 1rem;">(6 - Carbon Sugar)</div>
+
+                    <div style="border-left: 2px solid #4b5563; height: 30px; margin: 0 auto; width: 0;"></div>
+                    <div
+                        style="background: #374151; color: #e5e7eb; display: inline-block; padding: 0.2rem 0.8rem; border-radius: 4px; font-size: 0.85rem; margin: 0.5rem 0;">
+                        In cytoplasm</div>
+                    <div style="border-left: 2px solid #4b5563; height: 30px; margin: 0 auto; width: 0;"></div>
+
+                    <div style="margin: 1rem 0;">
+                        <strong>Pyruvic Acid</strong> (3 - Carbon) + <strong>Energy</strong>
+                    </div>
+
+                    <!-- Pathways Grid -->
+                    <div class="grid-3" style="gap: 1rem; align-items: start; margin-top: 2rem;">
+                        <!-- Pathway 1 -->
+                        <div style="position: relative;">
+                            <div style="font-size: 0.8rem; color: #f87171; margin-bottom: 0.5rem;">Absence of
+                                Oxygen<br>(In Yeast)</div>
+                            <div
+                                style="border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; background: rgba(0,0,0,0.2);">
+                                <strong>Ethanol + CO₂ + Energy</strong>
+                                <div style="font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem;">(2 - Carbon)</div>
+                            </div>
+                        </div>
+
+                        <!-- Pathway 2 -->
+                        <div style="position: relative;">
+                            <div style="font-size: 0.8rem; color: #facc15; margin-bottom: 0.5rem;">Lack of Oxygen<br>(In
+                                Muscles)</div>
+                            <div
+                                style="border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; background: rgba(0,0,0,0.2);">
+                                <strong>Lactic Acid + Energy</strong>
+                                <div style="font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem;">(3 - Carbon)</div>
+                            </div>
+                        </div>
+
+                        <!-- Pathway 3 -->
+                        <div style="position: relative;">
+                            <div style="font-size: 0.8rem; color: #4ade80; margin-bottom: 0.5rem;">Presence of
+                                Oxygen<br>(In Mitochondria)</div>
+                            <div
+                                style="border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; background: rgba(0,0,0,0.2);">
+                                <strong>CO₂ + Water + Energy</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aerobic vs Anaerobic -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>Aerobic vs Anaerobic Respiration</h3>
+                <div class="table-wrap">
+                    <table>
+                        <tr>
+                            <th style="background: rgba(244, 63, 94, 0.2); color: #fda4af;">Aerobic</th>
+                            <th style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7;">Anaerobic</th>
+                        </tr>
+                        <tr>
+                            <td>Takes place in the <strong>presence</strong> of oxygen.</td>
+                            <td>Takes place in the <strong>absence</strong> of oxygen.</td>
+                        </tr>
+                        <tr>
+                            <td>Occurs in <strong>mitochondria</strong>.</td>
+                            <td>Occurs in <strong>cytoplasm</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td>End products are <strong>CO₂ and H₂O</strong>.</td>
+                            <td>End products are <strong>alcohol or lactic acid</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>More</strong> amount of energy is released.</td>
+                            <td><strong>Less</strong> amount of energy is released.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Human Respiratory System -->
             <div class="grid-2">
-                <div class="card">
-                    <h3>Types of Respiration</h3>
-                    <ul>
-                        <li><strong>Aerobic:</strong> In presence of O₂. Produces CO₂, H₂O, High Energy (Mitochondria).
-                        </li>
-                        <li><strong>Anaerobic:</strong> In absence of O₂. Produces Ethanol/Lactic Acid, Low Energy
-                            (Yeast/Muscle cells).</li>
-                    </ul>
-                    <div class="question-box">
-                        <strong>Why do muscles cramp?</strong>
-                        Lack of oxygen during heavy exercise leads to anaerobic respiration in muscles, producing
-                        <strong>Lactic Acid</strong>.
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Human Respiratory System</h3>
+                    <div class="grid-2">
+                        <div>
+                            <h4 style="color: #93c5fd; margin-bottom: 1rem;">Passage of Air</h4>
+                            <ul style="list-style: none; padding-left: 0; position: relative;">
+                                <li style="padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem;">
+                                    <span style="position: absolute; left: 0; color: #60a5fa;">↓</span> Nostril
+                                </li>
+                                <li style="padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem;">
+                                    <span style="position: absolute; left: 0; color: #60a5fa;">↓</span> Nasal Passage
+                                </li>
+                                <li style="padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem;">
+                                    <span style="position: absolute; left: 0; color: #60a5fa;">↓</span> Nasal Cavity
+                                </li>
+                                <li style="padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem;">
+                                    <span style="position: absolute; left: 0; color: #60a5fa;">↓</span> Pharynx
+                                </li>
+                                <li style="padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem;">
+                                    <span style="position: absolute; left: 0; color: #60a5fa;">↓</span> Larynx
+                                </li>
+                                <li style="padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem;">
+                                    <span style="position: absolute; left: 0; color: #60a5fa;">↓</span> Trachea
+                                </li>
+                                <li style="padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem;">
+                                    <span style="position: absolute; left: 0; color: #60a5fa;">↓</span> Bronchi
+                                </li>
+                                <li style="padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem;">
+                                    <span style="position: absolute; left: 0; color: #60a5fa;">↓</span> Bronchioles
+                                </li>
+                                <li style="padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem;">
+                                    <span style="position: absolute; left: 0; color: #60a5fa;">↓</span> Alveoli
+                                </li>
+                                <li style="padding-left: 1.5rem; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #60a5fa;">↓</span> Blood
+                                    Capillaries
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="diagram-placeholder fit-contain" style="height: 300px;">
+                                <img src="images/human_respiratory_system.png" alt="Human Respiratory System">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Mechanism of Breathing -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Mechanism of Breathing</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <tr>
+                                <th style="width: 50%; background: rgba(59, 130, 246, 0.2); color: #93c5fd;">Inhalation
+                                </th>
+                                <th style="width: 50%; background: rgba(249, 115, 22, 0.2); color: #fdba74;">Exhalation
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>During inhalation the thoracic cavity (chest cavity) <strong>expands</strong>.</td>
+                                <td>Thoracic cavity <strong>contracts</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td>Ribs lift <strong>up</strong>.</td>
+                                <td>Ribs move <strong>downwards</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td>Diaphragm becomes <strong>flat</strong> in shape.</td>
+                                <td>Diaphragm becomes <strong>dome shaped</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td>Volume of lungs <strong>increases</strong> and air enters the lungs.</td>
+                                <td>Volume of lungs <strong>decreases</strong> and air exits from the lungs.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Exchange of Gases -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Exchange of Gases</h3>
+                    <p style="margin-bottom: 1rem;">Between alveolus, blood and tissues.</p>
+
+                    <div
+                        style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <strong style="color: #fca5a5;">(i) Oxygen Transport</strong>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem; line-height: 1.6;">
+                            Air rich in O₂ (in alveolus) → Enters in blood (through blood vessels) → O₂ Binds with
+                            haemoglobin in RBC → O₂ released in tissues → Glucose Breakdown → CO₂ Production (in
+                            tissues)
+                        </p>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px;">
+                        <strong style="color: #93c5fd;">(ii) CO₂ Transport</strong>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem; line-height: 1.6;">
+                            CO₂ from tissues released in blood and gets dissolved → Carried through blood vessels →
+                            Released in Alveolar sac → Sent out through nostrils
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Plants & Others -->
                 <div class="card">
-                    <h3>Human Respiratory System</h3>
-                    <p>Nostrils → Pharynx → Larynx → Trachea → Bronchi → Lungs → Alveoli.</p>
-                    <div class="tip-box">
-                        <strong>Alveoli</strong>
-                        Balloon-like structures where exchange of gases (O₂ and CO₂) takes place. Large surface area.
-                    </div>
-                    <div class="diagram-placeholder fit-contain" style="height: 200px; margin-top: 1rem;">
-                        <img src="images/human_respiratory_system.png" alt="Human Respiratory System">
-                    </div>
+                    <h3>Respiration in Other Organisms</h3>
+                    <ul>
+                        <li><strong>Terrestrial Organisms:</strong> Use atmospheric oxygen for respiration.</li>
+                        <li><strong>Aquatic Organisms:</strong> Use dissolved oxygen for respiration.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Respiration in Plants</h3>
+                    <p>Simpler than in animals. Gaseous exchange occurs through:</p>
+                    <ol style="padding-left: 1.2rem; margin-top: 0.5rem;">
+                        <li><strong>Stomata</strong> in leaves.</li>
+                        <li><strong>Lenticels</strong> in stems.</li>
+                        <li><strong>General surface</strong> of the root.</li>
+                    </ol>
                 </div>
             </div>
         </section>
+
 
         <!-- 5.3 Transportation -->
         <section id="transport">
             <div class="section-label">5.3 Transportation</div>
             <div class="section-title-row">
-                <h2>Transportation in Humans & Plants</h2>
+                <h2>Transportation</h2>
+                <p class="section-hint">Transport of food, oxygen, and waste.</p>
             </div>
 
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Human Heart</h3>
-                    <p>Pumping organ. Double circulation.</p>
-                    <ul>
-                        <li><strong>Right Side:</strong> Deoxygenated blood (Vena Cava → RA → RV →
-                            Pulmonary Artery).
-                        </li>
-                        <li><strong>Left Side:</strong> Oxygenated blood (Pulmonary Vein → LA → LV →
-                            Aorta).</li>
-                    </ul>
-                    <div class="diagram-placeholder fit-contain" style="height: 200px; margin-top: 1rem;">
-                        <img src="images/human_heart_section.png" alt="Human Heart Diagram">
+            <!-- Human Circulatory System -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>Human Circulatory System</h3>
+                <p>Consists of:</p>
+                <div class="grid-3" style="text-align: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                        <strong style="display: block; color: #f87171; margin-bottom: 0.3rem;">Heart</strong>
+                        <span style="font-size: 0.85rem; color: #9ca3af;">(Pumping organ)</span>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                        <strong style="display: block; color: #60a5fa; margin-bottom: 0.3rem;">Arteries & Veins</strong>
+                        <span style="font-size: 0.85rem; color: #9ca3af;">(Blood vessels)</span>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                        <strong style="display: block; color: #fbbf24; margin-bottom: 0.3rem;">Blood & Lymph</strong>
+                        <span style="font-size: 0.85rem; color: #9ca3af;">(Circulatory medium)</span>
                     </div>
                 </div>
 
-                <div class="card">
-                    <h3>Transport in Plants</h3>
-                    <ul>
-                        <li><strong>Xylem:</strong> Transports water & minerals (Unidirectional). Driven by
-                            Transpiration pull.</li>
-                        <li><strong>Phloem:</strong> Transports food (Bidirectional). Uses energy (ATP). Process called
-                            Translocation.</li>
-                    </ul>
+                <div class="diagram-placeholder fit-contain" style="height: 350px;">
+                    <img src="images/blood_circulation_diagram.png" alt="Blood Circulation Diagram">
+                </div>
+            </div>
+
+            <!-- Double Circulation -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>Double Circulation</h3>
+                <p>Blood travels twice through the heart in one complete cycle of the body.</p>
+                <ul style="margin-bottom: 1.5rem;">
+                    <li><strong>Pulmonary Circulation:</strong> Blood moves from the heart to the lungs and back to the
+                        heart.</li>
+                    <li><strong>Systemic Circulation:</strong> Blood moves from the heart to the rest of the body and
+                        back to the heart.</li>
+                </ul>
+                <div class="diagram-placeholder fit-contain" style="height: 400px;">
+                    <img src="images/human_heart_section.png" alt="Sectional View of Human Heart">
+                </div>
+            </div>
+
+            <!-- Blood -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>Blood</h3>
+                <p class="section-hint" style="margin-bottom: 1rem;">A fluid connective tissue.</p>
+
+                <div class="grid-2">
+                    <!-- Solid Component -->
+                    <div>
+                        <h4
+                            style="color: #cbd5e1; margin-bottom: 0.8rem; border-bottom: 1px solid #374151; padding-bottom: 0.5rem;">
+                            Solid Component (Blood Corpuscles)</h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                            <div
+                                style="background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.2); padding: 0.8rem; border-radius: 8px;">
+                                <strong style="color: #fca5a5;">RBCs</strong>
+                                <p style="font-size: 0.85rem; margin-top: 0.3rem; margin-bottom: 0;">Carries gas (O₂,
+                                    CO₂). Contains Hb (red colour).</p>
+                            </div>
+                            <div
+                                style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.2); padding: 0.8rem; border-radius: 8px;">
+                                <strong style="color: #fcd34d;">Blood Platelets</strong>
+                                <p style="font-size: 0.85rem; margin-top: 0.3rem; margin-bottom: 0;">Helps in Blood
+                                    Clotting.</p>
+                            </div>
+                            <div
+                                style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 8px;">
+                                <strong style="color: #e5e7eb;">WBC</strong>
+                                <p style="font-size: 0.85rem; margin-top: 0.3rem; margin-bottom: 0;">Provide body
+                                    defence by engulfing germs & producing antibodies.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Liquid Component -->
+                    <div>
+                        <h4
+                            style="color: #cbd5e1; margin-bottom: 0.8rem; border-bottom: 1px solid #374151; padding-bottom: 0.5rem;">
+                            Liquid Component (Plasma)</h4>
+                        <div
+                            style="background: rgba(254, 240, 138, 0.05); border: 1px solid rgba(254, 240, 138, 0.1); padding: 1rem; border-radius: 8px;">
+                            <strong style="color: #fef08a;">Plasma</strong>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem; line-height: 1.6;">
+                                A yellow colour fluid containing 90% water & 10% organic substances like plasma proteins
+                                (albumin, globulin), inorganic mineral ions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lymph -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>Lymph</h3>
+                <p>A yellowish fluid escapes from the blood capillaries into the intercellular spaces, contains less
+                    proteins than blood. Lymph flows from the tissues to the heart, assisting in transportation and
+                    destroying germs.</p>
+            </div>
+
+            <!-- Blood Vessels -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>Blood Vessels: Arteries vs Veins</h3>
+                <div class="table-wrap">
+                    <table>
+                        <tr>
+                            <th style="width: 50%; background: rgba(244, 63, 94, 0.2); color: #fda4af;">Arteries</th>
+                            <th style="width: 50%; background: rgba(59, 130, 246, 0.2); color: #93c5fd;">Veins</th>
+                        </tr>
+                        <tr>
+                            <td>1. Carry <strong>oxygenated</strong> blood from heart to body parts (except pulmonary
+                                artery).<br>2. Also called <strong>distributing vessel</strong>.</td>
+                            <td>1. Carry <strong>deoxygenated</strong> blood from body parts to heart (except pulmonary
+                                vein).<br>2. Also called <strong>collecting vessel</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td>3. Thick and elastic.</td>
+                            <td>3. Thin and less elastic.</td>
+                        </tr>
+                        <tr>
+                            <td>4. Deep seated.</td>
+                            <td>4. Superficial as compared to arteries.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Transportation in Plants -->
+            <div class="card">
+                <h3>Transportation in Plants</h3>
+                <p style="margin-bottom: 1rem;">There are two main conducting pathways in a plant.</p>
+
+                <div class="table-wrap" style="margin-bottom: 1.5rem;">
+                    <table>
+                        <tr>
+                            <th style="width: 50%; background: rgba(16, 185, 129, 0.2); color: #6ee7b7;">Xylem</th>
+                            <th style="width: 50%; background: rgba(236, 72, 153, 0.2); color: #f9a8d4;">Phloem</th>
+                        </tr>
+                        <tr>
+                            <td>1. Carries water & minerals from the roots to other parts of the plant.</td>
+                            <td>1. Carries product of photosynthesis from leaves to the other parts of the plant.</td>
+                        </tr>
+                        <tr>
+                            <td>2. No energy is used.</td>
+                            <td>2. Energy is used from ATP.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="grid-2">
+                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px;">
+                        <strong style="color: #a7f3d0;">Transpiration</strong>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                            The process of loss of water as vapour from aerial parts of the plant.
+                        </p>
+                        <ul style="font-size: 0.85rem; margin-top: 0.5rem; color: #9ca3af;">
+                            <li>Absorption and upward movement of water/minerals (osmotic pressure pull).</li>
+                            <li>Helps in temperature regulation.</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px;">
+                        <strong style="color: #fbcfe8;">Translocation</strong>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                            Transport of food from leaves (food factory) to different part of the plant.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 5.4 Excretion -->
+
+                <!-- 5.4 Excretion -->
         <section id="excretion">
             <div class="section-label">5.4 Excretion</div>
             <div class="section-title-row">
                 <h2>Excretion</h2>
-                <p class="section-hint">Removal of toxic wastes.</p>
+                <p class="section-hint">Removal of harmful metabolic wastes from the body.</p>
             </div>
 
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Human Excretory System</h3>
-                    <p>Kidneys filter blood to produce urine.</p>
-                    <ul>
-                        <li><strong>Nephron:</strong> Filtration unit. Glomerulus filters blood, tubular
-                            part reabsorbs
-                            glucose, amino acids, water.</li>
-                        <li><strong>Urine:</strong> Ureters → Bladder → Urethra.</li>
-                    </ul>
-                    <div class="diagram-placeholder fit-contain" style="height: 200px; margin-top: 1rem;">
-                        <img src="images/human_excretory_system.png" alt="Human Excretory System">
+            <!-- Intro -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>What is Excretion?</h3>
+                <p>The biological process involved in the removal of harmful metabolic wastes from the body is called excretion.</p>
+                
+                <div style="margin-top: 1.5rem;">
+                    <h4 style="color: #cbd5e1; margin-bottom: 1rem; text-align: center;">Material Excreted</h4>
+                    <div class="grid-2">
+                        <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <strong style="color: #fca5a5; display: block; margin-bottom: 0.5rem;">Nitrogenous Wastes</strong>
+                            <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                                <span class="tag">Urea</span>
+                                <span class="tag">Uric Acid</span>
+                                <span class="tag">Urine</span>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <strong style="color: #93c5fd; display: block; margin-bottom: 0.5rem;">Excess Water</strong>
+                            <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                                <span class="tag">Sweat</span>
+                                <span class="tag">Urine</span>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <strong style="color: #d1fae5; display: block; margin-bottom: 0.5rem;">Gases</strong>
+                            <span class="tag">CO₂</span>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <strong style="color: #fde047; display: block; margin-bottom: 0.5rem;">Salts</strong>
+                            <span class="tag">Excess Salts</span>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="card">
-                    <h3>Excretion in Plants</h3>
-                    <ul>
-                        <li>O₂ released via stomata.</li>
-                        <li>Excess water via transpiration.</li>
-                        <li>Wastes stored in old leaves (fall off) or vacuoles.</li>
-                        <li>Resins and gums in old xylem.</li>
-                    </ul>
+            <!-- Human Excretory System -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>Excretory System in Humans</h3>
+                <div class="grid-2">
+                    <div>
+                        <p><strong>Consists of:</strong></p>
+                        <ul style="margin-bottom: 1.5rem;">
+                            <li><strong>(1) The Kidneys:</strong> The excretory organ.</li>
+                            <li><strong>(2) The Ureters:</strong> Ducts which drain out urine from kidneys.</li>
+                            <li><strong>(3) The Urinary Bladder:</strong> The urine reservoir.</li>
+                            <li><strong>(4) The Urethra:</strong> The channel to the exterior.</li>
+                        </ul>
+
+                        <p><strong>Functions:</strong></p>
+                        <ol>
+                            <li>Maintains water, pH, ionic, and osmotic equilibrium of blood.</li>
+                            <li>Excretes waste product urea in dissolved form.</li>
+                            <li>Excretes poisonous substances like drugs, toxins.</li>
+                            <li>Regulates blood pressure by controlling fluid balance.</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <div class="diagram-placeholder fit-contain" style="height: 350px;">
+                            <img src="images/human_excretory_system.png" alt="Human Excretory System">
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Nephron & Urine Formation -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>Urine Formation (Nephron)</h3>
+                <p>Each kidney contains many filtration units called <strong>Nephrons</strong>.</p>
+                
+                <div class="grid-2" style="margin-top: 1.5rem;">
+                    <div>
+                        <h4 style="color: #cbd5e1; margin-bottom: 1rem;">Structure of Nephron</h4>
+                        <ul style="font-size: 0.9rem;">
+                            <li><strong>Glomerulus:</strong> Cluster of thin-walled capillaries.</li>
+                            <li><strong>Bowman's Capsule:</strong> Cup-like structure associated with Glomerulus.</li>
+                            <li><strong>Tubular Part:</strong> PCT, Loop of Henle, DCT.</li>
+                            <li><strong>Collecting Duct:</strong> Where urine is collected.</li>
+                        </ul>
+                        
+                        <h4 style="color: #cbd5e1; margin-top: 1.5rem; margin-bottom: 1rem;">Mechanism</h4>
+                        <div style="border-left: 2px solid #374151; padding-left: 1rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: #fca5a5;">1. Glomerular Filtration</strong>
+                                <p style="font-size: 0.85rem; margin-top: 0.2rem;">Nitrogenous wastes, glucose, water, amino acids filtered into Bowman's Capsule.</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: #93c5fd;">2. Tubular Reabsorption</strong>
+                                <p style="font-size: 0.85rem; margin-top: 0.2rem;">Useful substances (glucose, amino acids, salts, water) reabsorbed by capillaries.</p>
+                            </div>
+                            <div>
+                                <strong style="color: #fde047;">3. Secretion</strong>
+                                <p style="font-size: 0.85rem; margin-top: 0.2rem;">Urea, extra water, and salts secreted into tubule → Collecting Duct → Ureter.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="diagram-placeholder fit-contain" style="height: 400px;">
+                            <img src="images/nephron_structure.png" alt="Structure of Nephron">
+                        </div>
+                        <div class="tip-box" style="margin-top: 1rem;">
+                            <strong>Artificial Kidney (Haemodialysis)</strong>
+                            The process of purifying blood by an artificial kidney. It is meant for kidney failure patients.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Excretion in Plants -->
+            <div class="card">
+                <h3>Excretion in Plants</h3>
+                <p>Plants use different strategies for excretion of different products:</p>
+                <ul style="margin-top: 1rem;">
+                    <li><strong>Gaseous Wastes:</strong> Oxygen and CO₂ diffused through <strong>stomata</strong>.</li>
+                    <li><strong>Excess Water:</strong> Removed by <strong>transpiration</strong>.</li>
+                    <li><strong>Old Parts:</strong> Plants lose old leaves and bark.</li>
+                    <li><strong>Stored Wastes:</strong> Resins and gums (especially in old xylem).</li>
+                    <li><strong>Soil Excretion:</strong> Some waste substances excreted into the soil around them.</li>
+                </ul>
+            </div>
         </section>
+
 
         <!-- NCERT ACTIVITIES LINK -->
         <section id="ncert-activities">
@@ -1057,6 +1577,37 @@
             }
         }
     </script>
+
+    <script>
+        // Lightbox Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const lightbox = document.createElement('div');
+            lightbox.className = 'lightbox-overlay';
+            lightbox.innerHTML = '<img src="" alt="Lightbox Image" class="lightbox-image">';
+            document.body.appendChild(lightbox);
+
+            const lightboxImg = lightbox.querySelector('img');
+
+            // Select all images inside diagram placeholders
+            const images = document.querySelectorAll('.diagram-placeholder img');
+
+            images.forEach(img => {
+                img.addEventListener('click', () => {
+                    lightboxImg.src = img.src;
+                    lightboxImg.alt = img.alt;
+                    lightbox.classList.add('active');
+                });
+            });
+
+            // Close on click outside
+            lightbox.addEventListener('click', (e) => {
+                if (e.target !== lightboxImg) {
+                    lightbox.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

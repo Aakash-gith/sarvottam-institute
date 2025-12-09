@@ -284,7 +284,7 @@
             height: 100%;
             object-fit: cover;
         }
-        
+
         .diagram-placeholder.fit-contain img {
             object-fit: contain;
         }
@@ -552,6 +552,47 @@
                 font-size: 2.2rem;
             }
         }
+
+        /* Lightbox */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-overlay.active .lightbox-image {
+            transform: scale(1);
+        }
+
+        .diagram-placeholder img {
+            cursor: zoom-in;
+        }
     </style>
 </head>
 
@@ -587,7 +628,8 @@
                 </div>
                 <h1>Carbon and its Compounds</h1>
                 <p class="hero-subtitle">
-                    Explore the versatile nature of carbon, covalent bonding, allotropes, and the vast world of organic chemistry including soaps and detergents.
+                    Explore the versatile nature of carbon, covalent bonding, allotropes, and the vast world of organic
+                    chemistry including soaps and detergents.
                 </p>
                 <div class="hero-actions">
                     <a href="#bonding" class="btn btn-primary">Start Learning</a>
@@ -623,7 +665,8 @@
                     <h3>Why Covalent?</h3>
                     <p>Carbon (Atomic No. 6) has configuration 2, 4. To achieve noble gas configuration:</p>
                     <ul>
-                        <li><strong>Gain 4 electrons (C⁴⁻):</strong> Difficult for nucleus (6 protons) to hold 10 electrons.</li>
+                        <li><strong>Gain 4 electrons (C⁴⁻):</strong> Difficult for nucleus (6 protons) to hold 10
+                            electrons.</li>
                         <li><strong>Lose 4 electrons (C⁴⁺):</strong> Requires large energy to remove 4 electrons.</li>
                     </ul>
                     <div class="tip-box">
@@ -651,15 +694,18 @@
                     <div class="grid-3" style="margin-top: 1rem;">
                         <div>
                             <strong>Diamond</strong>
-                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Each C bonded to 4 other C atoms. Rigid 3D structure. Hardest substance.</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Each C bonded to 4 other C atoms. Rigid 3D
+                                structure. Hardest substance.</p>
                         </div>
                         <div>
                             <strong>Graphite</strong>
-                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Each C bonded to 3 other C atoms. Hexagonal arrays. Smooth, slippery, conducts electricity.</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Each C bonded to 3 other C atoms.
+                                Hexagonal arrays. Smooth, slippery, conducts electricity.</p>
                         </div>
                         <div>
                             <strong>Fullerenes</strong>
-                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">C-60 (Buckminsterfullerene). Football shape.</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">C-60 (Buckminsterfullerene). Football
+                                shape.</p>
                         </div>
                     </div>
                     <div class="diagram-placeholder fit-contain" style="height: 200px; margin-top: 1rem;">
@@ -681,7 +727,9 @@
                 <div class="card">
                     <h3>Key Properties</h3>
                     <ul>
-                        <li><strong>Catenation:</strong> Unique ability to form bonds with other carbon atoms (chains, branches, rings). Silicon shows this property but only up to 7-8 atoms and is reactive. Carbon bonds are very strong and stable.</li>
+                        <li><strong>Catenation:</strong> Unique ability to form bonds with other carbon atoms (chains,
+                            branches, rings). Silicon shows this property but only up to 7-8 atoms and is reactive.
+                            Carbon bonds are very strong and stable.</li>
                         <li><strong>Tetravalency:</strong> Valency of 4. Can bond with O, H, N, S, Cl, etc.</li>
                     </ul>
                 </div>
@@ -767,11 +815,11 @@
                         <img src="images/homologous_series.png" alt="Homologous Series">
                     </div>
                 </div>
-                
+
                 <!-- Detailed Nomenclature Section -->
                 <div class="card" style="grid-column: 1 / -1;">
                     <h3>Detailed Nomenclature (IUPAC Rules)</h3>
-                    
+
                     <div class="tip-box" style="margin-top: 0; margin-bottom: 1.5rem;">
                         <strong>The Golden Formula</strong>
                         <p style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: #fff;">
@@ -789,18 +837,24 @@
                         <div>
                             <h4 style="color: #93c5fd; margin-bottom: 0.5rem; font-size: 1rem;">Key Rules</h4>
                             <ol style="font-size: 0.9rem; margin-left: 1rem;">
-                                <li><strong>Longest Chain:</strong> Select the longest continuous carbon chain containing the functional group.</li>
-                                <li><strong>Lowest Number:</strong> Number from the end giving the substituent/functional group the lowest number.</li>
-                                <li><strong>Alphabetical Order:</strong> If multiple substituents, list them alphabetically (e.g., Bromo before Chloro).</li>
-                                <li><strong>Priority Order:</strong> Carboxylic Acid > Aldehyde > Ketone > Alcohol > Alkene/Alkyne.</li>
+                                <li><strong>Longest Chain:</strong> Select the longest continuous carbon chain
+                                    containing the functional group.</li>
+                                <li><strong>Lowest Number:</strong> Number from the end giving the
+                                    substituent/functional group the lowest number.</li>
+                                <li><strong>Alphabetical Order:</strong> If multiple substituents, list them
+                                    alphabetically (e.g., Bromo before Chloro).</li>
+                                <li><strong>Priority Order:</strong> Carboxylic Acid > Aldehyde > Ketone > Alcohol >
+                                    Alkene/Alkyne.</li>
                             </ol>
                         </div>
                         <div>
-                            <h4 style="color: #93c5fd; margin-bottom: 0.5rem; font-size: 1rem;">Step-by-Step Examples</h4>
+                            <h4 style="color: #93c5fd; margin-bottom: 0.5rem; font-size: 1rem;">Step-by-Step Examples
+                            </h4>
                             <div style="font-size: 0.9rem;">
                                 <p style="margin-bottom: 0.8rem;">
                                     <strong>1. CH₃-CH₂-CH₂-OH</strong><br>
-                                    <span style="color: var(--text-soft);">Prop (3C) + an (single) + ol (Alcohol)</span><br>
+                                    <span style="color: var(--text-soft);">Prop (3C) + an (single) + ol
+                                        (Alcohol)</span><br>
                                     = <strong>Propanol</strong>
                                 </p>
                                 <p style="margin-bottom: 0.8rem;">
@@ -810,13 +864,14 @@
                                 </p>
                                 <p>
                                     <strong>3. CH₃-CH(Cl)-CH₃</strong><br>
-                                    <span style="color: var(--text-soft);">2-Chloro (Prefix) + Prop (3C) + ane</span><br>
+                                    <span style="color: var(--text-soft);">2-Chloro (Prefix) + Prop (3C) +
+                                        ane</span><br>
                                     = <strong>2-Chloropropane</strong>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="tag-row" style="margin-top: 1.5rem;">
                         <span class="tag">Acid: -oic acid</span>
                         <span class="tag">Aldehyde: -al</span>
@@ -889,9 +944,9 @@
                     <div class="question-box">
                         <strong>Reactions</strong>
                         <p>1. <strong>With Sodium:</strong><br>
-                        2Na + 2CH₃CH₂OH → 2CH₃CH₂O⁻Na⁺ (Sodium Ethoxide) + H₂</p>
+                            2Na + 2CH₃CH₂OH → 2CH₃CH₂O⁻Na⁺ (Sodium Ethoxide) + H₂</p>
                         <p style="margin-top:0.5rem;">2. <strong>Dehydration:</strong><br>
-                        CH₃CH₂OH (conc. H₂SO₄) → CH₂=CH₂ + H₂O</p>
+                            CH₃CH₂OH (conc. H₂SO₄) → CH₂=CH₂ + H₂O</p>
                     </div>
                 </div>
 
@@ -905,9 +960,11 @@
                     <div class="question-box">
                         <strong>Reactions</strong>
                         <p>1. <strong>Esterification:</strong> Acid + Alcohol → Ester<br>
-                        CH₃COOH + C₂H₅OH → CH₃COOC₂H₅ + H₂O</p>
-                        <p style="margin-top:0.5rem;">2. <strong>Saponification:</strong> Ester + Base → Alcohol + Soap</p>
-                        <p style="margin-top:0.5rem;">3. <strong>With Carbonates:</strong> Gives CO₂ gas (brisk effervescence).</p>
+                            CH₃COOH + C₂H₅OH → CH₃COOC₂H₅ + H₂O</p>
+                        <p style="margin-top:0.5rem;">2. <strong>Saponification:</strong> Ester + Base → Alcohol + Soap
+                        </p>
+                        <p style="margin-top:0.5rem;">3. <strong>With Carbonates:</strong> Gives CO₂ gas (brisk
+                            effervescence).</p>
                     </div>
                     <div class="diagram-placeholder fit-contain" style="height: 150px; margin-top: 1rem;">
                         <img src="images/esterification_reaction.png" alt="Esterification Reaction">
@@ -938,7 +995,9 @@
 
                 <div class="card">
                     <h3>Micelle Formation</h3>
-                    <p>Ionic ends face water, carbon chains dissolve in oil/dirt. Forms a structure called <strong>Micelle</strong>. Emulsion is formed, and dirt is washed away.</p>
+                    <p>Ionic ends face water, carbon chains dissolve in oil/dirt. Forms a structure called
+                        <strong>Micelle</strong>. Emulsion is formed, and dirt is washed away.
+                    </p>
                 </div>
 
                 <div class="card" style="grid-column: 1 / -1;">
@@ -1047,7 +1106,7 @@
                 </div>
             </div>
         </section>
-        
+
     </div>
 
     <script>
@@ -1076,6 +1135,34 @@
                 });
             }
         }
+
+        // Lightbox Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const lightbox = document.createElement('div');
+            lightbox.className = 'lightbox-overlay';
+            lightbox.innerHTML = '<img src="" alt="Lightbox Image" class="lightbox-image">';
+            document.body.appendChild(lightbox);
+
+            const lightboxImg = lightbox.querySelector('img');
+
+            // Select all images inside diagram placeholders
+            const images = document.querySelectorAll('.diagram-placeholder img');
+
+            images.forEach(img => {
+                img.addEventListener('click', () => {
+                    lightboxImg.src = img.src;
+                    lightboxImg.alt = img.alt;
+                    lightbox.classList.add('active');
+                });
+            });
+
+            // Close on click outside
+            lightbox.addEventListener('click', (e) => {
+                if (e.target !== lightboxImg) {
+                    lightbox.classList.remove('active');
+                }
+            });
+        });
     </script>
 </body>
 

@@ -1,25 +1,559 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 6 - Control and Coordination</title>
+    <meta charset="UTF-8" />
+    <title>Control and Coordination – Class 10 Biology</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%); line-height: 1.6; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
-        h1 { color: #1b5e20; margin-bottom: 10px; text-align: center; border-bottom: 3px solid #1b5e20; padding-bottom: 15px; }
-        h2 { color: #006400; margin-top: 30px; margin-bottom: 15px; }
-        h3 { color: #0284a8; margin-top: 20px; margin-bottom: 10px; }
-        .important-box { background: #e0f7ff; border-left: 5px solid #4facfe; padding: 15px; margin: 20px 0; border-radius: 5px; }
-        .definition-box { background: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin: 20px 0; border-radius: 5px; }
-        p { margin-bottom: 10px; }
-        ul { margin-left: 20px; margin-bottom: 15px; }
-        li { margin-bottom: 8px; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        table, th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #1b5e20; color: white; }
-    
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --accent: #10b981;
+            /* Emerald Green for Biology */
+            --accent-soft: rgba(16, 185, 129, 0.15);
+            --accent-strong: #059669;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --danger: #f97373;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+            --transition-med: 260ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Layout */
+
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(14px);
+            background: linear-gradient(to right,
+                    rgba(15, 23, 42, 0.96),
+                    rgba(15, 23, 42, 0.9));
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }
+
+        .nav-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0.7rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            color: #e5e7eb;
+        }
+
+        .logo-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 12px;
+            background: radial-gradient(circle at 20% 20%, #34d399, #10b981 60%, #059669);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #fff;
+            font-weight: 800;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            font-size: 0.78rem;
+            padding: 0.35rem 0.8rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid transparent;
+            color: var(--text-soft);
+            transition: background var(--transition-fast), color var(--transition-fast),
+                border-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .nav-links a:hover {
+            background: rgba(31, 41, 55, 0.85);
+            border-color: rgba(55, 65, 81, 0.9);
+            color: #e5e7eb;
+            transform: translateY(-1px);
+        }
+
+        .nav-links a.primary-link {
+            border-color: rgba(16, 185, 129, 0.7);
+            background: linear-gradient(135deg,
+                    rgba(16, 185, 129, 0.15),
+                    rgba(5, 150, 105, 0.12));
+            color: #a7f3d0;
+        }
+
+        .nav-links a.primary-link:hover {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Hero */
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+            gap: 2.5rem;
+            align-items: center;
+            margin-top: 2.3rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.1rem, 3vw + 1.2rem, 3.2rem);
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-subtitle {
+            font-size: 0.98rem;
+            color: var(--text-soft);
+            max-width: 33rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            color: #cbd5f5;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.4rem;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-med);
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-strong);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(31, 41, 55, 0.6);
+            color: #e5e7eb;
+            border: 1px solid rgba(75, 85, 99, 0.5);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(55, 65, 81, 0.8);
+            border-color: #9ca3af;
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #34d399, #10b981);
+        }
+
+        .diagram-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #0f172a;
+            border-radius: var(--radius-lg);
+            border: 1px dashed #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .diagram-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .diagram-placeholder.fit-contain img {
+            object-fit: contain;
+        }
+
+        /* Sections */
+
+        section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 6rem;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .section-title-row {
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #f1f5f9;
+        }
+
+        .section-hint {
+            color: var(--text-soft);
+            font-size: 1rem;
+            max-width: 38rem;
+        }
+
+        /* Cards & Grid */
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(31, 41, 55, 0.6);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: transform var(--transition-fast), border-color var(--transition-fast);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(55, 65, 81, 0.9);
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.8rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            line-height: 1.65;
+        }
+
+        .card ul,
+        .card ol {
+            list-style: none;
+            padding-left: 0.4rem;
+        }
+
+        .card li {
+            position: relative;
+            padding-left: 1.2rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.92rem;
+            color: #cbd5e1;
+        }
+
+        .card li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Feature Boxes */
+
+        .tip-box,
+        .question-box,
+        .activity-box {
+            margin-top: 1.2rem;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .tip-box {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #d1fae5;
+        }
+
+        .tip-box strong {
+            color: #34d399;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .question-box {
+            background: rgba(234, 179, 8, 0.08);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            color: #fef08a;
+        }
+
+        .question-box strong {
+            color: #facc15;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-box {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #dbeafe;
+        }
+
+        .activity-box strong {
+            color: #60a5fa;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.07);
+            color: #9ca3af;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Comparison Tables */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th {
+            padding: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-soft);
+            color: #cbd5e1;
+            vertical-align: top;
+            line-height: 1.6;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Vertical Divider */
+        th:not(:last-child),
+        td:not(:last-child) {
+            border-right: 1px solid var(--border-soft);
+        }
+
+        /* Alternating Rows */
+        tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Quiz Buttons */
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: var(--bg-soft);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            color: var(--text-soft);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: #1e293b;
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .quiz-option.correct {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .quiz-option.wrong {
+            background: rgba(244, 63, 94, 0.2);
+            border-color: #f43f5e;
+            color: #f43f5e;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .nav-inner {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+
         /* Lightbox */
         .lightbox-overlay {
             position: fixed;
@@ -50,235 +584,576 @@
             transform: scale(0.9);
             transition: transform 0.3s ease;
             border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .lightbox-overlay.active .lightbox-image {
             transform: scale(1);
         }
-        
+
         .diagram-placeholder img {
             cursor: zoom-in;
         }
 
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(75, 85, 99, 0.8);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Chapter 6 - Control and Coordination</h1>
-        <p style="text-align: center; color: #999; margin-bottom: 30px;">Class X Biology | CBSE</p>
+    <header>
+        <div class="nav-inner">
+            <div class="logo">
+                <div class="logo-badge">B</div>
+                <span>Sarvottam Institute</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#nervous-system">Nervous System</a>
+                <a href="#plant-coordination">Plants</a>
+                <a href="#animal-hormones">Hormones</a>
+                <a href="#summary">Summary</a>
+                <a href="Chapter-6-Activities.html" class="primary-link">Activities</a>
+            </nav>
+        </div>
+    </header>
 
-        <h2>Introduction</h2>
-        <p>Control and coordination are essential for maintaining homeostasis and responding to environmental stimuli. Organisms use two main systems: nervous system and endocrine system.</p>
+    <div class="page">
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-text">
+                <div class="badge-row">
+                    <div class="badge">
+                        <div class="badge-dot"></div>
+                        Biology
+                    </div>
+                    <div class="badge">Chapter 6</div>
+                    <div class="badge">Grade 10</div>
+                </div>
+                <h1>Control and Coordination</h1>
+                <p class="hero-subtitle">
+                    Explore how living organisms control and coordinate their body movements and metabolism through
+                    nervous and hormonal systems.
+                </p>
+                <div class="hero-actions">
+                    <a href="#nervous-system" class="btn btn-primary">Start Learning</a>
+                    <a href="Chapter-6-Activities.html" class="btn btn-secondary">View Activities</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <div class="diagram-placeholder fit-contain">
+                        <img src="images/neuron.png" alt="Neuron Structure" />
+                    </div>
+                    <h3>At a Glance</h3>
+                    <ul>
+                        <li><strong>Nervous System:</strong> Fast control via electrical impulses.</li>
+                        <li><strong>Reflex Action:</strong> Rapid, involuntary response.</li>
+                        <li><strong>Hormones:</strong> Chemical coordination in plants & animals.</li>
+                        <li><strong>Tropisms:</strong> Plant movements linked to growth.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-        <h2>Nervous System</h2>
-        <p>The nervous system is a network of nerve cells (neurons) that transmit signals and coordinate all body activities.</p>
+        <!-- 6.1 Animals – Nervous System -->
+        <section id="nervous-system">
+            <div class="section-label">6.1 Animals – Nervous System</div>
+            <div class="section-title-row">
+                <h2>Nervous System</h2>
+                <p class="section-hint">The control center that receives information from the environment and directs
+                    the
+                    body's response.</p>
+            </div>
 
-        <h3>Types of Nervous System</h3>
-        <table>
-            <tr>
-                <th>Central Nervous System (CNS)</th>
-                <th>Peripheral Nervous System (PNS)</th>
-            </tr>
-            <tr>
-                <td>Brain and spinal cord</td>
-                <td>Nerves connecting CNS to body parts</td>
-            </tr>
-            <tr>
-                <td>Processes information</td>
-                <td>Transmits signals to/from CNS</td>
-            </tr>
-            <tr>
-                <td>Integrating center</td>
-                <td>Sensory and motor nerves</td>
-            </tr>
-        </table>
+            <div class="grid-2">
+                <!-- Basics -->
+                <div class="card">
+                    <h3>The Basics</h3>
+                    <p>Animals use <strong>Nervous Tissue</strong> and <strong>Muscular Tissue</strong> for control and
+                        coordination.</p>
+                    <div class="tip-box" style="margin-top: 0.5rem;">
+                        <strong>SENSE ORGANS & RECEPTORS</strong>
+                        <ul style="margin: 0.5rem 0 0 0; padding-left: 0;">
+                            <li><strong>Gustatory:</strong> Taste (Tongue)</li>
+                            <li><strong>Olfactory:</strong> Smell (Nose)</li>
+                            <li><strong>Photoreceptors:</strong> Light (Eyes)</li>
+                            <li><strong>Phonoreceptors:</strong> Sound (Ears)</li>
+                            <li><strong>Thermoreceptors:</strong> Heat/Cold (Skin)</li>
+                        </ul>
+                    </div>
+                </div>
 
-        <h2>Brain Structure and Functions</h2>
-        <ul>
-            <li><strong>Cerebrum:</strong> Controls voluntary actions, intelligence, memory, consciousness
-                <ul style="margin-left: 20px;">
-                    <li>Cerebral cortex: Grey matter (decision making)</li>
-                    <li>White matter: Myelinated nerve fibers (transmission)</li>
+                <!-- Neuron Structure -->
+                <div class="card">
+                    <h3>Neuron (Nerve Cell)</h3>
+                    <p>The structural and functional unit of the nervous system.</p>
+                    <div class="diagram-placeholder fit-contain" style="height: 180px;">
+                        <img src="images/neuron_structure.png" alt="Neuron Structure (Fig 6.1a)">
+                    </div>
+                    <ul>
+                        <li><strong>Dendrites:</strong> Acquire information.</li>
+                        <li><strong>Cell Body:</strong> Processes information.</li>
+                        <li><strong>Axon:</strong> Travels primarily as electrical impulse.</li>
+                        <li><strong>Synapse:</strong> Gap where signal converts to chemical (neurotransmitter) to cross
+                            to next neuron.</li>
+                    </ul>
+                </div>
+
+                <!-- Reflex Actions -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Reflex Actions</h3>
+                    <div class="grid-2" style="margin-top: 1rem; gap: 1.5rem;">
+                        <div>
+                            <p>Sudden, involuntary action in response to a stimulus. Does not involve thinking
+                                (conscious) part of the brain initially.</p>
+                            <div class="activity-box">
+                                <strong>REFLEX ARC PATHWAY</strong>
+                                <p style="margin-top: 0.5rem; color: #dbeafe;"> Stimulus → Receptor → Sensory Neuron →
+                                    Spinal Cord → Motor Neuron → Effector (Muscle) → Response</p>
+                            </div>
+                        </div>
+                        <div class="diagram-placeholder fit-contain" style="height: 200px;">
+                            <img src="images/reflex_arc.png" alt="Reflex Arc (Fig 6.2)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Human Brain -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>The Human Brain</h3>
+                    <p>The main coordinating center of the body.</p>
+                    <div class="diagram-placeholder fit-contain" style="height: 350px;">
+                        <img src="images/human_brain.png" alt="Human Brain (Fig 6.3)">
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Part</th>
+                                    <th>Region</th>
+                                    <th>Function</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Fore-brain</strong></td>
+                                    <td>Cerebrum</td>
+                                    <td>Thinking, memory, voluntary actions, sensory interpretation, hunger centre.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mid-brain</strong></td>
+                                    <td>-</td>
+                                    <td>Relay center, auditory/visual reflexes.</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="3"><strong>Hind-brain</strong></td>
+                                    <td>Cerebellum</td>
+                                    <td>Posture, balance, precision of voluntary movements (e.g., walking, riding).</td>
+                                </tr>
+                                <tr>
+                                    <td>Medulla</td>
+                                    <td>Involuntary actions (blood pressure, salivation, vomiting).</td>
+                                </tr>
+                                <tr>
+                                    <td>Pons</td>
+                                    <td>Regulation of respiration.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Protection -->
+                <div class="card">
+                    <h3>Protection of Tissues</h3>
+                    <ul>
+                        <li><strong>Brain:</strong> Inside bony box (Cranium). Surrounded by fluid-filled balloon (shock
+                            absorber).</li>
+                        <li><strong>Spinal Cord:</strong> Protected by Vertebral Column (Backbone).</li>
+                    </ul>
+                </div>
+
+                <!-- Action -->
+                <div class="card">
+                    <h3>How Muscle Causes Action</h3>
+                    <ul>
+                        <li>Nerve impulse reaches muscle.</li>
+                        <li>Muscle cells move by changing shape.</li>
+                        <li><strong>Mechanism:</strong> Special proteins change shape/arrangement in response to
+                            electrical impulses.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6.2 Coordination in Plants -->
+        <section id="plant-coordination">
+            <div class="section-label">6.2 Coordination in Plants</div>
+            <div class="section-title-row">
+                <h2>Coordination in Plants</h2>
+                <p class="section-hint">Plants lack a nervous system but use chemical means and movement for
+                    coordination.</p>
+            </div>
+
+            <div class="grid-2">
+                <!-- Types of Movement -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Types of Plant Movements</h3>
+                    <div class="grid-2" style="gap: 1rem; margin-top: 1rem;">
+                        <div class="tip-box"
+                            style="margin-top: 0; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3);">
+                            <strong style="color: #60a5fa;">1. Growth-Independent (Nastic)</strong>
+                            <p style="margin-top: 0.5rem; color: #dbeafe;">
+                                Immediate response to stimulus. Not directional.<br>
+                                <em>Ex: Touching sensitive plant (Mimosa).</em>
+                            </p>
+                        </div>
+                        <div class="tip-box"
+                            style="margin-top: 0; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
+                            <strong style="color: #34d399;">2. Growth-Dependent (Tropic)</strong>
+                            <p style="margin-top: 0.5rem; color: #d1fae5;">
+                                Directional movement due to growth.<br>
+                                <em>Ex: Bending towards light.</em>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Immediate Response -->
+                <div class="card">
+                    <h3>Immediate Response</h3>
+                    <p><strong>Sensitive Plant (Mimosa pudica):</strong> Leaves fold up and droop on touch.</p>
+                    <div class="diagram-placeholder fit-contain" style="height: 150px;">
+                        <img src="images/mimosa_movement.png" alt="Mimosa Plant (Fig 6.4)">
+                    </div>
+                    <ul>
+                        <li>No nervous tissue.</li>
+                        <li>Uses electrical-chemical signals to convey info.</li>
+                        <li><strong>Mechanism:</strong> Cells change shape by changing water content (Turgor changes).
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Tropisms -->
+                <div class="card">
+                    <h3>Tropic Movements</h3>
+                    <p>Directional growth in response to stimuli.</p>
+                    <ul style="margin-top: 1rem;">
+                        <li><strong>Phototropism:</strong> Response to Light (Shoots +, Roots -).</li>
+                        <li><strong>Geotropism:</strong> Response to Gravity (Roots +, Shoots -).</li>
+                        <li><strong>Hydrotropism:</strong> Response to Water (Roots +).</li>
+                        <li><strong>Chemotropism:</strong> Response to Chemicals (e.g., Pollen tube → Ovule).</li>
+                    </ul>
+                </div>
+
+                <!-- Plant Hormones -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Plant Hormones (Phytohormones)</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Hormone</th>
+                                    <th>Function</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Auxins</strong></td>
+                                    <td>Synthesized at shoot tip. Helps cells grow longer. Causes bending towards light
+                                        (Phototropism).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Gibberellins</strong></td>
+                                    <td>Growth of stem.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cytokinins</strong></td>
+                                    <td>Promotes cell division (Rapid in fruits/seeds).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Abscisic Acid</strong></td>
+                                    <td>Inhibits growth. Causes wilting of leaves. (Stress hormone).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6.3 Hormones in Animals -->
+        <section id="animal-hormones">
+            <div class="section-label">6.3 Hormones in Animals</div>
+            <div class="section-title-row">
+                <h2>Hormones in Animals</h2>
+                <p class="section-hint">Endocrine glands secrete chemicals (hormones) directly into the blood.</p>
+            </div>
+
+            <div class="grid-2" style="grid-template-columns: 1fr;">
+                <!-- Glands Diagram -->
+                <div class="card">
+                    <h3>Endocrine Glands</h3>
+                    <div class="diagram-placeholder fit-contain" style="height: 400px;">
+                        <img src="images/endocrine_glands.png" alt="Endocrine Glands (Fig 6.7)">
+                    </div>
+                </div>
+
+                <!-- Hormones Table -->
+                <div class="card">
+                    <h3>Major Hormones & Functions</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Gland</th>
+                                    <th>Hormone</th>
+                                    <th>Function</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Thyroid</strong></td>
+                                    <td>Thyroxin</td>
+                                    <td>Regulates carbohydrate, protein, fat metabolism. (Need Iodine).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pituitary</strong></td>
+                                    <td>Growth Hormone</td>
+                                    <td>Regulates growth and development.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Adrenal</strong></td>
+                                    <td>Adrenaline</td>
+                                    <td>"Fight or Flight". Increases heart rate, breathing, blood to muscles.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pancreas</strong></td>
+                                    <td>Insulin</td>
+                                    <td>Regulates blood sugar levels. Deficiency causing Diabetes.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Testes</strong> (Male)</td>
+                                    <td>Testosterone</td>
+                                    <td>Changes during puberty (Secondary sexual characters).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ovaries</strong> (Female)</td>
+                                    <td>Oestrogen</td>
+                                    <td>Changes during puberty, Menstrual cycle.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Feedback Mechanism -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Feedback Mechanism</h3>
+                    <div class="grid-2">
+                        <div>
+                            <p>Hormones must be secreted in precise quantities.</p>
+                            <p><strong>Mechanism:</strong> The timing and amount of hormone released are regulated by
+                                feedback mechanisms.</p>
+                        </div>
+                        <div class="activity-box">
+                            <strong>EXAMPLE: BLOOD SUGAR</strong>
+                            <ul style="margin: 0; padding-left: 1.2rem;">
+                                <li>Sugar level rises → Detected by Pancreas → More Insulin secreted.</li>
+                                <li>Sugar level falls → Detected by Pancreas → Less Insulin secreted.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary & Exercises -->
+        <section id="summary">
+            <div class="section-label">Recap</div>
+            <div class="section-title-row">
+                <h2>What You Have Learnt</h2>
+            </div>
+
+            <div class="card">
+                <ul>
+                    <li>Control and coordination are the functions of the nervous system and hormones.</li>
+                    <li>The <strong>nervous system</strong> uses electrical impulses for rapid responses.</li>
+                    <li><strong>Reflexes</strong> are involuntary actions allowing quick protection.</li>
+                    <li>The <strong>brain</strong> (CNS) integrates inputs and sends outputs.</li>
+                    <li><strong>Plants</strong> show tropisms (growth) and nastic (non-growth) movements.</li>
+                    <li><strong>Hormones</strong> provide chemical coordination in both plants and animals.</li>
                 </ul>
-            </li>
-            <li><strong>Cerebellum:</strong> Coordinates body movements, maintains balance and posture</li>
-            <li><strong>Medulla Oblongata:</strong> Controls involuntary functions (breathing, heartbeat, digestion)</li>
-            <li><strong>Thalamus:</strong> Relay station for sensory information</li>
-            <li><strong>Hypothalamus:</strong> Temperature regulation, hormone control, emotional responses</li>
-        </ul>
+            </div>
 
-        <div class="important-box">
-            <strong>Brain Protection:</strong> Protected by skull bones and cerebrospinal fluid (CSF) which provides shock absorption and nutrients.
-        </div>
+            <div class="section-title-row" style="margin-top: 3rem;">
+                <h2>Exercises</h2>
+            </div>
 
-        <h2>Spinal Cord</h2>
-        <ul>
-            <li><strong>Structure:</strong> Cylindrical cord extending from brain to lower back</li>
-            <li><strong>Function:</strong> Transmits signals between brain and body; coordinates reflexes</li>
-            <li><strong>Grey Matter:</strong> Inner region (cell bodies, synapses)</li>
-            <li><strong>White Matter:</strong> Outer region (myelinated axons)</li>
-            <li><strong>Protection:</strong> Vertebral column (backbone)</li>
-        </ul>
+            <div class="grid-2">
+                <div class="question-box">
+                    <strong>Q1. Spinal Cord Injury</strong>
+                    <p style="margin-top: 0.5rem; color: #fef08a;">
+                        What happens if the spinal cord is injured?<br>
+                        <em>Answer: Signals between the brain and body are disrupted, and reflex actions may be
+                            lost.</em>
+                    </p>
+                </div>
+                <div class="question-box">
+                    <strong>Q2. Phototropism</strong>
+                    <p style="margin-top: 0.5rem; color: #fef08a;">
+                        How does phototropism occur?<br>
+                        <em>Answer: Auxin diffuses to the shady side, causing elongation there, bending the shoot
+                            towards light.</em>
+                    </p>
+                </div>
+                <div class="question-box">
+                    <strong>Q3. Chemical Coordination</strong>
+                    <p style="margin-top: 0.5rem; color: #fef08a;">
+                        Why is chemical coordination needed?<br>
+                        <em>Answer: Electrical impulses cannot reach every cell; chemical signals diffuse to all cells
+                            for steady control.</em>
+                    </p>
+                </div>
+                <div class="question-box">
+                    <strong>Q4. Iodine Importance</strong>
+                    <p style="margin-top: 0.5rem; color: #fef08a;">
+                        Why is iodised salt advisable?<br>
+                        <em>Answer: Iodine is needed for Thyroxin synthesis. Deficiency causes Goitre.</em>
+                    </p>
+                </div>
+            </div>
+        </section>
 
-        <h2>Neurons</h2>
-        <p>Neurons are basic units of the nervous system that transmit electrical and chemical signals.</p>
+        <!-- NCERT ACTIVITIES LINK -->
+        <section id="ncert-activities">
+            <div class="section-label">NCERT Lab</div>
+            <div class="section-title-row">
+                <h2>Key Activities (6.1 to 6.4)</h2>
+                <div class="section-hint">
+                    Detailed experiments on Taste/Smell, Phototropism, and Hormones.
+                </div>
+            </div>
 
-        <div class="definition-box">
-            <strong>Structure of Neuron:</strong>
-            <ul>
-                <li><strong>Cell Body:</strong> Contains nucleus, mitochondria, ribosomes</li>
-                <li><strong>Dendrites:</strong> Branch-like extensions that receive signals from other neurons</li>
-                <li><strong>Axon:</strong> Long projection that transmits signals to other neurons or muscles</li>
-                <li><strong>Axon terminals:</strong> End branches that form synapses</li>
-                <li><strong>Myelin sheath:</strong> Insulating layer around axon (increases speed of transmission)</li>
-            </ul>
-        </div>
+            <div class="hero-card"
+                style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 95, 70, 0.2)); border-color: rgba(16, 185, 129, 0.3);">
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">🔬 Interactive Lab
+                        Activities
+                    </h3>
+                    <p style="max-width: 600px; color: #6ee7b7; margin-bottom: 2rem; font-size: 1.1rem;">
+                        Explore observations like "Role of smell in taste", "Phototropism in plants", and "Identifying
+                        Endocrine Glands".
+                    </p>
+                    <a href="Chapter-6-Activities.html" class="btn btn-primary"
+                        style="background: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                        Explore All Activities &rarr;
+                    </a>
+                    <div class="tag-row" style="justify-content: center; margin-top: 2rem;">
+                        <span class="tag">Olfactory Receptors</span>
+                        <span class="tag">Phototropism</span>
+                        <span class="tag">Endocrine System</span>
+                        <span class="tag">Hormone Functions</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <h3>Types of Neurons</h3>
-        <ul>
-            <li><strong>Sensory Neurons:</strong> Receive information from receptors, transmit to CNS</li>
-            <li><strong>Motor Neurons:</strong> Carry signals from CNS to muscles and glands</li>
-            <li><strong>Relay Neurons:</strong> Connect sensory and motor neurons in CNS</li>
-        </ul>
+        <!-- Quiz -->
+        <section id="quiz-section">
+            <div class="section-label">Test Yourself</div>
+            <div class="section-title-row">
+                <h2>⚡ Quick Quiz</h2>
+            </div>
 
-        <h2>Synapse and Neurotransmitters</h2>
-        <p>A synapse is the junction between two neurons or between a neuron and a muscle cell.</p>
+            <div class="grid-2">
+                <div class="card">
+                    <p><strong>Q1. The gap between two neurons is called a:</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Dendrite</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">B. Synapse</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. Axon</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Impulse</button>
+                </div>
 
-        <div class="definition-box">
-            <strong>Process of Signal Transmission:</strong>
-            <ul>
-                <li>1. Electrical signal reaches axon terminal</li>
-                <li>2. Synaptic vesicles release neurotransmitters</li>
-                <li>3. Neurotransmitters cross synaptic cleft</li>
-                <li>4. Bind to receptors on receiving neuron/muscle</li>
-                <li>5. Generate new electrical signal or muscle contraction</li>
-            </ul>
-        </div>
+                <div class="card">
+                    <p><strong>Q2. Which part of the brain maintains posture and balance?</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Cerebrum</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">B. Cerebellum</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. Medulla</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Pons</button>
+                </div>
 
-        <h2>Reflex Arc</h2>
-        <p>A reflex is an automatic, involuntary response to a stimulus that doesn't require brain involvement.</p>
+                <div class="card">
+                    <p><strong>Q3. Which plant hormone promotes cell division?</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Auxin</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">B. Gibberellin</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">C. Cytokinin</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Abscisic Acid</button>
+                </div>
 
-        <div class="important-box">
-            <strong>Reflex Arc Pathway:</strong><br>
-            Stimulus â†’ Receptor â†’ Sensory Neuron â†’ Spinal Cord â†’ Motor Neuron â†’ Effector (Muscle) â†’ Response<br>
-            <br>
-            <strong>Example:</strong> Touching a hot object and immediately pulling hand away
-        </div>
+                <div class="card">
+                    <p><strong>Q4. Iodine is necessary for the synthesis of which hormone?</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Adrenaline</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">B. Thyroxin</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. Insulin</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Testosterone</button>
+                </div>
+            </div>
+        </section>
 
-        <h2>Endocrine System</h2>
-        <p>The endocrine system consists of ductless glands that secrete hormones directly into the bloodstream.</p>
+        <footer>
+            <div style="text-align: center; color: var(--text-soft); font-size: 0.9rem; margin-top: 4rem;">Made as a
+                study companion for "Control and Coordination".</div>
+        </footer>
 
-        <h3>Major Endocrine Glands</h3>
-        <table>
-            <tr>
-                <th>Gland</th>
-                <th>Hormone</th>
-                <th>Function</th>
-            </tr>
-            <tr>
-                <td>Pituitary</td>
-                <td>Growth hormone, FSH, LH</td>
-                <td>Growth, reproduction, metabolism</td>
-            </tr>
-            <tr>
-                <td>Thyroid</td>
-                <td>Thyroxine</td>
-                <td>Metabolism, growth, development</td>
-            </tr>
-            <tr>
-                <td>Parathyroid</td>
-                <td>Parathormone (PTH)</td>
-                <td>Calcium and phosphate balance</td>
-            </tr>
-            <tr>
-                <td>Adrenal</td>
-                <td>Adrenaline, cortisol</td>
-                <td>Stress response, metabolism</td>
-            </tr>
-            <tr>
-                <td>Pancreas</td>
-                <td>Insulin, glucagon</td>
-                <td>Blood glucose regulation</td>
-            </tr>
-            <tr>
-                <td>Ovaries/Testes</td>
-                <td>Estrogen, testosterone</td>
-                <td>Sexual characteristics, reproduction</td>
-            </tr>
-        </table>
-
-        <h2>Hormones and Their Effects</h2>
-        <p>Hormones are chemical messengers that regulate various body functions.</p>
-
-        <ul>
-            <li><strong>Insulin:</strong> Decreases blood glucose by promoting uptake by cells</li>
-            <li><strong>Glucagon:</strong> Increases blood glucose by promoting glycogen breakdown</li>
-            <li><strong>Adrenaline:</strong> Prepares body for fight-or-flight response</li>
-            <li><strong>Thyroxine:</strong> Controls metabolic rate and heat production</li>
-            <li><strong>Growth Hormone:</strong> Promotes growth and development</li>
-        </ul>
-
-        <h2>Nervous vs Endocrine System Comparison</h2>
-        <table>
-            <tr>
-                <th>Feature</th>
-                <th>Nervous System</th>
-                <th>Endocrine System</th>
-            </tr>
-            <tr>
-                <td>Transmission</td>
-                <td>Electrical + chemical signals</td>
-                <td>Chemical hormones</td>
-            </tr>
-            <tr>
-                <td>Speed</td>
-                <td>Very fast (milliseconds)</td>
-                <td>Slow (seconds to minutes)</td>
-            </tr>
-            <tr>
-                <td>Duration</td>
-                <td>Short-lived</td>
-                <td>Long-lasting</td>
-            </tr>
-            <tr>
-                <td>Area of effect</td>
-                <td>Localized</td>
-                <td>Widespread</td>
-            </tr>
-            <tr>
-                <td>Example</td>
-                <td>Quick reflexes</td>
-                <td>Puberty changes</td>
-            </tr>
-        </table>
-
-        <h2>Plant Hormones (Auxins)</h2>
-        <p>Plants also have control systems using hormones.</p>
-        <ul>
-            <li><strong>Auxins:</strong> Promote cell elongation, responsible for phototropism (growth toward light)</li>
-            <li><strong>Gibberellins:</strong> Promote germination and flowering</li>
-            <li><strong>Cytokinins:</strong> Promote cell division</li>
-            <li><strong>Ethylene:</strong> Controls fruit ripening</li>
-            <li><strong>Abscisic acid:</strong> Stress response hormone</li>
-        </ul>
-
-        <div style="margin-top: 40px; padding: 20px; background: #e0f7ff; border-radius: 8px; text-align: center;">
-            <h3 style="color: #4facfe; margin-bottom: 15px;">Key Takeaways</h3>
-            <ul style="list-style: none; margin: 0;">
-                <li>âœ“ CNS: Brain and spinal cord (processing)</li>
-                <li>âœ“ PNS: Nerves (transmission)</li>
-                <li>âœ“ Neurons transmit signals via dendrites and axons</li>
-                <li>âœ“ Synapse: Junction between neurons</li>
-                <li>âœ“ Reflex arc: Automatic response without brain</li>
-                <li>âœ“ Hormones: Chemical messengers for long-term control</li>
-                <li>âœ“ Nervous system: Fast but short duration</li>
-                <li>âœ“ Endocrine system: Slow but long-lasting</li>
-            </ul>
-            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">CBSE | NCERT | Class X Biology</p>
-        </div>
     </div>
 
+    <!-- Scripts -->
+    <script>
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('.quiz-option');
+
+            // Reset all buttons in this card
+            buttons.forEach(b => {
+                b.classList.remove('correct', 'wrong');
+                b.style.pointerEvents = 'none'; // Disable further clicks
+            });
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                btn.innerHTML += ' ✅';
+            } else {
+                btn.classList.add('wrong');
+                btn.innerHTML += ' ❌';
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+        }
+    </script>
     <script>
         // Lightbox Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -308,10 +1183,6 @@
             });
         });
     </script>
-
 </body>
+
 </html>
-
-
-
-

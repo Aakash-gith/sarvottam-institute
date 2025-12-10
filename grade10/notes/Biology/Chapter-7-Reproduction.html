@@ -1,25 +1,497 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 7 - How do Organisms Reproduce?</title>
+    <meta charset="UTF-8" />
+    <title>How do Organisms Reproduce? – Class 10 Biology</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%); line-height: 1.6; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
-        h1 { color: #1b5e20; margin-bottom: 10px; text-align: center; border-bottom: 3px solid #1b5e20; padding-bottom: 15px; }
-        h2 { color: #006400; margin-top: 30px; margin-bottom: 15px; }
-        h3 { color: #008080; margin-top: 20px; margin-bottom: 10px; }
-        .important-box { background: #e0ffe0; border-left: 5px solid #43e97b; padding: 15px; margin: 20px 0; border-radius: 5px; }
-        .definition-box { background: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin: 20px 0; border-radius: 5px; }
-        p { margin-bottom: 10px; }
-        ul { margin-left: 20px; margin-bottom: 15px; }
-        li { margin-bottom: 8px; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        table, th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #1b5e20; color: white; }
-    
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --accent: #10b981;
+            /* Emerald Green for Biology */
+            --accent-soft: rgba(16, 185, 129, 0.15);
+            --accent-strong: #059669;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --danger: #f97373;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+            --transition-med: 260ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Layout */
+
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(14px);
+            background: linear-gradient(to right,
+                    rgba(15, 23, 42, 0.96),
+                    rgba(15, 23, 42, 0.9));
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }
+
+        .nav-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0.7rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            color: #e5e7eb;
+        }
+
+        .logo-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 12px;
+            background: radial-gradient(circle at 20% 20%, #34d399, #10b981 60%, #059669);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #fff;
+            font-weight: 800;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            font-size: 0.78rem;
+            padding: 0.35rem 0.8rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid transparent;
+            color: var(--text-soft);
+            transition: background var(--transition-fast), color var(--transition-fast),
+                border-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .nav-links a:hover {
+            background: rgba(31, 41, 55, 0.85);
+            border-color: rgba(55, 65, 81, 0.9);
+            color: #e5e7eb;
+            transform: translateY(-1px);
+        }
+
+        .nav-links a.primary-link {
+            border-color: rgba(16, 185, 129, 0.7);
+            background: linear-gradient(135deg,
+                    rgba(16, 185, 129, 0.15),
+                    rgba(5, 150, 105, 0.12));
+            color: #a7f3d0;
+        }
+
+        .nav-links a.primary-link:hover {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Hero */
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+            gap: 2.5rem;
+            align-items: center;
+            margin-top: 2.3rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.1rem, 3vw + 1.2rem, 3.2rem);
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-subtitle {
+            font-size: 0.98rem;
+            color: var(--text-soft);
+            max-width: 33rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            color: #cbd5f5;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.4rem;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-med);
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-strong);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(31, 41, 55, 0.6);
+            color: #e5e7eb;
+            border: 1px solid rgba(75, 85, 99, 0.5);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(55, 65, 81, 0.8);
+            border-color: #9ca3af;
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #34d399, #10b981);
+        }
+
+        .diagram-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #0f172a;
+            border-radius: var(--radius-lg);
+            border: 1px dashed #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .diagram-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .diagram-placeholder.fit-contain img {
+            object-fit: contain;
+        }
+
+        /* Sections */
+
+        section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 6rem;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title-row {
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #f1f5f9, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-hint {
+            color: var(--text-soft);
+            font-size: 1rem;
+            max-width: 40rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(31, 41, 55, 0.6);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: transform var(--transition-fast), border-color var(--transition-fast);
+        }
+
+        .card:hover {
+            border-color: rgba(55, 65, 81, 0.8);
+            transform: translateY(-2px);
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            margin-bottom: 1rem;
+            color: #f8fafc;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #9ca3af;
+        }
+
+        ul {
+            padding-left: 1.2rem;
+            color: #cbd5e1;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Feature Boxes */
+
+        .tip-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #d1fae5;
+            margin-bottom: 1.5rem;
+        }
+
+        .tip-box strong {
+            color: #34d399;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .question-box {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        .question-box h4 {
+            color: #60a5fa;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        th {
+            padding: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent);
+        }
+
+        td {
+            color: #cbd5e1;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(31, 41, 55, 0.4);
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(51, 65, 85, 0.7);
+            border-radius: 6px;
+            color: #94a3b8;
+        }
+
+        /* Quiz */
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-soft);
+            border-radius: 10px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: rgba(31, 41, 55, 0.8);
+            border-color: #64748b;
+        }
+
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--accent);
+            color: #6ee7b7;
+        }
+
+        .quiz-option.wrong {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--danger);
+            color: #fca5a5;
+        }
+
         /* Lightbox */
         .lightbox-overlay {
             position: fixed;
@@ -50,251 +522,527 @@
             transform: scale(0.9);
             transition: transform 0.3s ease;
             border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .lightbox-overlay.active .lightbox-image {
             transform: scale(1);
         }
-        
+
         .diagram-placeholder img {
             cursor: zoom-in;
         }
 
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(75, 85, 99, 0.8);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Chapter 7 - How do Organisms Reproduce?</h1>
-        <p style="text-align: center; color: #999; margin-bottom: 30px;">Class X Biology | CBSE</p>
+    <header>
+        <div class="nav-inner">
+            <div class="logo">
+                <div class="logo-badge">B</div>
+                <span>Sarvottam Institute</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#dna-copying">DNA Copying</a>
+                <a href="#asexual">Asexual</a>
+                <a href="#sexual-plants">Plants</a>
+                <a href="#sexual-humans">Humans</a>
+                <a href="#summary">Summary</a>
+                <a href="Chapter-7-Activities.html" class="primary-link">Activities</a>
+            </nav>
+        </div>
+    </header>
 
-        <h2>Introduction to Reproduction</h2>
-        <p>Reproduction is the biological process that produces new organisms of the same species. It's essential for species survival and contributes to genetic diversity (in sexual reproduction).</p>
-
-        <h2>Types of Reproduction</h2>
-        <table>
-            <tr>
-                <th>Asexual Reproduction</th>
-                <th>Sexual Reproduction</th>
-            </tr>
-            <tr>
-                <td>One parent involved</td>
-                <td>Two parents involved</td>
-            </tr>
-            <tr>
-                <td>Produces identical offspring (clones)</td>
-                <td>Produces genetically different offspring</td>
-            </tr>
-            <tr>
-                <td>No gametes involved</td>
-                <td>Gametes (sperm, egg) fuse</td>
-            </tr>
-            <tr>
-                <td>Fast reproduction</td>
-                <td>Slower but more genetic variation</td>
-            </tr>
-            <tr>
-                <td>Examples: Bacteria, Hydra, Planaria</td>
-                <td>Examples: Most animals and plants</td>
-            </tr>
-        </table>
-
-        <h2>Asexual Reproduction</h2>
-
-        <h3>1. Binary Fission (Bacteria, Amoeba)</h3>
-        <div class="definition-box">
-            <strong>Process:</strong> Single cell divides into two identical daughter cells
-            <ul>
-                <li>DNA replication</li>
-                <li>Cell elongation</li>
-                <li>Separation of nuclei</li>
-                <li>Cell division</li>
-            </ul>
-            <strong>Result:</strong> Two genetically identical organisms
+    <div class="page">
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-text">
+                <div class="badge-row">
+                    <div class="badge">
+                        <div class="badge-dot"></div>
+                        Biology
+                    </div>
+                    <div class="badge">Chapter 7</div>
+                    <div class="badge">Grade 10</div>
+                </div>
+                <h1>How do Organisms Reproduce?</h1>
+                <p class="hero-subtitle">
+                    Explore the fascinating processes by which organisms create offspring, ensuring the
+                    continuity of species.
+                </p>
+                <div class="hero-actions">
+                    <a href="#dna-copying" class="btn btn-primary">Start Learning</a>
+                    <a href="Chapter-7-Activities.html" class="btn btn-secondary">View Activities</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <div class="diagram-placeholder fit-contain">
+                        <img src="images/flower_parts.png" alt="Reproduction Concept" />
+                    </div>
+                    <div class="tag-row" style="justify-content: center;">
+                        <span class="tag">DNA Copying</span>
+                        <span class="tag">Asexual</span>
+                        <span class="tag">Sexual</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <h3>2. Budding (Hydra, Yeast)</h3>
-        <ul>
-            <li>Small outgrowth (bud) develops on parent body</li>
-            <li>Bud develops into new organism</li>
-            <li>Detaches from parent when mature</li>
-            <li>Example: Hydra reproduces by budding</li>
-        </ul>
+        <!-- 7.1 DNA Copying -->
+        <section id="dna-copying">
+            <div class="section-label">7.1 Basics of Reproduction</div>
+            <div class="section-title-row">
+                <h2>Do Organisms Create Copy?</h2>
+                <p class="section-hint">Reproduction involves creating copies of the blueprints of body design.</p>
+            </div>
 
-        <h3>3. Fragmentation (Planaria, Starfish)</h3>
-        <ul>
-            <li>Body breaks into fragments</li>
-            <li>Each fragment develops into new organism</li>
-            <li>Requires regeneration capability</li>
-            <li>Example: Planaria divides transversely</li>
-        </ul>
-
-        <h3>4. Vegetative Propagation (Plants)</h3>
-        <ul>
-            <li><strong>Runners:</strong> Horizontal stems (Strawberry)</li>
-            <li><strong>Rhizomes:</strong> Underground stems (Ginger, Turmeric)</li>
-            <li><strong>Tubers:</strong> Underground storage stems (Potato)</li>
-            <li><strong>Bulbs:</strong> Underground bud structures (Onion, Garlic)</li>
-            <li><strong>Corms:</strong> Compressed stem structures (Gladiolus)</li>
-            <li><strong>Leaf cuttings:</strong> New plants from leaves (Begonia)</li>
-        </ul>
-
-        <h2>Sexual Reproduction</h2>
-
-        <h3>Gamete Formation</h3>
-        <div class="definition-box">
-            <strong>Gametes:</strong> Sex cells (sperm and egg) that fuse during fertilization
-            <ul>
-                <li><strong>Sperm:</strong> Male gamete (mobile, many produced)</li>
-                <li><strong>Egg/Ovum:</strong> Female gamete (stationary, fewer produced)</li>
-                <li><strong>Fertilization:</strong> Fusion of sperm and egg to form zygote</li>
-            </ul>
-        </div>
-
-        <h3>Spermatogenesis (Sperm Formation)</h3>
-        <ul>
-            <li><strong>Site:</strong> Seminiferous tubules of testes</li>
-            <li><strong>Starting cell:</strong> Spermatogonium (diploid)</li>
-            <li><strong>Process:</strong> 
-                <ul style="margin-left: 20px;">
-                    <li>Mitotic divisions of spermatogonium</li>
-                    <li>Meiotic divisions (Meiosis I and II)</li>
-                    <li>Spermiogenesis (development into mature sperm)</li>
+            <div class="card">
+                <h3>DNA Copying & Variation</h3>
+                <p><strong>DNA (Deoxyribonucleic Acid)</strong> in the cell nucleus is the information source for making
+                    proteins. If the information is changed, different proteins will be made, leading to altered body
+                    designs.</p>
+                <ul>
+                    <li><strong>Mechanism:</strong> Cells build two copies of DNA and split into two cells.</li>
+                    <li><strong>Accuracy:</strong> No bio-chemical reaction is 100% reliable. Occasional errors during
+                        DNA copying lead to <strong>variations</strong>.</li>
                 </ul>
-            </li>
-            <li><strong>Result:</strong> Four functional haploid sperm cells</li>
-            <li><strong>Duration:</strong> ~74 days in humans</li>
-        </ul>
+                <div class="tip-box" style="margin-top: 1rem;">
+                    <strong>Importance of Variation</strong>
+                    Variations are useful for the survival of species over time. If a niche (habitat) changes
+                    drastically (e.g., temperature rise), variants resistant to that change will survive and reproduce,
+                    preventing extinction.
+                </div>
+            </div>
+        </section>
 
-        <h3>Oogenesis (Egg Formation)</h3>
-        <ul>
-            <li><strong>Site:</strong> Germinal epithelium of ovaries</li>
-            <li><strong>Starting cell:</strong> Oogonium (diploid)</li>
-            <li><strong>Process:</strong>
-                <ul style="margin-left: 20px;">
-                    <li>Mitotic divisions of oogonium</li>
-                    <li>Primary oocyte (diploid) enters Meiosis I</li>
-                    <li>First polar body and secondary oocyte formed</li>
-                    <li>Secondary oocyte enters Meiosis II (stops at metaphase)</li>
-                    <li>Completes Meiosis II after fertilization</li>
+        <!-- 7.2 Asexual Reproduction -->
+        <section id="asexual">
+            <div class="section-label">7.2 Modes of Reproduction</div>
+            <div class="section-title-row">
+                <h2>Asexual Reproduction</h2>
+                <p class="section-hint">Reproduction involving a single parent.</p>
+            </div>
+
+            <div class="grid-2">
+                <!-- Fission -->
+                <div class="card">
+                    <h3>1. Fission</h3>
+                    <p>Parent cell divides into daughter cells.</p>
+                    <ul>
+                        <li><strong>Binary Fission:</strong> Cell divides into two (e.g., <em>Amoeba</em>,
+                            <em>Leishmania</em>).
+                        </li>
+                        <li><strong>Multiple Fission:</strong> Single cell divides into many daughter cells (e.g.,
+                            <em>Plasmodium</em>).
+                        </li>
+                    </ul>
+                    <div class="diagram-placeholder fit-contain" style="height: 250px;">
+                        <img src="images/binary_fission_amoeba.png" alt="Binary Fission in Amoeba (Fig 7.1)">
+                    </div>
+                </div>
+
+                <!-- Fragmentation & Regeneration -->
+                <div class="card">
+                    <h3>2. Fragmentation & Regeneration</h3>
+                    <p><strong>Fragmentation:</strong> Examples like <em>Spirogyra</em> break into pieces, and each
+                        piece grows into a new individual.</p>
+                    <p><strong>Regeneration:</strong> If organisms like <em>Hydra</em> or <em>Planaria</em> are cut,
+                        specialized cells proliferate and differentiate to reform the whole organism.</p>
+                    <div class="diagram-placeholder fit-contain" style="height: 200px;">
+                        <img src="images/regeneration_planaria.png" alt="Regeneration in Planaria (Fig 7.3)">
+                    </div>
+                </div>
+
+                <!-- Budding -->
+                <div class="card">
+                    <h3>3. Budding</h3>
+                    <p>In <em>Hydra</em>, a bud develops as an outgrowth due to repeated cell division at one specific
+                        site. These buds develop into tiny individuals and detach.</p>
+                    <div class="diagram-placeholder fit-contain" style="height: 250px;">
+                        <img src="images/budding_hydra.png" alt="Budding in Hydra (Fig 7.4)">
+                    </div>
+                </div>
+
+                <!-- Vegetative Propagation -->
+                <div class="card">
+                    <h3>4. Vegetative Propagation</h3>
+                    <p>New plants produced from roots, stems, leaves (e.g., Rose, Sugarcane, Bryophyllum).</p>
+                    <div class="tip-box">
+                        <strong>Advantages:</strong>
+                        <br>• Faster reproduction.
+                        <br>• Plants raised this way can bear flowers/fruits earlier.
+                        <br>• Genetically similar (clones).
+                        <br>• Useful for plants that have lost capacity to produce seeds (Banana, Orange).
+                    </div>
+                </div>
+
+                <!-- Spore Formation -->
+                <div class="card">
+                    <h3>5. Spore Formation</h3>
+                    <p>In <em>Rhizopus</em> (bread mould), blob-on-a-stick structures (Sporangia) contain
+                        <strong>spores</strong>. Spores are covered by thick walls to survive until they find a moist
+                        surface to grow.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7.3 Sexual Reproduction - Plants -->
+        <!-- 7.3 Sexual Reproduction - Plants -->
+        <section id="sexual-plants">
+            <div class="section-label">7.3 Sexual Reproduction</div>
+            <div class="section-title-row">
+                <h2>Reproduction in Flowering Plants</h2>
+                <p class="section-hint">Sexual reproduction involves two parents and fusion of gametes (Germ cells).</p>
+            </div>
+
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3>Types of Flowers</h3>
+                <ul>
+                    <li><strong>Bisexual Flower:</strong> Both male and female reproductive parts are present. (e.g.,
+                        Hibiscus, Mustard).</li>
+                    <li><strong>Unisexual Flower:</strong> Either male or female reproductive part is present. (e.g.,
+                        Papaya, Watermelon).</li>
                 </ul>
-            </li>
-            <li><strong>Result:</strong> One functional egg and 2-3 polar bodies</li>
-        </ul>
+            </div>
 
-        <h2>Female Reproductive System</h2>
-        <ul>
-            <li><strong>Ovaries:</strong> Produce eggs and hormones (estrogen, progesterone)</li>
-            <li><strong>Fallopian Tubes:</strong> Carry egg from ovary, site of fertilization</li>
-            <li><strong>Uterus:</strong> Receives and nourishes zygote/embryo</li>
-            <li><strong>Cervix:</strong> Lower part of uterus, opening to vagina</li>
-            <li><strong>Vagina:</strong> Birth canal, receives sperm</li>
-        </ul>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Flower Parts</h3>
+                    <ul>
+                        <li><strong>Stamen (Male):</strong> Produces Pollen grains (yellowish). Consists of Filament and
+                            Anther.</li>
+                        <li><strong>Pistil/Carpel (Female):</strong> Stigma (sticky top), Style (tube), Ovary (base
+                            containing ovules).</li>
+                    </ul>
+                    <div class="diagram-placeholder fit-contain" style="height: 350px;">
+                        <img src="images/flower_parts.png" alt="L.S. of Flower (Fig 7.7)">
+                    </div>
+                </div>
 
-        <h2>Male Reproductive System</h2>
-        <ul>
-            <li><strong>Testes:</strong> Produce sperm and testosterone</li>
-            <li><strong>Epididymis:</strong> Stores and matures sperm</li>
-            <li><strong>Vas Deferens:</strong> Transports sperm</li>
-            <li><strong>Seminal Vesicles:</strong> Produce seminal fluid</li>
-            <li><strong>Prostate Gland:</strong> Secretes fluids to activate sperm</li>
-            <li><strong>Penis:</strong> Delivers sperm into female reproductive tract</li>
-        </ul>
+                <div class="card">
+                    <h3>Process of Seed Formation</h3>
+                    <ul>
+                        <li><strong>Pollination:</strong> Transfer of pollen from Stamen to Stigma by air, water, or
+                            animals.</li>
+                        <li><strong>Fertilisation:</strong>
+                            <ul style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                                <li>Pollen tube grows through style to reach ovary.</li>
+                                <li>Male germ cell fuses with female germ cell (Egg).</li>
+                                <li>Forms <strong>Zygote</strong> inside the ovule.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Post-Fertilisation:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Zygote divides to form <strong>Embryo</strong>.</li>
+                                <li>Ovule develops thick coat and becomes <strong>Seed</strong>.</li>
+                                <li>Ovary ripens to become <strong>Fruit</strong> (petals fall off).</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="diagram-placeholder fit-contain" style="height: 250px;">
+                        <img src="images/germination_seed.png" alt="Germination of Seed (Fig 7.9)">
+                    </div>
+                </div>
+            </div>
 
-        <h2>Menstrual Cycle (Humans)</h2>
-        <p>The menstrual cycle is a monthly process in females involving hormone changes and uterine changes.</p>
+            <div class="tip-box" style="margin-top: 2rem;">
+                <strong>Double Fertilisation (Key Concept)</strong>
+                <div>In flowering plants, two fusions occur:</div>
+                <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li><strong>Syngamy:</strong> Male Gamete (n) + Female Gamete (n) &rarr; Zygote (2n) &rarr; Embryo.
+                    </li>
+                    <li><strong>Triple Fusion:</strong> Male Gamete (n) + Secondary Nucleus (2n) &rarr; Endosperm
+                        Nucleus (3n) &rarr; Endosperm (food for embryo).</li>
+                </ol>
+            </div>
+        </section>
 
-        <div class="important-box">
-            <strong>Phases (28 days average):</strong>
-            <ul>
-                <li><strong>Menstruation (Days 1-5):</strong> Shedding of uterine lining, bleeding</li>
-                <li><strong>Follicular Phase (Days 1-13):</strong> FSH increases, follicle grows, estrogen increases</li>
-                <li><strong>Ovulation (Day 14):</strong> LH surge, egg released from ovary</li>
-                <li><strong>Luteal Phase (Days 15-28):</strong> Corpus luteum produces progesterone, prepares uterus for implantation</li>
-            </ul>
-        </div>
+        <!-- 7.3 Sexual Reproduction - Humans -->
+        <section id="sexual-humans">
+            <div class="section-label">7.3.2 Human Reproduction</div>
+            <div class="section-title-row">
+                <h2>Reproduction in Human Beings</h2>
+                <p class="section-hint">Humans use the sexual mode of reproduction. Sexual maturation (puberty) is
+                    required for germ cell production.</p>
+            </div>
 
-        <h2>Fertilization and Development</h2>
-        <ul>
-            <li><strong>Fertilization:</strong> Sperm nucleus fuses with egg nucleus in fallopian tube
-                <ul style="margin-left: 20px;">
-                    <li>Restores diploid number (2n)</li>
-                    <li>Forms zygote</li>
+            <!-- Puberty Changes -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3>Changes at Puberty</h3>
+                <div class="table-wrap">
+                    <table>
+                        <tr>
+                            <th>Common Changes</th>
+                            <th>Boys</th>
+                            <th>Girls</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                • Thick hair growth in armpits & genital area.<br>
+                                • Skin becomes oily, pimples may occur.
+                            </td>
+                            <td>
+                                • Thick hair growth on face.<br>
+                                • Voice begins to crack.<br>
+                                • Penis occasionally becomes erect.
+                            </td>
+                            <td>
+                                • Breast size increases.<br>
+                                • Menstruation begins.<br>
+                                • Darkening of nipple skin.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <!-- Male System -->
+                <div class="card">
+                    <h3>Male Reproductive System</h3>
+                    <ul>
+                        <li><strong>Testes:</strong> Located in Scrotum (outside body) because sperm formation requires
+                            2-3°C lower than body temp.
+                            <ul>
+                                <li>Produce <strong>Sperm</strong> (male germ cell).</li>
+                                <li>Secrete <strong>Testosterone</strong> (regulates sperm & puberty changes).</li>
+                            </ul>
+                        </li>
+                        <li><strong>Vas Deferens:</strong> Tube carrying sperm from testes to urethra.</li>
+                        <li><strong>Urethra:</strong> Common passage for both sperm and urine.</li>
+                        <li><strong>Associated Glands:</strong> (Seminal Vesicles, Prostate)
+                            <br><span style="color: var(--text-soft); font-size: 0.85em;">Secretions provide nutrition
+                                and fluid medium for easier sperm transport (forming Semen).</span>
+                        </li>
+                    </ul>
+                    <div class="diagram-placeholder fit-contain" style="height: 300px;">
+                        <img src="images/human_male_reproductive.png" alt="Male Reproductive System (Fig 7.10)">
+                    </div>
+                </div>
+
+                <!-- Female System -->
+                <div class="card">
+                    <h3>Female Reproductive System</h3>
+                    <ul>
+                        <li><strong>Ovary:</strong> Two almond-shaped organs.
+                            <ul>
+                                <li>Produce <strong>Egg</strong> (one released every month).</li>
+                                <li>Secrete <strong>Oestrogen / Progesterone</strong>.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Fallopian Tube (Oviduct):</strong> Carries egg from ovary to uterus. <strong>Site of
+                                Fertilisation.</strong></li>
+                        <li><strong>Uterus:</strong> Elastic bag-like structure where baby develops. Opens into vagina
+                            via cervix.</li>
+                    </ul>
+                    <div class="diagram-placeholder fit-contain" style="height: 300px;">
+                        <img src="images/human_female_reproductive.png" alt="Female Reproductive System (Fig 7.11)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fertilisation Scenarios -->
+            <div class="grid-2" style="margin-top: 2rem;">
+                <div class="card">
+                    <h3 style="color: #6ee7b7;">Scenario A: Egg is Fertilised</h3>
+                    <ul>
+                        <li><strong>Zygote</strong> is formed in Fallopian tube.</li>
+                        <li>It divides and implants in the uterine wall.</li>
+                        <li><strong>Placenta:</strong> A disc-embedded tissue in uterine wall.
+                            <br>• Provides large surface area for glucose/oxygen transfer from Mother to Embryo.
+                            <br>• Removes waste from Embryo to Mother's blood.
+                        </li>
+                        <li><strong>Gestation:</strong> ~9 months development until birth.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #fca5a5;">Scenario B: Egg is NOT Fertilised</h3>
+                    <ul>
+                        <li>The uterine lining (thick & spongy) is not needed.</li>
+                        <li>Lining breaks and comes out through vagina as <strong>Blood and Mucus</strong>.</li>
+                        <li>This cycle takes roughly 28 days -> <strong>Menstruation</strong>.</li>
+                        <li>Usually lasts for 2-8 days.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 1.5rem;">
+                <h3>Reproductive Health</h3>
+                <div class="grid-2">
+                    <div>
+                        <h4>Contraception Methods</h4>
+                        <ul>
+                            <li><strong>Mechanical Barriers:</strong> Condoms (prevent STDs too), Diaphragm.</li>
+                            <li><strong>Chemical:</strong> Oral Pills (change hormonal balance so eggs are not
+                                released).</li>
+                            <li><strong>IUCD:</strong> Copper-T (placed in Uterus to prevent implantation).</li>
+                            <li><strong>Surgical:</strong> Vasectomy (Vas deferens blocked), Tubectomy (Fallopian tube
+                                blocked).</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>STDs (Sexually Transmitted Diseases)</h4>
+                        <ul>
+                            <li><strong>Bacterial:</strong> Gonorrhoea, Syphilis.</li>
+                            <li><strong>Viral:</strong> Warts, HIV-AIDS.</li>
+                            <li><strong>Prevention:</strong> Using condoms protects against many infections.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section id="summary">
+            <div class="section-label">Summary</div>
+            <div class="section-title-row">
+                <h2>What You Have Learnt</h2>
+            </div>
+            <div class="card">
+                <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <li>Reproduction creates new individuals from existing ones.</li>
+                        <li>Asexual reproduction involves one parent (Fission, Fragmentation, Regeneration, Budding,
+                            Spore Formation, Vegetative Propagation).</li>
+                        <li>Sexual reproduction involves two parents and allows for more variation.</li>
+                    </div>
+                    <div>
+                        <li>In flowering plants, fertilisation happens in the ovary after pollination.</li>
+                        <li>In humans, testes produce sperm/testosterone; ovaries produce eggs/oestrogen.</li>
+                        <li>Contraceptive methods avoid pregnancy and prevent STDs.</li>
+                    </div>
                 </ul>
-            </li>
-            <li><strong>Cleavage:</strong> Rapid mitotic divisions form morula then blastocyst</li>
-            <li><strong>Implantation:</strong> Blastocyst embeds in uterine wall (6-10 days after fertilization)</li>
-            <li><strong>Placenta Formation:</strong> Provides nutrition and oxygen to fetus</li>
-        </ul>
+            </div>
+        </section>
 
-        <h2>Human Gestation and Birth</h2>
-        <ul>
-            <li><strong>Duration:</strong> ~280 days (40 weeks) or 9 months</li>
-            <li><strong>Trimesters:</strong>
-                <ul style="margin-left: 20px;">
-                    <li>First (Weeks 1-12): Organ formation</li>
-                    <li>Second (Weeks 13-27): Rapid growth</li>
-                    <li>Third (Weeks 28-40): Fetal maturation, preparation for birth</li>
-                </ul>
-            </li>
-            <li><strong>Birth Process:</strong> Labor contractions, rupture of amniotic sac, delivery</li>
-        </ul>
+        <!-- NCERT ACTIVITIES LINK -->
+        <section id="ncert-activities">
+            <div class="section-label">NCERT Lab</div>
+            <div class="section-title-row">
+                <h2>Key Activities</h2>
+                <div class="section-hint">
+                    Detailed observations of Slides and Germination.
+                </div>
+            </div>
 
-        <h2>Puberty Changes</h2>
-        <p>Puberty is the period of rapid growth and sexual maturation.</p>
+            <div class="hero-card"
+                style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 95, 70, 0.2)); border-color: rgba(16, 185, 129, 0.3);">
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">🔬 Interactive Lab
+                        Activities
+                    </h3>
+                    <p style="max-width: 600px; color: #6ee7b7; margin-bottom: 2rem; font-size: 1.1rem;">
+                        Explore "Observing Yeast Budding", "Amoeba Fission", and "Seed Germination".
+                    </p>
+                    <a href="Chapter-7-Activities.html" class="btn btn-primary"
+                        style="background: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                        Explore All Activities &rarr;
+                    </a>
+                </div>
+            </div>
+        </section>
 
-        <table>
-            <tr>
-                <th>Female Changes</th>
-                <th>Male Changes</th>
-            </tr>
-            <tr>
-                <td>Breast development</td>
-                <td>Testis enlargement</td>
-            </tr>
-            <tr>
-                <td>Pubic and axillary hair growth</td>
-                <td>Pubic and axillary hair growth</td>
-            </tr>
-            <tr>
-                <td>Menstruation begins</td>
-                <td>Sperm production begins</td>
-            </tr>
-            <tr>
-                <td>Widening of hips</td>
-                <td>Voice deepening (Adam's apple)</td>
-            </tr>
-            <tr>
-                <td>Skin changes</td>
-                <td>Increased muscle development</td>
-            </tr>
-        </table>
+        <!-- Quiz -->
+        <section id="quiz-section">
+            <div class="section-label">Test Yourself</div>
+            <div class="section-title-row">
+                <h2>⚡ Quick Quiz</h2>
+            </div>
 
-        <h2>Contraception</h2>
-        <p>Methods to prevent unwanted pregnancy:</p>
-        <ul>
-            <li><strong>Barrier Methods:</strong> Condoms, diaphragm</li>
-            <li><strong>Hormonal Methods:</strong> Pills, patches, injections</li>
-            <li><strong>Intrauterine:</strong> IUD</li>
-            <li><strong>Permanent:</strong> Tubal ligation, vasectomy</li>
-            <li><strong>Natural:</strong> Rhythm method</li>
-        </ul>
+            <div class="grid-2">
+                <div class="card">
+                    <p><strong>Q1. Asexual reproduction takes place through budding in:</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Amoeba</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">B. Yeast/Hydra</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. Plasmodium</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Leishmania</button>
+                </div>
 
-        <div style="margin-top: 40px; padding: 20px; background: #e0ffe0; border-radius: 8px; text-align: center;">
-            <h3 style="color: #43e97b; margin-bottom: 15px;">Key Takeaways</h3>
-            <ul style="list-style: none; margin: 0;">
-                <li>âœ“ Asexual: One parent, clones, fast</li>
-                <li>âœ“ Sexual: Two parents, genetically different, gamete fusion</li>
-                <li>âœ“ Spermatogenesis: Four functional sperm</li>
-                <li>âœ“ Oogenesis: One functional egg</li>
-                <li>âœ“ Ovulation: Egg release on day 14 of menstrual cycle</li>
-                <li>âœ“ Fertilization: Sperm + Egg = Zygote</li>
-                <li>âœ“ Gestation: ~280 days or 9 months</li>
-            </ul>
-            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">CBSE | NCERT | Class X Biology</p>
-        </div>
+                <div class="card">
+                    <p><strong>Q2. Which of the following is NOT part of the female reproductive system?</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Ovary</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">B. Uterus</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">C. Vas Deferens</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Fallopian Tube</button>
+                </div>
+
+                <div class="card">
+                    <p><strong>Q3. The anther contains:</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Sepals</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">B. Ovules</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. Carpel</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">D. Pollen grains</button>
+                </div>
+
+                <div class="card">
+                    <p><strong>Q4. Which method uses the production of clones?</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Sexual Reproduction</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">B. Vegetative Propagation</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. Fertilisation</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Pollination</button>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div style="text-align: center; color: var(--text-soft); font-size: 0.9rem; margin-top: 4rem;">Made as a
+                study companion for "How do Organisms Reproduce?".</div>
+        </footer>
+
     </div>
 
+    <!-- Scripts -->
+    <script>
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('.quiz-option');
+
+            // Reset all buttons in this card
+            buttons.forEach(b => {
+                b.classList.remove('correct', 'wrong');
+                b.style.pointerEvents = 'none'; // Disable further clicks
+            });
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                btn.innerHTML += ' ✅';
+            } else {
+                btn.classList.add('wrong');
+                btn.innerHTML += ' ❌';
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+        }
+    </script>
     <script>
         // Lightbox Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -326,8 +1074,5 @@
     </script>
 
 </body>
+
 </html>
-
-
-
-

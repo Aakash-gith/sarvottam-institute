@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control and Coordination - Activities | Sarvottam Institute</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --accent: #10b981;
+            /* Emerald Green */
+            --accent-soft: rgba(16, 185, 129, 0.15);
+            --accent-strong: #059669;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 4rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-soft);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #34d399, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-soft);
+            font-size: 1.1rem;
+        }
+
+        /* Activity Cards */
+        .activity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-number {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .activity-title {
+            font-size: 1.5rem;
+            color: #f1f5f9;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-soft);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .observation-box {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #d1fae5;
+        }
+
+        .observation-box strong {
+            color: #34d399;
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0.5rem;
+        }
+
+        li {
+            position: relative;
+            padding-left: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+        }
+
+        li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(75, 85, 99, 0.8);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <a href="Chapter-6-Control-Coordination.html" class="back-link">← Back to Notes</a>
+                <h1 style="margin-top: 1rem;">NCERT Activities</h1>
+                <p class="subtitle">Chapter 6: Control and Coordination</p>
+            </div>
+        </header>
+
+        <!-- Activity 6.1 -->
+        <div class="activity-card" id="activity-6.1">
+            <span class="activity-number">Activity 6.1</span>
+            <h2 class="activity-title">Role of Smell (Olfactory Receptors) in Taste</h2>
+
+            <div class="section-title">Procedure</div>
+            <ul>
+                <li>Take some sugar crystals and taste them. Note the taste.</li>
+                <li>Now block your nose by pressing it with your thumb and index finger.</li>
+                <li>Eat the sugar crystals again. Is there a difference in taste?</li>
+                <li>While eating lunch, block your nose similarly and observe if the food taste changes.</li>
+            </ul>
+
+            <div class="observation-box">
+                <strong>Observation & Conclusion</strong>
+                <p>When the nose is blocked, the ability to fully appreciate the flavor of food decreases. This is
+                    because flavor is a combination of <strong>taste</strong> (tongue) and <strong>smell</strong>
+                    (nose). Our olfactory receptors play a major role in identifying flavors.</p>
+            </div>
+        </div>
+
+        <!-- Activity 6.2 -->
+        <div class="activity-card" id="activity-6.2">
+            <span class="activity-number">Activity 6.2</span>
+            <h2 class="activity-title">Phototropism in Plants</h2>
+
+            <div class="section-title">Procedure</div>
+            <ul>
+                <li>Fill a conical flask with water.</li>
+                <li>Cover the neck of the flask with a wire mesh.</li>
+                <li>Keep two or three freshly germinated bean seeds on the wire mesh.</li>
+                <li>Take a cardboard box which is open from one side.</li>
+                <li>Keep the flask in the box in such a manner that the open side of the box faces light coming from a
+                    window.</li>
+                <li>Observe after 2-3 days.</li>
+                <li>Now, turn the flask so that the shoots are away from light and roots towards light. Leave it for a
+                    few days.</li>
+            </ul>
+
+            <div class="observation-box">
+                <strong>Observation & Conclusion</strong>
+                <p>Initially, shoots grow towards the light. After rotating, the old parts remain as they were, but new
+                    growth directions change: shoots bend <strong>towards the light</strong> (Phototropism) and roots
+                    bend <strong>away from light</strong> (Negative Phototropism).</p>
+            </div>
+        </div>
+
+        <!-- Activity 6.3 -->
+        <div class="activity-card" id="activity-6.3">
+            <span class="activity-number">Activity 6.3</span>
+            <h2 class="activity-title">Identifying Endocrine Glands</h2>
+
+            <div class="section-title">Procedure</div>
+            <ul>
+                <li>Look at the diagram of the endocrine system in the textbook (Figure 6.7).</li>
+                <li>Identify the glands present in the diagram.</li>
+                <li>List the glands associated with different regions of the body (Head, Neck, Chest, Abdomen, etc.).
+                </li>
+            </ul>
+
+            <div class="observation-box">
+                <strong>Observation & Conclusion</strong>
+                <p>The endocrine glands are located in specific regions:</p>
+                <ul style="margin-top: 0.5rem; color: #d1fae5;">
+                    <li><strong>HEAD:</strong> Pineal gland, Pituitary gland, Hypothalamus</li>
+                    <li><strong>NECK:</strong> Thyroid, Parathyroid</li>
+                    <li><strong>CHEST:</strong> Thymus</li>
+                    <li><strong>ABDOMEN:</strong> Pancreas, Adrenal glands</li>
+                    <li><strong>PELVIS:</strong> Ovaries (Female), Testes (Male)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Activity 6.4 -->
+        <div class="activity-card" id="activity-6.4">
+            <span class="activity-number">Activity 6.4</span>
+            <h2 class="activity-title">Hormones and Their Functions</h2>
+
+            <div class="section-title">Procedure</div>
+            <ul>
+                <li>Prepare a table to identify the hormones secreted by endocrine glands and their functions.</li>
+                <li>Consult the textbook, teachers, or library resources to complete the specific functions.</li>
+            </ul>
+
+            <div class="observation-box">
+                <strong>Observation & Conclusion</strong>
+                <p>Hormones regulate critical body functions:</p>
+                <ul style="margin-top: 0.5rem; color: #d1fae5;">
+                    <li><strong>Growth Hormone:</strong> Regulates body height and development.</li>
+                    <li><strong>Insulin:</strong> Lowers blood sugar levels.</li>
+                    <li><strong>Testosterone/Oestrogen:</strong> Control puberty and reproductive features.</li>
+                    <li><strong>Thyroxin:</strong> Controls metabolism of carbs, fats, and proteins.</li>
+                    <li><strong>Adrenaline:</strong> Emergency response (heart rate, breathing).</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

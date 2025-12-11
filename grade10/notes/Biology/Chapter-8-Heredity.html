@@ -1,25 +1,507 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 8 - How do Organisms Inherit Traits? - Heredity and Evolution</title>
+    <meta charset="UTF-8" />
+    <title>Heredity – Class 10 Biology</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%); line-height: 1.6; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
-        h1 { color: #1b5e20; margin-bottom: 10px; text-align: center; border-bottom: 3px solid #1b5e20; padding-bottom: 15px; }
-        h2 { color: #006400; margin-top: 30px; margin-bottom: 15px; }
-        h3 { color: #d64545; margin-top: 20px; margin-bottom: 10px; }
-        .important-box { background: #ffe0eb; border-left: 5px solid #fa709a; padding: 15px; margin: 20px 0; border-radius: 5px; }
-        .definition-box { background: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin: 20px 0; border-radius: 5px; }
-        p { margin-bottom: 10px; }
-        ul { margin-left: 20px; margin-bottom: 15px; }
-        li { margin-bottom: 8px; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        table, th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #1b5e20; color: white; }
-    
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --accent: #10b981;
+            /* Emerald Green for Biology */
+            --accent-soft: rgba(16, 185, 129, 0.15);
+            --accent-strong: #059669;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --danger: #f97373;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+            --transition-med: 260ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Layout */
+
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(14px);
+            background: linear-gradient(to right,
+                    rgba(15, 23, 42, 0.96),
+                    rgba(15, 23, 42, 0.9));
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }
+
+        .nav-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0.7rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            color: #e5e7eb;
+        }
+
+        .logo-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 12px;
+            background: radial-gradient(circle at 20% 20%, #34d399, #10b981 60%, #059669);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #fff;
+            font-weight: 800;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            font-size: 0.78rem;
+            padding: 0.35rem 0.8rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid transparent;
+            color: var(--text-soft);
+            transition: background var(--transition-fast), color var(--transition-fast),
+                border-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .nav-links a:hover {
+            background: rgba(31, 41, 55, 0.85);
+            border-color: rgba(55, 65, 81, 0.9);
+            color: #e5e7eb;
+            transform: translateY(-1px);
+        }
+
+        .nav-links a.primary-link {
+            border-color: rgba(16, 185, 129, 0.7);
+            background: linear-gradient(135deg,
+                    rgba(16, 185, 129, 0.15),
+                    rgba(5, 150, 105, 0.12));
+            color: #a7f3d0;
+        }
+
+        .nav-links a.primary-link:hover {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Hero */
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+            gap: 2.5rem;
+            align-items: center;
+            margin-top: 2.3rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.1rem, 3vw + 1.2rem, 3.2rem);
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-subtitle {
+            font-size: 0.98rem;
+            color: var(--text-soft);
+            max-width: 33rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            color: #cbd5f5;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.4rem;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-med);
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-strong);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(31, 41, 55, 0.6);
+            color: #e5e7eb;
+            border: 1px solid rgba(75, 85, 99, 0.5);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(55, 65, 81, 0.8);
+            border-color: #9ca3af;
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #34d399, #10b981);
+        }
+
+        .diagram-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #0f172a;
+            border-radius: var(--radius-lg);
+            border: 1px dashed #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .diagram-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .diagram-placeholder.fit-contain img {
+            object-fit: contain;
+        }
+
+        /* Sections */
+
+        section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 6rem;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title-row {
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #f1f5f9, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-hint {
+            color: var(--text-soft);
+            font-size: 1rem;
+            max-width: 40rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(31, 41, 55, 0.6);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: transform var(--transition-fast), border-color var(--transition-fast);
+        }
+
+        .card:hover {
+            border-color: rgba(55, 65, 81, 0.8);
+            transform: translateY(-2px);
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            margin-bottom: 1rem;
+            color: #f8fafc;
+        }
+
+        h4 {
+            color: #e5e7eb;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #9ca3af;
+        }
+
+        ul {
+            padding-left: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Feature Boxes */
+
+        .tip-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #d1fae5;
+            margin-bottom: 1.5rem;
+        }
+
+        .tip-box strong {
+            color: #34d399;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .question-box {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        .question-box h4 {
+            color: #60a5fa;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        th {
+            padding: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent);
+        }
+
+        td {
+            color: #cbd5e1;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(31, 41, 55, 0.4);
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(51, 65, 85, 0.7);
+            border-radius: 6px;
+            color: #94a3b8;
+        }
+
+        /* Ratio Box for Genetics */
+        .ratio-box {
+            display: inline-flex;
+            align-items: center;
+            background: #1e293b;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fcd34d;
+            border: 1px solid #475569;
+            margin: 0.5rem 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(75, 85, 99, 0.8);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
         /* Lightbox */
         .lightbox-overlay {
             position: fixed;
@@ -31,282 +513,518 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
+            z-index: 1000;
             backdrop-filter: blur(5px);
         }
 
         .lightbox-overlay.active {
             opacity: 1;
-            pointer-events: all;
+            pointer-events: auto;
         }
 
         .lightbox-image {
             max-width: 90%;
             max-height: 90%;
-            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             transform: scale(0.9);
             transition: transform 0.3s ease;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
         .lightbox-overlay.active .lightbox-image {
             transform: scale(1);
         }
-        
-        .diagram-placeholder img {
-            cursor: zoom-in;
+
+        .quiz-option {
+            width: 100%;
+            text-align: left;
+            background: rgba(31, 41, 55, 0.5);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
+        .quiz-option:hover {
+            background: rgba(55, 65, 81, 0.8);
+            border-color: #60a5fa;
+        }
+
+        .quiz-option.correct {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.2);
+            color: #d1fae5;
+        }
+
+        .quiz-option.wrong {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.2);
+            color: #fee2e2;
+        }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Chapter 8 - How do Organisms Inherit Traits?</h1>
-        <h2 style="text-align: center; color: #fee140; border: none;">Heredity and Evolution</h2>
-        <p style="text-align: center; color: #999; margin-bottom: 30px;">Class X Biology | CBSE</p>
+    <header>
+        <div class="nav-inner">
+            <div class="logo">
+                <div class="logo-badge">B</div>
+                <span>Sarvottam Institute</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#variation">Variation</a>
+                <a href="#heredity">Heredity</a>
+                <a href="#mendel">Mendel</a>
+                <a href="#sex-determination">Sex Determination</a>
+                <a href="Chapter-8-Activities.html" class="primary-link">Activities</a>
+            </nav>
+        </div>
+    </header>
 
-        <h2>Introduction to Heredity</h2>
-        <p>Heredity is the transmission of genetic information from parents to offspring. It explains why children resemble their parents and how traits pass through generations.</p>
+    <div class="page">
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-text">
+                <div class="badge-row">
+                    <div class="badge">
+                        <div class="badge-dot"></div>
+                        Biology
+                    </div>
+                    <div class="badge">Chapter 8</div>
+                    <div class="badge">Grade 10</div>
+                </div>
+                <h1>Heredity & Evolution</h1>
+                <p class="hero-subtitle">
+                    Genetics is the study of Heredity and Variations. Understand how traits are passed from parents to
+                    offspring.
+                </p>
+                <div class="hero-actions">
+                    <a href="#variation" class="btn btn-primary">Start Learning</a>
+                    <a href="Chapter-8-Activities.html" class="btn btn-secondary">View Activities</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <!-- Digitized Genetics Chart -->
+                    <div style="text-align: center; padding: 1rem;">
+                        <h3 style="color: var(--accent); margin-bottom: 1rem;">GENETICS</h3>
+                        <p style="margin-bottom: 1.5rem; font-size: 0.9rem;">Study of Heredity & Variations</p>
 
-        <h2>Mendel's Laws of Inheritance</h2>
-        <p>Gregor Mendel discovered the laws of inheritance through pea plant experiments.</p>
-
-        <h3>1. Law of Segregation (First Law)</h3>
-        <div class="definition-box">
-            <strong>Statement:</strong> Factors (genes) for a trait segregate during gamete formation, and each gamete receives only one factor.
-            <ul>
-                <li>Traits are controlled by pairs of factors (alleles)</li>
-                <li>During meiosis, allele pairs separate</li>
-                <li>Each gamete gets one allele</li>
-                <li>Offspring receive one allele from each parent</li>
-            </ul>
+                        <div class="grid-2">
+                            <div
+                                style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 12px; border: 1px solid var(--accent-strong);">
+                                <strong style="color: var(--accent);">Heredity</strong>
+                                <p style="font-size: 0.85rem; margin-top: 0.5rem;">Transmission of traits from parents
+                                    to offspring.</p>
+                            </div>
+                            <div
+                                style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 12px; border: 1px solid #3b82f6;">
+                                <strong style="color: #60a5fa;">Variation</strong>
+                                <p style="font-size: 0.85rem; margin-top: 0.5rem;">Differences in traits between parents
+                                    and offspring.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <h3>2. Law of Independent Assortment (Second Law)</h3>
-        <p>Alleles of different genes assort independently during gamete formation. A dihybrid cross shows this: RrYy produces nine different phenotypes in 9:3:3:1 ratio.</p>
+        <!-- 8.1 Accumulation of Variation -->
+        <section id="variation">
+            <div class="section-label">8.1 Variation</div>
+            <div class="section-title-row">
+                <h2>Accumulation of Variation</h2>
+                <p class="section-hint">Variations arise during reproduction and can accumulate over generations.</p>
+            </div>
 
-        <h3>3. Law of Dominance</h3>
-        <p>When two contrasting alleles are present, the dominant allele expresses and masks the recessive allele.</p>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Accumulation of Variation</h3>
+                    <!-- Removed image, ensured text covers it -->
+                    <ul>
+                        <li><strong>Asexually:</strong> Variations are fewer. Occurs due to small inaccuracies in DNA
+                            copying (Mutation).</li>
+                        <li><strong>Sexually:</strong> Variations are large. Occurs due to crossing over, separation of
+                            chromosomes, and mutation.</li>
+                    </ul>
+                </div>
 
-        <h2>Terminology in Genetics</h2>
-        <table>
-            <tr>
-                <th>Term</th>
-                <th>Definition</th>
-                <th>Example</th>
-            </tr>
-            <tr>
-                <td><strong>Gene</strong></td>
-                <td>Unit of heredity; DNA segment controlling a trait</td>
-                <td>Gene for flower color</td>
-            </tr>
-            <tr>
-                <td><strong>Allele</strong></td>
-                <td>Different forms of a gene</td>
-                <td>R (red), r (white) for flower color</td>
-            </tr>
-            <tr>
-                <td><strong>Genotype</strong></td>
-                <td>Genetic composition (allele combination)</td>
-                <td>Rr, RR, rr</td>
-            </tr>
-            <tr>
-                <td><strong>Phenotype</strong></td>
-                <td>Observable characteristic</td>
-                <td>Red flower, white flower</td>
-            </tr>
-            <tr>
-                <td><strong>Homozygous</strong></td>
-                <td>Both alleles identical</td>
-                <td>RR, rr</td>
-            </tr>
-            <tr>
-                <td><strong>Heterozygous</strong></td>
-                <td>Alleles different</td>
-                <td>Rr</td>
-            </tr>
-            <tr>
-                <td><strong>Dominant</strong></td>
-                <td>Allele expressed in heterozygote</td>
-                <td>R (usually uppercase)</td>
-            </tr>
-            <tr>
-                <td><strong>Recessive</strong></td>
-                <td>Allele masked in heterozygote</td>
-                <td>r (usually lowercase)</td>
-            </tr>
-        </table>
+                <div class="card">
+                    <h3>Importance of Variation</h3>
+                    <ul>
+                        <li>Depending upon the nature of variations, different individuals would have different kinds of
+                            advantage.</li>
+                        <li><strong>Example:</strong> Thermostatic Bacteria that can withstand heat will survive better
+                            in a heat wave.</li>
+                        <li>Main advantage is that it increases the chances of survival in a changing environment.</li>
+                    </ul>
+                </div>
+            </div>
 
-        <h2>Monohybrid Cross</h2>
-        <p>A cross between organisms differing in one trait.</p>
+            <div class="card" style="margin-top: 1.5rem;">
+                <h3>Types of Variations</h3>
+                <div class="grid-2">
+                    <div>
+                        <h4>Somatic</h4>
+                        <ul>
+                            <li>Takes place in body cells.</li>
+                            <li>Neither inherited nor transmitted.</li>
+                            <li>Known as acquired traits.</li>
+                            <li>Example: Cutting of tails in dogs.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Germinal</h4>
+                        <ul>
+                            <li>Takes place in gametes/reproductive cells.</li>
+                            <li>Inherited as well as transmitted.</li>
+                            <li>Known as inherited traits.</li>
+                            <li>Example: Human height, skin colour.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <div class="definition-box">
-            <strong>Example: RR Ã— rr</strong> (Red flower Ã— White flower)
-            <ul>
-                <li>P generation: RR (red) Ã— rr (white)</li>
-                <li>Fâ‚ generation: All Rr (red flowers) - shows Law of Dominance</li>
-                <li>Fâ‚‚ generation: 1RR : 2Rr : 1rr = 3 red : 1 white (3:1 ratio)</li>
-            </ul>
-        </div>
+        <!-- 8.2 Heredity -->
+        <section id="heredity">
+            <div class="section-label">8.2 Heredity</div>
+            <div class="section-title-row">
+                <h2>Inherited Traits</h2>
+                <p class="section-hint">Transmission of characteristics from parents to offspring.</p>
+            </div>
 
-        <h2>Dihybrid Cross</h2>
-        <p>A cross between organisms differing in two traits.</p>
+            <div class="card">
+                <h3>Inherited Traits</h3>
+                <p>Traits are characteristics transmitted from parents to offspring. Offspring resemble parents but are
+                    not identical.</p>
+                <div class="grid-2">
+                    <div>
+                        <h4>Example: Earlobes</h4>
+                        <ul>
+                            <li><strong>Free Earlobe:</strong> The bottom of the earlobe hangs free. (Dominant trait).
+                            </li>
+                            <li><strong>Attached Earlobe:</strong> The bottom of the earlobe is attached to the head
+                                side. (Recessive trait).</li>
+                        </ul>
+                    </div>
+                    <div class="diagram-placeholder fit-contain" style="height: 180px;">
+                        <img src="images/earlobes.png" alt="Free and Attached Earlobes (Fig 8.2)">
+                    </div>
+                </div>
+            </div>
 
-        <div class="important-box">
-            <strong>Example: RRYY Ã— rryy</strong> (Red, Round Ã— White, Wrinkled)
-            <ul>
-                <li>P generation: RRYY Ã— rryy</li>
-                <li>Fâ‚ generation: All RrYy (Red, Round)</li>
-                <li>Fâ‚‚ generation: 9 Red Round : 3 Red Wrinkled : 3 White Round : 1 White Wrinkled (9:3:3:1)</li>
-            </ul>
-            <strong>This demonstrates Law of Independent Assortment</strong>
-        </div>
+            <div class="card" style="margin-top: 1.5rem;">
+                <h3>Mendel and His Work on Inheritance</h3>
+                <p><strong>Gregor Johann Mendel (1822 & 1884):</strong> Should be called the <strong>Father of
+                        Genetics</strong> as he was the first to explain how traits are passed down using Garden Peas.
+                </p>
 
-        <h2>Punnett Square</h2>
-        <p>A tool to predict offspring genotypes and phenotypes.</p>
-        <ul>
-            <li>Rows: Alleles from one parent</li>
-            <li>Columns: Alleles from other parent</li>
-            <li>Cells: Possible offspring genotypes</li>
-            <li>4-box grid for monohybrid, 16-box for dihybrid</li>
-        </ul>
+                <div class="grid-2">
+                    <div>
+                        <h4>Why Garden Pea (Pisum sativum)?</h4>
+                        <ul>
+                            <li>Availability of detectable contrasting traits.</li>
+                            <li>Short life span.</li>
+                            <li>Self-fertilisation and easy cross-fertilisation.</li>
+                            <li>Large number of seeds.</li>
+                        </ul>
+                    </div>
+                </div>
 
-        <h2>Chromosomal Basis of Inheritance</h2>
-        <p>Genes are located on chromosomes. During meiosis, chromosomes separate, distributing genes to gametes.</p>
+                <h4 style="margin-top: 1.5rem;">7 Contrasting Characters Selected</h4>
+                <div class="diagram-placeholder fit-contain" style="height: 600px;">
+                    <img src="images/pea_traits_schematic.png" alt="7 Contrasting Characters of Garden Pea">
+                </div>
+            </div>
+        </section>
 
-        <ul>
-            <li><strong>Chromosome:</strong> Structure containing genes, made of DNA and proteins</li>
-            <li><strong>Gene Location:</strong> Specific position on chromosome (locus)</li>
-            <li><strong>Homologous Chromosomes:</strong> Carry alleles of same genes</li>
-            <li><strong>Diploid (2n):</strong> Full set of chromosomes (paired)</li>
-            <li><strong>Haploid (n):</strong> Single set of chromosomes (in gametes)</li>
-        </ul>
+        <!-- 8.2.2 Mendel's Contributions -->
+        <section id="mendel">
+            <div class="section-label">8.2.2 Rules of Inheritance</div>
+            <div class="section-title-row">
+                <h2>Mendel’s Contributions</h2>
+                <p class="section-hint">Gregor Johann Mendel used pea plants (Pisum sativum) to understand inheritance.
+                </p>
+            </div>
 
-        <h2>Human Genetics</h2>
+            <!-- Monohybrid Cross -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3>Monohybrid Cross</h3>
+                <p>Cross between two pea plants with one pair of contrasting characters is called a monohybrid cross.
+                    Example: Cross between a tall and a dwarf plant.</p>
 
-        <h3>Chromosome Number</h3>
-        <ul>
-            <li><strong>Total Chromosomes:</strong> 46 (23 pairs)</li>
-            <li><strong>Autosomes:</strong> 22 pairs (non-sex chromosomes)</li>
-            <li><strong>Sex Chromosomes:</strong> 1 pair (XX or XY)</li>
-            <li><strong>Male:</strong> 44 + XY</li>
-            <li><strong>Female:</strong> 44 + XX</li>
-        </ul>
+                <!-- Diagram for Monohybrid Cross -->
+                <div class="diagram-placeholder fit-contain" style="height: 450px;">
+                    <img src="images/mendel_cross_diagram.png" alt="Monohybrid Cross Diagram (P to F2)">
+                </div>
 
-        <h3>X-linked Traits</h3>
-        <p>Traits controlled by genes on X chromosome.</p>
-        <ul>
-            <li><strong>Example:</strong> Color blindness (recessive)</li>
-            <li><strong>Male (XcY):</strong> Color blind (if one Xc)</li>
-            <li><strong>Female (XCXc):</strong> Carrier (normal but carries gene)</li>
-            <li><strong>Female (XcXc):</strong> Color blind (rare)</li>
-        </ul>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <div class="tip-box">
+                        <strong>Pure or Homozygous</strong>
+                        <div class="ratio-box">TT or tt</div>
+                        Both alleles are same (Both dominant or both recessive).
+                    </div>
+                    <div class="tip-box">
+                        <strong>Heterozygous (Hybrid)</strong>
+                        <div class="ratio-box">Tt</div>
+                        One dominant, one recessive allele.
+                    </div>
+                </div>
 
-        <h3>Human Traits</h3>
-        <table>
-            <tr>
-                <th>Trait</th>
-                <th>Dominant</th>
-                <th>Recessive</th>
-            </tr>
-            <tr>
-                <td>Eye Color</td>
-                <td>Dark</td>
-                <td>Light</td>
-            </tr>
-            <tr>
-                <td>Hair Color</td>
-                <td>Dark</td>
-                <td>Light</td>
-            </tr>
-            <tr>
-                <td>Earlobe Type</td>
-                <td>Attached</td>
-                <td>Free hanging</td>
-            </tr>
-            <tr>
-                <td>Hair Texture</td>
-                <td>Curly</td>
-                <td>Straight</td>
-            </tr>
-            <tr>
-                <td>PTC Taste</td>
-                <td>Can taste</td>
-                <td>Cannot taste</td>
-            </tr>
-        </table>
+                <div class="table-wrap" style="margin-top: 1rem;">
+                    <table>
+                        <tr>
+                            <th>Ratio Type</th>
+                            <th>Value</th>
+                            <th>Meaning</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Phenotypic Ratio</strong></td>
+                            <td>3 : 1</td>
+                            <td>3 Tall : 1 Dwarf (Physical appearance)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Genotypic Ratio</strong></td>
+                            <td>1 : 2 : 1</td>
+                            <td>1 TT : 2 Tt : 1 tt (Genetic make up)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
 
-        <h2>Genetic Disorders</h2>
-        <ul>
-            <li><strong>Albinism:</strong> Lack of melanin, recessive trait</li>
-            <li><strong>Cystic Fibrosis:</strong> Autosomal recessive disorder</li>
-            <li><strong>Hemophilia:</strong> X-linked recessive bleeding disorder</li>
-            <li><strong>Color Blindness:</strong> X-linked recessive trait</li>
-            <li><strong>Huntington's Disease:</strong> Autosomal dominant neurological disorder</li>
-        </ul>
+            <!-- Dihybrid Cross -->
+            <div class="card">
+                <h3>2. Independent Inheritance (Dihybrid Cross)</h3>
+                <p>Crossing plants with two different traits: <strong>Seed Shape</strong> (Round/Wrinkled) and
+                    <strong>Seed Colour</strong> (Yellow/Green).
+                </p>
 
-        <h2>Mutations</h2>
-        <p>Permanent changes in DNA sequence that can affect traits.</p>
-        <ul>
-            <li><strong>Point Mutation:</strong> Change in single nucleotide</li>
-            <li><strong>Insertion:</strong> Addition of nucleotides</li>
-            <li><strong>Deletion:</strong> Loss of nucleotides</li>
-            <li><strong>Duplication:</strong> Repetition of nucleotides</li>
-            <li><strong>Inversion:</strong> Reversal of nucleotide sequence</li>
-            <li><strong>Causes:</strong> Radiation, chemicals, viral infection, spontaneous errors</li>
-        </ul>
+                <ul>
+                    <li><strong>Parents:</strong> Round-Yellow (RRYY) x Wrinkled-Green (rryy)</li>
+                    <li><strong>F1 Generation:</strong> All Round-Yellow (RrYy). (Round and Yellow are dominant).</li>
+                    <li><strong>F2 Generation:</strong> Self-pollination of F1 plants results in new combinations.</li>
+                </ul>
 
-        <h2>Evolution</h2>
-        <p>Evolution is change in heritable traits of populations over generations.</p>
+                <div class="tip-box">
+                    <strong>F2 Phenotypic Ratio</strong>
+                    <div class="ratio-box">9 : 3 : 3 : 1</div>
+                    <ul style="margin-top:0.5rem; margin-bottom:0;">
+                        <li>9 Round-Yellow (Parental type)</li>
+                        <li>3 Round-Green (New Combination)</li>
+                        <li>3 Wrinkled-Yellow (New Combination)</li>
+                        <li>1 Wrinkled-Green (Parental type)</li>
+                    </ul>
+                </div>
 
-        <h3>Evidence of Evolution</h3>
-        <ul>
-            <li><strong>Fossil Records:</strong> Show gradual changes over time</li>
-            <li><strong>Homologous Structures:</strong> Similar structures in different species (bat wing, human arm, whale flipper)</li>
-            <li><strong>Analogous Structures:</strong> Similar function, different origin (bird wing, butterfly wing)</li>
-            <li><strong>Vestigial Structures:</strong> Reduced/non-functional remnants (tailbone in humans, wings in ostriches)</li>
-            <li><strong>DNA Similarity:</strong> Genetic similarity among organisms, especially between related species</li>
-        </ul>
+                <p>This shows that traits are inherited <strong>independently</strong> of each other (Law of Independent
+                    Assortment).</p>
+                <div class="diagram-placeholder fit-contain" style="height: 350px;">
+                    <img src="images/dihybrid_cross.png" alt="Independent Inheritance (Fig 8.5)">
+                </div>
+            </div>
+        </section>
 
-        <h3>Natural Selection</h3>
-        <div class="definition-box">
-            <strong>Darwin's Theory:</strong> Organisms with advantageous traits survive better and reproduce more, passing traits to offspring.
-            <ul>
-                <li>Variation in populations</li>
-                <li>Struggle for existence</li>
-                <li>Survival of fittest</li>
-                <li>Gradual accumulation of advantageous traits</li>
-            </ul>
-        </div>
+        <!-- 8.2.4 How Traits Express -->
+        <section id="expression">
+            <div class="section-label">8.2.4 Mechanism</div>
+            <div class="section-title-row">
+                <h2>How Do Traits Get Expressed?</h2>
+                <p class="section-hint">Genes control traits by making proteins.</p>
+            </div>
 
-        <h2>Speciation</h2>
-        <p>Formation of new species from existing species through accumulated genetic changes.</p>
-        <ul>
-            <li><strong>Isolation:</strong> Geographic or reproductive isolation</li>
-            <li><strong>Variation:</strong> Different mutations in isolated populations</li>
-            <li><strong>Natural Selection:</strong> Different selective pressures in different environments</li>
-            <li><strong>New Species:</strong> Eventually cannot interbreed with original species</li>
-        </ul>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>The Central Dogma</h3>
+                    <p><strong>DNA &rarr; Protein &rarr; Trait</strong></p>
+                    <ul>
+                        <li><strong>Gene:</strong> A segment of DNA that provides instructions for a specific protein.
+                        </li>
+                        <li><strong>Enzymes:</strong> Proteins that control chemical reactions (e.g., production of
+                            plant hormones for growth).</li>
+                    </ul>
+                    <div class="diagram-placeholder fit-contain" style="height: 200px; margin-top: 1rem;">
+                        <img src="images/dna_structure_schematic.png" alt="DNA Structure and Gene">
+                    </div>
+                </div>
 
-        <div style="margin-top: 40px; padding: 20px; background: #ffe0eb; border-radius: 8px; text-align: center;">
-            <h3 style="color: #fa709a; margin-bottom: 15px;">Key Takeaways</h3>
-            <ul style="list-style: none; margin: 0;">
-                <li>âœ“ Genes control traits; alleles are gene variants</li>
-                <li>âœ“ Dominant alleles mask recessive in heterozygotes</li>
-                <li>âœ“ Mendel's laws: Segregation, Independent Assortment, Dominance</li>
-                <li>âœ“ Genotype: genetic makeup; Phenotype: observable traits</li>
-                <li>âœ“ Monohybrid 3:1 ratio; Dihybrid 9:3:3:1 ratio</li>
-                <li>âœ“ Humans: 46 chromosomes, 23 pairs</li>
-                <li>âœ“ Evolution: Change in populations over time via natural selection</li>
-            </ul>
-            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">CBSE | NCERT | Class X Biology</p>
-        </div>
+                <div class="card">
+                    <h3>Mechanism Example (Tallness)</h3>
+                    <ul>
+                        <li><strong>Efficient Enzyme:</strong> Lots of growth hormone made &rarr; Plant grows Tall.</li>
+                        <li><strong>Inefficient Enzyme (Mutation):</strong> Little growth hormone made &rarr; Plant
+                            remains Short.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tip-box" style="margin-top: 1.5rem;">
+                <strong>Why two copies?</strong>
+                Sexually reproducing organisms have two sets of genes (one from each parent).
+                <br>• <strong>Gametes</strong> (Germ cells) have only one set (Haploid).
+                <br>• <strong>Zygote</strong> restores the two sets (Diploid).
+            </div>
+        </section>
+
+        <!-- 8.2.5 Sex Determination -->
+        <section id="sex-determination">
+            <div class="section-label">8.2.5 Sex Determination</div>
+            <div class="section-title-row">
+                <h2>Sex Determination</h2>
+                <p class="section-hint">What determines if the offspring is male or female?</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Environmental vs Genetic</h3>
+                    <ul>
+                        <li><strong>Environmental:</strong> In some reptiles, incubation temperature of eggs determines
+                            sex (e.g., Turtles, Lizards). Some snails can change sex.</li>
+                        <li><strong>Genetic:</strong> In humans, sex is determined by specific chromosomes.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Human Sex Determination</h3>
+                    <p>Humans have 23 pairs of chromosomes. One pair is <strong>Sex Chromosomes</strong>.</p>
+                    <ul>
+                        <li><strong>Females:</strong> XX (Perfect pair)</li>
+                        <li><strong>Males:</strong> XY (One normal X, one short Y)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 1.5rem;">
+                <h3>Process</h3>
+                <ul>
+                    <li><strong>Mother (XX):</strong> Always produces eggs with <strong>X</strong> chromosome.</li>
+                    <li><strong>Father (XY):</strong> Produces sperms with either <strong>X</strong> (50%) or
+                        <strong>Y</strong> (50%).
+                    </li>
+                </ul>
+                <div class="tip-box" style="margin-top: 1rem;">
+                    <strong>Determination:</strong>
+                    The sex of the child is determined by the father's sperm.
+                    <br>• Egg (X) + Sperm (X) &rarr; <strong>XX (Girl)</strong>
+                    <br>• Egg (X) + Sperm (Y) &rarr; <strong>XY (Boy)</strong>
+                </div>
+                <div class="diagram-placeholder fit-contain" style="height: 300px;">
+                    <img src="images/sex_determination.png" alt="Sex Determination in Humans (Fig 8.6)">
+                </div>
+            </div>
+        </section>
+
+        </section>
+
+        <!-- NCERT ACTIVITIES LINK -->
+        <section id="ncert-activities">
+            <div class="section-label">NCERT Lab</div>
+            <div class="section-title-row">
+                <h2>Key Activities</h2>
+                <div class="section-hint">
+                    Practical understanding of inheritance rules.
+                </div>
+            </div>
+
+            <div class="hero-card"
+                style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 95, 70, 0.2)); border-color: rgba(16, 185, 129, 0.3);">
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">🔬 Interactive Lab
+                        Activities
+                    </h3>
+                    <p style="max-width: 600px; color: #6ee7b7; margin-bottom: 2rem; font-size: 1.1rem;">
+                        Activity 8.1: Observing Earlobes in Class.<br>
+                        Activity 8.2: Verifying Mendel's Ratios (Coin Toss).
+                    </p>
+                    <a href="Chapter-8-Activities.html" class="btn btn-primary"
+                        style="background: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                        View Detailed Steps &rarr;
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <section id="quiz-section">
+            <div class="section-label">Test Yourself</div>
+            <div class="section-title-row">
+                <h2>⚡ Quick Quiz</h2>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <p><strong>Q1. Which of the following is an inherited trait?</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Swimming skill</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">B. Skin colour</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. Scars</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Knowledge</button>
+                </div>
+
+                <div class="card">
+                    <p><strong>Q2. In peas, a pure tall plant (TT) is crossed with a short plant (tt). The ratio of pure
+                            tall plants in F2 is:</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. 1:3</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">B. 3:1</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">C. 1:4</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. 2:1</button>
+                </div>
+
+                <div class="card">
+                    <p><strong>Q3. A zygote which has an X-chromosome inherited from the father will develop into
+                            a:</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Boy</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">B. Girl</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">C. X-Chromosome does not determine
+                        sex</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Either boy or girl</button>
+                </div>
+
+                <div class="card">
+                    <p><strong>Q4. Exchange of genetic material takes place in:</strong></p>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">A. Vegetative reproduction</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">B. Asexual reproduction</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">C. Sexual reproduction</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">D. Budding</button>
+                </div>
+            </div>
+        </section>
+
     </div>
+    <!-- Scripts -->
+    <script>
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('.quiz-option');
 
+            // Reset all buttons in this card
+            buttons.forEach(b => {
+                b.classList.remove('correct', 'wrong');
+                b.style.pointerEvents = 'none'; // Disable further clicks
+            });
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                btn.innerHTML += ' ✅';
+            } else {
+                btn.classList.add('wrong');
+                btn.innerHTML += ' ❌';
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+        }
+    </script>
     <script>
         // Lightbox Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -336,10 +1054,6 @@
             });
         });
     </script>
-
 </body>
+
 </html>
-
-
-
-

@@ -130,8 +130,7 @@ export const sendOtp = async (user, type = "signup") => {
     }
 
     console.log(`[sendOtp] Sending email to ${email}`);
-    // await sendOtpEmail(email, otp); 
-    console.log(`[sendOtp] SKIPPED EMAIL SENDING (Debugging Mode) - OTP is: ${otp}`);
+    await sendOtpEmail(email, otp);
     console.log(`[sendOtp] Email sent successfully to ${email}`);
     return { success: true, status: 200, message: "OTP sent to email" };
   } catch (err) {

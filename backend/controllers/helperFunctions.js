@@ -112,7 +112,7 @@ export const sendOtp = async (user, type = "signup") => {
         upperCaseAlphabets: false,
         specialChars: false,
       });
-      await redis.setex(`otp:${email}`, 300, otp); // 5 min expiry
+      await redis.set(`otp:${email}`, otp, { ex: 300 }); // 5 min expiry
     }
 
     if (password) {
@@ -123,7 +123,7 @@ export const sendOtp = async (user, type = "signup") => {
           ? { name, email, password: hashedPassword, class: userClass }
           : { email, password: hashedPassword };
 
-      await redis.setex(`tempUser:${email}`, 300, JSON.stringify(tempData));
+      await redis.set(`tempUser:${email}`, JSON.stringify(tempData), { ex: 300 });
     }
 
     await sendOtpEmail(email, otp);
@@ -166,7 +166,7 @@ export const resendOtp = async (req, res) => {
         upperCaseAlphabets: false,
         specialChars: false,
       });
-      await redis.setex(`otp:${email}`, 300, otp); // 5 min expiry
+      await redis.set(`otp:${email}`, otp, { ex: 300 }); // 5 min expiry
       await sendOtpEmail(email, otp);
 
       return res.status(200).json({

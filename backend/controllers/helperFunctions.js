@@ -104,6 +104,7 @@ export const sendOtp = async (user, type = "signup") => {
     if (type === "reset" && !exists)
       return { success: false, status: 404, message: "User not found" };
 
+    console.log(`[sendOtp] Generating OTP for ${email}`);
     let otp = await redis.get(`otp:${email}`);
     if (!otp) {
       otp = otpGenerator.generate(6, {
@@ -112,6 +113,7 @@ export const sendOtp = async (user, type = "signup") => {
         upperCaseAlphabets: false,
         specialChars: false,
       });
+      console.log(`[sendOtp] Storing new OTP in Redis for ${email}`);
       await redis.set(`otp:${email}`, otp, { ex: 300 }); // 5 min expiry
     }
 
@@ -123,14 +125,17 @@ export const sendOtp = async (user, type = "signup") => {
           ? { name, email, password: hashedPassword, class: userClass }
           : { email, password: hashedPassword };
 
+      console.log(`[sendOtp] Storing tempUserData in Redis for ${email}`);
       await redis.set(`tempUser:${email}`, JSON.stringify(tempData), { ex: 300 });
     }
 
+    console.log(`[sendOtp] Sending email to ${email}`);
     await sendOtpEmail(email, otp);
+    console.log(`[sendOtp] Email sent successfully to ${email}`);
     return { success: true, status: 200, message: "OTP sent to email" };
   } catch (err) {
-    console.error("sendOtp error:", err);
-    return { success: false, status: 500, message: "Failed to send OTP" };
+    console.error(`[sendOtp] Error processing OTP for ${user?.email}:`, err);
+    return { success: false, status: 500, message: "Failed to send OTP", error: err.message };
   }
 };
 

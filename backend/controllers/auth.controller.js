@@ -7,7 +7,7 @@ export const signup = async (req, res) => {
   try {
     const user = req.body;
     const result = await sendOtp(user, "signup");
-    return res.status(result.status).json({ message: result.message });
+    return res.status(result.status).json({ message: result.message, error: result.error });
   } catch (err) {
     console.error("Signup error:", err);
     return res.status(500).json({ message: "Internal server error" });

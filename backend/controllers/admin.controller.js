@@ -443,7 +443,7 @@ export const adminLoginNew = async (req, res) => {
         });
 
         // Store OTP in Redis (5 minutes expiry)
-        await redis.setex(`admin_otp:${email}`, 300, otp);
+        await redis.set(`admin_otp:${email}`, otp, { ex: 300 });
 
         // Send OTP Email
         const html = otpEmailTemplate(otp);
@@ -503,7 +503,7 @@ export const sendLoginOTP = async (req, res) => {
         });
 
         // Store OTP in Redis (5 minutes expiry)
-        await redis.setex(`admin_otp:${email}`, 300, otp);
+        await redis.set(`admin_otp:${email}`, otp, { ex: 300 });
 
         // Send OTP Email
         const html = otpEmailTemplate(otp);
@@ -644,7 +644,7 @@ export const forgotPasswordSendOTP = async (req, res) => {
         });
 
         // Store OTP in Redis (5 minutes expiry)
-        await redis.setex(`admin_reset_otp:${email}`, 300, otp);
+        await redis.set(`admin_reset_otp:${email}`, otp, { ex: 300 });
 
         // Send OTP via email
         const html = otpEmailTemplate(otp);

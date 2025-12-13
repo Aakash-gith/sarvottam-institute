@@ -146,7 +146,7 @@ function TakeQuiz() {
   return (
     <div className="flex h-screen bg-gray-50">
       <Navbar />
-      <div className="flex-1 transition-all duration-300">
+      <div className="flex-1 transition-all duration-300 pt-20">
         <div className="min-h-screen p-6">
           <div className="max-w-4xl mx-auto">
 
@@ -194,8 +194,8 @@ function TakeQuiz() {
                       key={index}
                       onClick={() => handleSelectAnswer(optionText)}
                       className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-200 border-2 ${isSelected
-                          ? "bg-blue-50 text-blue-700 border-blue-500"
-                          : "bg-gray-50 text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
+                        ? "bg-blue-50 text-blue-700 border-blue-500"
+                        : "bg-gray-50 text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                         }`}
                     >
                       <div className="flex items-center gap-3">
@@ -235,10 +235,10 @@ function TakeQuiz() {
                         key={qIndex}
                         onClick={() => setCurrentQuestionIndex(qIndex)}
                         className={`w-10 h-10 rounded-lg font-medium transition-all ${currentQuestionIndex === qIndex
-                            ? "bg-blue-600 text-white"
-                            : answers[qIndex] !== undefined && answers[qIndex] !== null
-                              ? "bg-green-100 text-green-700 border-2 border-green-300"
-                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          ? "bg-blue-600 text-white"
+                          : answers[qIndex] !== undefined && answers[qIndex] !== null
+                            ? "bg-green-100 text-green-700 border-2 border-green-300"
+                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                           }`}
                       >
                         {qIndex + 1}

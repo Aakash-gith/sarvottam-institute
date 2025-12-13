@@ -3,13 +3,14 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import otpGenerator from "otp-generator";
 import User from "../models/Users.js";
-import {
-  createMailOptions,
-  otpEmailTemplate,
-  transporter,
-} from "../conf/mail.conf.js";
+import { Resend } from "resend";
+
 const JWT_SECRET = process.env.JWT_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
+
+// Resend Configuration
+// checks for API key in env
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Generate Tokens
 export const generateTokens = (user) => {
@@ -68,12 +69,36 @@ export const refreshToken = async (req, res) => {
 };
 
 
-// EMAIL
-
+// EMAIL (Via Resend)
 const sendOtpEmail = async (email, otp) => {
-  const html = otpEmailTemplate(otp);
-  const mailOptions = createMailOptions(email, "Your OTP for Sarvottam Institute", html);
-  await transporter.sendMail(mailOptions);
+  try {
+    console.log(`[Resend] Sending OTP ${otp} to ${email}...`);
+
+    const { data, error } = await resend.emails.send({
+      from: "Sarvottam Institute <onboarding@resend.dev>", // Default testing domain
+      to: [email],
+      subject: "Your OTP for Sarvottam Institute",
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+          <h2 style="color: #2563eb;">Sarvottam Institute</h2>
+          <p>Your Verification Code:</p>
+          <h1 style="letter-spacing: 5px; font-size: 32px; color: #000;">${otp}</h1>
+          <p>This code will expire in 5 minutes.</p>
+        </div>
+      `,
+    });
+
+    if (error) {
+      console.error("[Resend] Error:", error);
+      throw new Error(error.message);
+    }
+
+    console.log("[Resend] Success:", data);
+    return data;
+  } catch (error) {
+    console.error("[Resend] FAILED:", error);
+    throw error;
+  }
 };
 
 // USER HELPERS
@@ -182,7 +207,8 @@ export const resendOtp = async (req, res) => {
       console.error("Failed to generate and send OTP:", err);
       return res.status(500).json({
         success: false,
-        message: "Failed to send OTP"
+        message: "Failed to send OTP",
+        error: err.message
       });
     }
   } catch (err) {

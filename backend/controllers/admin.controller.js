@@ -2,28 +2,37 @@ import AdminRequest from "../models/AdminRequest.js";
 import AdminUser from "../models/AdminUser.js";
 import User from "../models/Users.js";
 import PasswordReset from "../models/PasswordReset.js";
-import nodemailer from "nodemailer";
-import jwt from "jsonwebtoken";
-import bcryptjs from "bcryptjs";
-import redis from "../conf/redis.js";
-import otpGenerator from "otp-generator";
-import {
-    createMailOptions,
-    otpEmailTemplate,
-    transporter,
-} from "../conf/mail.conf.js";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const otpEmailTemplate = (otp) => `
+<div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+  <h2 style="color: #2563eb;">Sarvottam Institute</h2>
+  <p>Your Verification Code:</p>
+  <h1 style="letter-spacing: 5px; font-size: 32px; color: #000;">${otp}</h1>
+  <p>This code will expire in 5 minutes.</p>
+</div>
+`;
 
 const MASTER_ADMIN_EMAIL = "arsir.personal@gmail.com";
 
 // Send email notification (keeping the original helper for admin requests)
+// Send email helper
 const sendEmail = async (to, subject, html) => {
     try {
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER || "your-email@gmail.com",
-            to,
-            subject,
-            html,
+        const { data, error } = await resend.emails.send({
+            from: "Sarvottam Institute <onboarding@resend.dev>", // Default testing domain
+            to: [to],
+            subject: subject,
+            html: html,
         });
+
+        if (error) {
+            console.error("[Resend] Error:", error);
+        } else {
+            console.log(`[Resend] Email sent to ${to}`);
+        }
     } catch (error) {
         console.error("Email send failed:", error);
     }
@@ -648,12 +657,7 @@ export const forgotPasswordSendOTP = async (req, res) => {
 
         // Send OTP via email
         const html = otpEmailTemplate(otp);
-        const mailOptions = createMailOptions(
-            email,
-            "Admin Password Reset OTP",
-            html
-        );
-        await transporter.sendMail(mailOptions);
+        await sendEmail(email, "Admin Password Reset OTP", html);
 
         // For development: log OTP to console
         if (process.env.NODE_ENV !== "production") {

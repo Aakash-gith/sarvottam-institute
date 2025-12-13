@@ -1,16 +1,18 @@
 import redis from "../conf/redis.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import otpGenerator from "otp-generator";
 import User from "../models/Users.js";
-import { Resend } from "resend";
+import mojoAuth from "../conf/mojoauth.js";
+import axios from "axios";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
 
-// Resend Configuration
-// checks for API key in env
-const resend = new Resend(process.env.RESEND_API_KEY);
+// EmailJS Config
+const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
+const EMAILJS_PRIVATE_KEY = process.env.EMAILJS_PRIVATE_KEY;
 
 // Generate Tokens
 export const generateTokens = (user) => {
@@ -69,35 +71,36 @@ export const refreshToken = async (req, res) => {
 };
 
 
-// EMAIL (Via Resend)
+// EMAIL (Via EmailJS REST API)
 const sendOtpEmail = async (email, otp) => {
   try {
-    console.log(`[Resend] Sending OTP ${otp} to ${email}...`);
+    const data = {
+      service_id: EMAILJS_SERVICE_ID,
+      template_id: EMAILJS_TEMPLATE_ID,
+      user_id: EMAILJS_PUBLIC_KEY,
+      accessToken: EMAILJS_PRIVATE_KEY,
+      template_params: {
+        to_email: email,
+        otp: otp,
+        app_name: "Sarvottam Institute"
+      }
+    };
 
-    const { data, error } = await resend.emails.send({
-      from: "Sarvottam Institute <onboarding@resend.dev>", // Default testing domain
-      to: [email],
-      subject: "Your OTP for Sarvottam Institute",
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-          <h2 style="color: #2563eb;">Sarvottam Institute</h2>
-          <p>Your Verification Code:</p>
-          <h1 style="letter-spacing: 5px; font-size: 32px; color: #000;">${otp}</h1>
-          <p>This code will expire in 5 minutes.</p>
-        </div>
-      `,
+    console.log(`[EmailJS] Sending OTP ${otp} to ${email}...`);
+
+    // EmailJS REST API endpoint
+    const response = await axios.post('https://api.emailjs.com/api/v1.0/email/send', data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
 
-    if (error) {
-      console.error("[Resend] Error:", error);
-      throw new Error(error.message);
-    }
+    console.log("[EmailJS] Success:", response.data);
+    return true;
 
-    console.log("[Resend] Success:", data);
-    return data;
   } catch (error) {
-    console.error("[Resend] FAILED:", error);
-    throw error;
+    console.error("[EmailJS] FAILED:", error.response?.data || error.message);
+    throw new Error(`EmailJS Failed: ${JSON.stringify(error.response?.data || error.message)}`);
   }
 };
 
@@ -107,7 +110,7 @@ export const checkUserExists = async (email) => {
   return user;
 };
 
-// SEND OTP
+// SEND OTP (MojoAuth)
 export const sendOtp = async (user, type = "signup") => {
   try {
     const { name, email, password, class: userClass } = user;
@@ -129,122 +132,163 @@ export const sendOtp = async (user, type = "signup") => {
     if (type === "reset" && !exists)
       return { success: false, status: 404, message: "User not found" };
 
-    console.log(`[sendOtp] Generating OTP for ${email}`);
-    let otp = await redis.get(`otp:${email}`);
-    if (!otp) {
-      otp = otpGenerator.generate(6, {
-        digits: true,
-        lowerCaseAlphabets: false,
-        upperCaseAlphabets: false,
-        specialChars: false,
-      });
-      console.log(`[sendOtp] Storing new OTP in Redis for ${email}`);
-      await redis.set(`otp:${email}`, otp, { ex: 300 }); // 5 min expiry
-    }
-
+    // Store temp user data if signup/reset
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
-
       const tempData =
         type === "signup"
           ? { name, email, password: hashedPassword, class: userClass }
           : { email, password: hashedPassword };
 
       console.log(`[sendOtp] Storing tempUserData in Redis for ${email}`);
-      await redis.set(`tempUser:${email}`, JSON.stringify(tempData), { ex: 300 });
+      await redis.set(`tempUser:${email}`, JSON.stringify(tempData), { ex: 600 }); // 10 min expiry
     }
 
-    console.log(`[sendOtp] Sending email to ${email}`);
-    await sendOtpEmail(email, otp);
-    console.log(`[sendOtp] Email sent successfully to ${email}`);
+    console.log(`[MojoAuth] Sending OTP to ${email}`);
+
+    // MojoAuth: Send OTP
+    const response = await mojoAuth.mojoAPI.signinWithEmailOTP(email, {});
+    console.log("[MojoAuth] Response:", response);
+
+    // Store "state_id" in Redis to verify later
+    // MojoAuth response usually contains { state_id: "..." }
+    // We map email -> state_id
+    if (response && response.state_id) {
+      await redis.set(`mojoState:${email}`, response.state_id, { ex: 300 }); // 5 min
+    } else {
+      throw new Error("MojoAuth did not return a state_id");
+    }
+
     return { success: true, status: 200, message: "OTP sent to email" };
   } catch (err) {
-    console.error(`[sendOtp] Error processing OTP for ${user?.email}:`, err);
+    console.error(`[MojoAuth] Error sending OTP for ${user?.email}:`, err);
     return { success: false, status: 500, message: "Failed to send OTP", error: err.message };
   }
 };
 
-//RESEND OTP
+// RESEND OTP (MojoAuth)
 export const resendOtp = async (req, res) => {
   try {
     const { email, type } = req.body;
 
     if (!email || !type) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Email and type required" });
+      return res.status(400).json({ success: false, message: "Email and type required" });
     }
 
-    // Check user existence based on type
     const exists = await checkUserExists(email);
     if (type === "signup" && exists) {
-      return res
-        .status(409)
-        .json({ success: false, message: "Email already registered" });
+      return res.status(409).json({ success: false, message: "Email already registered" });
     }
     if (type === "reset" && !exists) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Generate new OTP - don't require all fields for resend
-    try {
-      const otp = otpGenerator.generate(6, {
-        digits: true,
-        lowerCaseAlphabets: false,
-        upperCaseAlphabets: false,
-        specialChars: false,
-      });
-      await redis.set(`otp:${email}`, otp, { ex: 300 }); // 5 min expiry
-      await sendOtpEmail(email, otp);
+    console.log(`[MojoAuth] Resending OTP to ${email}`);
+    const response = await mojoAuth.mojoAPI.signinWithEmailOTP(email, {});
 
-      return res.status(200).json({
-        success: true,
-        message: "OTP sent to email"
-      });
-    } catch (err) {
-      console.error("Failed to generate and send OTP:", err);
-      return res.status(500).json({
-        success: false,
-        message: "Failed to send OTP",
-        error: err.message
-      });
+
+    if (response && response.state_id) {
+      await redis.set(`mojoState:${email}`, response.state_id, { ex: 300 }); // 5 min
+      return res.status(200).json({ success: true, message: "OTP sent to email" });
+    } else {
+      throw new Error("MojoAuth did not return a state_id");
     }
+
   } catch (err) {
     console.error("resendOtp error:", err);
-    return res
-      .status(500)
-      .json({ success: false, message: "Failed to resend OTP" });
+    return res.status(500).json({ success: false, message: "Failed to resend OTP", error: err.message });
   }
 };
 
-// VERIFY OTP
+// VERIFY OTP (MojoAuth)
 export const verifyOtp = async (req, res) => {
   try {
     const { email, otp, type } = req.body;
+    console.log(`[VerifyOtp] Request: email=${email}, otp=${otp}, type=${type}`);
 
-    const storedOtp = await redis.get(`otp:${email}`);
-    if (!storedOtp || storedOtp.toString() !== otp.toString()) {
-      return res.status(400).json({ message: "Invalid or expired OTP" });
+    // Retrieve state_id
+    const state_id = await redis.get(`mojoState:${email}`);
+    console.log(`[VerifyOtp] Redis state_id: ${state_id}`);
+
+    if (!state_id) {
+      console.warn("[VerifyOtp] Missing state_id in Redis");
+      return res.status(400).json({ message: "OTP Session expired or invalid" });
     }
+
+    // Verify with MojoAuth (Direct API Call to bypass SDK bug)
+    console.log(`[MojoAuth] Verifying OTP for ${email} with state ${state_id}`);
+
+    try {
+      const verifyResponse = await axios.post(
+        "https://api.mojoauth.com/users/emailotp/verify",
+        {
+          otp: otp,
+          state_id: state_id
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-Key": process.env.MOJOAUTH_API_KEY
+          }
+        }
+      );
+
+      console.log("[MojoAuth] Verify Response Status:", verifyResponse.status);
+      console.log("[MojoAuth] Verify Response Body Type:", typeof verifyResponse.data);
+      console.log("[MojoAuth] Verify Response Body:", JSON.stringify(verifyResponse.data, null, 2));
+
+      // Flexible success check
+      const data = verifyResponse.data;
+      const isAuthenticated = data && (
+        data.authenticated === true ||
+        data.user ||
+        data.access_token ||
+        data.oauth_token ||
+        data.refresh_token // Use refresh_token as proof of success too
+      );
+
+      console.log(`[VerifyOtp] isAuthenticated result: ${!!isAuthenticated}`);
+
+      if (!isAuthenticated) {
+        console.error("[VerifyOtp] isAuthenticated failed despite response data.");
+        throw new Error("Verification failed: Valid authentication tokens missing in response");
+      }
+
+    } catch (apiError) {
+      console.error("[MojoAuth] API Verification Failed (Inner Catch):", apiError.response?.data || apiError.message);
+      const details = apiError.response?.data?.description || apiError.message;
+      return res.status(400).json({
+        message: `Verification Failed: ${details}`, // Append details to message for UI visibility
+        details: details
+      });
+    }
+
+    // Proceed with logic
+    console.log("[VerifyOtp] Proceeding to User Logic...");
+
     if (type === "signup") {
-      const tempUserData = await redis.get(`tempUser:${email}`);
-      if (!tempUserData)
-        return res.status(400).json({ message: "Session expired" });
+      const tempUserDataRaw = await redis.get(`tempUser:${email}`);
+      console.log(`[VerifyOtp] Signup tempUser type: ${typeof tempUserDataRaw}`);
+      console.log(`[VerifyOtp] Signup tempUser value: ${JSON.stringify(tempUserDataRaw)}`);
 
-      const userData = JSON.parse(tempUserData);
+      if (!tempUserDataRaw)
+        return res.status(400).json({ message: "Session expired (User Data missing)" });
 
-      // Create the user
-      const newUser = new User(userData); // create a Mongoose document
+      let userData;
+      if (typeof tempUserDataRaw === 'string') {
+        userData = JSON.parse(tempUserDataRaw);
+      } else {
+        userData = tempUserDataRaw;
+      }
+
+      const newUser = new User(userData);
       const { accessToken, refreshToken } = generateTokens(newUser);
 
-      // Save the refresh token to user
       newUser.refreshTokens = [refreshToken];
       await newUser.save();
+      console.log("[VerifyOtp] User saved to DB.");
 
-      // Cleanup Redis
-      await redis.del(`otp:${email}`);
+      await redis.del(`mojoState:${email}`);
       await redis.del(`tempUser:${email}`);
 
       return res.status(200).json({
@@ -261,17 +305,24 @@ export const verifyOtp = async (req, res) => {
     }
 
     if (type === "reset") {
-      const tempUserData = await redis.get(`tempUser:${email}`);
-      if (!tempUserData)
-        return res.status(400).json({ message: "Session expired" });
+      const tempUserDataRaw = await redis.get(`tempUser:${email}`);
+      if (!tempUserDataRaw)
+        return res.status(400).json({ message: "Session expired (User Data missing)" });
 
-      const { password } = JSON.parse(tempUserData);
+      let userData;
+      if (typeof tempUserDataRaw === 'string') {
+        userData = JSON.parse(tempUserDataRaw);
+      } else {
+        userData = tempUserDataRaw;
+      }
+
+      const { password } = userData;
       const user = await User.findOne({ email });
       if (!user) return res.status(404).json({ message: "User not found" });
 
       await User.updateOne({ email }, { password });
 
-      await redis.del(`otp:${email}`);
+      await redis.del(`mojoState:${email}`);
       await redis.del(`tempUser:${email}`);
 
       return res.status(200).json({ message: "Password reset successful" });
@@ -279,7 +330,7 @@ export const verifyOtp = async (req, res) => {
 
     return res.status(400).json({ message: "Invalid request type" });
   } catch (err) {
-    console.error("verifyOtp error:", err);
-    return res.status(500).json({ message: "Internal server error" });
+    console.error("[VerifyOtp] Outer Error:", err);
+    return res.status(400).json({ message: `Verification System Error: ${err.message}` });
   }
 };

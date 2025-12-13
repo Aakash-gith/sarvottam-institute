@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 9 - Light: Reflection and Refraction | Sarvottam Institute</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --accent: #10b981;
+            --accent-soft: rgba(16, 185, 129, 0.15);
+            --accent-strong: #059669;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --danger: #f97373;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+            --transition-med: 260ms ease-out;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(14px);
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.9));
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }
+
+        .nav-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0.7rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .logo-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 12px;
+            background: radial-gradient(circle at 20% 20%, #34d399, #10b981 60%, #059669);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.8rem;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-soft);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        /* Hero */
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+            gap: 2.5rem;
+            align-items: center;
+            margin-top: 2.3rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.1rem, 3vw + 1.2rem, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(to right, #fff, #cbd5e1);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 0.98rem;
+            color: var(--text-soft);
+            max-width: 33rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .hero-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--radius-lg);
+        }
+
+        /* Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            transition: transform var(--transition-fast), border-color var(--transition-fast);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(55, 65, 81, 0.9);
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin: 1.25rem 0 0.75rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+
+        ul,
+        ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* Tables */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            background: rgba(255, 255, 255, 0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        th {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Feature Boxes */
+        .feature-box {
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .tip-box {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #d1fae5;
+        }
+
+        .question-box {
+            background: rgba(250, 204, 21, 0.08);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            color: #fef9c3;
+        }
+
+        .activity-box {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #dbeafe;
+        }
+
+        /* Images */
+        .diagram {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            margin: 1.5rem 0;
+            cursor: zoom-in;
+            transition: transform 0.2s;
+            background: #fff;
+            padding: 10px;
+        }
+
+        .diagram:hover {
+            transform: scale(1.01);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.2);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+        }
+
+        /* Math/Formula */
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+            margin: 0.5rem 0;
+            display: inline-block;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <header>
+        <div class="nav-inner">
+            <div class="logo-badge">
+                <span>⚡</span> Sarvottam Institute
+            </div>
+            <nav class="nav-links">
+                <a href="../Biology/index.html" class="nav-link">Home</a>
+                <a href="#reflection" class="nav-link">Reflection</a>
+                <a href="#refraction" class="nav-link">Refraction</a>
+                <a href="#mirrors" class="nav-link">Mirrors</a>
+                <a href="#lenses" class="nav-link">Lenses</a>
+                <a href="Chapter-9-Activities.html" class="nav-link" style="color: var(--accent);">Activities →</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem;">
+                    <span
+                        style="background: rgba(16,185,129,0.1); color: var(--accent); padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(16,185,129,0.2);">Class
+                        10 Physics</span>
+                    <span
+                        style="background: rgba(99,102,241,0.1); color: #818cf8; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(99,102,241,0.2);">Chapter
+                        9</span>
+                </div>
+                <h1>Light: Reflection <br>and Refraction</h1>
+                <p class="hero-subtitle">Explore the fascinating world of light. Understand how it bounces off mirrors
+                    and bends through lenses to form the images we see.</p>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="#reflection"
+                        style="background: var(--accent); color: #000; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-block;">Start
+                        Learning</a>
+                </div>
+            </div>
+            <div class="hero-card">
+                <!-- Placeholder for Hero Image (e.g., ray passing through slab) -->
+                <img src="refraction_glass_slab.png" alt="Light Refraction"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+                <div
+                    style="position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; background: linear-gradient(to top, rgba(2,6,23,0.9), transparent);">
+                    <p style="color: #fff; margin: 0; font-weight: 500;">Bending of Light</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9.1 Reflection of Light -->
+        <h2 id="reflection">9.1 Reflection of Light</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>The Nature of Light</h3>
+                <p>Light is a form of energy that enables us to see. It travels in straight lines (Rectilinear
+                    propagation).</p>
+                <ul class="feature-box tip-box">
+                    <li><strong>Speed of Light:</strong> 3 × 10⁸ m/s in vacuum.</li>
+                    <li><strong>Wave-Particle Duality:</strong> Light exhibits properties of both waves and particles.
+                    </li>
+                </ul>
+                <p><strong>Reflection</strong> is the bouncing back of light when it strikes a polished surface like a
+                    mirror.</p>
+            </div>
+            <div class="card">
+                <h3>Laws of Reflection</h3>
+                <p>The laws of reflection apply to all kinds of reflecting surfaces, including spherical surfaces.</p>
+                <ol>
+                    <li>The angle of incidence is equal to the angle of reflection.<br>
+                        <div class="formula">∠i = ∠r</div>
+                    </li>
+                    <li>The incident ray, the normal to the mirror at the point of incidence, and the reflected ray, all
+                        lie in the same plane.</li>
+                </ol>
+                <img src="reflection_laws_diagram.png" alt="Laws of Reflection" class="diagram">
+            </div>
+        </div>
+
+        <!-- New Content from Images -->
+        <h2 id="images">9.1.2 Images & Plane Mirrors</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Image</h3>
+                <p>It is a point where at least two light rays actually meet or appear to meet.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Real Image</th>
+                                <th>Virtual Image</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Formed when light rays <strong>actually meet</strong>.</td>
+                                <td>Formed when light rays <strong>appear to meet</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td>Can be obtained on a screen.</td>
+                                <td>Can't be obtained on a screen.</td>
+                            </tr>
+                            <tr>
+                                <td>Inverted.</td>
+                                <td>Erect.</td>
+                            </tr>
+                            <tr>
+                                <td>Example: Cinema screen.</td>
+                                <td>Example: Plane mirror, Convex mirror.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Image Formed by Plane Mirror</h3>
+                <div class="feature-box activity-box">
+                    <ul style="margin: 0; padding-left: 1.2rem;">
+                        <li><strong>Virtual and Erect.</strong></li>
+                        <li>Size of image is <strong>equal</strong> to the size of object.</li>
+                        <li>Image is formed as far <strong>behind</strong> the mirror as the object is in front.</li>
+                        <li><strong>Laterally Inverted.</strong></li>
+                    </ul>
+                </div>
+                <div class="feature-box tip-box">
+                    <strong>Lateral Inversion:</strong> The right side of the object appears left side of the image and
+                    vice-versa.
+                    <br><br>
+                    <em>Application:</em> 'AMBULANCE' is written backwards so it reads correctly in rear-view mirrors.
+                </div>
+            </div>
+        </div>
+
+        <!-- Rules for Spherical Mirrors -->
+        <h2 id="rules">Rules for Ray Diagrams</h2>
+        <div class="card" style="margin-bottom: 2rem;">
+            <h3>Standard Rules for Concave Mirrors</h3>
+            <div class="grid-2">
+                <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                    <img src="concave_rule_1_parallel.png" alt="Rule 1: Parallel to Axis" class="diagram"
+                        style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                    <div style="text-align: left;">
+                        <strong>Rule 1:</strong> A ray parallel to the principal axis will pass through the
+                        <strong>Principal Focus (F)</strong> after reflection.
+                    </div>
+                </div>
+                <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                    <img src="concave_rule_2_focus.png" alt="Rule 2: Through Focus" class="diagram"
+                        style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                    <div style="text-align: left;">
+                        <strong>Rule 2:</strong> A ray passing through the Principal Focus (F) will emerge
+                        <strong>parallel</strong> to the principal axis after reflection.
+                    </div>
+                </div>
+                <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                    <img src="concave_rule_3_center.png" alt="Rule 3: Through Center" class="diagram"
+                        style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                    <div style="text-align: left;">
+                        <strong>Rule 3:</strong> A ray passing through the <strong>Center of Curvature (C)</strong> is
+                        reflected back along the same path.
+                    </div>
+                </div>
+                <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                    <img src="concave_rule_4_pole.png" alt="Rule 4: At Pole" class="diagram"
+                        style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                    <div style="text-align: left;">
+                        <strong>Rule 4:</strong> A ray incident obliquely to the Pole (P) is reflected obliquely making
+                        <strong>equal angles</strong> (∠i = ∠r).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9.2 Spherical Mirrors -->
+        <h2 id="mirrors">9.2 Spherical Mirrors</h2>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="card">
+                <h3>Mirror Types</h3>
+                <p><strong>Concave Mirror:</strong> Reflecting surface is curved inwards. It converges light rays
+                    (Converging Mirror).</p>
+                <p><strong>Convex Mirror:</strong> Reflecting surface is curved outwards. It diverges light rays
+                    (Diverging Mirror).</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Definition</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Pole (P)</td>
+                                <td>Center of the reflecting surface.</td>
+                            </tr>
+                            <tr>
+                                <td>Centre of Curvature (C)</td>
+                                <td>Center of the sphere the mirror is part of.</td>
+                            </tr>
+                            <tr>
+                                <td>Focus (F)</td>
+                                <td>Point where parallel rays meet (concave) or appear to come from (convex).</td>
+                            </tr>
+                            <tr>
+                                <td>Focal Length (f)</td>
+                                <td>Distance between Pole and Focus. <strong>R = 2f</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Image Formation (Concave Mirror)</h3>
+                <p>The nature of the image formed depends on the position of the object.</p>
+                <div class="grid-2" style="margin-top: 2rem;">
+                    <!-- Case 1: Infinity -->
+                    <div style="text-align: center;">
+                        <img src="concave_infinity_ray.png" alt="Object at Infinity" class="diagram"
+                            style="margin-bottom: 0.5rem;">
+                        <div class="feature-box tip-box" style="text-align: left; font-size: 0.85rem;">
+                            <strong>Object:</strong> At Infinity<br>
+                            <strong>Image:</strong> At Focus (F)<br>
+                            <strong>Size:</strong> Point sized
+                        </div>
+                    </div>
+                    <!-- Case 2: Beyond C -->
+                    <div style="text-align: center;">
+                        <img src="concave_beyond_c_ray.png" alt="Object Beyond C" class="diagram"
+                            style="margin-bottom: 0.5rem;">
+                        <div class="feature-box tip-box" style="text-align: left; font-size: 0.85rem;">
+                            <strong>Object:</strong> Beyond C<br>
+                            <strong>Image:</strong> Between F & C<br>
+                            <strong>Size:</strong> Diminished
+                        </div>
+                    </div>
+                    <!-- Case 3: At C -->
+                    <div style="text-align: center;">
+                        <img src="concave_at_c_ray.png" alt="Object at C" class="diagram"
+                            style="margin-bottom: 0.5rem;">
+                        <div class="feature-box tip-box" style="text-align: left; font-size: 0.85rem;">
+                            <strong>Object:</strong> At C<br>
+                            <strong>Image:</strong> At C (Inverted)<br>
+                            <strong>Size:</strong> Same size
+                        </div>
+                    </div>
+                    <!-- Case 4: Between C & F -->
+                    <div style="text-align: center;">
+                        <img src="concave_between_c_f_ray.png" alt="Object Between C and F" class="diagram"
+                            style="margin-bottom: 0.5rem;">
+                        <div class="feature-box tip-box" style="text-align: left; font-size: 0.85rem;">
+                            <strong>Object:</strong> Between C & F<br>
+                            <strong>Image:</strong> Beyond C<br>
+                            <strong>Size:</strong> Enlarged
+                        </div>
+                    </div>
+                    <!-- Case 5: At F -->
+                    <div style="text-align: center;">
+                        <img src="concave_at_f_ray.png" alt="Object At F" class="diagram"
+                            style="margin-bottom: 0.5rem;">
+                        <div class="feature-box tip-box" style="text-align: left; font-size: 0.85rem;">
+                            <strong>Object:</strong> At F<br>
+                            <strong>Image:</strong> At Infinity<br>
+                            <strong>Size:</strong> Highly Enlarged
+                        </div>
+                    </div>
+                    <!-- Case 6: Between P & F -->
+                    <div style="text-align: center;">
+                        <img src="concave_virtual_ray.png" alt="Object between P and F" class="diagram"
+                            style="margin-bottom: 0.5rem;">
+                        <div class="feature-box tip-box" style="text-align: left; font-size: 0.85rem;">
+                            <strong>Object:</strong> Between P & F<br>
+                            <strong>Image:</strong> Behind Mirror (Virtual)<br>
+                            <strong>Size:</strong> Enlarged
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <h3>Uses of Concave Mirrors</h3>
+                    <ul class="feature-box activity-box">
+                        <li><strong>Torches & Headlights:</strong> Used to get powerful parallel beams of light.</li>
+                        <li><strong>Dentists:</strong> Used to see large images of teeth (Object between P & F).</li>
+                        <li><strong>Shaving/Makeup:</strong> Used to see a larger image of the face.</li>
+                        <li><strong>Solar Furnaces:</strong> Large concave mirrors concentrate sunlight to produce heat.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Image Formation (Convex Mirror) -->
+            <div class="card">
+                <h3>Image Formation (Convex Mirror)</h3>
+                <div class="grid-2">
+                    <!-- Case 1: Infinity -->
+                    <div style="text-align: center;">
+                        <img src="convex_case_1.png" alt="Convex Case 1: Infinity" class="diagram"
+                            style="margin-bottom: 0.5rem;">
+                        <div class="feature-box tip-box" style="text-align: left; font-size: 0.85rem;">
+                            <strong>Case 1: At Infinity</strong><br>
+                            <strong>Image:</strong> At F (Behind Mirror)<br>
+                            <strong>Size:</strong> Point-sized
+                        </div>
+                    </div>
+                    <!-- Case 2: Finite Distance -->
+                    <div style="text-align: center;">
+                        <img src="convex_case_2.png" alt="Convex Case 2: Finite Distance" class="diagram"
+                            style="margin-bottom: 0.5rem;">
+                        <div class="feature-box tip-box" style="text-align: left; font-size: 0.85rem;">
+                            <strong>Case 2: Finite Distance</strong><br>
+                            <strong>Image:</strong> Between P & F<br>
+                            <strong>Size:</strong> Diminished
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card" style="margin-top: 1.5rem; background: rgba(255,255,255,0.03);">
+                <h3>Uses of Convex Mirrors</h3>
+                <ul class="feature-box activity-box">
+                    <li><strong>Rear-view Mirrors:</strong> Only mirror that gives an erect (though diminished)
+                        image. Covers a wider field of view.</li>
+                    <li><strong>Security Mirrors:</strong> Used in shops to monitor activities.</li>
+                    <li><strong>Traffic Mirrors:</strong> Used at blind turns to see merging traffic.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card" style="grid-column: 1 / -1; margin-top: 2rem;">
+            <h3>Case Wise Summary (Spherical Mirrors)</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Param</th>
+                            <th colspan="6" style="text-align: center;">Concave Mirror</th>
+                            <th colspan="2" style="text-align: center;">Convex Mirror</th>
+                        </tr>
+                        <tr>
+                            <th>Case</th>
+                            <th>(i) Infinity</th>
+                            <th>(ii) Beyond C</th>
+                            <th>(iii) At C</th>
+                            <th>(iv) Bw C&F</th>
+                            <th>(v) At F</th>
+                            <th>(vi) Bw P&F</th>
+                            <th>(i) Infinity</th>
+                            <th>(ii) Finite</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>u</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>v</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>+</td>
+                            <td>+</td>
+                            <td>+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>R</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>+</td>
+                            <td>+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>f</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>+</td>
+                            <td>+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>h(o)</strong></td>
+                            <td>+</td>
+                            <td>+</td>
+                            <td>+</td>
+                            <td>+</td>
+                            <td>+</td>
+                            <td>+</td>
+                            <td>+</td>
+                            <td>+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>h(i)</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>+</td>
+                            <td>+</td>
+                            <td>+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>m</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>+</td>
+                            <td>+</td>
+                            <td>+</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mirror Formula -->
+    <!-- Mirror Formula & Magnification -->
+    <div class="grid-2">
+        <div class="card">
+            <h3>Mirror Formula</h3>
+            <p style="color: var(--text-soft); margin-bottom: 1rem;">Relation between u, v, and f:</p>
+            <div class="feature-box"
+                style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); text-align: center; font-size: 1.2rem; font-weight: bold; color: #10b981;">
+                1/v + 1/u = 1/f
+            </div>
+            <div class="feature-box tip-box" style="margin-top: 1rem;">
+                <ul style="margin: 0; padding-left: 1rem;">
+                    <li><strong>u:</strong> &nbsp;Object distance (always -ve)</li>
+                    <li><strong>v:</strong> &nbsp;Image distance</li>
+                    <li><strong>f:</strong> &nbsp;Focal length</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Magnification (m)</h3>
+            <p style="color: var(--text-soft); margin-bottom: 1rem;">Ratio of image height to object height:</p>
+            <div class="feature-box"
+                style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); text-align: center; font-size: 1.2rem; font-weight: bold; color: #60a5fa;">
+                m = h'/h = -v/u
+            </div>
+            <ul class="feature-box question-box" style="margin-top: 1rem;">
+                <li><strong>m ( - ):</strong> &nbsp;Real & Inverted</li>
+                <li><strong>m ( + ):</strong> &nbsp;Virtual & Erect</li>
+                <li><strong>|m| > 1:</strong> &nbsp;Enlarged</li>
+                <li><strong>|m| < 1:</strong> &nbsp;Diminished</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Sign Convention -->
+    <div class="card" style="margin-top: 1.5rem; margin-bottom: 2rem;">
+        <h3>Sign Convention (Cartesian)</h3>
+        <div class="grid-2">
+            <ul class="feature-box activity-box">
+                <li>Light travels <strong>Left → Right</strong>.</li>
+                <li>Origin is at the <strong>Pole (P)</strong>.</li>
+                <li>Distances in direction of light: <span style="color: #10b981; font-weight: bold;">Positive
+                        (+)</span></li>
+            </ul>
+            <ul class="feature-box activity-box">
+                <li>Distances against light: <span style="color: #f472b6; font-weight: bold;">Negative (-)</span></li>
+                <li>Height upwards: <strong>Positive (+)</strong></li>
+                <li>Height downwards: <strong>Negative (-)</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 9.3 Refraction -->
+    <!-- 9.3 Refraction -->
+    <h2 id="refraction" class="section-title" style="margin-top: 3rem;">9.3 Refraction of Light</h2>
+    <div class="grid-2">
+        <div class="card">
+            <h3>Concept</h3>
+            <p style="color: var(--text-soft); margin-bottom: 1rem;">Bending of light when passing obliquely between
+                transparent media.</p>
+            <ul class="feature-box tip-box">
+                <li><strong>Rarer → Denser:</strong> Bends <span
+                        style="text-decoration: underline; text-decoration-color: #10b981;">TOWARDS</span> normal (v ↓).
+                </li>
+                <li><strong>Denser → Rarer:</strong> Bends <span
+                        style="text-decoration: underline; text-decoration-color: #f472b6;">AWAY</span> from normal (v
+                    ↑).</li>
+            </ul>
+            <h4 style="margin-top: 1.5rem; color: var(--accent);">Glass Slab Refraction</h4>
+            <p style="font-size: 0.9rem; color: var(--text-soft);">Incident & Emergent rays are parallel but laterally
+                displaced.</p>
+            <img src="refraction_glass_slab.png" alt="Refraction through Glass Slab" class="diagram"
+                style="margin-top: 1rem;">
+        </div>
+
+        <div class="card">
+            <h3>Laws of Refraction</h3>
+            <div class="feature-box activity-box">
+                <ol style="padding-left: 1.2rem; margin: 0;">
+                    <li style="margin-bottom: 0.5rem;">Incident ray, refracted ray, and normal lie in the same plane.
+                    </li>
+                    <li><strong>Snell's Law:</strong> Ratio of sine of angles is constant for a given pair of media.
+                    </li>
+                </ol>
+            </div>
+
+            <div class="feature-box"
+                style="margin-top: 1rem; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); text-align: center; color: #10b981; font-weight: bold;">
+                sin i / sin r = constant (n₂₁)
+            </div>
+
+            <h4 style="margin-top: 1.5rem; color: var(--accent);">Refractive Index (nm)</h4>
+            <div class="feature-box tip-box">
+                <div style="text-align: center; margin-bottom: 0.5rem; font-weight: bold;">nm = c / v</div>
+                <div style="font-size: 0.85rem; color: var(--text-soft);">
+                    <strong>c:</strong> Speed in Air (3 × 10⁸ m/s)<br>
+                    <strong>v:</strong> Speed in Medium
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- 9.4 Lenses -->
+    <h2 id="lenses">9.4 Spherical Lenses</h2>
+    <div class="grid-2">
+        <div class="card">
+            <h3>Types of Lenses</h3>
+            <div style="margin-bottom: 1rem;">
+                <p style="margin-bottom: 0.5rem;"><strong style="color: #10b981;">Convex Lens:</strong> Thicker at
+                    middle. <em>Converging</em>.</p>
+                <p><strong style="color: #f472b6;">Concave Lens:</strong> Thinner at middle. <em>Diverging</em>.</p>
+            </div>
+            <div class="feature-box tip-box">
+                <strong>Visual Trick:</strong> A convex lens magnifies text when held close. A concave lens
+                diminishes it.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Lens Formula</h3>
+            <div class="feature-box"
+                style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); text-align: center; font-size: 1.2rem; font-weight: bold; color: #10b981;">
+                1/v - 1/u = 1/f
+            </div>
+            <p style="font-size: 0.85rem; color: var(--danger); margin-top: 0.5rem; text-align: center;">⚠ Note the
+                negative sign (contrast with mirror).</p>
+
+            <h3 style="margin-top: 1.5rem;">Magnification (m)</h3>
+            <div class="feature-box"
+                style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); text-align: center; font-size: 1.1rem; font-weight: bold; color: #60a5fa;">
+                m = h'/h = v/u
+            </div>
+        </div>
+    </div>
+
+    <!-- Power of Lens -->
+    <div class="card" style="margin-top: 2rem;">
+        <h3>Power of Lens (P)</h3>
+        <div class="grid-2">
+            <div>
+                <p style="color: var(--text-soft); margin-bottom: 1rem;">Reciprocal of focal length (in meters). Defines
+                    converging/diverging capacity.</p>
+                <div class="feature-box"
+                    style="background: rgba(249, 115, 22, 0.1); border-color: rgba(249, 115, 22, 0.2); text-align: center; font-size: 1.2rem; font-weight: bold; color: #f97316;">
+                    P = 1 / f(in meters)
+                </div>
+            </div>
+            <div>
+                <ul class="feature-box activity-box">
+                    <li><strong>SI Unit:</strong> Diopter (D)</li>
+                    <li><strong>Convex Lens:</strong> Positive Power (+D)</li>
+                    <li><strong>Concave Lens:</strong> Negative Power (-D)</li>
+                    <li><strong>Combination:</strong> P = P₁ + P₂ + ...</li>
+                </ul>
+            </div>
+        </div>
+        <img src="lens_power_schematic.png" alt="Lens Power Schematic" class="diagram"
+            style="max-width: 60%; margin: 1rem auto; display: block;">
+    </div>
+
+    <div class="card" style="margin-top: 1.5rem;">
+        <h3>Image Formation (Convex Lens)</h3>
+        <img src="convex_lens_ray_diagrams.png" alt="Convex Lens Ray Diagrams" class="diagram">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Object Position</th>
+                        <th>Image Position</th>
+                        <th>Nature & Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>At Infinity</td>
+                        <td>At F2</td>
+                        <td>Real, Inverted, Highly Diminished</td>
+                    </tr>
+                    <tr>
+                        <td>Beyond 2F1</td>
+                        <td>Between F2 & 2F2</td>
+                        <td>Real, Inverted, Diminished</td>
+                    </tr>
+                    <tr>
+                        <td>At 2F1</td>
+                        <td>At 2F2</td>
+                        <td>Real, Inverted, Same Size</td>
+                    </tr>
+                    <tr>
+                        <td>Between F1 & 2F1</td>
+                        <td>Beyond 2F2</td>
+                        <td>Real, Inverted, Enlarged</td>
+                    </tr>
+                    <tr>
+                        <td>At F1</td>
+                        <td>At Infinity</td>
+                        <td>Real, Inverted, Highly Enlarged</td>
+                    </tr>
+                    <tr>
+                        <td>Between F1 & O</td>
+                        <td>Same side as object</td>
+                        <td>Virtual, Erect, Enlarged</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- Lightbox Element -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close">&times;</button>
+        <img src="" alt="Lightbox View">
+    </div>
+
+    <script>
+        // Lightbox Logic
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = lightbox.querySelector('img');
+        const closeBtn = lightbox.querySelector('.lightbox-close');
+
+        document.querySelectorAll('.diagram, .hero-card img').forEach(img => {
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        const closeLightbox = () => {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        closeBtn.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        // ESC key close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+        });
+    </script>
+</body>
+
+</html>

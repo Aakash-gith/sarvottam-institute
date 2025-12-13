@@ -109,7 +109,7 @@ export default function Signup() {
       }
     } catch (error) {
       console.error("Signup Error:", error.response?.data || error.message);
-      setError(error.response?.data.message);
+      setError(error.response?.data?.message || error.message || "Signup failed");
     }
   };
 

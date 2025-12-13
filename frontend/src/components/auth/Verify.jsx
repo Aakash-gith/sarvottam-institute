@@ -65,7 +65,7 @@ export default function VerifyOTP() {
         navigate("/");
       }
     } catch (error) {
-      alert(error.response?.data?.message);
+      alert(error.response?.data?.message || error.message || "Verification failed");
     }
   };
 

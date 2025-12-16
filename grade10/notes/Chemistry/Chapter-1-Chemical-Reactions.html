@@ -635,7 +635,7 @@
                 gap: 1rem;
             }
         }
-    
+
         /* Lightbox */
         .lightbox-overlay {
             position: fixed;
@@ -666,597 +666,582 @@
             transform: scale(0.9);
             transition: transform 0.3s ease;
             border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .lightbox-overlay.active .lightbox-image {
             transform: scale(1);
         }
-        
+
         .diagram-placeholder img {
             cursor: zoom-in;
         }
-
     </style>
 </head>
+</nav>
+</div>
+</header>
 
-<body>
-    <div class="page">
-        <header>
-            <div class="nav-inner">
-                <div class="logo">
-                    <div class="logo-badge">10</div>
-                    <span>Sarvottam Institute</span>
+<main>
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-text">
+            <div class="badge-row">
+                <div class="badge">
+                    <span class="badge-dot"></span>
+                    Chemistry
                 </div>
-                <nav class="nav-links">
-                    <a href="#">Home</a>
-                    <a href="#">Class 10</a>
-                    <a href="#" class="primary-link">Chemistry Notes</a>
-                </nav>
+                <div class="badge">Chapter 1</div>
             </div>
-        </header>
+            <h1>Chemical Reactions and Equations</h1>
+            <p class="hero-subtitle">
+                Master the fundamentals of chemical changes, balancing equations, and reaction types with these
+                comprehensive, exam-oriented notes.
+            </p>
+            <div class="hero-actions">
+                <a href="#intro" class="btn btn-secondary">Start Learning</a>
+                <a href="#quiz-section" class="btn btn-primary">Take Quiz</a>
+            </div>
+        </div>
 
-        <main>
-            <!-- HERO -->
-            <div class="hero">
-                <div class="hero-text">
-                    <div class="badge-row">
-                        <div class="badge">
-                            <span class="badge-dot"></span>
-                            Chemistry
-                        </div>
-                        <div class="badge">Chapter 1</div>
-                    </div>
-                    <h1>Chemical Reactions and Equations</h1>
-                    <p class="hero-subtitle">
-                        Master the fundamentals of chemical changes, balancing equations, and reaction types with these
-                        comprehensive, exam-oriented notes.
-                    </p>
-                    <div class="hero-actions">
-                        <a href="#intro" class="btn btn-secondary">Start Learning</a>
-                        <a href="#quiz-section" class="btn btn-primary">Take Quiz</a>
-                    </div>
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div class="diagram-placeholder">
+                    <img src="images/magnesium_burning.png" alt="Chemical Reaction Visual">
                 </div>
-
-                <div class="hero-visual">
-                    <div class="hero-card">
-                        <div class="diagram-placeholder">
-                            <img src="images/magnesium_burning.png" alt="Chemical Reaction Visual">
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center">
-                            <div style="font-size:0.8rem; color:#94a3b8">Topic Coverage</div>
-                            <div style="font-size:0.8rem; color:var(--accent); font-weight:700">100%</div>
-                        </div>
-                        <div
-                            style="height:4px; background:#1e293b; border-radius:2px; margin-top:0.5rem; overflow:hidden">
-                            <div style="width:100%; height:100%; background:var(--accent)"></div>
-                        </div>
-                    </div>
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <div style="font-size:0.8rem; color:#94a3b8">Topic Coverage</div>
+                    <div style="font-size:0.8rem; color:var(--accent); font-weight:700">100%</div>
+                </div>
+                <div style="height:4px; background:#1e293b; border-radius:2px; margin-top:0.5rem; overflow:hidden">
+                    <div style="width:100%; height:100%; background:var(--accent)"></div>
                 </div>
             </div>
-
-            <!-- 1. INTRODUCTION -->
-            <section id="intro">
-                <div class="section-label">Fundamentals</div>
-                <div class="section-title-row">
-                    <h2>Introduction to Chemical Reactions</h2>
-                    <div class="section-hint">
-                        Understanding how substances transform into new materials.
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="card">
-                        <h3>What is a Chemical Reaction?</h3>
-                        <p>
-                            A process in which one or more substances (<strong>reactants</strong>) are converted into
-                            new substances (<strong>products</strong>) with new chemical properties.
-                        </p>
-                        <ul>
-                            <li>Atoms are rearranged, not created or destroyed (Law of Conservation of Mass).</li>
-                            <li>Occurs to achieve stable electronic configuration.</li>
-                        </ul>
-                    </div>
-
-                    <div class="card">
-                        <h3>Chemical Changes in Daily Life</h3>
-                        <p>Chemical reactions happen around us all the time:</p>
-                        <ul>
-                            <li><strong>Souring of Milk:</strong> When left at room temperature in summer.</li>
-                            <li><strong>Rusting of Iron:</strong> Tawa/pan/nail left exposed to humid atmosphere.</li>
-                            <li><strong>Fermentation:</strong> Grapes getting fermented.</li>
-                            <li><strong>Cooking:</strong> Food is cooked.</li>
-                            <li><strong>Digestion:</strong> Food gets digested in our body.</li>
-                            <li><strong>Respiration:</strong> We respire.</li>
-                        </ul>
-                    </div>
-
-                    <div class="card" style="grid-column: 1 / -1;">
-                        <h3>Key Features</h3>
-                        <p>
-                            A chemical reaction is characterized by:
-                        </p>
-                        <div class="grid-2" style="gap: 1rem;">
-                            <ul>
-                                <li><strong>Change in State:</strong> Solid &rarr; Liquid &rarr; Gas.</li>
-                                <li><strong>Change in Colour:</strong> New substance has different colour.</li>
-                            </ul>
-                            <ul>
-                                <li><strong>Evolution of Gas:</strong> Bubbles or fumes.</li>
-                                <li><strong>Change in Temperature:</strong> Heat released or absorbed.</li>
-                            </ul>
-                        </div>
-                        <div class="tip-box">
-                            <strong>Exam Reminder</strong>
-                            If <span>new substances</span> are formed, it is a chemical change, not just physical.
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. INDICATORS -->
-            <section id="indicators">
-                <div class="section-label">Observations</div>
-                <div class="section-title-row">
-                    <h2>Indicators of a Chemical Reaction</h2>
-                    <div class="section-hint">
-                        How do we know a reaction has taken place?
-                    </div>
-                </div>
-
-                <div class="grid-3">
-                    <div class="card">
-                        <h3>1. Change in Colour</h3>
-                        <p>Example: Brown <span class="equation">Fe<sup>3+</sup></span> ions react with colourless
-                            OH<sup>-</sup> to form brown <span class="equation">Fe(OH)<sub>3</sub></span>.</p>
-                    </div>
-                    <div class="card">
-                        <h3>2. Formation of Precipitate</h3>
-                        <p>Example: <span class="equation">AgNO<sub>3</sub> + NaCl &rarr; AgCl(s) +
-                                NaNO<sub>3</sub></span> (White ppt).</p>
-                    </div>
-                    <div class="card">
-                        <h3>3. Evolution of Gas</h3>
-                        <p>Example: <span class="equation">Zn + H<sub>2</sub>SO<sub>4</sub> &rarr; ZnSO<sub>4</sub> +
-                                H<sub>2</sub>&uarr;</span></p>
-                    </div>
-                    <div class="card">
-                        <h3>4. Change in Temperature</h3>
-                        <ul>
-                            <li><strong>Exothermic:</strong> Heat released (e.g., combustion).</li>
-                            <li><strong>Endothermic:</strong> Heat absorbed (e.g., decomposition).</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h3>5. Change in State</h3>
-                        <p>Solid &rarr; Liquid &rarr; Gas transformations during chemical changes.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. EQUATIONS -->
-            <section id="equations">
-                <div class="section-label">Representation</div>
-                <div class="section-title-row">
-                    <h2>Chemical Equations & Balancing</h2>
-                    <div class="section-hint">
-                        The language of chemistry.
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="card">
-                        <h3>Types of Equations</h3>
-                        <ul>
-                            <li><strong>Word Equation:</strong> Magnesium + Oxygen &rarr; Magnesium Oxide</li>
-                            <li><strong>Skeletal Equation:</strong> <span class="equation">Mg + O<sub>2</sub> &rarr;
-                                    MgO</span> (Unbalanced)</li>
-                            <li><strong>Balanced Equation:</strong> <span class="equation">2Mg + O<sub>2</sub> &rarr;
-                                    2MgO</span></li>
-                        </ul>
-                        <div class="tip-box">
-                            <strong>Why Balance?</strong>
-                            To satisfy the <span>Law of Conservation of Mass</span>.
-                        </div>
-                    </div>
-
-                    <div class="card" style="grid-column: 1 / -1;">
-                        <h3>Balancing Chemical Equations (NCERT Method)</h3>
-                        <p>Follow these steps to balance any equation:</p>
-                        <ol style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <li><strong>Step I:</strong> Draw boxes around each formula. Do not change anything inside
-                                the boxes.</li>
-                            <li><strong>Step II:</strong> List the number of atoms of different elements.</li>
-                            <li><strong>Step III:</strong> Start balancing with the compound having the maximum number
-                                of atoms.</li>
-                            <li><strong>Step IV:</strong> Balance the other elements one by one.</li>
-                            <li><strong>Step V:</strong> Check the correctness by counting atoms on both sides.</li>
-                            <li><strong>Step VI:</strong> Write symbols of physical states (s, l, g, aq).</li>
-                            <li><strong>Step VII:</strong> Write reaction conditions (temp, pressure, catalyst)
-                                above/below the arrow.</li>
-                        </ol>
-                        <div class="question-box">
-                            <strong>Example: Steam on Iron</strong>
-                            <span class="equation">3Fe(s) + 4H<sub>2</sub>O(g) &rarr; Fe<sub>3</sub>O<sub>4</sub>(s) +
-                                4H<sub>2</sub>(g)</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 4. TYPES OF CHEMICAL REACTIONS -->
-            <section id="types">
-                <div class="section-label">Classification</div>
-                <div class="section-title-row">
-                    <h2>Types of Chemical Reactions</h2>
-                    <div class="section-hint">
-                        Classifying reactions based on how atoms are rearranged.
-                    </div>
-                </div>
-
-                <!-- 1. Combination -->
-                <h3 style="color: var(--accent); margin-bottom: 1rem;">1. Combination Reaction</h3>
-                <div class="grid-2" style="margin-bottom: 2rem;">
-                    <div class="card">
-                        <p>Two or more reactants combine to form a <strong>single product</strong>.</p>
-                        <p class="equation">A + B &rarr; AB</p>
-                        <div class="activity-box">
-                            <strong>Examples</strong>
-                            <ul>
-                                <li><strong>Burning of Coal:</strong> <span class="equation">C(s) + O<sub>2</sub>(g)
-                                        &rarr; CO<sub>2</sub>(g)</span></li>
-                                <li><strong>Formation of Water:</strong> <span class="equation">2H<sub>2</sub>(g) +
-                                        O<sub>2</sub>(g) &rarr; 2H<sub>2</sub>O(l)</span></li>
-                                <li><strong>Slaked Lime:</strong> <span class="equation">CaO(s) + H<sub>2</sub>O(l)
-                                        &rarr; Ca(OH)<sub>2</sub>(aq)</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3>Exothermic Reactions</h3>
-                        <p>Reactions in which heat is released along with the formation of products.</p>
-                        <ul>
-                            <li><strong>Burning of Natural Gas:</strong> <span class="equation">CH<sub>4</sub> +
-                                    2O<sub>2</sub> &rarr; CO<sub>2</sub> + 2H<sub>2</sub>O</span></li>
-                            <li><strong>Respiration:</strong> Glucose breaks down to release energy.
-                                <br><span class="equation">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub>
-                                    &rarr; 6CO<sub>2</sub> + 6H<sub>2</sub>O + Energy</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- 2. Decomposition -->
-                <h3 style="color: var(--accent); margin-bottom: 1rem;">2. Decomposition Reaction</h3>
-                <div class="grid-2" style="margin-bottom: 2rem;">
-                    <div class="card">
-                        <p>A single reactant breaks down to give simpler products.</p>
-                        <p class="equation">AB &rarr; A + B</p>
-                        <div class="tip-box">
-                            <strong>Endothermic</strong>
-                            These reactions require energy in the form of heat, light, or electricity to break bonds.
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3>Types of Decomposition</h3>
-                        <ul>
-                            <li><strong>Thermal (Heat):</strong> FeSO<sub>4</sub>, CaCO<sub>3</sub>,
-                                Pb(NO<sub>3</sub>)<sub>2</sub>.</li>
-                            <li><strong>Electrolytic (Electricity):</strong> Electrolysis of Water (<span
-                                    class="equation">2H<sub>2</sub>O &rarr; 2H<sub>2</sub> + O<sub>2</sub></span>).</li>
-                            <li><strong>Photolytic (Light):</strong> AgCl, AgBr (Used in B&W photography).
-                                <br><span class="equation">2AgCl &rarr; 2Ag + Cl<sub>2</sub></span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- 3. Displacement -->
-                <h3 style="color: var(--accent); margin-bottom: 1rem;">3. Displacement Reaction</h3>
-                <div class="grid-2" style="margin-bottom: 2rem;">
-                    <div class="card">
-                        <p>A more reactive element displaces a less reactive element from its compound.</p>
-                        <p class="equation">A + BC &rarr; AC + B</p>
-                    </div>
-                    <div class="card">
-                        <h3>Examples</h3>
-                        <ul>
-                            <li><strong>Iron + Copper Sulphate:</strong>
-                                <br><span class="equation">Fe(s) + CuSO<sub>4</sub>(aq) &rarr; FeSO<sub>4</sub>(aq) +
-                                    Cu(s)</span>
-                            </li>
-                            <li><strong>Zinc + Copper Sulphate:</strong>
-                                <br><span class="equation">Zn(s) + CuSO<sub>4</sub>(aq) &rarr; ZnSO<sub>4</sub>(aq) +
-                                    Cu(s)</span>
-                            </li>
-                            <li><strong>Lead + Copper Chloride:</strong>
-                                <br><span class="equation">Pb(s) + CuCl<sub>2</sub>(aq) &rarr; PbCl<sub>2</sub>(aq) +
-                                    Cu(s)</span>
-                            </li>
-                        </ul>
-                        <p style="font-size: 0.85rem; color: var(--text-soft); margin-top: 0.5rem;">Zn and Pb are more
-                            reactive than Cu.</p>
-                    </div>
-                </div>
-
-                <!-- 4. Double Displacement -->
-                <h3 style="color: var(--accent); margin-bottom: 1rem;">4. Double Displacement Reaction</h3>
-                <div class="grid-2" style="margin-bottom: 2rem;">
-                    <div class="card">
-                        <p>Exchange of ions between reactants.</p>
-                        <p class="equation">AB + CD &rarr; AD + CB</p>
-                    </div>
-                    <div class="card">
-                        <h3>Precipitation Reaction</h3>
-                        <p>Any reaction that produces a precipitate (insoluble solid).</p>
-                        <div class="activity-box">
-                            <strong>Example</strong>
-                            <span class="equation">Na<sub>2</sub>SO<sub>4</sub> + BaCl<sub>2</sub> &rarr;
-                                BaSO<sub>4</sub>(s) + 2NaCl</span>
-                            <br>White ppt of Barium Sulphate is formed.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 5. Redox -->
-                <h3 style="color: var(--accent); margin-bottom: 1rem;">5. Oxidation and Reduction (Redox)</h3>
-                <div class="grid-2">
-                    <div class="card">
-                        <h3>Definitions</h3>
-                        <ul>
-                            <li><strong>Oxidation:</strong> Gain of Oxygen OR Loss of Hydrogen.</li>
-                            <li><strong>Reduction:</strong> Loss of Oxygen OR Gain of Hydrogen.</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h3>Examples</h3>
-                        <ul>
-                            <li><strong>Copper Oxide + Hydrogen:</strong>
-                                <br><span class="equation">CuO + H<sub>2</sub> &rarr; Cu + H<sub>2</sub>O</span>
-                                <br>(CuO reduced to Cu, H<sub>2</sub> oxidized to H<sub>2</sub>O)
-                            </li>
-                            <li><strong>Zinc Oxide + Carbon:</strong>
-                                <br><span class="equation">ZnO + C &rarr; Zn + CO</span>
-                            </li>
-                            <li><strong>Manganese Dioxide + HCl:</strong>
-                                <br><span class="equation">MnO<sub>2</sub> + 4HCl &rarr; MnCl<sub>2</sub> +
-                                    2H<sub>2</sub>O + Cl<sub>2</sub></span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- NCERT ACTIVITIES LINK -->
-            <section id="ncert-activities">
-                <div class="section-label">NCERT Lab</div>
-                <div class="section-title-row">
-                    <h2>Key Activities (1.1 to 1.11)</h2>
-                    <div class="section-hint">
-                        Explore detailed observations and conclusions for all textbook activities.
-                    </div>
-                </div>
-
-                <div class="hero-card"
-                    style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 78, 59, 0.2)); border-color: rgba(16, 185, 129, 0.3);">
-                    <div
-                        style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem;">
-                        <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">🔬 Interactive Lab Activities
-                        </h3>
-                        <p style="max-width: 600px; color: #d1fae5; margin-bottom: 2rem; font-size: 1.1rem;">
-                            Dive deep into all 11 NCERT activities. Understand the Aim, Procedure, Observations, and
-                            Conclusions with visual diagrams for each experiment.
-                        </p>
-                        <a href="Chapter-1-Activities.html" class="btn btn-primary"
-                            style="background: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
-                            Explore All Activities &rarr;
-                        </a>
-                        <div class="tag-row" style="justify-content: center; margin-top: 2rem;">
-                            <span class="tag">Magnesium Ribbon</span>
-                            <span class="tag">Lead Iodide Ppt</span>
-                            <span class="tag">Zinc + Acid</span>
-                            <span class="tag">Electrolysis</span>
-                            <span class="tag">Silver Chloride</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 6. EVERYDAY LIFE -->
-            <section id="everyday">
-                <div class="section-label">Applications</div>
-                <div class="section-title-row">
-                    <h2>Oxidation in Everyday Life</h2>
-                </div>
-
-                <div class="grid-2">
-                    <div class="card">
-                        <h3>1. Corrosion</h3>
-                        <p>Gradual deterioration of metals due to reaction with air, moisture, or chemicals.</p>
-                        <div class="diagram-placeholder">
-                            <img src="images/rusting_iron.png" alt="Rusting Iron">
-                        </div>
-                        <p><strong>Examples:</strong> Rusting of Iron (Reddish-brown), Black coating on Silver, Green
-                            coating on Copper.</p>
-                        <p><strong>Prevention:</strong> Painting, Oiling, Greasing, Galvanization, Chrome plating,
-                            Anodizing, Alloying.</p>
-                    </div>
-
-                    <div class="card">
-                        <h3>2. Rancidity</h3>
-                        <p>Oxidation of fats and oils in food causing unpleasant smell and taste.</p>
-                        <p><strong>Prevention Methods:</strong></p>
-                        <ul>
-                            <li>Adding <strong>antioxidants</strong> (BHA, BHT).</li>
-                            <li>Storing food in <strong>air-tight containers</strong>.</li>
-                            <li>Flushing bags of chips with <strong>Nitrogen</strong> gas.</li>
-                            <li>Keeping food away from direct sunlight.</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 7. REVISION / QUIZ -->
-            <section id="revision">
-                <div class="section-label">Active Recall</div>
-                <div class="section-title-row">
-                    <h2>Practice Questions</h2>
-                    <div class="section-hint">
-                        Click to reveal answers.
-                    </div>
-                </div>
-
-                <div class="accordion">
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <span>1. Why is respiration considered an exothermic reaction?</span>
-                            <div class="accordion-toggle">+</div>
-                        </div>
-                        <div class="accordion-body">
-                            Because energy is released during the breakdown of glucose in our cells.
-                            <span class="equation">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub> &rarr;
-                                6CO<sub>2</sub> + 6H<sub>2</sub>O + Energy</span>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <span>2. Why do we apply paint on iron articles?</span>
-                            <div class="accordion-toggle">+</div>
-                        </div>
-                        <div class="accordion-body">
-                            To prevent rusting. Paint cuts off the contact of iron with air and moisture.
-                        </div>
-                    </div>
-
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <span>3. Oil and fat containing food items are flushed with Nitrogen. Why?</span>
-                            <div class="accordion-toggle">+</div>
-                        </div>
-                        <div class="accordion-body">
-                            To prevent rancidity. Nitrogen is an inert gas and prevents oxidation of fats and oils.
-                        </div>
-                    </div>
-
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <span>4. What is the colour of Copper Sulphate solution?</span>
-                            <div class="accordion-toggle">+</div>
-                        </div>
-                        <div class="accordion-body">
-                            Blue. When iron is added, it turns pale green due to formation of Ferrous Sulphate.
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- INTERACTIVE QUIZ -->
-            <section id="quiz-section">
-                <div class="section-label">Test Yourself</div>
-                <div class="section-title-row">
-                    <h2>⚡ Quick Quiz</h2>
-                </div>
-
-                <div class="grid-2">
-                    <div class="card">
-                        <p><strong>Q1. Which gas is evolved when Magnesium burns in air?</strong></p>
-                        <button class="quiz-option" onclick="checkAnswer(this, false)">A. Hydrogen</button>
-                        <button class="quiz-option" onclick="checkAnswer(this, false)">B. Carbon Dioxide</button>
-                        <button class="quiz-option" onclick="checkAnswer(this, false)">C. Nitrogen</button>
-                        <button class="quiz-option" onclick="checkAnswer(this, true)">D. None (It forms a solid
-                            oxide)</button>
-                    </div>
-
-                    <div class="card">
-                        <p><strong>Q2. The reaction of Iron with Copper Sulphate is an example of:</strong></p>
-                        <button class="quiz-option" onclick="checkAnswer(this, false)">A. Combination Reaction</button>
-                        <button class="quiz-option" onclick="checkAnswer(this, true)">B. Displacement Reaction</button>
-                        <button class="quiz-option" onclick="checkAnswer(this, false)">C. Decomposition
-                            Reaction</button>
-                        <button class="quiz-option" onclick="checkAnswer(this, false)">D. Double Displacement
-                            Reaction</button>
-                    </div>
-                </div>
-            </section>
-
-            <footer>
-                <div>Made as a study companion for "Chemical Reactions and Equations".</div>
-            </footer>
-        </main>
+        </div>
     </div>
 
-    <script>
-        // Accordion Logic
-        document.querySelectorAll(".accordion-header").forEach((header) => {
-            header.addEventListener("click", () => {
-                const item = header.parentElement;
-                const isOpen = item.classList.contains("open");
-                // Close all
-                document
-                    .querySelectorAll(".accordion-item")
-                    .forEach((el) => el.classList.remove("open"));
-                // Toggle current
-                if (!isOpen) item.classList.add("open");
-            });
+    <!-- 1. INTRODUCTION -->
+    <section id="intro">
+        <div class="section-label">Fundamentals</div>
+        <div class="section-title-row">
+            <h2>Introduction to Chemical Reactions</h2>
+            <div class="section-hint">
+                Understanding how substances transform into new materials.
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h3>What is a Chemical Reaction?</h3>
+                <p>
+                    A process in which one or more substances (<strong>reactants</strong>) are converted into
+                    new substances (<strong>products</strong>) with new chemical properties.
+                </p>
+                <ul>
+                    <li>Atoms are rearranged, not created or destroyed (Law of Conservation of Mass).</li>
+                    <li>Occurs to achieve stable electronic configuration.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Chemical Changes in Daily Life</h3>
+                <p>Chemical reactions happen around us all the time:</p>
+                <ul>
+                    <li><strong>Souring of Milk:</strong> When left at room temperature in summer.</li>
+                    <li><strong>Rusting of Iron:</strong> Tawa/pan/nail left exposed to humid atmosphere.</li>
+                    <li><strong>Fermentation:</strong> Grapes getting fermented.</li>
+                    <li><strong>Cooking:</strong> Food is cooked.</li>
+                    <li><strong>Digestion:</strong> Food gets digested in our body.</li>
+                    <li><strong>Respiration:</strong> We respire.</li>
+                </ul>
+            </div>
+
+            <div class="card" style="grid-column: 1 / -1;">
+                <h3>Key Features</h3>
+                <p>
+                    A chemical reaction is characterized by:
+                </p>
+                <div class="grid-2" style="gap: 1rem;">
+                    <ul>
+                        <li><strong>Change in State:</strong> Solid &rarr; Liquid &rarr; Gas.</li>
+                        <li><strong>Change in Colour:</strong> New substance has different colour.</li>
+                    </ul>
+                    <ul>
+                        <li><strong>Evolution of Gas:</strong> Bubbles or fumes.</li>
+                        <li><strong>Change in Temperature:</strong> Heat released or absorbed.</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <strong>Exam Reminder</strong>
+                    If <span>new substances</span> are formed, it is a chemical change, not just physical.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. INDICATORS -->
+    <section id="indicators">
+        <div class="section-label">Observations</div>
+        <div class="section-title-row">
+            <h2>Indicators of a Chemical Reaction</h2>
+            <div class="section-hint">
+                How do we know a reaction has taken place?
+            </div>
+        </div>
+
+        <div class="grid-3">
+            <div class="card">
+                <h3>1. Change in Colour</h3>
+                <p>Example: Brown <span class="equation">Fe<sup>3+</sup></span> ions react with colourless
+                    OH<sup>-</sup> to form brown <span class="equation">Fe(OH)<sub>3</sub></span>.</p>
+            </div>
+            <div class="card">
+                <h3>2. Formation of Precipitate</h3>
+                <p>Example: <span class="equation">AgNO<sub>3</sub> + NaCl &rarr; AgCl(s) +
+                        NaNO<sub>3</sub></span> (White ppt).</p>
+            </div>
+            <div class="card">
+                <h3>3. Evolution of Gas</h3>
+                <p>Example: <span class="equation">Zn + H<sub>2</sub>SO<sub>4</sub> &rarr; ZnSO<sub>4</sub> +
+                        H<sub>2</sub>&uarr;</span></p>
+            </div>
+            <div class="card">
+                <h3>4. Change in Temperature</h3>
+                <ul>
+                    <li><strong>Exothermic:</strong> Heat released (e.g., combustion).</li>
+                    <li><strong>Endothermic:</strong> Heat absorbed (e.g., decomposition).</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>5. Change in State</h3>
+                <p>Solid &rarr; Liquid &rarr; Gas transformations during chemical changes.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. EQUATIONS -->
+    <section id="equations">
+        <div class="section-label">Representation</div>
+        <div class="section-title-row">
+            <h2>Chemical Equations & Balancing</h2>
+            <div class="section-hint">
+                The language of chemistry.
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h3>Types of Equations</h3>
+                <ul>
+                    <li><strong>Word Equation:</strong> Magnesium + Oxygen &rarr; Magnesium Oxide</li>
+                    <li><strong>Skeletal Equation:</strong> <span class="equation">Mg + O<sub>2</sub> &rarr;
+                            MgO</span> (Unbalanced)</li>
+                    <li><strong>Balanced Equation:</strong> <span class="equation">2Mg + O<sub>2</sub> &rarr;
+                            2MgO</span></li>
+                </ul>
+                <div class="tip-box">
+                    <strong>Why Balance?</strong>
+                    To satisfy the <span>Law of Conservation of Mass</span>.
+                </div>
+            </div>
+
+            <div class="card" style="grid-column: 1 / -1;">
+                <h3>Balancing Chemical Equations (NCERT Method)</h3>
+                <p>Follow these steps to balance any equation:</p>
+                <ol style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <li><strong>Step I:</strong> Draw boxes around each formula. Do not change anything inside
+                        the boxes.</li>
+                    <li><strong>Step II:</strong> List the number of atoms of different elements.</li>
+                    <li><strong>Step III:</strong> Start balancing with the compound having the maximum number
+                        of atoms.</li>
+                    <li><strong>Step IV:</strong> Balance the other elements one by one.</li>
+                    <li><strong>Step V:</strong> Check the correctness by counting atoms on both sides.</li>
+                    <li><strong>Step VI:</strong> Write symbols of physical states (s, l, g, aq).</li>
+                    <li><strong>Step VII:</strong> Write reaction conditions (temp, pressure, catalyst)
+                        above/below the arrow.</li>
+                </ol>
+                <div class="question-box">
+                    <strong>Example: Steam on Iron</strong>
+                    <span class="equation">3Fe(s) + 4H<sub>2</sub>O(g) &rarr; Fe<sub>3</sub>O<sub>4</sub>(s) +
+                        4H<sub>2</sub>(g)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. TYPES OF CHEMICAL REACTIONS -->
+    <section id="types">
+        <div class="section-label">Classification</div>
+        <div class="section-title-row">
+            <h2>Types of Chemical Reactions</h2>
+            <div class="section-hint">
+                Classifying reactions based on how atoms are rearranged.
+            </div>
+        </div>
+
+        <!-- 1. Combination -->
+        <h3 style="color: var(--accent); margin-bottom: 1rem;">1. Combination Reaction</h3>
+        <div class="grid-2" style="margin-bottom: 2rem;">
+            <div class="card">
+                <p>Two or more reactants combine to form a <strong>single product</strong>.</p>
+                <p class="equation">A + B &rarr; AB</p>
+                <div class="activity-box">
+                    <strong>Examples</strong>
+                    <ul>
+                        <li><strong>Burning of Coal:</strong> <span class="equation">C(s) + O<sub>2</sub>(g)
+                                &rarr; CO<sub>2</sub>(g)</span></li>
+                        <li><strong>Formation of Water:</strong> <span class="equation">2H<sub>2</sub>(g) +
+                                O<sub>2</sub>(g) &rarr; 2H<sub>2</sub>O(l)</span></li>
+                        <li><strong>Slaked Lime:</strong> <span class="equation">CaO(s) + H<sub>2</sub>O(l)
+                                &rarr; Ca(OH)<sub>2</sub>(aq)</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Exothermic Reactions</h3>
+                <p>Reactions in which heat is released along with the formation of products.</p>
+                <ul>
+                    <li><strong>Burning of Natural Gas:</strong> <span class="equation">CH<sub>4</sub> +
+                            2O<sub>2</sub> &rarr; CO<sub>2</sub> + 2H<sub>2</sub>O</span></li>
+                    <li><strong>Respiration:</strong> Glucose breaks down to release energy.
+                        <br><span class="equation">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub>
+                            &rarr; 6CO<sub>2</sub> + 6H<sub>2</sub>O + Energy</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 2. Decomposition -->
+        <h3 style="color: var(--accent); margin-bottom: 1rem;">2. Decomposition Reaction</h3>
+        <div class="grid-2" style="margin-bottom: 2rem;">
+            <div class="card">
+                <p>A single reactant breaks down to give simpler products.</p>
+                <p class="equation">AB &rarr; A + B</p>
+                <div class="tip-box">
+                    <strong>Endothermic</strong>
+                    These reactions require energy in the form of heat, light, or electricity to break bonds.
+                </div>
+            </div>
+            <div class="card">
+                <h3>Types of Decomposition</h3>
+                <ul>
+                    <li><strong>Thermal (Heat):</strong> FeSO<sub>4</sub>, CaCO<sub>3</sub>,
+                        Pb(NO<sub>3</sub>)<sub>2</sub>.</li>
+                    <li><strong>Electrolytic (Electricity):</strong> Electrolysis of Water (<span
+                            class="equation">2H<sub>2</sub>O &rarr; 2H<sub>2</sub> + O<sub>2</sub></span>).</li>
+                    <li><strong>Photolytic (Light):</strong> AgCl, AgBr (Used in B&W photography).
+                        <br><span class="equation">2AgCl &rarr; 2Ag + Cl<sub>2</sub></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 3. Displacement -->
+        <h3 style="color: var(--accent); margin-bottom: 1rem;">3. Displacement Reaction</h3>
+        <div class="grid-2" style="margin-bottom: 2rem;">
+            <div class="card">
+                <p>A more reactive element displaces a less reactive element from its compound.</p>
+                <p class="equation">A + BC &rarr; AC + B</p>
+            </div>
+            <div class="card">
+                <h3>Examples</h3>
+                <ul>
+                    <li><strong>Iron + Copper Sulphate:</strong>
+                        <br><span class="equation">Fe(s) + CuSO<sub>4</sub>(aq) &rarr; FeSO<sub>4</sub>(aq) +
+                            Cu(s)</span>
+                    </li>
+                    <li><strong>Zinc + Copper Sulphate:</strong>
+                        <br><span class="equation">Zn(s) + CuSO<sub>4</sub>(aq) &rarr; ZnSO<sub>4</sub>(aq) +
+                            Cu(s)</span>
+                    </li>
+                    <li><strong>Lead + Copper Chloride:</strong>
+                        <br><span class="equation">Pb(s) + CuCl<sub>2</sub>(aq) &rarr; PbCl<sub>2</sub>(aq) +
+                            Cu(s)</span>
+                    </li>
+                </ul>
+                <p style="font-size: 0.85rem; color: var(--text-soft); margin-top: 0.5rem;">Zn and Pb are more
+                    reactive than Cu.</p>
+            </div>
+        </div>
+
+        <!-- 4. Double Displacement -->
+        <h3 style="color: var(--accent); margin-bottom: 1rem;">4. Double Displacement Reaction</h3>
+        <div class="grid-2" style="margin-bottom: 2rem;">
+            <div class="card">
+                <p>Exchange of ions between reactants.</p>
+                <p class="equation">AB + CD &rarr; AD + CB</p>
+            </div>
+            <div class="card">
+                <h3>Precipitation Reaction</h3>
+                <p>Any reaction that produces a precipitate (insoluble solid).</p>
+                <div class="activity-box">
+                    <strong>Example</strong>
+                    <span class="equation">Na<sub>2</sub>SO<sub>4</sub> + BaCl<sub>2</sub> &rarr;
+                        BaSO<sub>4</sub>(s) + 2NaCl</span>
+                    <br>White ppt of Barium Sulphate is formed.
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Redox -->
+        <h3 style="color: var(--accent); margin-bottom: 1rem;">5. Oxidation and Reduction (Redox)</h3>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Definitions</h3>
+                <ul>
+                    <li><strong>Oxidation:</strong> Gain of Oxygen OR Loss of Hydrogen.</li>
+                    <li><strong>Reduction:</strong> Loss of Oxygen OR Gain of Hydrogen.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Examples</h3>
+                <ul>
+                    <li><strong>Copper Oxide + Hydrogen:</strong>
+                        <br><span class="equation">CuO + H<sub>2</sub> &rarr; Cu + H<sub>2</sub>O</span>
+                        <br>(CuO reduced to Cu, H<sub>2</sub> oxidized to H<sub>2</sub>O)
+                    </li>
+                    <li><strong>Zinc Oxide + Carbon:</strong>
+                        <br><span class="equation">ZnO + C &rarr; Zn + CO</span>
+                    </li>
+                    <li><strong>Manganese Dioxide + HCl:</strong>
+                        <br><span class="equation">MnO<sub>2</sub> + 4HCl &rarr; MnCl<sub>2</sub> +
+                            2H<sub>2</sub>O + Cl<sub>2</sub></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- NCERT ACTIVITIES LINK -->
+    <section id="ncert-activities">
+        <div class="section-label">NCERT Lab</div>
+        <div class="section-title-row">
+            <h2>Key Activities (1.1 to 1.11)</h2>
+            <div class="section-hint">
+                Explore detailed observations and conclusions for all textbook activities.
+            </div>
+        </div>
+
+        <div class="hero-card"
+            style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 78, 59, 0.2)); border-color: rgba(16, 185, 129, 0.3);">
+            <div
+                style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem;">
+                <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">🔬 Interactive Lab Activities
+                </h3>
+                <p style="max-width: 600px; color: #d1fae5; margin-bottom: 2rem; font-size: 1.1rem;">
+                    Dive deep into all 11 NCERT activities. Understand the Aim, Procedure, Observations, and
+                    Conclusions with visual diagrams for each experiment.
+                </p>
+                <a href="Chapter-1-Activities.html" class="btn btn-primary"
+                    style="background: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                    Explore All Activities &rarr;
+                </a>
+                <div class="tag-row" style="justify-content: center; margin-top: 2rem;">
+                    <span class="tag">Magnesium Ribbon</span>
+                    <span class="tag">Lead Iodide Ppt</span>
+                    <span class="tag">Zinc + Acid</span>
+                    <span class="tag">Electrolysis</span>
+                    <span class="tag">Silver Chloride</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. EVERYDAY LIFE -->
+    <section id="everyday">
+        <div class="section-label">Applications</div>
+        <div class="section-title-row">
+            <h2>Oxidation in Everyday Life</h2>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h3>1. Corrosion</h3>
+                <p>Gradual deterioration of metals due to reaction with air, moisture, or chemicals.</p>
+                <div class="diagram-placeholder">
+                    <img src="images/rusting_iron.png" alt="Rusting Iron">
+                </div>
+                <p><strong>Examples:</strong> Rusting of Iron (Reddish-brown), Black coating on Silver, Green
+                    coating on Copper.</p>
+                <p><strong>Prevention:</strong> Painting, Oiling, Greasing, Galvanization, Chrome plating,
+                    Anodizing, Alloying.</p>
+            </div>
+
+            <div class="card">
+                <h3>2. Rancidity</h3>
+                <p>Oxidation of fats and oils in food causing unpleasant smell and taste.</p>
+                <p><strong>Prevention Methods:</strong></p>
+                <ul>
+                    <li>Adding <strong>antioxidants</strong> (BHA, BHT).</li>
+                    <li>Storing food in <strong>air-tight containers</strong>.</li>
+                    <li>Flushing bags of chips with <strong>Nitrogen</strong> gas.</li>
+                    <li>Keeping food away from direct sunlight.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. REVISION / QUIZ -->
+    <section id="revision">
+        <div class="section-label">Active Recall</div>
+        <div class="section-title-row">
+            <h2>Practice Questions</h2>
+            <div class="section-hint">
+                Click to reveal answers.
+            </div>
+        </div>
+
+        <div class="accordion">
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>1. Why is respiration considered an exothermic reaction?</span>
+                    <div class="accordion-toggle">+</div>
+                </div>
+                <div class="accordion-body">
+                    Because energy is released during the breakdown of glucose in our cells.
+                    <span class="equation">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub> &rarr;
+                        6CO<sub>2</sub> + 6H<sub>2</sub>O + Energy</span>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>2. Why do we apply paint on iron articles?</span>
+                    <div class="accordion-toggle">+</div>
+                </div>
+                <div class="accordion-body">
+                    To prevent rusting. Paint cuts off the contact of iron with air and moisture.
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>3. Oil and fat containing food items are flushed with Nitrogen. Why?</span>
+                    <div class="accordion-toggle">+</div>
+                </div>
+                <div class="accordion-body">
+                    To prevent rancidity. Nitrogen is an inert gas and prevents oxidation of fats and oils.
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>4. What is the colour of Copper Sulphate solution?</span>
+                    <div class="accordion-toggle">+</div>
+                </div>
+                <div class="accordion-body">
+                    Blue. When iron is added, it turns pale green due to formation of Ferrous Sulphate.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE QUIZ -->
+    <section id="quiz-section">
+        <div class="section-label">Test Yourself</div>
+        <div class="section-title-row">
+            <h2>⚡ Quick Quiz</h2>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <p><strong>Q1. Which gas is evolved when Magnesium burns in air?</strong></p>
+                <button class="quiz-option" onclick="checkAnswer(this, false)">A. Hydrogen</button>
+                <button class="quiz-option" onclick="checkAnswer(this, false)">B. Carbon Dioxide</button>
+                <button class="quiz-option" onclick="checkAnswer(this, false)">C. Nitrogen</button>
+                <button class="quiz-option" onclick="checkAnswer(this, true)">D. None (It forms a solid
+                    oxide)</button>
+            </div>
+
+            <div class="card">
+                <p><strong>Q2. The reaction of Iron with Copper Sulphate is an example of:</strong></p>
+                <button class="quiz-option" onclick="checkAnswer(this, false)">A. Combination Reaction</button>
+                <button class="quiz-option" onclick="checkAnswer(this, true)">B. Displacement Reaction</button>
+                <button class="quiz-option" onclick="checkAnswer(this, false)">C. Decomposition
+                    Reaction</button>
+                <button class="quiz-option" onclick="checkAnswer(this, false)">D. Double Displacement
+                    Reaction</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div>Made as a study companion for "Chemical Reactions and Equations".</div>
+    </footer>
+</main>
+</div>
+
+<script>
+    // Accordion Logic
+    document.querySelectorAll(".accordion-header").forEach((header) => {
+        header.addEventListener("click", () => {
+            const item = header.parentElement;
+            const isOpen = item.classList.contains("open");
+            // Close all
+            document
+                .querySelectorAll(".accordion-item")
+                .forEach((el) => el.classList.remove("open"));
+            // Toggle current
+            if (!isOpen) item.classList.add("open");
+        });
+    });
+
+    // Quiz Logic
+    function checkAnswer(btn, isCorrect) {
+        const parent = btn.parentElement;
+        const buttons = parent.querySelectorAll('.quiz-option');
+
+        // Reset all buttons in this card
+        buttons.forEach(b => {
+            b.classList.remove('correct', 'wrong');
+            b.style.pointerEvents = 'none'; // Disable further clicks
         });
 
-        // Quiz Logic
-        function checkAnswer(btn, isCorrect) {
-            const parent = btn.parentElement;
-            const buttons = parent.querySelectorAll('.quiz-option');
-
-            // Reset all buttons in this card
+        if (isCorrect) {
+            btn.classList.add('correct');
+            btn.innerHTML += ' ✅';
+        } else {
+            btn.classList.add('wrong');
+            btn.innerHTML += ' ❌';
+            // Highlight the correct one
             buttons.forEach(b => {
-                b.classList.remove('correct', 'wrong');
-                b.style.pointerEvents = 'none'; // Disable further clicks
-            });
-
-            if (isCorrect) {
-                btn.classList.add('correct');
-                btn.innerHTML += ' ✅';
-            } else {
-                btn.classList.add('wrong');
-                btn.innerHTML += ' ❌';
-                // Highlight the correct one
-                buttons.forEach(b => {
-                    if (b.getAttribute('onclick').includes('true')) {
-                        b.classList.add('correct');
-                    }
-                });
-            }
-        }
-    </script>
-
-    <script>
-        // Lightbox Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const lightbox = document.createElement('div');
-            lightbox.className = 'lightbox-overlay';
-            lightbox.innerHTML = '<img src="" alt="Lightbox Image" class="lightbox-image">';
-            document.body.appendChild(lightbox);
-
-            const lightboxImg = lightbox.querySelector('img');
-
-            // Select all images inside diagram placeholders
-            const images = document.querySelectorAll('.diagram-placeholder img');
-
-            images.forEach(img => {
-                img.addEventListener('click', () => {
-                    lightboxImg.src = img.src;
-                    lightboxImg.alt = img.alt;
-                    lightbox.classList.add('active');
-                });
-            });
-
-            // Close on click outside
-            lightbox.addEventListener('click', (e) => {
-                if (e.target !== lightboxImg) {
-                    lightbox.classList.remove('active');
+                if (b.getAttribute('onclick').includes('true')) {
+                    b.classList.add('correct');
                 }
             });
+        }
+    }
+</script>
+
+<script>
+    // Lightbox Logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const lightbox = document.createElement('div');
+        lightbox.className = 'lightbox-overlay';
+        lightbox.innerHTML = '<img src="" alt="Lightbox Image" class="lightbox-image">';
+        document.body.appendChild(lightbox);
+
+        const lightboxImg = lightbox.querySelector('img');
+
+        // Select all images inside diagram placeholders
+        const images = document.querySelectorAll('.diagram-placeholder img');
+
+        images.forEach(img => {
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt;
+                lightbox.classList.add('active');
+            });
         });
-    </script>
+
+        // Close on click outside
+        lightbox.addEventListener('click', (e) => {
+            if (e.target !== lightboxImg) {
+                lightbox.classList.remove('active');
+            }
+        });
+    });
+</script>
 
 </body>
 

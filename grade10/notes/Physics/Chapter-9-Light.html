@@ -356,6 +356,58 @@
                 padding-bottom: 0.5rem;
             }
         }
+
+        /* New Button and Link Styles */
+        .nav-links a.primary-link {
+            border-color: rgba(16, 185, 129, 0.7);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.12));
+            color: #a7f3d0;
+        }
+
+        .nav-links a.primary-link:hover {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.4rem;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-med);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-strong);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(31, 41, 55, 0.6);
+            color: #e5e7eb;
+            border: 1px solid rgba(75, 85, 99, 0.5);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(55, 65, 81, 0.8);
+            border-color: #9ca3af;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 
@@ -366,7 +418,7 @@
     <header>
         <div class="nav-inner">
             <div class="logo-badge">
-                <span>⚡</span> Sarvottam Institute
+                <span>⚡</span>
             </div>
             <nav class="nav-links">
                 <a href="../Biology/index.html" class="nav-link">Home</a>
@@ -374,7 +426,7 @@
                 <a href="#refraction" class="nav-link">Refraction</a>
                 <a href="#mirrors" class="nav-link">Mirrors</a>
                 <a href="#lenses" class="nav-link">Lenses</a>
-                <a href="Chapter-9-Activities.html" class="nav-link" style="color: var(--accent);">Activities →</a>
+                <a href="Chapter-9-Activities.html" class="nav-link primary-link">Activities</a>
             </nav>
         </div>
     </header>
@@ -398,6 +450,7 @@
                     <a href="#reflection"
                         style="background: var(--accent); color: #000; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-block;">Start
                         Learning</a>
+                    <a href="Chapter-9-Activities.html" class="btn btn-secondary">View Activities</a>
                 </div>
             </div>
             <div class="hero-card">
@@ -652,6 +705,48 @@
             </div>
 
             <!-- Image Formation (Convex Mirror) -->
+            <!-- Rules for Convex Mirror -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3>Rules for Image Formation by Convex Mirror</h3>
+                <div class="grid-2">
+                    <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                        <img src="convex_rule_1_parallel.png" alt="Rule 1: Parallel to Axis" class="diagram"
+                            style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                        <div style="text-align: left;">
+                            <strong>Rule 1:</strong> A ray of light parallel to the principal axis appears to diverge
+                            from the
+                            <strong>Principal Focus (F)</strong> after reflection.
+                        </div>
+                    </div>
+                    <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                        <img src="convex_rule_2_focus.png" alt="Rule 2: Towards Focus" class="diagram"
+                            style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                        <div style="text-align: left;">
+                            <strong>Rule 2:</strong> A ray directed towards the Principal Focus (F) will emerge
+                            <strong>parallel</strong> to the principal axis after reflection.
+                        </div>
+                    </div>
+                    <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                        <img src="convex_rule_3_center.png" alt="Rule 3: Towards Center" class="diagram"
+                            style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                        <div style="text-align: left;">
+                            <strong>Rule 3:</strong> A ray directed towards the <strong>Center of Curvature (C)</strong>
+                            is
+                            reflected back along the same path.
+                        </div>
+                    </div>
+                    <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                        <img src="convex_rule_4_pole.png" alt="Rule 4: At Pole" class="diagram"
+                            style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                        <div style="text-align: left;">
+                            <strong>Rule 4:</strong> A ray incident obliquely to the Pole (P) is reflected obliquely
+                            making
+                            <strong>equal angles</strong> (∠i = ∠r).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <h3>Image Formation (Convex Mirror)</h3>
                 <div class="grid-2">
@@ -681,330 +776,747 @@
 
             <div class="card" style="margin-top: 1.5rem; background: rgba(255,255,255,0.03);">
                 <h3>Uses of Convex Mirrors</h3>
+                <div class="feature-box activity-box">
+                    <ol type="i" style="margin: 0; padding-left: 1.2rem; color: #d1d5db;">
+                        <li style="margin-bottom: 0.8rem;">
+                            <strong>Convex mirrors are used as rear-view mirrors in vehicles because:</strong>
+                            <ol type="a" style="margin-top: 0.5rem; margin-left: 1rem;">
+                                <li style="margin-bottom: 0.3rem;">They always give an <strong>erect though
+                                        diminished</strong> image.</li>
+                                <li>They have a <strong>wider field of view</strong> as they are curved outwards.</li>
+                            </ol>
+                        </li>
+                        <li style="margin-bottom: 0.8rem;">Used at <strong>blind turns</strong> and on points of merging
+                            traffic to facilitate vision of both side traffic.</li>
+                        <li>Used in shops as <strong>security mirrors</strong>.</li>
+                    </ol>
+                </div>
+            </div>
+
+
+            <div class="card" style="margin-top: 3rem; background: rgba(255,255,255,0.03);">
+                <h3>Sign Convention for Reflection by Spherical Mirror</h3>
+                <h4 style="color: var(--text-soft); font-size: 1rem; margin-top: -0.5rem; margin-bottom: 1rem;">Or New
+                    Cartesian Sign Convention</h4>
+
+                <div class="grid-2">
+                    <div class="feature-box" style="border: 1px solid var(--border-soft); background: rgba(0,0,0,0.2);">
+                        <img src="sign_convention_diagram.png" alt="Cartesian Sign Convention" class="diagram"
+                            style="margin: 0 auto; display: block; max-height: 300px;">
+                    </div>
+
+                    <div class="feature-box activity-box">
+                        <ol type="i" style="margin: 0; padding-left: 1.2rem; color: #d1d5db;">
+                            <li>The object is placed to the <strong>left</strong> of the mirror.</li>
+                            <li>All distances parallel to the principal axis are measured from the <strong>pole</strong>
+                                of
+                                the mirror.</li>
+                            <li>All distances measured in the direction of incident ray (along + X-axis) are taken as
+                                <strong>positive</strong> and those measured against the direction of incident ray
+                                (along -
+                                X-axis) are taken as <strong>negative</strong>.
+                            </li>
+                            <li>Distance measured perpendicular to and above the principal axis are taken as
+                                <strong>positive</strong>.
+                            </li>
+                            <li>Distances measured perpendicular to and below the principal axis are taken as
+                                <strong>negative</strong>.
+                            </li>
+                        </ol>
+
+                        <div
+                            style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-soft); font-size: 0.9rem;">
+                            <ul style="margin: 0; padding-left: 1.2rem; color: var(--accent);">
+                                <li>Object distance = '<em>u</em>' is always <strong>negative</strong>.</li>
+                                <li>Focal length of concave mirror = <strong>Negative</strong> (f = -ve)</li>
+                                <li>Focal length of convex mirror = <strong>Positive</strong> (f = +ve)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="grid-column: 1 / -1; margin-top: 3rem;">
+                <h3>Case Wise Summary (Spherical Mirrors)</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th colspan="6" style="text-align: center;">Concave Mirror</th>
+                                <th colspan="2" style="text-align: center;">Convex Mirror</th>
+                            </tr>
+                            <tr>
+                                <th>Case</th>
+                                <th>(i) Infinity</th>
+                                <th>(ii) Beyond C</th>
+                                <th>(iii) At C</th>
+                                <th>(iv) Bw C&F</th>
+                                <th>(v) At F</th>
+                                <th>(vi) Bw P&F</th>
+                                <th>(i) Infinity</th>
+                                <th>(ii) Finite</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>u</strong></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>v</strong></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                            </tr>
+                            <tr>
+                                <td><strong>R</strong></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>+</td>
+                                <td>+</td>
+                            </tr>
+                            <tr>
+                                <td><strong>f</strong></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>+</td>
+                                <td>+</td>
+                            </tr>
+                            <tr>
+                                <td><strong>h<sub>o</sub></strong></td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                            </tr>
+                            <tr>
+                                <td><strong>h<sub>i</sub></strong></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                            </tr>
+                            <tr>
+                                <td><strong>m</strong></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mirror Formula -->
+        <!-- Mirror Formula & Magnification -->
+        <div class="grid-2" style="margin-top: 5rem;">
+            <!-- Mirror Formula -->
+            <div class="card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(30, 41, 59, 0.8);">
+                <h3 style="color: #10b981; margin-top: 0;">Mirror Formula</h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Relation between u, v, and f:</p>
+
+                <div
+                    style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(30, 41, 59, 1); border-radius: 8px; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem;">
+                    <span style="color: #10b981; font-size: 1.3rem; font-weight: 700;">1/v + 1/u = 1/f</span>
+                </div>
+
+                <div
+                    style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(30, 41, 59, 0.6); border-radius: 8px; padding: 1.2rem;">
+                    <ul
+                        style="margin: 0; padding-left: 1.2rem; color: #e2e8f0; font-size: 0.9rem; list-style-type: disc;">
+                        <li style="margin-bottom: 0.5rem;"><strong style="color: #fff;">u:</strong> Object distance
+                            (always -ve)</li>
+                        <li style="margin-bottom: 0.5rem;"><strong style="color: #fff;">v:</strong> Image distance</li>
+                        <li><strong style="color: #fff;">f:</strong> Focal length</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Magnification -->
+            <div class="card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(30, 41, 59, 0.8);">
+                <h3 style="color: #10b981; margin-top: 0;">Magnification (m)</h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Ratio of image height to object
+                    height:</p>
+
+                <div
+                    style="background: rgba(30, 58, 138, 0.2); border: 1px solid rgba(30, 58, 138, 0.3); border-radius: 8px; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem;">
+                    <span style="color: #60a5fa; font-size: 1.3rem; font-weight: 700;">m = h'/h = -v/u</span>
+                </div>
+
+                <div
+                    style="background: rgba(50, 40, 30, 0.3); border: 1px solid rgba(100, 80, 60, 0.3); border-radius: 8px; padding: 1.2rem;">
+                    <ul
+                        style="margin: 0; padding-left: 1.2rem; color: #e2e8f0; font-size: 0.9rem; list-style-type: disc;">
+                        <li style="margin-bottom: 0.5rem;"><strong style="color: #fff;">m ( - ):</strong> Real &
+                            Inverted</li>
+                        <li style="margin-bottom: 0.5rem;"><strong style="color: #fff;">m ( + ):</strong> Virtual &
+                            Erect</li>
+                        <li style="margin-bottom: 0.5rem;"><strong style="color: #fff;">|m| > 1:</strong> Enlarged</li>
+                        <li><strong style="color: #fff;">|m| < 1:</strong> Diminished</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sign Convention -->
+        <div class="card" style="margin-top: 1.5rem; margin-bottom: 2rem;">
+            <h3>Sign Convention (Cartesian)</h3>
+            <div class="grid-2">
                 <ul class="feature-box activity-box">
-                    <li><strong>Rear-view Mirrors:</strong> Only mirror that gives an erect (though diminished)
-                        image. Covers a wider field of view.</li>
-                    <li><strong>Security Mirrors:</strong> Used in shops to monitor activities.</li>
-                    <li><strong>Traffic Mirrors:</strong> Used at blind turns to see merging traffic.</li>
+                    <li>Light travels <strong>Left → Right</strong>.</li>
+                    <li>Origin is at the <strong>Pole (P)</strong>.</li>
+                    <li>Distances in direction of light: <span style="color: #10b981; font-weight: bold;">Positive
+                            (+)</span></li>
+                </ul>
+                <ul class="feature-box activity-box">
+                    <li>Distances against light: <span style="color: #f472b6; font-weight: bold;">Negative (-)</span>
+                    </li>
+                    <li>Height upwards: <strong>Positive (+)</strong></li>
+                    <li>Height downwards: <strong>Negative (-)</strong></li>
                 </ul>
             </div>
         </div>
 
-        <div class="card" style="grid-column: 1 / -1; margin-top: 2rem;">
-            <h3>Case Wise Summary (Spherical Mirrors)</h3>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Param</th>
-                            <th colspan="6" style="text-align: center;">Concave Mirror</th>
-                            <th colspan="2" style="text-align: center;">Convex Mirror</th>
-                        </tr>
-                        <tr>
-                            <th>Case</th>
-                            <th>(i) Infinity</th>
-                            <th>(ii) Beyond C</th>
-                            <th>(iii) At C</th>
-                            <th>(iv) Bw C&F</th>
-                            <th>(v) At F</th>
-                            <th>(vi) Bw P&F</th>
-                            <th>(i) Infinity</th>
-                            <th>(ii) Finite</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>u</strong></td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td><strong>v</strong></td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>+</td>
-                            <td>+</td>
-                            <td>+</td>
-                        </tr>
-                        <tr>
-                            <td><strong>R</strong></td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>+</td>
-                            <td>+</td>
-                        </tr>
-                        <tr>
-                            <td><strong>f</strong></td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>+</td>
-                            <td>+</td>
-                        </tr>
-                        <tr>
-                            <td><strong>h(o)</strong></td>
-                            <td>+</td>
-                            <td>+</td>
-                            <td>+</td>
-                            <td>+</td>
-                            <td>+</td>
-                            <td>+</td>
-                            <td>+</td>
-                            <td>+</td>
-                        </tr>
-                        <tr>
-                            <td><strong>h(i)</strong></td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>+</td>
-                            <td>+</td>
-                            <td>+</td>
-                        </tr>
-                        <tr>
-                            <td><strong>m</strong></td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>+</td>
-                            <td>+</td>
-                            <td>+</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mirror Formula -->
-    <!-- Mirror Formula & Magnification -->
-    <div class="grid-2">
-        <div class="card">
-            <h3>Mirror Formula</h3>
-            <p style="color: var(--text-soft); margin-bottom: 1rem;">Relation between u, v, and f:</p>
-            <div class="feature-box"
-                style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); text-align: center; font-size: 1.2rem; font-weight: bold; color: #10b981;">
-                1/v + 1/u = 1/f
-            </div>
-            <div class="feature-box tip-box" style="margin-top: 1rem;">
-                <ul style="margin: 0; padding-left: 1rem;">
-                    <li><strong>u:</strong> &nbsp;Object distance (always -ve)</li>
-                    <li><strong>v:</strong> &nbsp;Image distance</li>
-                    <li><strong>f:</strong> &nbsp;Focal length</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>Magnification (m)</h3>
-            <p style="color: var(--text-soft); margin-bottom: 1rem;">Ratio of image height to object height:</p>
-            <div class="feature-box"
-                style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); text-align: center; font-size: 1.2rem; font-weight: bold; color: #60a5fa;">
-                m = h'/h = -v/u
-            </div>
-            <ul class="feature-box question-box" style="margin-top: 1rem;">
-                <li><strong>m ( - ):</strong> &nbsp;Real & Inverted</li>
-                <li><strong>m ( + ):</strong> &nbsp;Virtual & Erect</li>
-                <li><strong>|m| > 1:</strong> &nbsp;Enlarged</li>
-                <li><strong>|m| < 1:</strong> &nbsp;Diminished</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Sign Convention -->
-    <div class="card" style="margin-top: 1.5rem; margin-bottom: 2rem;">
-        <h3>Sign Convention (Cartesian)</h3>
+        <!-- 9.3 Refraction -->
+        <!-- 9.3 Refraction -->
+        <h2 id="refraction" class="section-title" style="margin-top: 3rem;">9.3 Refraction of Light</h2>
         <div class="grid-2">
-            <ul class="feature-box activity-box">
-                <li>Light travels <strong>Left → Right</strong>.</li>
-                <li>Origin is at the <strong>Pole (P)</strong>.</li>
-                <li>Distances in direction of light: <span style="color: #10b981; font-weight: bold;">Positive
-                        (+)</span></li>
-            </ul>
-            <ul class="feature-box activity-box">
-                <li>Distances against light: <span style="color: #f472b6; font-weight: bold;">Negative (-)</span></li>
-                <li>Height upwards: <strong>Positive (+)</strong></li>
-                <li>Height downwards: <strong>Negative (-)</strong></li>
-            </ul>
-        </div>
-    </div>
+            <!-- Refraction Concept -->
+            <div class="card">
+                <h3>Refraction of Light</h3>
+                <p style="color: var(--text-soft);">Bending of light when it enters obliquely from one transparent
+                    medium to another.</p>
 
-    <!-- 9.3 Refraction -->
-    <!-- 9.3 Refraction -->
-    <h2 id="refraction" class="section-title" style="margin-top: 3rem;">9.3 Refraction of Light</h2>
-    <div class="grid-2">
-        <div class="card">
-            <h3>Concept</h3>
-            <p style="color: var(--text-soft); margin-bottom: 1rem;">Bending of light when passing obliquely between
-                transparent media.</p>
-            <ul class="feature-box tip-box">
-                <li><strong>Rarer → Denser:</strong> Bends <span
-                        style="text-decoration: underline; text-decoration-color: #10b981;">TOWARDS</span> normal (v ↓).
-                </li>
-                <li><strong>Denser → Rarer:</strong> Bends <span
-                        style="text-decoration: underline; text-decoration-color: #f472b6;">AWAY</span> from normal (v
-                    ↑).</li>
-            </ul>
-            <h4 style="margin-top: 1.5rem; color: var(--accent);">Glass Slab Refraction</h4>
-            <p style="font-size: 0.9rem; color: var(--text-soft);">Incident & Emergent rays are parallel but laterally
-                displaced.</p>
-            <img src="refraction_glass_slab.png" alt="Refraction through Glass Slab" class="diagram"
-                style="margin-top: 1rem;">
+                <div class="feature-box tip-box" style="margin-top: 1rem;">
+                    <ul style="margin: 0; padding-left: 1.2rem; list-style-type: disc;">
+                        <li style="margin-bottom: 0.5rem;"><strong>Speed of light:</strong> Maximum in vacuum (3 × 10⁸
+                            m/s).</li>
+                        <li><strong>Cause of Refraction:</strong> Change in speed of light.</li>
+                    </ul>
+                </div>
+
+                <h4 style="margin-top: 1.5rem; color: var(--accent);">Examples:</h4>
+                <ul class="feature-box activity-box">
+                    <li style="margin-bottom: 0.5rem;">The bottom of a swimming pool appears higher.</li>
+                    <li style="margin-bottom: 0.5rem;">A pencil partially immersed in water appears to be bent.</li>
+                    <li style="margin-bottom: 0.5rem;">Lemons in a glass tumbler appear bigger.</li>
+                    <li>Letters appear raised through a glass slab.</li>
+                </ul>
+                <img src="pencil_refraction.png" alt="Pencil Refraction" class="diagram"
+                    style="margin-top: 1rem; max-height: 200px;">
+            </div>
+
+            <!-- Optically Rarer/Denser -->
+            <div class="card">
+                <h3>Optically Mediums</h3>
+                <p style="margin-bottom: 1rem;"><strong>Optically rarer medium:</strong> Out of two given media, the
+                    medium with lower value of refractive index.</p>
+
+                <div class="feature-box" style="margin-bottom: 1rem; background: rgba(0,0,0,0.2);">
+                    <div style="font-weight: bold; color: #10b981; margin-bottom: 0.5rem;">Rarer → Denser</div>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Light bends <strong>towards</strong> the
+                        normal.</p>
+                    <img src="refraction_rarer_denser.png" alt="Rarer to Denser" class="diagram"
+                        style="max-height: 150px; margin: 0;">
+                </div>
+
+                <div class="feature-box" style="background: rgba(0,0,0,0.2);">
+                    <div style="font-weight: bold; color: #f472b6; margin-bottom: 0.5rem;">Denser → Rarer</div>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Light bends <strong>away</strong> from the
+                        normal.</p>
+                    <img src="refraction_denser_rarer.png" alt="Denser to Rarer" class="diagram"
+                        style="max-height: 150px; margin: 0;">
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-soft); margin-top: 1rem;">* Refractive index of a medium
+                    does not depend on physical density.</p>
+            </div>
+
+            <!-- Glass Slab -->
+            <div class="card">
+                <h3>Refraction through Glass Slab</h3>
+                <p style="font-size: 0.9rem;">Incident & Emergent rays are parallel but laterally displaced.</p>
+                <img src="refraction_glass_slab.png" alt="glass slab" class="diagram" style="margin: 1rem 0;">
+                <h4 style="color: var(--accent);">Lateral Displacement depends on:</h4>
+                <ul class="feature-box activity-box">
+                    <li>Refractive index of glass slab</li>
+                    <li>Thickness of glass slab</li>
+                    <li>Wavelength of light rays</li>
+                    <li>Angle of incidence</li>
+                </ul>
+                </ul>
+            </div>
         </div>
 
-        <div class="card">
+        <!-- Laws of Refraction (Full Width) -->
+        <div class="card" style="margin-top: 1.5rem;">
             <h3>Laws of Refraction</h3>
             <div class="feature-box activity-box">
                 <ol style="padding-left: 1.2rem; margin: 0;">
-                    <li style="margin-bottom: 0.5rem;">Incident ray, refracted ray, and normal lie in the same plane.
+                    <li style="margin-bottom: 1rem;">The incident ray, the refracted ray and the normal to the
+                        interface of two transparent media at the point of incidence, all lie in the same plane.
                     </li>
-                    <li><strong>Snell's Law:</strong> Ratio of sine of angles is constant for a given pair of media.
-                    </li>
+                    <li><strong>Snell's Law:</strong> The ratio of sine of angle of incidence to the sine of angle
+                        of refraction is a constant.</li>
                 </ol>
             </div>
 
             <div class="feature-box"
                 style="margin-top: 1rem; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); text-align: center; color: #10b981; font-weight: bold;">
-                sin i / sin r = constant (n₂₁)
+                sin i / sin r = constant
+            </div>
+        </div>
+
+        <!-- Refractive Index (Detailed) -->
+        <div class="card" style="margin-top: 2rem; margin-bottom: 2rem;">
+            <h3>Refractive Index (n)</h3>
+            <p style="color: var(--text-soft); margin-bottom: 1rem;">The ratio of speed of light in a given pair of
+                media.</p>
+
+            <div class="grid-2">
+                <div class="feature-box tip-box">
+                    <strong>Formula:</strong><br>
+                    n = (Velocity of light in medium 1) / (Velocity of light in medium 2)
+                </div>
+
+                <div class="feature-box activity-box">
+                    <ul style="margin: 0; padding-left: 1.2rem; list-style-type: none;">
+                        <li style="margin-bottom: 0.8rem;">
+                            <strong>n₂₁:</strong> Refractive index of medium 2 w.r.t medium 1<br>
+                            <span style="color: #10b981; font-weight: bold;">n₂₁ = v₁ / v₂</span>
+                        </li>
+                        <li>
+                            <strong>n₁₂:</strong> Refractive index of medium 1 w.r.t medium 2<br>
+                            <span style="color: #f472b6; font-weight: bold;">n₁₂ = v₂ / v₁</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
-            <h4 style="margin-top: 1.5rem; color: var(--accent);">Refractive Index (nm)</h4>
-            <div class="feature-box tip-box">
-                <div style="text-align: center; margin-bottom: 0.5rem; font-weight: bold;">nm = c / v</div>
-                <div style="font-size: 0.85rem; color: var(--text-soft);">
-                    <strong>c:</strong> Speed in Air (3 × 10⁸ m/s)<br>
-                    <strong>v:</strong> Speed in Medium
+            <h4 style="margin-top: 1.5rem; color: var(--accent);">Key Relations</h4>
+            <div class="grid-2">
+                <div>
+                    <p style="font-weight: bold; margin-bottom: 0.5rem;">Absolute Refractive Index</p>
+                    <p style="font-size: 0.9rem; color: var(--text-soft);">Refractive index of a medium w.r.t vacuum or
+                        air.</p>
+                    <div class="feature-box" style="text-align: center; font-weight: bold; color: #60a5fa;">
+                        n = c / v
+                        <div
+                            style="font-size: 0.8rem; color: var(--text-soft); font-weight: normal; margin-top: 0.3rem;">
+                            (c = 3 × 10⁸ m/s)</div>
+                    </div>
+                </div>
+                <div>
+                    <ul style="margin: 0; padding-left: 0; list-style-type: none;">
+                        <li style="margin-bottom: 1rem;">
+                            <strong>Reciprocal Relation:</strong><br>
+                            Refractive index of one medium is reciprocal of other's in a given pair.<br>
+                            <span style="font-weight: bold; color: var(--warning);">n₁₂ = 1 / n₂₁</span>
+                        </li>
+                        <li>
+                            <strong>Relative Formula:</strong><br>
+                            <span style="font-weight: bold;">n₂₁ = n₂ / n₁</span> (where n is absolute RI)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-box"
+                style="margin-top: 1.5rem; border-left: 4px solid #f59e0b; background: rgba(245, 158, 11, 0.1);">
+                <strong>Example: Diamond</strong><br>
+                Refractive index is <strong>2.42</strong> (highest).<br>
+                It means speed of light is <strong>1/2.42</strong> times in diamond of that in vacuum.
+            </div>
+        </div>
+
+
+        <!-- 9.4 Lenses -->
+        <!-- 9.4 Lenses -->
+        <h2 id="lenses">9.4 Spherical Lenses</h2>
+
+        <!-- Types of Lenses (Full Width) -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <h3>Spherical Lenses</h3>
+            <p style="color: var(--text-soft); margin-bottom: 1.5rem;">A transparent medium bound by two surfaces, of
+                which one or both surfaces are curved.</p>
+
+            <div class="grid-2" style="margin-bottom: 1.5rem;">
+                <div class="feature-box" style="background: rgba(16, 185, 129, 0.05); border-left: 4px solid #10b981;">
+                    <h4 style="color: #10b981; margin-top: 0;">Convex Lens</h4>
+                    <ul style="margin: 0; padding-left: 1.2rem; list-style-type: disc;">
+                        <li>Thin from corners</li>
+                        <li>Thick at center</li>
+                        <li><strong>Converging</strong></li>
+                    </ul>
+                </div>
+                <div class="feature-box" style="background: rgba(244, 114, 182, 0.05); border-left: 4px solid #f472b6;">
+                    <h4 style="color: #f472b6; margin-top: 0;">Concave Lens</h4>
+                    <ul style="margin: 0; padding-left: 1.2rem; list-style-type: disc;">
+                        <li>Thick from corners</li>
+                        <li>Thin at center</li>
+                        <li><strong>Diverging</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <img src="lens_types.png" alt="Types of Spherical Lenses" class="diagram"
+                style="max-width: 80%; margin: 0 auto; display: block;">
+        </div>
+
+        <!-- Rules for Image Formation (Convex Lens) -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <h3>Rules for Image Formation by Convex Lens</h3>
+
+            <div class="grid-2">
+                <!-- Rule 1 -->
+                <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                    <img src="convex_lens_rule_1_parallel.png" alt="Rule 1: Parallel to Axis" class="diagram"
+                        style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                    <div style="text-align: left;">
+                        <strong>Rule 1:</strong> A ray parallel to the principal axis passes through the focus
+                        <strong>(F₂)</strong> on the other side.
+                    </div>
+                </div>
+
+                <!-- Rule 2 -->
+                <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                    <img src="convex_lens_rule_2_focus.png" alt="Rule 2: Through Focus" class="diagram"
+                        style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                    <div style="text-align: left;">
+                        <strong>Rule 2:</strong> A ray passing through the principal focus <strong>(F₁)</strong> emerges
+                        <strong>parallel</strong> to the principal axis.
+                    </div>
+                </div>
+
+                <!-- Rule 3 -->
+                <div class="feature-box" style="border: 1px solid var(--border-soft); text-align: center;">
+                    <img src="convex_lens_rule_3_center.png" alt="Rule 3: Optical Center" class="diagram"
+                        style="margin-top: 0; max-height: 200px; object-fit: contain;">
+                    <div style="text-align: left;">
+                        <strong>Rule 3:</strong> A ray passing through the <strong>Optical Center (O)</strong> emerges
+                        without any deviation.
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
 
-    <!-- 9.4 Lenses -->
-    <h2 id="lenses">9.4 Spherical Lenses</h2>
-    <div class="grid-2">
-        <div class="card">
-            <h3>Types of Lenses</h3>
-            <div style="margin-bottom: 1rem;">
-                <p style="margin-bottom: 0.5rem;"><strong style="color: #10b981;">Convex Lens:</strong> Thicker at
-                    middle. <em>Converging</em>.</p>
-                <p><strong style="color: #f472b6;">Concave Lens:</strong> Thinner at middle. <em>Diverging</em>.</p>
-            </div>
-            <div class="feature-box tip-box">
-                <strong>Visual Trick:</strong> A convex lens magnifies text when held close. A concave lens
-                diminishes it.
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>Lens Formula</h3>
-            <div class="feature-box"
-                style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); text-align: center; font-size: 1.2rem; font-weight: bold; color: #10b981;">
-                1/v - 1/u = 1/f
-            </div>
-            <p style="font-size: 0.85rem; color: var(--danger); margin-top: 0.5rem; text-align: center;">⚠ Note the
-                negative sign (contrast with mirror).</p>
-
-            <h3 style="margin-top: 1.5rem;">Magnification (m)</h3>
-            <div class="feature-box"
-                style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); text-align: center; font-size: 1.1rem; font-weight: bold; color: #60a5fa;">
-                m = h'/h = v/u
-            </div>
-        </div>
-    </div>
-
-    <!-- Power of Lens -->
-    <div class="card" style="margin-top: 2rem;">
-        <h3>Power of Lens (P)</h3>
         <div class="grid-2">
-            <div>
-                <p style="color: var(--text-soft); margin-bottom: 1rem;">Reciprocal of focal length (in meters). Defines
-                    converging/diverging capacity.</p>
+            <div class="card">
+                <h3>Sign convention for spherical lenses</h3>
+                <ul class="feature-box activity-box" style="margin-bottom: 1.5rem;">
+                    <li>Sign conventions are similar to the one used for spherical mirrors, except that measurements are
+                        taken from <strong>optical center</strong> of the lens.</li>
+                    <li>Focal length of convex lens = <strong>Positive</strong></li>
+                    <li>Focal length of concave lens = <strong>Negative</strong></li>
+                </ul>
+
+                <h3>Lens Formula</h3>
                 <div class="feature-box"
-                    style="background: rgba(249, 115, 22, 0.1); border-color: rgba(249, 115, 22, 0.2); text-align: center; font-size: 1.2rem; font-weight: bold; color: #f97316;">
-                    P = 1 / f(in meters)
+                    style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); text-align: center; font-size: 1.2rem; font-weight: bold; color: #10b981;">
+                    1/v - 1/u = 1/f
+                </div>
+
+                <h3 style="margin-top: 1.5rem;">Magnification</h3>
+                <div class="feature-box"
+                    style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); text-align: center; font-size: 1.1rem; font-weight: bold; color: #60a5fa;">
+                    m = hᵢ/hₒ
+                    <div style="font-size: 0.9rem; margin-top: 0.5rem; font-weight: normal; color: var(--text-main);">
+                        Also, m = v/u</div>
+                </div>
+                <div style="text-align: right; font-size: 0.85rem; color: var(--text-soft); margin-top: 0.5rem;">
+                    ∴ hᵢ = height of image, hₒ = height of object
+                </div>
+
+                <h3 style="margin-top: 2rem;">Case Wise Summary</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th colspan="6" style="text-align: center;">Convex Lens</th>
+                                <th colspan="2" style="text-align: center;">Concave Lens</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>(i)</th>
+                                <th>(ii)</th>
+                                <th>(iii)</th>
+                                <th>(iv)</th>
+                                <th>(v)</th>
+                                <th>(vi)</th>
+                                <th>(i)</th>
+                                <th>(ii)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>u</strong></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>v</strong></td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>f</strong></td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>hₒ</strong></td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                            </tr>
+                            <tr>
+                                <td><strong>hᵢ</strong></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                            </tr>
+                            <tr>
+                                <td><strong>m</strong></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>+</td>
+                                <td>+</td>
+                                <td>+</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div>
-                <ul class="feature-box activity-box">
-                    <li><strong>SI Unit:</strong> Diopter (D)</li>
-                    <li><strong>Convex Lens:</strong> Positive Power (+D)</li>
-                    <li><strong>Concave Lens:</strong> Negative Power (-D)</li>
-                    <li><strong>Combination:</strong> P = P₁ + P₂ + ...</li>
-                </ul>
+        </div>
+
+
+        <div class="card" style="margin-top: 1.5rem;">
+            <h3>Image Formation (Convex Lens)</h3>
+            <img src="convex_lens_ray_diagrams.png" alt="Convex Lens Ray Diagrams" class="diagram">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Object Position</th>
+                            <th>Image Position</th>
+                            <th>Nature & Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>(i) At Infinity</td>
+                            <td>At Focus F₂</td>
+                            <td>Real, Inverted, Point sized / Highly Diminished</td>
+                        </tr>
+                        <tr>
+                            <td>(ii) Beyond 2F₁</td>
+                            <td>Between F₂ and 2F₂</td>
+                            <td>Real, Inverted, Diminished</td>
+                        </tr>
+                        <tr>
+                            <td>(iii) At 2F₁</td>
+                            <td>At 2F₂</td>
+                            <td>Real, Inverted, Same Size</td>
+                        </tr>
+                        <tr>
+                            <td>(iv) Between F₁ and 2F₁</td>
+                            <td>Beyond 2F₂</td>
+                            <td>Real, Inverted, Enlarged</td>
+                        </tr>
+                        <tr>
+                            <td>(v) At Focus F₁</td>
+                            <td>At Infinity</td>
+                            <td>Real, Inverted, Highly Enlarged</td>
+                        </tr>
+                        <tr>
+                            <td>(vi) Between F₁ and Optical Center</td>
+                            <td>On the same side of the lens as object</td>
+                            <td>Virtual, Erect, Enlarged</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <img src="lens_power_schematic.png" alt="Lens Power Schematic" class="diagram"
-            style="max-width: 60%; margin: 1rem auto; display: block;">
-    </div>
 
-    <div class="card" style="margin-top: 1.5rem;">
-        <h3>Image Formation (Convex Lens)</h3>
-        <img src="convex_lens_ray_diagrams.png" alt="Convex Lens Ray Diagrams" class="diagram">
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Object Position</th>
-                        <th>Image Position</th>
-                        <th>Nature & Size</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>At Infinity</td>
-                        <td>At F2</td>
-                        <td>Real, Inverted, Highly Diminished</td>
-                    </tr>
-                    <tr>
-                        <td>Beyond 2F1</td>
-                        <td>Between F2 & 2F2</td>
-                        <td>Real, Inverted, Diminished</td>
-                    </tr>
-                    <tr>
-                        <td>At 2F1</td>
-                        <td>At 2F2</td>
-                        <td>Real, Inverted, Same Size</td>
-                    </tr>
-                    <tr>
-                        <td>Between F1 & 2F1</td>
-                        <td>Beyond 2F2</td>
-                        <td>Real, Inverted, Enlarged</td>
-                    </tr>
-                    <tr>
-                        <td>At F1</td>
-                        <td>At Infinity</td>
-                        <td>Real, Inverted, Highly Enlarged</td>
-                    </tr>
-                    <tr>
-                        <td>Between F1 & O</td>
-                        <td>Same side as object</td>
-                        <td>Virtual, Erect, Enlarged</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Rules for Concave Lens -->
+        <div class="card" style="margin-top: 2rem;">
+            <h3>Rules for Image Formation by Concave Lens</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rule</th>
+                            <th>Light Ray from Object</th>
+                            <th>How it appears after refraction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Parallel to the principal axis</td>
+                            <td>Appears to diverge from the principal focus located on the same side of the lens.</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Passing through a principal focus (directed towards)</td>
+                            <td>Emerges parallel to the principal axis.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Passing through the optical center</td>
+                            <td>Emerges without any deviation.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+
+        <!-- Image Formation (Concave Lens) -->
+        <div class="card" style="margin-top: 2rem;">
+            <h3>Ray Diagrams of Images Formed by a Concave Lens</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Object Position</th>
+                            <th>Image Position</th>
+                            <th>Nature & Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>(i) At Infinity</td>
+                            <td>At Focus F₁</td>
+                            <td>Virtual, Erect, Point sized / Highly Diminished</td>
+                        </tr>
+                        <tr>
+                            <td>(ii) Between Infinity and Optical Center</td>
+                            <td>Between Focus F₁ and Optical Center O</td>
+                            <td>Virtual, Erect, Diminished</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Power of Lens (Moved to End) -->
+        <div class="card" style="margin-top: 2rem;">
+            <h3>Power of Lens (P)</h3>
+            <div class="grid-2">
+                <div>
+                    <p style="color: var(--text-soft); margin-bottom: 1rem;">It is defined as the reciprocal of focal
+                        length in meter.<br>
+                        The degree of convergence or divergence of light rays is expressed in terms of power.</p>
+                    <div class="feature-box"
+                        style="background: rgba(249, 115, 22, 0.1); border-color: rgba(249, 115, 22, 0.2); text-align: center; font-size: 1.2rem; font-weight: bold; color: #f97316;">
+                        Power = 1 / focal length (in meter) &nbsp;&nbsp; P = 1/f
+                    </div>
+                </div>
+                <div>
+                    <ul class="feature-box activity-box">
+                        <li><strong>SI Unit of Power:</strong> dioptre = D</li>
+                        <li>1 D = 1 m⁻¹<br>1 dioptre is the power of lens whose focal length is one meter.</li>
+                        <li><strong>Power of convex lens:</strong> Positive</li>
+                        <li><strong>Power of concave lens:</strong> Negative</li>
+                        <li><strong>Power of a lens combination:</strong><br><span
+                                style="font-weight: bold; color: var(--accent);">P = P₁ + P₂ + P₃.........</span></li>
+                    </ul>
+                </div>
+            </div>
+            <img src="lens_power_schematic.png" alt="Lens Power Schematic" class="diagram"
+                style="max-width: 60%; margin: 1rem auto; display: block;">
+        </div>
+
+        <!-- NCERT ACTIVITIES LINK -->
+        <section id="ncert-activities" style="margin-top: 3rem;">
+            <div class="section-label">NCERT Lab</div>
+            <h2 style="margin-bottom: 2rem;">Key Activities</h2>
+
+            <div class="hero-card"
+                style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 95, 70, 0.2)); border-color: rgba(16, 185, 129, 0.3);">
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">🔬 Interactive Lab
+                        Activities
+                    </h3>
+                    <p style="max-width: 600px; color: #6ee7b7; margin-bottom: 2rem; font-size: 1.1rem;">
+                        Activity 9.1: Reflection by a Spoon.<br>
+                        Activity 9.8: Refraction through a Glass Slab.<br>
+                        Activity 9.10: Image Formation by Convex Lens.
+                    </p>
+                    <a href="Chapter-9-Activities.html" class="btn btn-primary"
+                        style="background: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                        View Detailed Steps &rarr;
+                    </a>
+                </div>
+            </div>
+        </section>
 
     </div>
 

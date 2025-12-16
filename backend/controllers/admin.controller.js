@@ -2,7 +2,13 @@ import AdminRequest from "../models/AdminRequest.js";
 import AdminUser from "../models/AdminUser.js";
 import User from "../models/Users.js";
 import PasswordReset from "../models/PasswordReset.js";
+import QuizAttempt from "../models/QuizAttempt.js";
+import Progress from "../models/Progress.js";
 import axios from "axios";
+import { sendOtp, verifyMojoAuthToken } from "./helperFunctions.js";
+import redis from "../conf/redis.js";
+import jwt from "jsonwebtoken";
+import bcryptjs from "bcryptjs"; // Ensure bcryptjs is used consistently or check if it was bcrypt
 
 // EmailJS Config
 const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
@@ -501,25 +507,15 @@ export const adminLoginNew = async (req, res) => {
             });
         }
 
-        // Generate OTP
-        const otp = otpGenerator.generate(6, {
-            digits: true,
-            lowerCaseAlphabets: false,
-            upperCaseAlphabets: false,
-            specialChars: false,
-        });
+        // Send OTP via MojoAuth (using helper)
+        const result = await sendOtp({ email }, "admin_login");
 
-        // Store OTP in Redis (5 minutes expiry)
-        await redis.set(`admin_otp:${email}`, otp, { ex: 300 });
-
-        // Send OTP Email
-        const html = otpEmailTemplate(otp);
-        const mailOptions = createMailOptions(
-            email,
-            "Admin Login Verification - Sarvottam Institute",
-            html
-        );
-        await transporter.sendMail(mailOptions);
+        if (!result.success) {
+            return res.status(result.status || 500).json({
+                success: false,
+                message: result.message || "Failed to send OTP"
+            });
+        }
 
         // For ALL admins, require OTP verification
         return res.json({
@@ -540,7 +536,7 @@ export const adminLoginNew = async (req, res) => {
     }
 };
 
-// Send Login OTP (for all admins)
+// Send Login OTP (for all admins / Resend)
 export const sendLoginOTP = async (req, res) => {
     try {
         const { email } = req.body;
@@ -561,29 +557,14 @@ export const sendLoginOTP = async (req, res) => {
             });
         }
 
-        // Generate OTP
-        const otp = otpGenerator.generate(6, {
-            digits: true,
-            lowerCaseAlphabets: false,
-            upperCaseAlphabets: false,
-            specialChars: false,
-        });
+        // Send OTP via MojoAuth
+        const result = await sendOtp({ email }, "admin_login");
 
-        // Store OTP in Redis (5 minutes expiry)
-        await redis.set(`admin_otp:${email}`, otp, { ex: 300 });
-
-        // Send OTP Email
-        const html = otpEmailTemplate(otp);
-        const mailOptions = createMailOptions(
-            email,
-            "Admin Login Verification - Sarvottam Institute",
-            html
-        );
-        await transporter.sendMail(mailOptions);
-
-        // For development: log OTP to console
-        if (process.env.NODE_ENV !== "production") {
-            console.log(`✓ Admin OTP for ${email}: ${otp}`);
+        if (!result.success) {
+            return res.status(result.status || 500).json({
+                success: false,
+                message: result.message || "Failed to send OTP"
+            });
         }
 
         res.json({
@@ -591,8 +572,6 @@ export const sendLoginOTP = async (req, res) => {
             message: "OTP sent to admin email",
             data: {
                 email,
-                // In development, return OTP for testing
-                otp: process.env.NODE_ENV !== "production" ? otp : undefined,
             },
         });
     } catch (error) {
@@ -625,13 +604,22 @@ export const verifyLoginOTP = async (req, res) => {
             });
         }
 
-        // Verify OTP from Redis
-        const storedOtp = await redis.get(`admin_otp:${email}`);
-
-        if (!storedOtp || storedOtp !== otp) {
+        // Retrieve state_id
+        const state_id = await redis.get(`mojoState:${email}`);
+        if (!state_id) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid or expired OTP",
+                message: "OTP Session expired or invalid",
+            });
+        }
+
+        // Verify with MojoAuth
+        try {
+            await verifyMojoAuthToken(otp, state_id);
+        } catch (err) {
+            return res.status(400).json({
+                success: false,
+                message: `Verification Failed: ${err.message}`
             });
         }
 
@@ -647,7 +635,7 @@ export const verifyLoginOTP = async (req, res) => {
         );
 
         // Clear OTP from Redis
-        await redis.del(`admin_otp:${email}`);
+        await redis.del(`mojoState:${email}`);
 
         // Send login confirmation email
         await sendEmail(
@@ -702,24 +690,16 @@ export const forgotPasswordSendOTP = async (req, res) => {
             });
         }
 
-        // Generate OTP
-        const otp = otpGenerator.generate(6, {
-            digits: true,
-            lowerCaseAlphabets: false,
-            upperCaseAlphabets: false,
-            specialChars: false,
-        });
+        // Send OTP via MojoAuth
+        // We use "admin_login" type to bypass the "User" collection check in sendOtp, 
+        // effectively reusing the logic just for sending OTP and setting Redis state.
+        const result = await sendOtp({ email }, "admin_login");
 
-        // Store OTP in Redis (5 minutes expiry)
-        await redis.set(`admin_reset_otp:${email}`, otp, { ex: 300 });
-
-        // Send OTP via email
-        const html = otpEmailTemplate(otp);
-        await sendEmail(email, "Admin Password Reset OTP", html);
-
-        // For development: log OTP to console
-        if (process.env.NODE_ENV !== "production") {
-            console.log(`✓ OTP for ${email}: ${otp}`);
+        if (!result.success) {
+            return res.status(result.status || 500).json({
+                success: false,
+                message: result.message || "Failed to send OTP"
+            });
         }
 
         res.json({
@@ -727,8 +707,6 @@ export const forgotPasswordSendOTP = async (req, res) => {
             message: "OTP sent to your email",
             data: {
                 email,
-                // In development, return OTP for testing
-                otp: process.env.NODE_ENV !== "production" ? otp : undefined,
             },
         });
     } catch (error) {
@@ -768,13 +746,22 @@ export const verifyOTPAndResetPassword = async (req, res) => {
             });
         }
 
-        // Verify OTP from Redis
-        const storedOtp = await redis.get(`admin_reset_otp:${email}`);
-
-        if (!storedOtp || storedOtp !== otp) {
+        // Retrieve state_id
+        const state_id = await redis.get(`mojoState:${email}`);
+        if (!state_id) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid or expired OTP",
+                message: "OTP Session expired or invalid",
+            });
+        }
+
+        // Verify with MojoAuth
+        try {
+            await verifyMojoAuthToken(otp, state_id);
+        } catch (err) {
+            return res.status(400).json({
+                success: false,
+                message: `Verification Failed: ${err.message}`
             });
         }
 
@@ -793,7 +780,7 @@ export const verifyOTPAndResetPassword = async (req, res) => {
         await user.save();
 
         // Clear OTP from Redis
-        await redis.del(`admin_reset_otp:${email}`);
+        await redis.del(`mojoState:${email}`);
 
         // Send confirmation email
         await sendEmail(
@@ -802,9 +789,8 @@ export const verifyOTPAndResetPassword = async (req, res) => {
             `
             <div style="font-family: Arial, sans-serif; padding: 20px;">
                 <h2>Password Reset Successful</h2>
-                <p>Your password has been successfully reset.</p>
-                <p>You can now login with your new password.</p>
-                <p style="color: #666; font-size: 12px;">If you didn't request this change, please contact the master admin immediately.</p>
+                <p>Your admin panel password has been successfully reset.</p>
+                <p>You can now log in with your new password.</p>
             </div>
             `
         );
@@ -818,6 +804,68 @@ export const verifyOTPAndResetPassword = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Error resetting password",
+        });
+    }
+};
+
+// Get All Users (for Admin Analytics)
+export const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find({}, "name email class streak lastLoginDate");
+        res.json({
+            success: true,
+            data: users,
+        });
+    } catch (error) {
+        console.error("Get all users error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error fetching users",
+        });
+    }
+};
+
+// Get Single User Analytics
+export const getUserAnalytics = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "User ID is required",
+            });
+        }
+
+        const user = await User.findById(userId, "-password -refreshTokens");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        // Fetch Quiz Attempts
+        const quizAttempts = await QuizAttempt.find({ user: userId })
+            .populate("quiz", "title topic")
+            .sort({ startTime: -1 });
+
+        // Fetch Study Progress
+        const progress = await Progress.find({ studentId: userId });
+
+        res.json({
+            success: true,
+            data: {
+                user,
+                quizAttempts,
+                progress,
+            },
+        });
+    } catch (error) {
+        console.error("Get user analytics error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error fetching user analytics",
         });
     }
 };

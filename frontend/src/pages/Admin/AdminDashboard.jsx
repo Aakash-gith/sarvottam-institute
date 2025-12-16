@@ -10,6 +10,7 @@ import {
     Settings,
     Menu,
     X,
+    Activity,
 } from "lucide-react";
 import API from "../../api/axios";
 import toast from "react-hot-toast";
@@ -18,62 +19,35 @@ import PYQUpload from "../../components/admin/PYQUpload";
 import EventsManager from "../../components/admin/EventsManager";
 import NotificationsManager from "../../components/admin/NotificationsManager";
 import AdminRequests from "../../components/admin/AdminRequests";
+import AdminUserAnalytics from "../../components/admin/AdminUserAnalytics";
 
 function AdminDashboard() {
+    // ... existing state ...
     const [adminInfo, setAdminInfo] = useState(null);
     const [activeTab, setActiveTab] = useState("overview");
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        fetchAdminInfo();
-    }, []);
+    // ... existing useEffect ...
 
-    const fetchAdminInfo = async () => {
-        try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) {
-                navigate("/admin/login");
-                return;
-            }
+    // ... existing fetchAdminInfo ...
 
-            const response = await API.get("/admin/info");
-            setAdminInfo(response.data.data);
-            setLoading(false);
-        } catch (error) {
-            console.error(error);
-            toast.error("Error loading admin info");
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("adminEmail");
-            navigate("/admin/login");
-        }
-    };
+    // ... existing handleLogout ...
 
-    const handleLogout = () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("adminRole");
-        localStorage.removeItem("adminEmail");
-        navigate("/admin/login");
-        toast.success("Logged out successfully");
-    };
-
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-gray-100">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading admin dashboard...</p>
-                </div>
-            </div>
-        );
-    }
+    // ... existing loading check ...
 
     const menuItems = [
         {
             id: "overview",
             label: "Overview",
             icon: Settings,
+            visible: true,
+        },
+        {
+            id: "analytics",
+            label: "User Analytics",
+            icon: Activity,
             visible: true,
         },
         {
@@ -195,6 +169,7 @@ function AdminDashboard() {
                 {/* Content Area */}
                 <div className="p-8">
                     {activeTab === "overview" && <OverviewTab adminInfo={adminInfo} />}
+                    {activeTab === "analytics" && <AdminUserAnalytics />}
                     {activeTab === "notes" && <NotesUpload />}
                     {activeTab === "pyq" && <PYQUpload />}
                     {activeTab === "events" && <EventsManager />}

@@ -11,6 +11,8 @@ import {
     verifyLoginOTP,
     forgotPasswordSendOTP,
     verifyOTPAndResetPassword,
+    getAllUsers,
+    getUserAnalytics,
 } from "../controllers/admin.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
 import { adminMiddleware, masterAdminMiddleware } from "../middleware/admin.middleware.js";
@@ -31,5 +33,9 @@ router.get("/info", authMiddleware, adminMiddleware, getAdminInfo);
 router.get("/pending-requests", authMiddleware, masterAdminMiddleware, getPendingRequests);
 router.put("/approve/:requestId", authMiddleware, masterAdminMiddleware, approveAdminRequest);
 router.put("/reject/:requestId", authMiddleware, masterAdminMiddleware, rejectAdminRequest);
+
+// User Analytics Routes (Admin only)
+router.get("/users", authMiddleware, adminMiddleware, getAllUsers);
+router.get("/users/:userId/analytics", authMiddleware, adminMiddleware, getUserAnalytics);
 
 export default router;

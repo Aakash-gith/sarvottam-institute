@@ -117,23 +117,27 @@ export const sendOtp = async (user, type = "signup") => {
 
     if (
       (type === "signup" && (!email || !name || !userClass || !password)) ||
-      (type === "reset" && !email)
+      (type === "reset" && !email) ||
+      (type === "admin_login" && !email)
     ) {
       return { success: false, status: 400, message: "All fields required" };
     }
 
-    const exists = await checkUserExists(email);
-    if (type === "signup" && exists)
-      return {
-        success: false,
-        status: 409,
-        message: "Email already registered",
-      };
-    if (type === "reset" && !exists)
-      return { success: false, status: 404, message: "User not found" };
+    // Skip user existence check for admin_login (handled by admin controller)
+    if (type !== "admin_login") {
+      const exists = await checkUserExists(email);
+      if (type === "signup" && exists)
+        return {
+          success: false,
+          status: 409,
+          message: "Email already registered",
+        };
+      if (type === "reset" && !exists)
+        return { success: false, status: 404, message: "User not found" };
+    }
 
-    // Store temp user data if signup/reset
-    if (password) {
+    // Store temp user data if signup/reset (not needed for admin_login)
+    if (password && type !== "admin_login") {
       const hashedPassword = await bcrypt.hash(password, 10);
       const tempData =
         type === "signup"
@@ -200,7 +204,42 @@ export const resendOtp = async (req, res) => {
   }
 };
 
-// VERIFY OTP (MojoAuth)
+// Core Verification Logic (Reusable)
+export const verifyMojoAuthToken = async (otp, state_id) => {
+  try {
+    console.log(`[MojoAuth] Verifying OTP for state ${state_id}`);
+    const verifyResponse = await axios.post(
+      "https://api.mojoauth.com/users/emailotp/verify",
+      { otp, state_id },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-Key": process.env.MOJOAUTH_API_KEY
+        }
+      }
+    );
+
+    const data = verifyResponse.data;
+    const isAuthenticated = data && (
+      data.authenticated === true ||
+      data.user ||
+      data.access_token ||
+      data.oauth_token ||
+      data.refresh_token
+    );
+
+    if (!isAuthenticated) {
+      throw new Error("Verification failed: Valid authentication tokens missing in response");
+    }
+
+    return data;
+  } catch (error) {
+    const msg = error.response?.data?.description || error.message;
+    throw new Error(msg);
+  }
+};
+
+// VERIFY OTP (MojoAuth) - User Controller Handler
 export const verifyOtp = async (req, res) => {
   try {
     const { email, otp, type } = req.body;
@@ -208,59 +247,15 @@ export const verifyOtp = async (req, res) => {
 
     // Retrieve state_id
     const state_id = await redis.get(`mojoState:${email}`);
-    console.log(`[VerifyOtp] Redis state_id: ${state_id}`);
-
     if (!state_id) {
-      console.warn("[VerifyOtp] Missing state_id in Redis");
       return res.status(400).json({ message: "OTP Session expired or invalid" });
     }
 
-    // Verify with MojoAuth (Direct API Call to bypass SDK bug)
-    console.log(`[MojoAuth] Verifying OTP for ${email} with state ${state_id}`);
-
+    // Verify with MojoAuth
     try {
-      const verifyResponse = await axios.post(
-        "https://api.mojoauth.com/users/emailotp/verify",
-        {
-          otp: otp,
-          state_id: state_id
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-API-Key": process.env.MOJOAUTH_API_KEY
-          }
-        }
-      );
-
-      console.log("[MojoAuth] Verify Response Status:", verifyResponse.status);
-      console.log("[MojoAuth] Verify Response Body Type:", typeof verifyResponse.data);
-      console.log("[MojoAuth] Verify Response Body:", JSON.stringify(verifyResponse.data, null, 2));
-
-      // Flexible success check
-      const data = verifyResponse.data;
-      const isAuthenticated = data && (
-        data.authenticated === true ||
-        data.user ||
-        data.access_token ||
-        data.oauth_token ||
-        data.refresh_token // Use refresh_token as proof of success too
-      );
-
-      console.log(`[VerifyOtp] isAuthenticated result: ${!!isAuthenticated}`);
-
-      if (!isAuthenticated) {
-        console.error("[VerifyOtp] isAuthenticated failed despite response data.");
-        throw new Error("Verification failed: Valid authentication tokens missing in response");
-      }
-
-    } catch (apiError) {
-      console.error("[MojoAuth] API Verification Failed (Inner Catch):", apiError.response?.data || apiError.message);
-      const details = apiError.response?.data?.description || apiError.message;
-      return res.status(400).json({
-        message: `Verification Failed: ${details}`, // Append details to message for UI visibility
-        details: details
-      });
+      await verifyMojoAuthToken(otp, state_id);
+    } catch (err) {
+      return res.status(400).json({ message: `Verification Failed: ${err.message}` });
     }
 
     // Proceed with logic
@@ -269,7 +264,6 @@ export const verifyOtp = async (req, res) => {
     if (type === "signup") {
       const tempUserDataRaw = await redis.get(`tempUser:${email}`);
       console.log(`[VerifyOtp] Signup tempUser type: ${typeof tempUserDataRaw}`);
-      console.log(`[VerifyOtp] Signup tempUser value: ${JSON.stringify(tempUserDataRaw)}`);
 
       if (!tempUserDataRaw)
         return res.status(400).json({ message: "Session expired (User Data missing)" });

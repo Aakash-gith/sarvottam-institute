@@ -77,15 +77,30 @@ export default function Login() {
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (status || localStorage.getItem("accessToken")) {
-      navigate("/", { replace: true });
-    }
-  }, [status, navigate]);
+  // REMOVED: Auto-redirect useEffect
+  // useEffect(() => {
+  //   if (status || localStorage.getItem("accessToken")) {
+  //     navigate("/", { replace: true });
+  //   }
+  // }, [status, navigate]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleLogout = () => {
+    // Clear Redux state needs to be handled by an action if available, 
+    // or just clear storage/reload as a simple fix if action not imported here.
+    // Ideally we dispatch a logout action.
+    // But since we didn't import 'logout' action in previous code, let's keep it simple or import it.
+    // Wait, the previous file inspection didn't show 'logout' imported from slice, only 'login'.
+    // Taking a safer approach: standard clear and reload/redirect.
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userId");
+    window.location.reload();
   };
 
   const handleLogin = async (e) => {
@@ -107,6 +122,39 @@ export default function Login() {
       setError(error.response?.data?.message || error.message || "Login failed");
     }
   };
+
+  // If already logged in, show the "Already Logged In" view
+  if (status) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border border-gray-100">
+          <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+            👋
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">You are already logged in</h2>
+          <p className="text-gray-600 mb-8">
+            You are currently logged in as <span className="font-semibold text-blue-600">{useSelector(state => state.auth.userData?.name) || "User"}</span>.
+          </p>
+
+          <div className="space-y-3">
+            <button
+              onClick={() => navigate("/")}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              Go to Dashboard
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="w-full bg-white border border-gray-200 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-50 hover:text-red-600 transition-all duration-200 cursor-pointer"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex">

@@ -29,23 +29,23 @@ function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-16">
+      <div className="bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] text-white mt-16">
         <div className="max-w-7xl mx-auto px-6 py-16 text-center">
           {status ? (
             <>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Welcome back, <span className="text-blue-300">{userData?.name?.split(" ")[0]}</span>! 👋
+                Welcome back, <span className="text-[#d8fbff]">{userData?.name?.split(" ")[0]}</span>! 👋
               </h1>
-              <p className="text-blue-100 text-lg">
+              <p className="text-blue-50 text-lg">
                 Continue your learning journey in Grade {userData?.class === 9 ? "9" : "10"}
               </p>
             </>
           ) : (
             <>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Learn, Practice, Excel in <span className="text-blue-300">Grades 9 & 10</span>
+                Learn, Practice, Excel in <span className="text-[#d8fbff]">Grades 9 & 10</span>
               </h1>
-              <p className="text-blue-100 text-lg mb-8">
+              <p className="text-blue-50 text-lg mb-8">
                 Focused study materials, practice questions, and resources for Maths and Science.
               </p>
               <div className="flex gap-4 justify-center flex-wrap">

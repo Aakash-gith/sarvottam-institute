@@ -5,17 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-bg: #f5f7fa;
+  /* Brand palette aligned to the circular logo */
+  --color-bg: #f4fafc;
   --color-bg-1: #ffffff;
-  --color-bg-2: #eef2f7;
-  --color-accent: #1e40af;
-  --color-accent-1: #3b82f6;
-
-  /* Brand Palette */
-  --color-brand-indigo: #50006c;
-  --color-brand-cream: #f5e8da;
-  --color-brand-dark: #2b192e;
-  --color-brand-rose: #ce8ca5;
+  --color-bg-2: #e3f2f7;
+  --color-accent: #0fb4b3; /* teal */
+  --color-accent-1: #123b70; /* navy */
+  --color-highlight: #f4c542; /* amber from bulb */
 }
 
 body {
@@ -117,85 +113,73 @@ html {
 }
 
 :root {
-  /* Brand Colors (Keep your existing purple as primary) */
-  --brand-primary: #7F2F9F;
-  /* The deep purple from your banner */
-  --brand-secondary: #5D2278;
-  /* A darker shade for gradients/hover */
-  --brand-accent: #3B82F6;
-  /* A bright blue for charts/highlights */
+  /* Brand Colors (logo-aligned) */
+  --brand-primary: #0fb4b3; /* teal */
+  --brand-secondary: #123b70; /* navy */
+  --brand-accent: #f4c542; /* amber accent */
 
   /* Functional Colors */
-  --success: #10B981;
-  /* Green for positive trends/verified status */
-  --warning: #F59E0B;
-  /* Orange for pending items */
-  --danger: #EF4444;
-  /* Red for errors/inactive */
+  --success: #0bbf87;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 
   /* Standard Variables mapped to new palette */
   --radius: 0.625rem;
-  --background: #F3F4F6;
-  /* Clean light grey background */
-  --foreground: #111827;
-  /* Deep near-black */
-  --card: #FFFFFF;
-  --card-foreground: #111827;
-  --popover: #FFFFFF;
-  --popover-foreground: #111827;
-  --primary: #7F2F9F;
-  --primary-foreground: #FFFFFF;
-  --secondary: #F3E8FF;
-  --secondary-foreground: #7F2F9F;
-  --muted: #F3F4F6;
-  --muted-foreground: #6B7280;
-  --accent: #3B82F6;
-  --accent-foreground: #FFFFFF;
-  --destructive: #EF4444;
-  --border: #E5E7EB;
-  --input: #E5E7EB;
-  --ring: #7F2F9F;
+  --background: #f4fafc; /* light teal wash */
+  --foreground: #0f1f3c; /* deep navy text */
+  --card: #ffffff;
+  --card-foreground: #0f1f3c;
+  --popover: #ffffff;
+  --popover-foreground: #0f1f3c;
+  --primary: var(--brand-primary);
+  --primary-foreground: #ffffff;
+  --secondary: #d6f3f5;
+  --secondary-foreground: #0f1f3c;
+  --muted: #e9f2f7;
+  --muted-foreground: #4b5563;
+  --accent: var(--brand-secondary);
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --border: #d7e6f0;
+  --input: #d7e6f0;
+  --ring: var(--brand-primary);
 
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #111827;
+  --sidebar: #f9fcfd;
+  --sidebar-foreground: #0f1f3c;
 
-  /* Legacy Gradient Support (Mapped to new colors for compatibility) */
-  --bg-gradient-light: #F3F4F6;
-  /* Solid Modern Grey */
-  --bg-gradient-dark: #0F172A;
-  /* Solid Deep Navy */
+  /* Background support */
+  --bg-gradient-light: linear-gradient(145deg, #f4fafc 0%, #e7f3f8 100%);
+  --bg-gradient-dark: #0b162b;
 
-  --sidebar-bg: #FFFFFF;
+  --sidebar-bg: #f9fcfd;
 }
 
 .dark {
-  /* DARK MODE Modern Tech */
-  --background: #0F172A;
-  /* Deep navy background */
-  --foreground: #F9FAFB;
-  /* Almost white text */
-  --card: #1E293B;
-  /* Dark slate cards */
-  --card-foreground: #F9FAFB;
-  --popover: #1E293B;
-  --popover-foreground: #F9FAFB;
-  --primary: #7F2F9F;
-  --primary-foreground: #FFFFFF;
-  --secondary: #334155;
-  --secondary-foreground: #F9FAFB;
-  --muted: #1E293B;
-  --muted-foreground: #9CA3AF;
-  --accent: #3B82F6;
-  --accent-foreground: #FFFFFF;
-  --destructive: #EF4444;
-  --border: #374151;
-  --input: #374151;
-  --ring: #7F2F9F;
+  /* DARK MODE tuned to logo palette */
+  --background: #0d1a2b; /* deep navy */
+  --foreground: #e6f1ff; /* soft ice text */
+  --card: #11263d; /* dark slate */
+  --card-foreground: #e6f1ff;
+  --popover: #11263d;
+  --popover-foreground: #e6f1ff;
+  --primary: #22c2c0; /* brighter teal for contrast */
+  --primary-foreground: #041622;
+  --secondary: #132a45;
+  --secondary-foreground: #e6f1ff;
+  --muted: #162f4a;
+  --muted-foreground: #c1d2e8;
+  --accent: #f4c542;
+  --accent-foreground: #0f1f3c;
+  --destructive: #f87171;
+  --border: #1f3651;
+  --input: #1f3651;
+  --ring: #22c2c0;
 
-  --sidebar: #1E293B;
-  --sidebar-foreground: #F9FAFB;
+  --sidebar: #11263d;
+  --sidebar-foreground: #e6f1ff;
 
-  --sidebar-bg: #1E293B;
+  --sidebar-bg: #11263d;
+  --bg-gradient-dark: radial-gradient(circle at 20% 20%, #12304a 0%, #0d1a2b 45%, #0b1623 100%);
 }
 
 @layer base {
@@ -212,5 +196,24 @@ html {
   .dark body {
     background: var(--bg-gradient-dark);
     @apply text-white;
+  }
+
+  /* Lightweight dark-mode rescue styles for utility-first markup */
+  .dark .bg-white {
+    background-color: var(--card) !important;
+  }
+  .dark .text-gray-900 {
+    color: var(--foreground) !important;
+  }
+  .dark .text-gray-800 {
+    color: var(--foreground) !important;
+  }
+  .dark .text-gray-700,
+  .dark .text-gray-600 {
+    color: var(--muted-foreground) !important;
+  }
+  .dark .border-gray-200,
+  .dark .border-gray-100 {
+    border-color: var(--border) !important;
   }
 }

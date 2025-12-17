@@ -115,20 +115,24 @@ function Navbar() {
   return (
     <>
       {/* Top Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 h-16 bg-[var(--background)]/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm z-40 transition-colors duration-300">
+      <nav className="fixed top-0 left-0 right-0 h-16 bg-[var(--background)]/90 dark:bg-[rgba(15,34,61,0.92)] backdrop-blur-md border-b border-slate-200 dark:border-[var(--border)] shadow-sm z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
           {/* Logo */}
           <div
-            className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition flex-shrink-0"
+            className="flex items-center gap-2 cursor-pointer hover:opacity-90 transition flex-shrink-0"
             onClick={() => navigate("/")}
           >
-            <img src={logo} alt="Logo" className="h-10 w-10 object-contain" />
-            <span className="text-xl font-bold text-gray-800 whitespace-nowrap">Sarvottam Institute</span>
+            <img
+              src={logo}
+              alt="Logo"
+              className="h-11 w-11 object-contain rounded-full bg-white dark:bg-[var(--card)] p-1 border border-[var(--border)] shadow-sm"
+            />
+            <span className="text-xl font-bold text-gray-800 dark:text-[var(--foreground)] whitespace-nowrap">Sarvottam Institute</span>
           </div>
 
           {/* Desktop Navigation */}
           {isLoggedIn && (
-            <div className="hidden md:flex items-center gap-6 mx-4">
+            <div className="hidden md:flex items-center gap-3 mx-4">
               {navItems.slice(0, -1).map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.path);
@@ -136,10 +140,11 @@ function Navbar() {
                   <button
                     key={item.name}
                     onClick={() => navigate(item.path)}
-                    className={`flex items-center gap-1 font-medium transition-colors whitespace-nowrap ${active
-                      ? "text-blue-600 border-b-2 border-blue-600"
-                      : "text-gray-600 hover:text-blue-600"
-                      }`}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-full font-medium transition-all whitespace-nowrap cursor-pointer ${
+                      active
+                        ? "text-[var(--brand-secondary)] dark:text-[#e8f4ff] bg-[rgba(15,180,179,0.15)] dark:bg-[rgba(37,201,199,0.18)] border border-[var(--brand-primary)] shadow-[0_6px_16px_-8px_rgba(15,180,179,0.8)]"
+                        : "text-gray-600 dark:text-[var(--muted-foreground)] hover:text-[var(--brand-secondary)] hover:bg-[rgba(15,180,179,0.12)]"
+                    }`}
                   >
                     <Icon size={18} />
                     <span className="text-sm">{item.name}</span>

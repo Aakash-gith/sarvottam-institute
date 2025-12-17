@@ -37,7 +37,17 @@ const progressSchema = new mongoose.Schema(
       default: [],
     },
 
+    notesInProgress: {
+      type: [String],
+      default: [],
+    },
+
     videosCompleted: {
+      type: [String],
+      default: [],
+    },
+
+    videosInProgress: {
       type: [String],
       default: [],
     },

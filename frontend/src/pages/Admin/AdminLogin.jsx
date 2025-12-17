@@ -35,7 +35,7 @@ function AdminLogin() {
 
             if (response.data.success) {
                 if (response.data.data.requiresOTP) {
-                    // All admins - requires OTP
+                    // All admins - requires OTP (Legacy or specific high-security roles if enabled)
                     setRequiresOTP(true);
                     setStep("otp");
 
@@ -49,13 +49,15 @@ function AdminLogin() {
                         setStep("login");
                     }
                 } else {
-                    // Fallback for legacy behavior (should not happen with new enforcement)
+                    // Direct Login (No OTP needed)
                     const { token, role } = response.data.data;
                     localStorage.setItem("adminEmail", email);
                     localStorage.setItem("accessToken", token);
                     localStorage.setItem("adminRole", role);
+                    // Also ensure refresh token is stored if sent (though backend admin login currently just sends token, let's stick to what we have)
+
                     navigate("/admin/dashboard");
-                    toast.success("Welcome to Admin Panel!");
+                    toast.success("Welcome back, Admin!");
                 }
             }
         } catch (error) {

@@ -35,7 +35,7 @@ function Dashboard() {
     <div className="w-full">
       {/* Quick Links */}
       <div className="mb-12">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Access</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Quick Access</h2>
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
           {quickLinks.map((link) => {
             const Icon = link.icon;
@@ -43,7 +43,7 @@ function Dashboard() {
               <Link
                 to={link.path}
                 key={link.name}
-                className={`${link.color} rounded-lg p-6 hover:shadow-md transition cursor-pointer`}
+                className={`${link.color} dark:bg-card dark:text-primary dark:border dark:border-border rounded-lg p-6 hover:shadow-md transition cursor-pointer`}
               >
                 <Icon size={24} className="mb-2" />
                 <h3 className="font-semibold text-sm">{link.name}</h3>
@@ -55,8 +55,8 @@ function Dashboard() {
 
       {/* Your Subjects */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900">Your Subjects</h2>
-        <p className="text-gray-600 text-sm">Continue learning and master your concepts</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Subjects</h2>
+        <p className="text-gray-600 dark:text-muted-foreground text-sm">Continue learning and master your concepts</p>
       </div>
 
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
@@ -65,21 +65,21 @@ function Dashboard() {
             <Link
               to={`/notes/${subject.id}`}
               key={subject.id}
-              className="group relative rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-300 transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br hover:from-blue-50 hover:to-blue-100"
+              className="group relative rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md hover:border-blue-300 dark:hover:border-primary transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br hover:from-blue-50 hover:to-blue-100 dark:bg-none dark:bg-card"
             >
               {/* Content */}
-              <div className="relative h-full flex flex-col justify-between p-6 bg-white group-hover:bg-opacity-95 transition">
+              <div className="relative h-full flex flex-col justify-between p-6 bg-white dark:bg-card group-hover:bg-opacity-95 transition">
                 {/* Top Section - Icon */}
                 <div className="flex justify-between items-start">
                   <div className="text-5xl">{subject.icon}</div>
-                  <ChevronRight size={20} className="text-gray-400 group-hover:text-blue-600 transition-colors transform group-hover:translate-x-1 duration-300" />
+                  <ChevronRight size={20} className="text-gray-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-primary transition-colors transform group-hover:translate-x-1 duration-300" />
                 </div>
 
                 {/* Bottom Section - Title & Description */}
                 <div>
-                  <h3 className="text-gray-900 font-bold text-xl mb-1">{subject.name}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{subject.description}</p>
-                  <div className="mt-4 flex items-center text-blue-600 text-sm group-hover:text-blue-700 transition-colors font-medium">
+                  <h3 className="text-gray-900 dark:text-white font-bold text-xl mb-1">{subject.name}</h3>
+                  <p className="text-gray-600 dark:text-slate-400 text-sm leading-relaxed">{subject.description}</p>
+                  <div className="mt-4 flex items-center text-blue-600 dark:text-primary text-sm group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors font-medium">
                     <span>Start Learning</span>
                     <ChevronRight size={16} className="ml-1" />
                   </div>
@@ -88,15 +88,15 @@ function Dashboard() {
             </Link>
           ))
         ) : (
-          <div className="col-span-2 flex flex-col items-center justify-center gap-3 p-10 border border-dashed border-gray-300 rounded-xl bg-gray-50">
+          <div className="col-span-2 flex flex-col items-center justify-center gap-3 p-10 border border-dashed border-gray-300 dark:border-slate-700 rounded-xl bg-gray-50 dark:bg-slate-900/50">
             <div className="text-3xl">🎯</div>
-            <h3 className="text-lg font-semibold text-gray-800">Your dashboard is empty</h3>
-            <p className="text-sm text-gray-600 text-center max-w-md">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Your dashboard is empty</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 text-center max-w-md">
               Update your class details to see personalised Maths and Science subjects here. You can always change this later from your profile.
             </p>
             <Link
               to="/profile"
-              className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm"
+              className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-blue-600 dark:bg-primary text-white rounded-lg hover:bg-blue-700 dark:hover:bg-cyan-700 transition shadow-sm"
             >
               Go to Profile
               <ChevronRight size={16} />

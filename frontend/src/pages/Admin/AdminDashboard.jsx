@@ -140,7 +140,7 @@ function AdminDashboard() {
             >
                 {/* Logo Area */}
                 <div
-                    className="h-20 flex items-center justify-between px-6 border-b border-brand-indigo/10 dark:border-slate-800 bg-transparent cursor-pointer hover:bg-brand-indigo/5 dark:hover:bg-slate-900 transition-colors group"
+                    className="h-20 flex items-center justify-between px-6 border-b border-blue-500/10 dark:border-slate-800 bg-transparent cursor-pointer hover:bg-blue-500/5 dark:hover:bg-slate-900 transition-colors group"
                     onClick={() => setActiveTab('dashboard')}
                 >
                     <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap">
@@ -158,11 +158,11 @@ function AdminDashboard() {
                             key={item.id}
                             onClick={() => setActiveTab(item.id)}
                             className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group relative overflow-hidden ${activeTab === item.id
-                                ? "bg-gradient-to-r from-brand-indigo to-brand-rose shadow-lg shadow-brand-indigo/20 text-white translate-x-1"
-                                : "text-slate-600 dark:text-slate-400 hover:bg-brand-indigo/5 dark:hover:bg-slate-800 hover:text-brand-indigo dark:hover:text-white hover:translate-x-1"
+                                ? "bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg shadow-blue-500/20 text-white translate-x-1"
+                                : "text-slate-600 dark:text-slate-400 hover:bg-blue-500/5 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-white hover:translate-x-1"
                                 }`}
                         >
-                            <item.icon size={22} className={`min-w-[22px] transition-transform duration-300 ${activeTab === item.id ? "scale-110" : "group-hover:scale-110"}`} />
+                            <item.icon size={22} className={`min-w-[22px] transition-transform duration-300 ${activeTab === item.id ? "scale-110 text-white" : "group-hover:scale-110"}`} />
                             <span className={`whitespace-nowrap font-medium transition-all duration-300 origin-left ${sidebarOpen ? "opacity-100 scale-100" : "opacity-0 scale-0 invisible w-0"}`}>
                                 {item.label}
                             </span>
@@ -176,10 +176,10 @@ function AdminDashboard() {
                 </nav>
 
                 {/* Footer / Toggle */}
-                <div className="p-4 border-t border-brand-indigo/10 dark:border-slate-800 bg-transparent">
+                <div className="p-4 border-t border-blue-500/10 dark:border-slate-800 bg-transparent">
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="w-full flex items-center justify-center p-2 rounded-lg hover:bg-brand-indigo/5 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"
+                        className="w-full flex items-center justify-center p-2 rounded-lg hover:bg-blue-500/5 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"
                     >
                         {sidebarOpen ? <Menu size={20} /> : <ChevronRight size={20} />}
                     </button>
@@ -252,13 +252,34 @@ function AdminDashboard() {
 // Recharts Import (Add to top of file in next step)
 // import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
-const COLORS = ['#7F2F9F', '#CE8CA5'];
+// colors for 3 categories
+const COLORS = ['#7F2F9F', '#CE8CA5', '#4F46E5'];
 
 function OverviewTab({ adminInfo, stats, setActiveTab }) {
-    // Fallback data if stats fail to load for some reason (optional, or just show 0)
+    // Fallback data
     const metrics = stats?.metrics || { totalStudents: 0, activeToday: 0, totalNotes: 0, pendingRequests: 0 };
     const enrollmentData = stats?.charts?.enrollment || [];
-    const contentData = stats?.charts?.contentDistribution || [{ name: 'Notes', value: 0 }, { name: 'PYQs', value: 0 }];
+
+    // Use backend data if available, otherwise fallback to reasonable placeholders
+    let contentData = stats?.charts?.contentDistribution;
+
+    // Only use fallback if the data is genuinely missing or empty
+    if (!contentData || contentData.length === 0) {
+        contentData = [
+            { name: 'Notes', value: metrics.totalNotes || 0 },
+            { name: 'PYQs', value: 0 },
+            { name: 'Tests', value: 0 }
+        ];
+    } else {
+        // Ensure "Notes" is present even if backend sent partial data
+        const notesEntry = contentData.find(d => d.name === 'Notes');
+        if (!notesEntry) {
+            contentData = [
+                { name: 'Notes', value: metrics.totalNotes || 0 },
+                ...contentData
+            ];
+        }
+    }
     const recentAdmissions = stats?.recentAdmissions || [];
 
     return (

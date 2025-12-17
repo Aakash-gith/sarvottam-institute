@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import User from "../models/Users.js";
 import mojoAuth from "../conf/mojoauth.js";
 import axios from "axios";
+import otpGenerator from "otp-generator";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
@@ -81,7 +82,7 @@ const sendOtpEmail = async (email, otp) => {
       accessToken: EMAILJS_PRIVATE_KEY,
       template_params: {
         to_email: email,
-        otp: otp,
+        otp: String(otp), // Force string
         app_name: "Sarvottam Institute"
       }
     };
@@ -152,21 +153,46 @@ export const sendOtp = async (user, type = "signup") => {
 
     // MojoAuth: Send OTP
     const response = await mojoAuth.mojoAPI.signinWithEmailOTP(email, {});
-    console.log("[MojoAuth] Response:", response);
+
+    // Check for error in response
+    if (!response || !response.state_id) {
+      const errorMsg = response?.description || response?.message || "MojoAuth did not return a state_id";
+      throw new Error(errorMsg);
+    }
 
     // Store "state_id" in Redis to verify later
     // MojoAuth response usually contains { state_id: "..." }
     // We map email -> state_id
-    if (response && response.state_id) {
-      await redis.set(`mojoState:${email}`, response.state_id, { ex: 300 }); // 5 min
-    } else {
-      throw new Error("MojoAuth did not return a state_id");
-    }
+    await redis.set(`mojoState:${email}`, response.state_id, { ex: 300 }); // 5 min
 
     return { success: true, status: 200, message: "OTP sent to email" };
   } catch (err) {
-    console.error(`[MojoAuth] Error sending OTP for ${user?.email}:`, err);
-    return { success: false, status: 500, message: "Failed to send OTP", error: err.message };
+    console.error(`[MojoAuth] Error sending OTP for ${user?.email}:`, err.message);
+
+    // Fallback: Try EmailJS directly with local OTP
+    try {
+      console.log("[MojoAuth] Falling back to local EmailJS...");
+      const localOtp = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+        lowerCaseAlphabets: false
+      });
+
+      await sendOtpEmail(user.email, localOtp);
+
+      // Store local state with specialized prefix
+      await redis.set(`mojoState:${user.email}`, `LOCAL:${localOtp}`, { ex: 300 }); // 5 min
+
+      return { success: true, status: 200, message: "OTP sent via alternative method" };
+    } catch (fallbackErr) {
+      console.error("[EmailJS] Fallback failed:", fallbackErr);
+      return {
+        success: false,
+        status: 500,
+        message: `MojoAuth Limit Reached AND Fallback Failed. Mojo: ${err.message}. EmailJS: ${fallbackErr.message}`,
+        error: fallbackErr.message
+      };
+    }
   }
 };
 
@@ -204,9 +230,25 @@ export const resendOtp = async (req, res) => {
   }
 };
 
+
 // Core Verification Logic (Reusable)
 export const verifyMojoAuthToken = async (otp, state_id) => {
   try {
+    // Check for Local Fallback OTP
+    if (state_id && state_id.startsWith("LOCAL:")) {
+      console.log(`[MojoAuth] Verifying LOCAL OTP`);
+      const expectedOtp = state_id.split(":")[1];
+      if (String(otp) === String(expectedOtp)) {
+        return {
+          authenticated: true,
+          user: { email: "verified@local" }, // minimal mock
+          description: "Local Verification Successful"
+        };
+      } else {
+        throw new Error("Invalid OTP");
+      }
+    }
+
     console.log(`[MojoAuth] Verifying OTP for state ${state_id}`);
     const verifyResponse = await axios.post(
       "https://api.mojoauth.com/users/emailotp/verify",

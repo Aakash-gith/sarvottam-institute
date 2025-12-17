@@ -6,6 +6,8 @@ import {
   //   updateSubjectProgress,
   markNoteRead,
   markLectureWatched,
+  markNoteInProgress,
+  markLectureInProgress,
   initSemesterProgress,
 } from "../controllers/progress.controller.js";
 
@@ -23,5 +25,7 @@ progressRoutes.get(
 // progressRoutes.put("/updateSubjectProgress/:subjectId", updateSubjectProgress);
 progressRoutes.post("/markNoteRead", markNoteRead);
 progressRoutes.post("/markLectureWatched", markLectureWatched);
+progressRoutes.post("/markNoteInProgress", markNoteInProgress);
+progressRoutes.post("/markLectureInProgress", markLectureInProgress);
 
 export default progressRoutes;

@@ -9,9 +9,12 @@
   --color-bg: #f4fafc;
   --color-bg-1: #ffffff;
   --color-bg-2: #e3f2f7;
-  --color-accent: #0fb4b3; /* teal */
-  --color-accent-1: #123b70; /* navy */
-  --color-highlight: #f4c542; /* amber from bulb */
+  --color-accent: #0fb4b3;
+  /* teal */
+  --color-accent-1: #123b70;
+  /* navy */
+  --color-highlight: #f4c542;
+  /* amber from bulb */
 }
 
 body {
@@ -114,9 +117,12 @@ html {
 
 :root {
   /* Brand Colors (logo-aligned) */
-  --brand-primary: #0fb4b3; /* teal */
-  --brand-secondary: #123b70; /* navy */
-  --brand-accent: #f4c542; /* amber accent */
+  --brand-primary: #0fb4b3;
+  /* teal */
+  --brand-secondary: #123b70;
+  /* navy */
+  --brand-accent: #f4c542;
+  /* amber accent */
 
   /* Functional Colors */
   --success: #0bbf87;
@@ -125,8 +131,10 @@ html {
 
   /* Standard Variables mapped to new palette */
   --radius: 0.625rem;
-  --background: #f4fafc; /* light teal wash */
-  --foreground: #0f1f3c; /* deep navy text */
+  --background: #f4fafc;
+  /* light teal wash */
+  --foreground: #0f1f3c;
+  /* deep navy text */
   --card: #ffffff;
   --card-foreground: #0f1f3c;
   --popover: #ffffff;
@@ -155,31 +163,44 @@ html {
 }
 
 .dark {
-  /* DARK MODE tuned to logo palette */
-  --background: #0d1a2b; /* deep navy */
-  --foreground: #e6f1ff; /* soft ice text */
-  --card: #11263d; /* dark slate */
-  --card-foreground: #e6f1ff;
-  --popover: #11263d;
-  --popover-foreground: #e6f1ff;
-  --primary: #22c2c0; /* brighter teal for contrast */
-  --primary-foreground: #041622;
-  --secondary: #132a45;
-  --secondary-foreground: #e6f1ff;
-  --muted: #162f4a;
-  --muted-foreground: #c1d2e8;
-  --accent: #f4c542;
-  --accent-foreground: #0f1f3c;
-  --destructive: #f87171;
-  --border: #1f3651;
-  --input: #1f3651;
-  --ring: #22c2c0;
+  /* DARK MODE: Provided Image Specs (Deep Navy + Teal) */
+  --background: #020617;
+  /* Deep Navy (Main Page) */
+  --foreground: #ffffff;
+  /* Primary Headings (White) */
+  --card: #1e293b;
+  /* Card Surface (Slate-800) */
+  --card-foreground: #ffffff;
+  --popover: #1e293b;
+  --popover-foreground: #ffffff;
+  --primary: #0891b2;
+  /* Brand Teal (Primary Buttons/Links) */
+  --primary-foreground: #ffffff;
+  --secondary: #0f172a;
+  /* Navy Surface (Slate-900) */
+  --secondary-foreground: #9ca3af;
+  --muted: #0f172a;
+  --muted-foreground: #9ca3af;
+  /* Body Text (Gray-400) */
+  --accent: #f59e0b;
+  /* Accent Gold */
+  --accent-foreground: #020617;
+  --destructive: #ef4444;
+  --border: #334155;
+  /* Border Line (Slate-700) */
+  --input: #334155;
+  --ring: #0891b2;
+  /* Brand Teal */
 
-  --sidebar: #11263d;
-  --sidebar-foreground: #e6f1ff;
+  --sidebar: #020617;
+  --sidebar-foreground: #ffffff;
+  --sidebar-bg: #020617;
 
-  --sidebar-bg: #11263d;
-  --bg-gradient-dark: radial-gradient(circle at 20% 20%, #12304a 0%, #0d1a2b 45%, #0b1623 100%);
+  --bg-banner-gradient: linear-gradient(to right, #0f172a, #1e3a8a);
+  /* Slate 900 to Brand Dark */
+
+  --bg-gradient-dark: #020617;
+  /* Solid Deep Navy Background */
 }
 
 @layer base {
@@ -202,16 +223,20 @@ html {
   .dark .bg-white {
     background-color: var(--card) !important;
   }
+
   .dark .text-gray-900 {
     color: var(--foreground) !important;
   }
+
   .dark .text-gray-800 {
     color: var(--foreground) !important;
   }
+
   .dark .text-gray-700,
   .dark .text-gray-600 {
     color: var(--muted-foreground) !important;
   }
+
   .dark .border-gray-200,
   .dark .border-gray-100 {
     border-color: var(--border) !important;

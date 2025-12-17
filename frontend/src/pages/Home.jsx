@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { Dashboard, Calendar, CreateEvent } from "../components/index.components";
+import { Dashboard, Calendar, CreateEvent } from "../components/index.components"; // Keep old dashboard for now just in case, but we use StudentDashboard
+import StudentDashboard from "../components/StudentDashboard";
 import GradeCard from "../components/GradeCard";
 import { BookOpen, Brain, Zap, ArrowRight, CheckCircle } from "lucide-react";
 import { Helmet } from "react-helmet-async";
@@ -21,37 +22,39 @@ function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-background dark:to-background">
       <Helmet>
         <title>Home | Sarvottam Institute</title>
         <meta name="description" content="Sarvottam Institute - Excellence in Education for Grades 9 & 10" />
       </Helmet>
       <Navbar />
 
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] text-white mt-16">
-        <div className="max-w-7xl mx-auto px-6 py-16 text-center">
-          {status ? (
-            <>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Welcome back, <span className="text-[#d8fbff]">{userData?.name?.split(" ")[0]}</span>! 👋
-              </h1>
-              <p className="text-blue-50 text-lg">
-                Continue your learning journey in Grade {userData?.class === 9 ? "9" : "10"}
-              </p>
-            </>
-          ) : (
-            <>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 py-8 flex-1 mt-16">
+        {status ? (
+          <>
+            {/* For Logged In Users - New Student Dashboard */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+              <div className="lg:col-span-3">
+                {/* Student Dashboard handles its own header and stats now */}
+                <StudentDashboard />
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* For Non-Logged In Users - Hero & Landing */}
+            <div className="bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] text-white rounded-3xl p-12 text-center mb-12 shadow-xl">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
                 Learn, Practice, Excel in <span className="text-[#d8fbff]">Grades 9 & 10</span>
               </h1>
-              <p className="text-blue-50 text-lg mb-8">
+              <p className="text-blue-50 text-lg mb-8 max-w-2xl mx-auto">
                 Focused study materials, practice questions, and resources for Maths and Science.
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <button
                   onClick={() => navigate("/auth/signup")}
-                  className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition"
+                  className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition shadow-lg"
                 >
                   Get Started
                 </button>
@@ -62,46 +65,25 @@ function Home() {
                   Login
                 </button>
               </div>
-              <p className="text-blue-100 text-sm mt-6">Join thousands of students excelling in Maths and Science</p>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12 flex-1">
-        {status ? (
-          <>
-            {/* For Logged In Users - Dashboard and Calendar */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-              <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-                <Dashboard />
-              </div>
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 overflow-y-auto max-h-96">
-                <Calendar refresh={refreshEvents} />
-              </div>
             </div>
-          </>
-        ) : (
-          <>
-            {/* For Non-Logged In Users */}
+
             {/* Explore Subjects Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">Explore Subjects</h2>
-              <p className="text-gray-600 mb-8">
+            <div className="bg-white dark:bg-card rounded-xl shadow-sm border border-gray-200 dark:border-border p-12 text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">Explore Subjects</h2>
+              <p className="text-gray-600 dark:text-muted-foreground mb-8">
                 Focused learning resources for Mathematics and Science for grades 9 and 10
               </p>
-              <div className="inline-block bg-blue-50 rounded-lg p-8 w-full max-w-2xl">
+              <div className="inline-block bg-blue-50 dark:bg-slate-900/50 rounded-lg p-8 w-full max-w-2xl">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col items-center p-6 bg-white rounded-lg border border-blue-200">
+                  <div className="flex flex-col items-center p-6 bg-white dark:bg-card rounded-lg border border-blue-200 dark:border-slate-700">
                     <div className="text-4xl mb-3">🔢</div>
-                    <h3 className="text-lg font-semibold text-gray-900">Mathematics</h3>
-                    <p className="text-gray-600 text-sm mt-2">Algebra, Geometry, Statistics and more</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Mathematics</h3>
+                    <p className="text-gray-600 dark:text-slate-400 text-sm mt-2">Algebra, Geometry, Statistics and more</p>
                   </div>
-                  <div className="flex flex-col items-center p-6 bg-white rounded-lg border border-blue-200">
+                  <div className="flex flex-col items-center p-6 bg-white dark:bg-card rounded-lg border border-blue-200 dark:border-slate-700">
                     <div className="text-4xl mb-3">🧪</div>
-                    <h3 className="text-lg font-semibold text-gray-900">Science</h3>
-                    <p className="text-gray-600 text-sm mt-2">Physics, Chemistry, Biology and more</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Science</h3>
+                    <p className="text-gray-600 dark:text-slate-400 text-sm mt-2">Physics, Chemistry, Biology and more</p>
                   </div>
                 </div>
               </div>

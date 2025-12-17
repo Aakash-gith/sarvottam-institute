@@ -15,11 +15,13 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.userId).select("-password -securityAnswer");
+    // Support id, userId, and _id (from admin controller)
+    const userIdToFind = decoded.id || decoded.userId || decoded._id;
+    req.user = await User.findById(userIdToFind).select("-password -securityAnswer");
 
     if (!req.user) {
       console.log("AuthMiddleware: User not found in DB");
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res.status(401).json({ success: false, message: "User not found" });
     }
 
     req.token = token;

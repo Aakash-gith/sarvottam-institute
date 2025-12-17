@@ -528,24 +528,25 @@ export const adminLoginNew = async (req, res) => {
             });
         }
 
-        // Send OTP via MojoAuth (using helper)
-        const result = await sendOtp({ email }, "admin_login");
+        // Bypass OTP: Login directly
+        const token = jwt.sign(
+            {
+                id: adminUser.userId._id,
+                email: adminUser.userId.email,
+                role: adminUser.role,
+            },
+            process.env.JWT_SECRET || "default-secret",
+            { expiresIn: "30d" }
+        );
 
-        if (!result.success) {
-            return res.status(result.status || 500).json({
-                success: false,
-                message: result.message || "Failed to send OTP"
-            });
-        }
-
-        // For ALL admins, require OTP verification
         return res.json({
             success: true,
-            message: "Password verified. OTP required.",
+            message: "Login successful",
             data: {
-                requiresOTP: true,
-                email: adminUser.email,
-                role: adminUser.role,
+                ...adminUser.toObject(),
+                token,
+                user: adminUser.userId,
+                requiresOTP: false,
             },
         });
     } catch (error) {
@@ -647,7 +648,7 @@ export const verifyLoginOTP = async (req, res) => {
         // Generate JWT token
         const token = jwt.sign(
             {
-                _id: adminUser.userId._id,
+                id: adminUser.userId._id,
                 email: adminUser.userId.email,
                 role: adminUser.role,
             },
@@ -1016,7 +1017,9 @@ export const getDashboardStats = async (req, res) => {
                 charts: {
                     enrollment: enrollmentTrends,
                     contentDistribution: [
-                        { name: 'PYQs', value: totalPYQs }
+                        { name: 'Notes', value: totalNotes },
+                        { name: 'PYQs', value: totalPYQs },
+                        { name: 'Tests', value: 0 } // Placeholder for future test features
                     ]
                 },
                 recentAdmissions

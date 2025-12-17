@@ -248,20 +248,21 @@ export const markNoteRead = async (req, res) => {
       return res.status(200).json({ message: "Note marked as read", progress });
     }
 
-    // If already marked, do nothing (idempotent)
-    if (
-      Array.isArray(progress.notesCompleted) &&
-      progress.notesCompleted.includes(noteIdStr)
-    ) {
-      return res
-        .status(200)
-        .json({ message: "Note already marked as read", progress });
+    // Check if already marked
+    const isAlreadyMarked = Array.isArray(progress.notesCompleted) && progress.notesCompleted.includes(noteIdStr);
+    let isChanged = false;
+
+    if (!isAlreadyMarked) {
+      progress.notesCompleted.push(noteIdStr);
+      // Remove from In Progress if it exists there
+      if (progress.notesInProgress && progress.notesInProgress.includes(noteIdStr)) {
+        progress.notesInProgress = progress.notesInProgress.filter(id => id !== noteIdStr);
+      }
+      progress.notesRead = progress.notesCompleted.length; // Sync count with array
+      isChanged = true;
     }
 
-    // Mark as read
-    progress.notesCompleted.push(noteIdStr);
-    progress.notesRead = (progress.notesRead || 0) + 1;
-
+    // Always re-calculate completion to self-correct if totals changed
     const completion = computeCompletion({
       totalNotes: totalNotesNum,
       totalLectures: totalLecturesNum,
@@ -269,23 +270,84 @@ export const markNoteRead = async (req, res) => {
       videosCompletedCount: progress.videosCompleted?.length || 0,
     });
 
-    if (typeof completion === "number") {
+    if (typeof completion === "number" && progress.completion !== completion) {
       progress.completion = completion;
+      isChanged = true;
     }
 
-    progress.lastUpdated = new Date();
+    if (isChanged) {
+      progress.lastUpdated = new Date();
+      // Force Mongoose to recognize the array change if needed
+      if (!isAlreadyMarked) {
+        progress.notesCompleted = [...progress.notesCompleted];
+        progress.notesInProgress = [...(progress.notesInProgress || [])];
+      }
+      await progress.save();
+    }
 
-    // Force Mongoose to recognize the array change
-    progress.notesCompleted = [...progress.notesCompleted];
-
-    await progress.save();
-
-    return res.status(200).json({ message: "Note marked as read", progress });
+    return res.status(200).json({ message: isAlreadyMarked ? "Note already marked" : "Note marked as read", progress });
   } catch (error) {
     console.error("markNoteRead error:", error);
     return res.status(500).json({ message: "Internal server error", error: error.message });
   }
 };
+
+// ---- mark note in progress ----
+export const markNoteInProgress = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const { subjectId, classId, noteId } = req.body;
+    if (!subjectId || !classId || !noteId) {
+      return res.status(400).json({ message: "subjectId, classId and noteId required" });
+    }
+
+    const subjectIdNum = parseInt(subjectId, 10);
+    const classIdNum = parseInt(classId, 10);
+    const noteIdStr = String(noteId);
+
+    let progress = await Progress.findOne({
+      studentId: userId,
+      subjectId: subjectIdNum,
+      classId: classIdNum,
+    });
+
+    if (!progress) {
+      // Create new record
+      progress = new Progress({
+        studentId: userId,
+        subjectId: subjectIdNum,
+        classId: classIdNum,
+        notesInProgress: [noteIdStr],
+        lastUpdated: new Date()
+      });
+      await progress.save();
+      return res.status(200).json({ message: "Note marked in progress", progress });
+    }
+
+    // If already completed, ignore (or could move back to in-progress if that's desired behavior? User said "when marked complete, in progress should be normalised", implying removed from in-progress. But if moving FROM complete TO in-progress? Let's assume this is strictly for "Starting" a chapter).
+    // For now: If completed, don't mark in progress.
+    if (progress.notesCompleted && progress.notesCompleted.includes(noteIdStr)) {
+      return res.status(200).json({ message: "Note already completed", progress });
+    }
+
+    // Add to in-progress if not already there
+    if (!progress.notesInProgress) progress.notesInProgress = [];
+    if (!progress.notesInProgress.includes(noteIdStr)) {
+      progress.notesInProgress.push(noteIdStr);
+      progress.lastUpdated = new Date();
+      await progress.save();
+    }
+
+    return res.status(200).json({ message: "Note marked in progress", progress });
+
+  } catch (error) {
+    console.error("markNoteInProgress error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 // ----  mark a lecture video as watched ----
 
@@ -308,6 +370,8 @@ export const markLectureWatched = async (req, res) => {
     const subjectIdNum = parseInt(subjectId, 10);
     const classIdNum = parseInt(classId, 10);
     const videoIdStr = String(videoId);
+    const totalNotesNum = parseInt(totalNotes, 10) || 0;
+    const totalLecturesNum = parseInt(totalLectures, 10) || 0;
 
     let progress = await Progress.findOne({
       studentId: userId,
@@ -321,8 +385,8 @@ export const markLectureWatched = async (req, res) => {
       const notesCompleted = [];
 
       const completion = computeCompletion({
-        totalNotes,
-        totalLectures,
+        totalNotes: totalNotesNum,
+        totalLectures: totalLecturesNum,
         notesCompletedCount: notesCompleted.length,
         videosCompletedCount: videosCompleted.length,
       });
@@ -344,44 +408,100 @@ export const markLectureWatched = async (req, res) => {
         .json({ message: "Lecture marked as watched", progress });
     }
 
-    // If already marked, do nothing
-    if (
-      Array.isArray(progress.videosCompleted) &&
-      progress.videosCompleted.includes(videoIdStr)
-    ) {
-      return res
-        .status(200)
-        .json({ message: "Lecture already marked as watched", progress });
+    // Check if already marked
+    const isAlreadyMarked = Array.isArray(progress.videosCompleted) && progress.videosCompleted.includes(videoIdStr);
+    let isChanged = false;
+
+    if (!isAlreadyMarked) {
+      progress.videosCompleted.push(videoIdStr);
+      // Remove from In Progress
+      if (progress.videosInProgress && progress.videosInProgress.includes(videoIdStr)) {
+        progress.videosInProgress = progress.videosInProgress.filter(id => id !== videoIdStr);
+      }
+      progress.lecturesWatched = progress.videosCompleted.length; // Sync count
+      isChanged = true;
     }
 
-    // Mark as watched
-    progress.videosCompleted.push(videoIdStr);
-    progress.lecturesWatched = (progress.lecturesWatched || 0) + 1;
-
+    // Always re-calculate completion
     const completion = computeCompletion({
-      totalNotes,
-      totalLectures,
+      totalNotes: totalNotesNum,
+      totalLectures: totalLecturesNum,
       notesCompletedCount: progress.notesCompleted?.length || 0,
       videosCompletedCount: progress.videosCompleted.length,
     });
 
-    if (typeof completion === "number") {
+    if (typeof completion === "number" && progress.completion !== completion) {
       progress.completion = completion;
+      isChanged = true;
     }
 
-    progress.lastUpdated = new Date();
-
-    // Force Mongoose to recognize the array change
-    progress.videosCompleted = [...progress.videosCompleted];
-
-    await progress.save();
-    console.log("Lecture marked as watched and saved:", { videoId: videoIdStr, videosCompleted: progress.videosCompleted });
+    if (isChanged) {
+      progress.lastUpdated = new Date();
+      if (!isAlreadyMarked) {
+        progress.videosCompleted = [...progress.videosCompleted];
+        progress.videosInProgress = [...(progress.videosInProgress || [])];
+      }
+      await progress.save();
+    }
 
     return res
       .status(200)
-      .json({ message: "Lecture marked as watched", progress });
+      .json({ message: isAlreadyMarked ? "Lecture already watched" : "Lecture marked as watched", progress });
   } catch (error) {
     console.error("markLectureWatched error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// ---- mark video in progress ----
+export const markLectureInProgress = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const { subjectId, classId, videoId } = req.body;
+    if (!subjectId || !classId || !videoId) {
+      return res.status(400).json({ message: "subjectId, classId and videoId required" });
+    }
+
+    const subjectIdNum = parseInt(subjectId, 10);
+    const classIdNum = parseInt(classId, 10);
+    const videoIdStr = String(videoId);
+
+    let progress = await Progress.findOne({
+      studentId: userId,
+      subjectId: subjectIdNum,
+      classId: classIdNum,
+    });
+
+    if (!progress) {
+      // Create new
+      progress = new Progress({
+        studentId: userId,
+        subjectId: subjectIdNum,
+        classId: classIdNum,
+        videosInProgress: [videoIdStr],
+        lastUpdated: new Date()
+      });
+      await progress.save();
+      return res.status(200).json({ message: "Video marked in progress", progress });
+    }
+
+    if (progress.videosCompleted && progress.videosCompleted.includes(videoIdStr)) {
+      return res.status(200).json({ message: "Video already completed", progress });
+    }
+
+    if (!progress.videosInProgress) progress.videosInProgress = [];
+    if (!progress.videosInProgress.includes(videoIdStr)) {
+      progress.videosInProgress.push(videoIdStr);
+      progress.lastUpdated = new Date();
+      await progress.save();
+    }
+
+    return res.status(200).json({ message: "Video marked in progress", progress });
+
+  } catch (error) {
+    console.error("markLectureInProgress error:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

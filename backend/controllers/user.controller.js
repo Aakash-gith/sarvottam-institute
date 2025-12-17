@@ -1,4 +1,6 @@
 import User from "../models/Users.js";
+import Notification from "../models/Notification.js";
+
 import QuizAttempt from "../models/QuizAttempt.js";
 import multer from "multer";
 import path from "path";
@@ -380,3 +382,53 @@ export const getProfilePicture = async (req, res) => {
     });
   }
 };
+
+// Get Notifications for User
+export const getNotifications = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+    // Fetch notifications:
+    // 1. targetAudience is "all" 
+    // 2. OR targetAudience is "class" AND targetClass matches user.class
+    const notifications = await Notification.find({
+      $or: [
+        { targetAudience: "all" },
+        { targetAudience: "class", targetClass: String(user.class) }
+      ]
+    }).sort({ createdAt: -1 }).limit(20);
+
+    // Count unread
+    const unreadCount = notifications.filter(n => !n.readBy.includes(userId)).length;
+
+    res.json({
+      success: true,
+      data: notifications,
+      unreadCount
+    });
+  } catch (error) {
+    console.error("Get Notifications Error:", error);
+    res.status(500).json({ success: false, message: "Error fetching notifications" });
+  }
+};
+
+// Mark Notification as Read
+export const markNotificationRead = async (req, res) => {
+  try {
+    const { notificationId } = req.params;
+    const userId = req.user.id;
+
+    await Notification.findByIdAndUpdate(notificationId, {
+      $addToSet: { readBy: userId }
+    });
+
+    res.json({ success: true, message: "Marked as read" });
+  } catch (error) {
+    console.error("Mark Read Error:", error);
+    res.status(500).json({ success: false, message: "Error marking notification as read" });
+  }
+};
+

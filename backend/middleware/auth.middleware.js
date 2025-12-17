@@ -1,25 +1,32 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import User from "../models/Users.js"; // Added User import
 
 dotenv.config();
 
-const authMiddleware = (req, res, next) => {
+// Auth Middleware (Updated)
+const authMiddleware = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    // console.log("AuthMiddleware Token:", token ? "Present" : "Missing");
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: "No token provided" });
     }
 
-    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.userId).select("-password -securityAnswer");
 
-    req.user = decoded; 
+    if (!req.user) {
+      console.log("AuthMiddleware: User not found in DB");
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    req.token = token;
     next();
   } catch (error) {
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expired" });
-    }
-    return res.status(403).json({ message: "Invalid token" });
+    console.error("Auth Middleware Error:", error.message);
+    res.status(401).json({ success: false, message: "Invalid or expired token" });
   }
 };
 

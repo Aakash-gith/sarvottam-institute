@@ -32,11 +32,10 @@ function NotificationsManager() {
 
         setLoading(true);
 
-        try {
-            // API endpoint would be created for notifications
-            // const response = await API.post("/admin/send-notification", formData);
 
-            // For now, simulate success
+        try {
+            await API.post("/admin/send-notification", formData);
+
             toast.success("Notification sent successfully!");
             setSent(true);
 

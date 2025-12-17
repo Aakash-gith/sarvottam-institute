@@ -1,14 +1,22 @@
 import AdminRequest from "../models/AdminRequest.js";
 import AdminUser from "../models/AdminUser.js";
 import User from "../models/Users.js";
+import Notification from "../models/Notification.js"; // Added Import
 import PasswordReset from "../models/PasswordReset.js";
 import QuizAttempt from "../models/QuizAttempt.js";
 import Progress from "../models/Progress.js";
+import SubjectNotes from "../models/SubjectNotes.js"; // Added SubjectNotes import if not already there (it wasn't in the view_file of top 800 lines? Wait, let me check view_file 1112)
 import axios from "axios";
 import { sendOtp, verifyMojoAuthToken } from "./helperFunctions.js";
 import redis from "../conf/redis.js";
 import jwt from "jsonwebtoken";
-import bcryptjs from "bcryptjs"; // Ensure bcryptjs is used consistently or check if it was bcrypt
+import bcryptjs from "bcryptjs";
+import path from "path";
+import fs from "fs/promises";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // EmailJS Config
 const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
@@ -423,9 +431,22 @@ export const getAdminInfo = async (req, res) => {
             });
         }
 
+        let responseData = adminUser.toObject();
+
+        // Grant full permissions to master_admin
+        if (adminUser.role === "master_admin") {
+            responseData.permissions = {
+                uploadNotes: true,
+                uploadPYQ: true,
+                manageEvents: true,
+                sendNotifications: true,
+                manageAdmins: true,
+            };
+        }
+
         res.json({
             success: true,
-            data: adminUser,
+            data: responseData,
         });
     } catch (error) {
         console.error("Get admin info error:", error);
@@ -869,3 +890,233 @@ export const getUserAnalytics = async (req, res) => {
         });
     }
 };
+
+// Get Dashboard Stats
+export const getDashboardStats = async (req, res) => {
+    console.log("HITTING DASHBOARD STATS ENDPOINT");
+    try {
+        // 1. Total Students
+        const totalStudents = await User.countDocuments({});
+        console.log("Total Students:", totalStudents);
+
+        // 2. Active Today (logged in since midnight)
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+        const activeToday = await User.countDocuments({ lastLoginDate: { $gte: startOfToday } });
+        console.log("Active Today:", activeToday);
+
+        // 3. Total Notes (Aggregation across all SubjectNotes + HTML Static Notes)
+        const allNotesDocs = await SubjectNotes.find({});
+        const dbNotesCount = allNotesDocs.reduce((acc, doc) => acc + (doc.notes ? doc.notes.length : 0), 0);
+
+        // Helper to count HTML files recursively
+        const countHtmlFiles = async (dir) => {
+            let count = 0;
+            try {
+                const entries = await fs.readdir(dir, { withFileTypes: true });
+                for (const entry of entries) {
+                    const res = path.resolve(dir, entry.name);
+                    if (entry.isDirectory()) {
+                        count += await countHtmlFiles(res);
+                    } else if (entry.isFile() && entry.name.endsWith('.html')) {
+                        count++;
+                    }
+                }
+            } catch (e) {
+                // Ignore if directory doesn't exist
+            }
+            return count;
+        };
+
+        const grade10NotesPath = path.join(__dirname, "..", "..", "grade10");
+        const grade9NotesPath = path.join(__dirname, "..", "..", "grade9");
+
+        const grade10HtmlCount = await countHtmlFiles(grade10NotesPath);
+        const grade9HtmlCount = await countHtmlFiles(grade9NotesPath);
+
+        const totalNotes = dbNotesCount + grade10HtmlCount + grade9HtmlCount;
+
+        console.log(`Total Notes: ${totalNotes} (DB: ${dbNotesCount}, G10 HTML: ${grade10HtmlCount}, G9 HTML: ${grade9HtmlCount})`);
+
+        // 4. Pending Requests
+        const pendingRequests = await AdminRequest.countDocuments({ status: "pending" });
+        console.log("Pending Requests:", pendingRequests);
+
+        // 5. Total PYQs (from JSON manifest)
+        const pyqManifestPath = path.join(__dirname, "..", "..", "grade10", "PYQ", "pyq-list.json");
+        let totalPYQs = 0;
+        try {
+            const raw = await fs.readFile(pyqManifestPath, "utf-8");
+            const manifest = JSON.parse(raw);
+            totalPYQs = Object.values(manifest).reduce((acc, subjectList) => acc + (Array.isArray(subjectList) ? subjectList.length : 0), 0);
+        } catch (e) {
+            console.warn("PYQ Manifest read error:", e.message);
+        }
+
+        // 6. Enrollment Trends (Cumulative Growth over Last 30 Days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const enrollmentRaw = await User.aggregate([
+            { $match: { createdAt: { $gte: thirtyDaysAgo } } },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { "_id": 1 } }
+        ]);
+
+        const studentsBefore30Days = await User.countDocuments({ createdAt: { $lt: thirtyDaysAgo } });
+        let cumulative = studentsBefore30Days;
+
+        const enrollmentTrends = [];
+        for (let i = 29; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const dateStr = d.toISOString().split('T')[0];
+            const found = enrollmentRaw.find(r => r._id === dateStr);
+            const dailyCount = found ? found.count : 0;
+            cumulative += dailyCount;
+
+            enrollmentTrends.push({
+                name: new Date(dateStr).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }),
+                students: cumulative
+            });
+        }
+
+        // 7. Recent Admissions (Last 72 Hours)
+        const seventyTwoHoursAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
+        console.log("Fetching admissions since:", seventyTwoHoursAgo);
+
+        const recentAdmissionsRaw = await User.find({
+            createdAt: { $gte: seventyTwoHoursAgo }
+        }).sort({ createdAt: -1 }).limit(10).select("name class createdAt streak");
+
+        const recentAdmissions = recentAdmissionsRaw.map(u => ({
+            id: u._id,
+            name: u.name,
+            course: `Class ${u.class}`,
+            date: new Date(u.createdAt).toLocaleDateString() + " " + new Date(u.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            status: u.streak > 0 ? "Active" : "New"
+        }));
+
+        console.log("Recent Admissions Found:", recentAdmissions.length);
+
+        res.json({
+            success: true,
+            data: {
+                metrics: {
+                    totalStudents,
+                    activeToday,
+                    totalNotes,
+                    pendingRequests
+                },
+                charts: {
+                    enrollment: enrollmentTrends,
+                    contentDistribution: [
+                        { name: 'PYQs', value: totalPYQs }
+                    ]
+                },
+                recentAdmissions
+            }
+        });
+
+    } catch (error) {
+        console.error("Dashboard stats CRITICAL error:", error);
+        res.status(500).json({ success: false, message: "Error loading dashboard data" });
+    }
+};
+
+// Get All Admins
+export const getAllAdmins = async (req, res) => {
+    try {
+        console.log("getAllAdmins called by:", req.user?.userId);
+        const admins = await AdminUser.find().populate("userId", "name email profilePicture");
+        res.json({
+            success: true,
+            data: admins
+        });
+    } catch (error) {
+        console.error("Get All Admins Error:", error);
+        res.status(500).json({ success: false, message: "Error fetching admins" });
+    }
+};
+
+// Update Admin Permissions (Master Only)
+export const updateAdminPermissions = async (req, res) => {
+    try {
+        const { adminId } = req.params;
+        const { permissions } = req.body;
+
+        const admin = await AdminUser.findById(adminId);
+        if (!admin) return res.status(404).json({ success: false, message: "Admin not found" });
+
+        if (admin.role === 'master_admin') {
+            return res.status(403).json({ success: false, message: "Cannot modify Master Admin permissions" });
+        }
+
+        admin.permissions = { ...admin.permissions, ...permissions };
+        await admin.save();
+
+        res.json({ success: true, message: "Permissions updated successfully", data: admin });
+    } catch (error) {
+        console.error("Update Permissions Error:", error);
+        res.status(500).json({ success: false, message: "Error updating permissions" });
+    }
+};
+
+// Toggle Admin Access (Revoke/Grant) (Master Only)
+export const toggleAdminAccess = async (req, res) => {
+    try {
+        const { adminId } = req.params;
+        const { isActive } = req.body; // true = Grant, false = Revoke
+
+        const admin = await AdminUser.findById(adminId);
+        if (!admin) return res.status(404).json({ success: false, message: "Admin not found" });
+
+        if (admin.role === 'master_admin') {
+            return res.status(403).json({ success: false, message: "Cannot revoke Master Admin access" });
+        }
+
+        admin.isActive = isActive;
+        await admin.save();
+
+        res.json({ success: true, message: `Admin access ${isActive ? 'granted' : 'revoked'}` });
+    } catch (error) {
+        console.error("Toggle Access Error:", error);
+        res.status(500).json({ success: false, message: "Error updating access" });
+    }
+};
+
+// Send Notification
+export const sendNotification = async (req, res) => {
+    try {
+        const { title, message, targetAudience, class: targetClass, priority } = req.body;
+
+        if (!title || !message) {
+            return res.status(400).json({ success: false, message: "Title and message are required" });
+        }
+
+        const newNotification = new Notification({
+            title,
+            message,
+            targetAudience,
+            targetClass,
+            priority
+        });
+
+        await newNotification.save();
+
+        res.status(201).json({
+            success: true,
+            message: "Notification sent successfully",
+            data: newNotification
+        });
+    } catch (error) {
+        console.error("Send Notification Error:", error);
+        res.status(500).json({ success: false, message: "Error sending notification" });
+    }
+};
+

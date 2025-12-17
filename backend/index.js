@@ -34,6 +34,10 @@ const app = express();
 // reset Core Middleware reset
 app.use(cookieParser());
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log(`[REQUEST] ${req.method} ${req.url}`);
+  next();
+});
 
 // CORS configuration - accept localhost on any port for development
 const corsOptions = {
@@ -76,6 +80,7 @@ app.get("/", (req, res) => {
 
 // reset API Routes reset
 app.use("/api/auth", authRoutes);
+console.log("Mounting /api/admin routes...");
 app.use("/api/admin", adminRoutes);
 app.use("/api/event", authMiddleware, eventRoutes);
 app.use("/api/task", authMiddleware, taskRoutes);
@@ -98,7 +103,16 @@ app.use(express.static(frontendPath));
 //   res.sendFile(path.join(frontendPath, "index.html"));
 // });
 // reset 404 Fallback reset
+// Direct debug route
+app.post("/api/admin/send-notification", (req, res) => {
+  console.log("Direct route /api/admin/send-notification HIT!");
+  // We can even try to call the controller here if we import it, but let's just return success first.
+  res.status(200).json({ success: true, message: "Direct route works!" });
+});
+
+// reset 404 Fallback reset
 app.use((req, res) => {
+  console.log(`[404] Route not found: ${req.method} ${req.url}`);
   res.status(404).json({ message: "Route not found" });
 });
 

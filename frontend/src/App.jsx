@@ -54,14 +54,28 @@ const NotesViewer = React.lazy(() => import("./components/notes/NotesViewer"));
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Skeleton } from "./components/Skeleton"; // Use our new Skeleton component
 
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+
 function App() {
+  const theme = useSelector((state) => state.theme.mode);
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
+
   return (
     <>
       <Toaster
         position="top-right"
         toastOptions={conf.toast}
       />
-      <React.Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <React.Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-white">Loading...</div>}>
+        {/* ... existing Routes ... */}
         <Routes>
           <Route path={index} element={<Home />} />
           <Route path={logIn} element={<Auth />} />

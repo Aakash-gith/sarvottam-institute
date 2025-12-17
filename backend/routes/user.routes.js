@@ -25,4 +25,8 @@ router.get("/profile-picture", userController.getProfilePicture);
 router.post("/upload-profile-picture", upload.single("profilePicture"), userController.uploadProfilePicture);
 router.delete("/remove-profile-picture", userController.removeProfilePicture);
 
+// Notification Routes
+router.get("/notifications", userController.getNotifications);
+router.put("/notifications/:notificationId/read", userController.markNotificationRead);
+
 export default router;

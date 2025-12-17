@@ -1,32 +1,14 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 10 - The Human Eye and the Colourful World</title>
-    <style>
-        :root {
-            
-            --accent: #06b6d4; /* Cyan */
-            --accent-soft: rgba(6, 182, 212, 0.15);
-            --accent-strong: #0891b2;
-            --accent-rgb: 6, 182, 212;
-            
-            --bg: #0f172a;
-            --bg-soft: #111827;
-            --text-main: #e5e7eb;
-            --text-soft: #9ca3af;
-            --card-bg: #020617;
-            --border-soft: #1f2937;
-            --danger: #f97373;
-            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
-            --radius-xl: 20px;
-            --radius-lg: 16px;
-            --radius-pill: 999px;
-            --transition-fast: 180ms ease-out;
-            --transition-med: 260ms ease-out;
-        }
-        
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const NOTES_DIR = path.resolve(__dirname, '../../grade10/notes');
+
+// Premium CSS Content (Styles Only - Root vars are injected dynamically)
+const PREMIUM_CSS_STYLES = `
     * {
         box-sizing: border-box;
         margin: 0;
@@ -410,184 +392,128 @@
     }
     .lightbox-overlay.active .lightbox-image { transform: scale(1); }
     .diagram-placeholder img { cursor: zoom-in; }
+`;
 
-    </style></head>
-<body>
-    <div class="container">
-        <h1>Chapter 10 - The Human Eye and the Colourful World</h1>
-        <p style="text-align: center; color: #999; margin-bottom: 30px;">Class X Physics | CBSE</p>
+// Helper to determine subject theme
+function getThemeVars(subject) {
+    switch (subject.toLowerCase()) {
+        case 'mathematics': // Cyan/Blue
+        case 'physics':
+            return `
+            --accent: #06b6d4; /* Cyan */
+            --accent-soft: rgba(6, 182, 212, 0.15);
+            --accent-strong: #0891b2;
+            --accent-rgb: 6, 182, 212;
+            `;
+        case 'chemistry': // Orange/Amber
+            return `
+            --accent: #f59e0b; /* Amber */
+            --accent-soft: rgba(245, 158, 11, 0.15);
+            --accent-strong: #d97706;
+            --accent-rgb: 245, 158, 11;
+            `;
+        case 'biology': // Emerald/Green
+        default:
+            return `
+            --accent: #10b981; /* Emerald */
+            --accent-soft: rgba(16, 185, 129, 0.15);
+            --accent-strong: #059669;
+            --accent-rgb: 16, 185, 129;
+            `;
+    }
+}
 
-        <h2>Structure of the Human Eye</h2>
-        <p>The human eye is a complex organ that allows us to see objects around us. It acts like a camera, with the cornea and lens focusing light, and the retina acting as the light-sensitive film.</p>
+function processFile(filePath, subject) {
+    let content = fs.readFileSync(filePath, 'utf8');
 
-        <h2>Parts of the Human Eye</h2>
-        <ul>
-            <li><strong>Cornea:</strong> Transparent front layer that covers iris and pupil. Refracts light and protects eye.</li>
-            <li><strong>Iris:</strong> Colored part (pigmented membrane) that controls pupil size.</li>
-            <li><strong>Pupil:</strong> Opening through which light enters the eye. Dilates in dim light, contracts in bright light.</li>
-            <li><strong>Lens:</strong> Transparent, biconvex structure that focuses light onto retina. Adjusts its focal length (accommodation).</li>
-            <li><strong>Retina:</strong> Light-sensitive tissue at back of eye containing rods and cones (photoreceptor cells).</li>
-            <li><strong>Optic Nerve:</strong> Transmits visual signals to brain for interpretation.</li>
-            <li><strong>Vitreous Humor:</strong> Transparent gel filling eyeball.</li>
-            <li><strong>Aqueous Humor:</strong> Clear fluid between cornea and lens.</li>
-            <li><strong>Sclera:</strong> White, tough outer layer protecting eye.</li>
-            <li><strong>Ciliary Muscles:</strong> Control lens shape for focusing (accommodation).</li>
-        </ul>
+    // 1. Replace Style Block
+    const themeVars = getThemeVars(subject);
+    const newStyle = `<style>
+        :root {
+            ${themeVars}
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --danger: #f97373;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+            --transition-med: 260ms ease-out;
+        }
+        ${PREMIUM_CSS_STYLES}
+    </style>`;
 
-        <h2>How the Eye Sees</h2>
-        <ol>
-            <li>Light enters through cornea and is refracted</li>
-            <li>Pupil controls amount of light entering</li>
-            <li>Lens focuses light onto retina</li>
-            <li>Retina converts light to electrical signals (photoreceptors: rods for B&W, cones for color)</li>
-            <li>Optic nerve transmits signals to brain's visual cortex</li>
-            <li>Brain interprets signals as images</li>
-        </ol>
+    // Regex to Replace content inside <style>...</style>
+    // Improved regex to ensure it captures everything inside <style> tags
+    const styleRegex = /<style>([\s\S]*?)<\/style>/i;
+    if (styleRegex.test(content)) {
+        content = content.replace(styleRegex, newStyle);
+    } else {
+        // Inject head if missing style
+        content = content.replace('</head>', `${newStyle}</head>`);
+    }
 
-        <h2>Accommodation</h2>
-        <p>The ability of eye to change focal length to focus on objects at different distances.</p>
-        <ul>
-            <li><strong>Near Vision:</strong> Ciliary muscles contract, lens becomes thicker, focal length decreases</li>
-            <li><strong>Distance Vision:</strong> Ciliary muscles relax, lens becomes thinner, focal length increases</li>
-            <li><strong>Near Point:</strong> Closest distance eye can focus clearly (typically 25 cm for normal eye)</li>
-            <li><strong>Far Point:</strong> Farthest distance eye can focus clearly (infinity for normal eye)</li>
-        </ul>
-
-        <h2>Defects of Vision</h2>
-        <p>Common vision problems that affect the eye's ability to focus light properly:</p>
-        <ul>
-            <li><strong>Myopia (Short-sightedness):</strong> Can see nearby objects clearly but distant objects appear blurred
-                <ul style="margin-left: 20px;">
-                    <li>Cause: Lens too strong or eyeball too long</li>
-                    <li>Light focuses in front of retina</li>
-                    <li>Correction: Concave lens (negative power)</li>
-                </ul>
-            </li>
-            <li><strong>Hypermetropia (Long-sightedness):</strong> Can see distant objects clearly but nearby objects appear blurred
-                <ul style="margin-left: 20px;">
-                    <li>Cause: Lens too weak or eyeball too short</li>
-                    <li>Light focuses behind retina</li>
-                    <li>Correction: Convex lens (positive power)</li>
-                </ul>
-            </li>
-            <li><strong>Presbyopia:</strong> Age-related gradual loss of eye's accommodation ability
-                <ul style="margin-left: 20px;">
-                    <li>Usually starts after age 40</li>
-                    <li>Lens loses elasticity</li>
-                    <li>Correction: Bifocals or progressive lenses</li>
-                </ul>
-            </li>
-            <li><strong>Astigmatism:</strong> Cornea or lens is irregularly curved
-                <ul style="margin-left: 20px;">
-                    <li>Causes blurred vision at all distances</li>
-                    <li>Correction: Cylindrical lens</li>
-                </ul>
-            </li>
-            <li><strong>Color Blindness:</strong> Inability to distinguish certain colors (usually red-green)
-                <ul style="margin-left: 20px;">
-                    <li>Genetic condition</li>
-                    <li>Deficiency in cone cells</li>
-                </ul>
-            </li>
-        </ul>
-
-        <h2>Dispersion of Light</h2>
-        <p>Dispersion is the phenomenon in which white light is split into its component colors. Different colors have different wavelengths and travel at slightly different speeds in a medium.</p>
-
-        <div class="important-box">
-            <strong>The Spectrum:</strong> White light disperses into seven colors in order:<br>
-            Red, Orange, Yellow, Green, Blue, Indigo, Violet (ROYGBIV)<br>
-            <br>
-            <strong>Wavelengths (in vacuum):</strong><br>
-            Red: 700-650 nm | Orange: 650-590 nm | Yellow: 590-570 nm<br>
-            Green: 570-495 nm | Blue: 495-450 nm | Indigo: 450-420 nm | Violet: 420-380 nm
-        </div>
-
-        <h2>Causes of Dispersion</h2>
-        <ul>
-            <li>Different wavelengths have different refractive indices in a medium</li>
-            <li>Violet has highest refractive index (bends most)</li>
-            <li>Red has lowest refractive index (bends least)</li>
-        </ul>
-
-        <h2>Rainbow Formation</h2>
-        <p>Rainbow is formed when white light from sun undergoes dispersion in water droplets in atmosphere.</p>
-        <ul>
-            <li>Sunlight enters water droplet and refracts</li>
-            <li>Light disperses into colors</li>
-            <li>Light reflects at back of droplet</li>
-            <li>Light refracts again as it exits droplet</li>
-            <li>Observer sees colored arc at angle ~42Â° from anti-solar point</li>
-        </ul>
-
-        <h2>Scattering of Light</h2>
-        <p>Scattering is the phenomenon in which light is reflected in many directions when it strikes particles with dimensions comparable to wavelength of light.</p>
-
-        <h2>Rayleigh's Scattering Law</h2>
-        <div class="formula-box">
-            Intensity of scattered light âˆ 1/Î»â´<br>
-            <br>
-            <strong>Implications:</strong><br>
-            â€¢ Violet light scatters most (~16 times more than red)<br>
-            â€¢ Blue light scatters more than red<br>
-            â€¢ Red light scatters least
-        </div>
-
-        <h2>Why is the Sky Blue?</h2>
-        <p>Blue light has shorter wavelength than red, so it scatters more in atmosphere. Blue light from all directions reaches our eyes, making sky appear blue.</p>
-
-        <h2>Why is Sunset Red?</h2>
-        <p>At sunset, sunlight travels longer distance through atmosphere. Blue light scatters away, only red and orange light (longer wavelengths) reach observer, making sunset appear red/orange.</p>
-
-        <h2>Why Do Clouds Appear White?</h2>
-        <p>Cloud droplets are much larger than light wavelength. All colors scatter equally, so clouds appear white.</p>
-
-        <div style="margin-top: 40px; padding: 20px; background: #f0f4ff; border-radius: 8px; text-align: center;">
-            <h3 style="color: #2c3e50; margin-bottom: 15px;">Key Takeaways</h3>
-            <ul style="list-style: none; margin: 0;">
-                <li>âœ“ Eye focuses light using cornea and lens onto retina</li>
-                <li>âœ“ Myopia: Concave lens correction; Hypermetropia: Convex lens</li>
-                <li>âœ“ White light disperses into 7 colors</li>
-                <li>âœ“ Rayleigh's Scattering: I âˆ 1/Î»â´</li>
-                <li>âœ“ Blue sky, red sunset due to selective scattering</li>
-            </ul>
-            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">CBSE | NCERT | Class X Physics</p>
-        </div>
-    </div>
-
-    <script>
+    // 2. Add Scripts if missing (Lightbox/Quiz) - simplified for mass update
+    const closingBody = '</body>';
+    const scriptTag = `<script>
         // Lightbox Logic
         document.addEventListener('DOMContentLoaded', () => {
-            const lightbox = document.createElement('div');
-            lightbox.className = 'lightbox-overlay';
-            lightbox.innerHTML = '<img src="" alt="Lightbox Image" class="lightbox-image">';
-            document.body.appendChild(lightbox);
-
-            const lightboxImg = lightbox.querySelector('img');
-
-            // Select all images inside diagram placeholders
-            const images = document.querySelectorAll('.diagram-placeholder img');
-
-            images.forEach(img => {
-                img.addEventListener('click', () => {
-                    lightboxImg.src = img.src;
-                    lightboxImg.alt = img.alt;
-                    lightbox.classList.add('active');
-                });
-            });
-
-            // Close on click outside
-            lightbox.addEventListener('click', (e) => {
-                if (e.target !== lightboxImg) {
-                    lightbox.classList.remove('active');
-                }
-            });
+             // Avoid adding duplicate lightboxes
+             if (document.querySelector('.lightbox-overlay')) return;
+             
+             const images = document.querySelectorAll('img');
+             const lightbox = document.createElement('div');
+             lightbox.className = 'lightbox-overlay';
+             lightbox.innerHTML = '<img class="lightbox-image" src="" alt="Lightbox View">';
+             document.body.appendChild(lightbox);
+             
+             const lightboxImg = lightbox.querySelector('img');
+             
+             images.forEach(img => {
+                 img.addEventListener('click', () => {
+                     lightboxImg.src = img.src;
+                     lightbox.classList.add('active');
+                 });
+             });
+             
+             lightbox.addEventListener('click', () => {
+                 lightbox.classList.remove('active');
+             });
         });
-    </script>
+    </script>`;
 
-</body>
-</html>
+    if (!content.includes('lightbox-overlay')) {
+        content = content.replace(closingBody, `${scriptTag}\n${closingBody}`);
+    }
 
+    fs.writeFileSync(filePath, content, 'utf8');
+    console.log(`✅ Updated: ${path.basename(filePath)} (${subject})`);
+}
 
+function traverseAndApply(dir) {
+    const items = fs.readdirSync(dir, { withFileTypes: true });
 
+    items.forEach(item => {
+        const fullPath = path.join(dir, item.name);
+        if (item.isDirectory()) {
+            traverseAndApply(fullPath);
+        } else if (item.isFile() && item.name.endsWith('.html')) {
+            // Determine Subject from Parent Dir
+            const parentDir = path.basename(dir);
+            processFile(fullPath, parentDir);
+        }
+    });
+}
 
+console.log('🚀 Starting Global Premium Theme Overhaul...');
+if (fs.existsSync(NOTES_DIR)) {
+    traverseAndApply(NOTES_DIR);
+    console.log('✨ All notes updated to Premium Dark UI.');
+} else {
+    console.error('❌ Notes directory not found:', NOTES_DIR);
+}

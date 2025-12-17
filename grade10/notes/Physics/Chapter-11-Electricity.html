@@ -1,24 +1,302 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 11 - Electricity</title>
+    <title>Chapter 11 - Electricity | Class 10 Physics</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); line-height: 1.6; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
-        h1 { color: #2c3e50; margin-bottom: 10px; text-align: center; border-bottom: 3px solid #2c3e50; padding-bottom: 15px; }
-        h2 { color: #1a252f; margin-top: 30px; margin-bottom: 15px; }
-        .important-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px; }
-        .formula-box { background: #e7f3ff; border-left: 5px solid #2196F3; padding: 15px; margin: 20px 0; border-radius: 5px; font-family: 'Courier New', monospace; }
-        p { margin-bottom: 10px; }
-        ul { margin-left: 20px; margin-bottom: 15px; }
-        li { margin-bottom: 8px; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        table, th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #2c3e50; color: white; }
-    
+        :root {
+
+            --accent: #06b6d4;
+            /* Cyan */
+            --accent-soft: rgba(6, 182, 212, 0.15);
+            --accent-strong: #0891b2;
+            --accent-rgb: 6, 182, 212;
+
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --danger: #f97373;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+            --transition-med: 260ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Layout */
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+        }
+
+        /* Hero */
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+            gap: 2.5rem;
+            align-items: center;
+            margin-top: 2.3rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.1rem, 3vw + 1.2rem, 3.2rem);
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+            color: #fff;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-soft);
+            max-width: 33rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            color: #cbd5f5;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 6rem;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        h2::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border-soft);
+            margin-left: 1rem;
+            opacity: 0.5;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #e2e8f0;
+        }
+
+        /* Cards & Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(31, 41, 55, 0.6);
+            border-radius: var(--radius-lg);
+            padding: 1.8rem;
+            transition: transform var(--transition-fast), border-color var(--transition-fast);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(6, 182, 212, 0.4);
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        .card ul,
+        .card ol {
+            list-style: none;
+            padding-left: 0.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .card li {
+            position: relative;
+            padding-left: 1.2rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        .card li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Custom Elements */
+        .formula-box {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-left: 4px solid var(--accent);
+            border-radius: 12px;
+            padding: 1.2rem;
+            color: #22d3ee;
+            margin: 1.2rem 0;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .formula-box strong {
+            display: block;
+            color: #a5f3fc;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            font-family: system-ui;
+        }
+
+        .diagram-box {
+            background: #020617;
+            border: 1px dashed #334155;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            color: #64748b;
+            margin: 1rem 0;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .diagram-box span {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            text-align: left;
+            color: var(--accent);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .highlight-text {
+            color: #fca5a5;
+            font-weight: 500;
+        }
+
+        .activity-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: rgba(234, 179, 8, 0.2);
+            color: #fde047;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
         /* Lightbox */
         .lightbox-overlay {
             position: fixed;
@@ -49,150 +327,349 @@
             transform: scale(0.9);
             transition: transform 0.3s ease;
             border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .lightbox-overlay.active .lightbox-image {
             transform: scale(1);
         }
-        
-        .diagram-placeholder img {
-            cursor: zoom-in;
-        }
-
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Chapter 11 - Electricity</h1>
-        <p style="text-align: center; color: #999; margin-bottom: 30px;">Class X Physics | CBSE</p>
 
-        <h2>Electric Charge</h2>
-        <p>Electric charge is the physical property of matter that causes it to experience a force in an electromagnetic field. It is measured in Coulombs (C).</p>
+    <div class="page">
+        <!-- Hero Header -->
+        <header class="hero">
+            <div class="hero-text">
+                <div class="badge-row">
+                    <span class="badge"><span class="badge-dot"></span>Physics</span>
+                    <span class="badge">Class 10</span>
+                    <span class="badge" style="border-color: rgba(234, 179, 8, 0.5); color: #fde047;">Chapter 11</span>
+                </div>
+                <h1>Electricity</h1>
+                <p class="hero-subtitle">Improvised notes based on curriculum standards covering Charge, Current, Ohm's
+                    Law, and Resistive Circuits.</p>
+            </div>
+            <div class="hero-card">
+                <div class="formula-box" style="margin:0; background: transparent; border: none; text-align: left;">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem; color: #fff;">Q = ne</span>
+                    <span style="color: #94a3b8; font-family: sans-serif; font-size: 0.9rem;">Quantization of Charge:
+                        The foundation of electricity.</span>
+                </div>
+            </div>
+        </header>
 
-        <h2>Types of Electric Charge</h2>
-        <ul>
-            <li><strong>Positive Charge:</strong> Produced by loss of electrons (deficiency)</li>
-            <li><strong>Negative Charge:</strong> Produced by gain of electrons (excess)</li>
-            <li><strong>Elementary Charge (e):</strong> 1.6 Ã— 10â»Â¹â¹ C (charge on one electron/proton)</li>
-        </ul>
+        <!-- 11.1 Electric Current & Circuit -->
+        <section id="section-11.1">
+            <span class="section-label">11.1 Fundamentals</span>
+            <h2>Electric Charge and Current</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Electric Charge (Q)</h3>
+                    <p>Charge is a fundamental particle in an atom. It may be positive or negative.</p>
+                    <ul>
+                        <li>Like charges repel, unlike charges attract.</li>
+                        <li><strong>SI Unit:</strong> Coulomb (C).</li>
+                        <li>Charge on 1 electron (e) = 1.6 × 10⁻¹⁹ C.</li>
+                    </ul>
+                    <div class="formula-box">
+                        <strong>Quantization of Charge</strong>
+                        Q = ne<br>
+                        <span style="font-size:0.8em; opacity:0.7;">n = number of electrons<br>e = charge on 1
+                            electron</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Electric Current (I)</h3>
+                    <p>The rate of flow of charge is called current.</p>
+                    <div class="formula-box">
+                        <strong>Formula</strong>
+                        I = Q / t<br>
+                        <span style="font-size:0.8em; opacity:0.7;">1 Ampere = 1 Coulomb / 1 second (1 Cs⁻¹)</span>
+                    </div>
+                    <ul>
+                        <li><strong>Small Units:</strong>
+                            <ul>
+                                <li>1 mA (Milliampere) = 10⁻³ A</li>
+                                <li>1 μA (Microampere) = 10⁻⁶ A</li>
+                            </ul>
+                        </li>
+                        <li><strong>Direction:</strong> Opposite to flow of electrons. (Positive → Negative).</li>
+                    </ul>
+                    <div class="diagram-box" style="margin-top: 1rem;">
+                        <img src="images/circuit_simple.png" alt="Simple Electric Circuit Diagram"
+                            style="width: 100%; border-radius: 8px;">
+                        <span>[Diagram: Simple Circuit with Cell, Key, Bulb, Ammeter]</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <h2>Coulomb's Law</h2>
-        <div class="formula-box">
-            F = k(qâ‚qâ‚‚)/rÂ²<br>
-            where k = 9 Ã— 10â¹ NÂ·mÂ²/CÂ², qâ‚, qâ‚‚ are charges, r is distance<br>
-            <br>
-            <strong>OR:</strong><br>
-            F = (qâ‚qâ‚‚)/(4Ï€Îµâ‚€rÂ²)<br>
-            where Îµâ‚€ = permittivity of free space
-        </div>
+        <!-- 11.2 Electric Potential -->
+        <section id="section-11.2">
+            <span class="section-label">11.2 Potential</span>
+            <h2>Potential Difference (V)</h2>
+            <div class="card">
+                <div class="grid-2">
+                    <div>
+                        <h3>Definition</h3>
+                        <p>Work done to move a unit charge from one point to another.</p>
+                        <div class="formula-box">
+                            V = W / Q
+                        </div>
+                        <p><strong>1 Volt Definition:</strong><br>
+                            When 1 Joule of work is done in carrying 1 Coulomb charge, the potential difference is
+                            called 1 Volt.</p>
+                    </div>
+                    <div>
+                        <h3>Measurement</h3>
+                        <ul>
+                            <li><strong>Voltmeter:</strong> Instrument to measure PD.</li>
+                            <li><strong>Connection:</strong> Always in <span class="highlight-text">PARALLEL</span>.
+                            </li>
+                            <li>Has high resistance.</li>
+                            <li>Cells maintain potential difference in a circuit.</li>
+                            <li>Current flows from Higher Potential → Lower Potential.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <h2>Electric Field and Electric Potential</h2>
-        <ul>
-            <li><strong>Electric Field (E):</strong> Force per unit charge. E = F/q</li>
-            <li><strong>Electric Potential (V):</strong> Energy per unit charge. V = W/q</li>
-            <li><strong>Potential Difference:</strong> Difference in potential between two points: V = Vâ‚ - Vâ‚‚</li>
-            <li><strong>Unit:</strong> Volt (V) or J/C</li>
-        </ul>
+        <!-- 11.3 Circuit Diagram -->
+        <section id="section-11.3">
+            <span class="section-label">11.3 Components</span>
+            <h2>Circuit Diagram Components</h2>
+            <div class="table-container">
+                <div class="diagram-box" style="padding: 0; background: transparent; border: none;">
+                    <img src="images/circuit_symbols_new.png" alt="Circuit Symbols Chart"
+                        style="width: 100%; max-width: 800px; border-radius: 12px; border: 1px solid #334155;">
+                </div>
+        </section>
 
-        <h2>Electric Current</h2>
-        <p>Electric current is the flow of electric charge in a conductor.</p>
+        <!-- 11.4 Ohm's Law -->
+        <section id="section-11.4">
+            <span class="section-label">11.4 Relationship</span>
+            <h2>Ohm's Law & Resistance</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Statement</h3>
+                    <p>Potential difference across the two points of a metallic conductor is directly proportional to
+                        current passing through it, provided temperature remains constant.</p>
+                    <div class="formula-box">
+                        V ∝ I<br>
+                        V = IR
+                    </div>
+                    <div class="diagram-box">
+                        <img src="images/ohm_graph.png" alt="Ohm's Law Graph V vs I">
+                        <span>[Diagram: V vs I Graph - Straight Line]</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Resistance (R)</h3>
+                    <p>Property to resist flow of charges.</p>
+                    <ul>
+                        <li><strong>1 Ohm (Ω):</strong> If potential difference is 1 V and current is 1 A, then
+                            resistance is 1 Ω.</li>
+                        <li><strong>Rheostat:</strong> Component to regulate current without changing voltage source.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-        <div class="formula-box">
-            I = Q/t<br>
-            where I = current (Amperes), Q = charge (Coulombs), t = time (seconds)<br>
-            <br>
-            <strong>Direction:</strong> Conventional current flows from positive to negative terminal<br>
-            <strong>Actual flow:</strong> Electrons flow from negative to positive terminal
-        </div>
+        <!-- 11.5 Factors -->
+        <section id="section-11.5">
+            <span class="section-label">11.5 Properties</span>
+            <h2>Factors Affecting Resistance</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Dependence Factors</h3>
+                    <ol>
+                        <li><strong>Length (l):</strong> Directly proportional (R ∝ l).</li>
+                        <li><strong>Area (A):</strong> Inversely proportional (R ∝ 1/A).</li>
+                        <li><strong>Temperature:</strong> Directly proportional.</li>
+                        <li><strong>Material:</strong> Depends on nature of material.</li>
+                    </ol>
+                    <div class="formula-box" style="margin-top: 1rem;">
+                        R = ρ (l / A)
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Resistivity (ρ)</h3>
+                    <p>Resistance offered by a cube of material of side 1m when current flows perpendicular to opposite
+                        faces.</p>
+                    <ul>
+                        <li><strong>SI Unit:</strong> Ohm-meter (Ωm).</li>
+                        <li>Does not change with dimensions, only with material and temperature.</li>
+                        <li><strong>Metals/Alloys:</strong> Low resistivity (10⁻⁸ to 10⁻⁶ Ωm).</li>
+                        <li><strong>Insulators:</strong> High resistivity (10¹² to 10¹⁷ Ωm).</li>
+                        <li>Alloys don't oxidize vertically at high temps (Used in heaters).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-        <h2>Ohm's Law</h2>
-        <p>At constant temperature, current through a conductor is directly proportional to potential difference and inversely proportional to resistance.</p>
+        <!-- 11.6 System of Resistors -->
+        <section id="section-11.6">
+            <span class="section-label">11.6 Combinations</span>
+            <h2>System of Resistors</h2>
 
-        <div class="formula-box">
-            V = IR<br>
-            where V = potential difference (Volts), I = current (Amperes), R = resistance (Ohms - Î©)<br>
-            <br>
-            <strong>Resistance:</strong> R = Ïl/A<br>
-            where Ï = resistivity, l = length, A = cross-sectional area
-        </div>
+            <!-- Series -->
+            <div class="card" style="border-top: 4px solid var(--accent); margin-bottom: 2rem;">
+                <h3>1. Resistors in Series</h3>
+                <p>Two or more resistors connected end to end.</p>
+                <div class="grid-2">
+                    <div>
+                        <h4>Derivation:</h4>
+                        <p>Total voltage drops is sum of individual drops:</p>
+                        <p style="font-family: monospace; color: var(--accent);">V = V₁ + V₂ + V₃</p>
+                        <p>Apply Ohm's Law (V=IR):</p>
+                        <p style="font-family: monospace;">IR = IR₁ + IR₂ + IR₃</p>
+                        <p style="font-family: monospace;">IR = I(R₁ + R₂ + R₃)</p>
+                        <p><strong>Result:</strong></p>
+                        <div class="formula-box">Rs = R₁ + R₂ + R₃</div>
+                        <div style="margin-top: 1rem;">
+                            <img src="images/resistors_series.png" alt="Resistors in Series Diagram"
+                                style="width: 100%; border-radius: 8px; border: 1px solid #334155;">
+                        </div>
+                    </div>
+                    <div>
+                        <h4>Key Points:</h4>
+                        <ul>
+                            <li>Current (I) is <strong>SAME</strong> in every part.</li>
+                            <li>Equivalent resistance is <strong>LARGER</strong> than largest individual resistance.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-        <h2>Resistivity and Conductivity</h2>
-        <ul>
-            <li><strong>Resistivity (Ï):</strong> Property of material that opposes current flow. Measured in Î©Â·m</li>
-            <li><strong>Conductivity (Ïƒ):</strong> Ability of material to conduct current. Ïƒ = 1/Ï</li>
-            <li><strong>Good Conductors:</strong> Low resistivity (Copper: 1.7Ã—10â»â¸ Î©Â·m)</li>
-            <li><strong>Good Insulators:</strong> High resistivity (Glass: 10Â¹Â¹ Î©Â·m)</li>
-        </ul>
+            <!-- Parallel -->
+            <div class="card" style="border-top: 4px solid #f472b6;">
+                <h3>2. Resistors in Parallel</h3>
+                <p>Resistors connected between two common points.</p>
+                <div class="grid-2">
+                    <div>
+                        <h4>Derivation:</h4>
+                        <p>Total current is sum of branch currents:</p>
+                        <p style="font-family: monospace; color: #f472b6;">I = I₁ + I₂ + I₃</p>
+                        <p>Apply Ohm's Law (I=V/R):</p>
+                        <p style="font-family: monospace;">V/Rp = V/R₁ + V/R₂ + V/R₃</p>
+                        <p style="font-family: monospace;">V/Rp = V(1/R₁ + 1/R₂ + 1/R₃)</p>
+                        <p><strong>Result:</strong></p>
+                        <div class="formula-box">1/Rp = 1/R₁ + 1/R₂ + 1/R₃</div>
+                        <div style="margin-top: 1rem;">
+                            <img src="images/resistors_parallel.png" alt="Resistors in Parallel Diagram"
+                                style="width: 100%; border-radius: 8px; border: 1px solid #334155;">
+                        </div>
+                    </div>
+                    <div>
+                        <h4>Key Points:</h4>
+                        <ul>
+                            <li>Voltage (V) is <strong>SAME</strong> across each resistor.</li>
+                            <li>Equivalent resistance is <strong>LESS</strong> than smallest individual resistance.</li>
+                        </ul>
+                    </div>
+                </div>
 
-        <h2>Effect of Temperature on Resistance</h2>
-        <div class="formula-box">
-            Râ‚œ = Râ‚€(1 + Î±Î”T)<br>
-            where Râ‚œ = resistance at temperature T, Râ‚€ = resistance at 0Â°C, Î± = temperature coefficient
-        </div>
+                <div
+                    style="margin-top: 1.5rem; background: rgba(244, 114, 182, 0.1); padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #f472b6;">Advantages of Parallel Combination:</strong>
+                    <ol style="margin-top: 0.5rem; margin-left: 1.5rem; font-size: 0.95rem;">
+                        <li>In series, if one component fails, the circuit is broken and none work. In parallel, others
+                            continue to work.</li>
+                        <li>Different appliances have different current requirements. This is satisfied in parallel
+                            (current divides).</li>
+                        <li>The total resistance in a parallel circuit is decreased, allowing efficient power usage.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
 
-        <h2>Electrical Power and Energy</h2>
-        <div class="formula-box">
-            <strong>Power:</strong><br>
-            P = VI = IÂ²R = VÂ²/R<br>
-            Unit: Watt (W) = Joule/second<br>
-            <br>
-            <strong>Electrical Energy:</strong><br>
-            W = Pt = VIt<br>
-            Unit: Joule (J) or Kilowatt-hour (kWh)<br>
-            1 kWh = 3.6 Ã— 10â¶ J
-        </div>
+        <!-- 11.7 Heating Effect -->
+        <section id="section-11.7">
+            <span class="section-label">11.7 Thermal Effects</span>
+            <h2>Heating Effect & Applications</h2>
+            <div class="card" style="border-top: 4px solid var(--accent); margin-bottom: 2rem;">
+                <h3>Heating Effect of Electric Circuit</h3>
+                <p>If an electric circuit is purely resistive, the source of energy continually gets dissipated entirely
+                    in the form of heat.</p>
+                <div class="formula-box">
+                    <strong>Heat Produced (Joule's Law)</strong>
+                    H = I²Rt
+                </div>
+                <p><strong>Joule's Law of Heating:</strong> Heat produced in a resistor is:</p>
+                <ol>
+                    <li>Directly proportional to square of current (H ∝ I²).</li>
+                    <li>Directly proportional to resistance (H ∝ R).</li>
+                    <li>Directly proportional to time (H ∝ t).</li>
+                </ol>
 
-        <h2>Joule's Law of Heating</h2>
-        <p>When current flows through a conductor, heat is produced.</p>
-        <div class="formula-box">
-            H = IÂ²Rt<br>
-            where H = heat produced (Joules), I = current, R = resistance, t = time<br>
-            <br>
-            Also: H = Pt = VIt
-        </div>
+                <div class="grid-2" style="margin-top: 1.5rem;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                        <strong>Desirable Heating Effect</strong>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #a3e635;">Electric heater, Electric
+                            iron, Electric bulb, Electric fuse.</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                        <strong>Undesirable Heating Effect</strong>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #f87171;">Computers, Monitors (CRT),
+                            TV, Refrigerators.</p>
+                    </div>
+                </div>
+            </div>
 
-        <h2>Combination of Resistances</h2>
-        <ul>
-            <li><strong>Series Connection:</strong> Resistances connected one after another
-                <ul style="margin-left: 20px;">
-                    <li>Total Resistance: R_total = Râ‚ + Râ‚‚ + Râ‚ƒ + ...</li>
-                    <li>Same current through all resistors</li>
-                    <li>Voltages add up</li>
-                </ul>
-            </li>
-            <li><strong>Parallel Connection:</strong> Resistances connected side by side
-                <ul style="margin-left: 20px;">
-                    <li>Total Resistance: 1/R_total = 1/Râ‚ + 1/Râ‚‚ + 1/Râ‚ƒ + ...</li>
-                    <li>Same voltage across all resistors</li>
-                    <li>Currents add up</li>
-                </ul>
-            </li>
-        </ul>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Electric Bulb</h3>
+                    <p>Most power consumed by filament appears as heat, small part radiated as light.</p>
+                    <ul>
+                        <li><strong>Filament:</strong> Tungsten.</li>
+                        <li>(i) Does not oxidize readily at high temp.</li>
+                        <li>(ii) High melting point (3380° C).</li>
+                        <li><strong>Gas Filling:</strong> Inactive gases like Nitrogen and Argon to prolong life.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Electric Fuse</h3>
+                    <p>Safety device to protect appliances from short circuit or overloading.</p>
+                    <ul>
+                        <li><strong>Material:</strong> Pure tin or alloy of copper and tin (Pb+Sn).</li>
+                        <li><strong>Connection:</strong> In series with Live wire.</li>
+                        <li><strong>Property:</strong> Low melting point.</li>
+                        <li><strong>Capacity:</strong> Slightly higher than appliance rating.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-        <h2>Electromotive Force (EMF)</h2>
-        <p>EMF is the total energy per unit charge provided by a battery or power source.</p>
-        <div class="formula-box">
-            Îµ = E/Q<br>
-            where Îµ = EMF, E = total energy, Q = charge<br>
-            <br>
-            <strong>Terminal Voltage:</strong><br>
-            V = Îµ - Ir<br>
-            where r = internal resistance of battery
-        </div>
+        <!-- 11.8 Power -->
+        <section id="section-11.8">
+            <span class="section-label">11.8 Energy Rate</span>
+            <h2>Electric Power (P)</h2>
+            <div class="card">
+                <p>The rate at which electric energy is consumed or dissipated in an electric circuit.</p>
+                <div class="grid-2">
+                    <div class="formula-box">
+                        P = VI<br>
+                        P = I²R = V²/R
+                    </div>
+                    <div>
+                        <ul>
+                            <li><strong>SI Unit:</strong> Watt (W).</li>
+                            <li>1 watt = 1 volt × 1 ampere.</li>
+                            <li><strong>Commercial Unit:</strong> kWh.</li>
+                            <li>1 kWh = 3.6 × 10⁶ Joules.</li>
+                            <li>1 kWh = 1 Unit of electric energy.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <div style="margin-top: 40px; padding: 20px; background: #f0f4ff; border-radius: 8px; text-align: center;">
-            <h3 style="color: #2c3e50; margin-bottom: 15px;">Key Takeaways</h3>
-            <ul style="list-style: none; margin: 0;">
-                <li>âœ“ I = Q/t (Current)</li>
-                <li>âœ“ V = IR (Ohm's Law)</li>
-                <li>âœ“ P = VI = IÂ²R (Power)</li>
-                <li>âœ“ H = IÂ²Rt (Joule's Law)</li>
-                <li>âœ“ Series: R_total = Râ‚ + Râ‚‚</li>
-                <li>âœ“ Parallel: 1/R_total = 1/Râ‚ + 1/Râ‚‚</li>
-            </ul>
-            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">CBSE | NCERT | Class X Physics</p>
-        </div>
     </div>
 
     <script>
@@ -204,9 +681,7 @@
             document.body.appendChild(lightbox);
 
             const lightboxImg = lightbox.querySelector('img');
-
-            // Select all images inside diagram placeholders
-            const images = document.querySelectorAll('.diagram-placeholder img');
+            const images = document.querySelectorAll('.diagram-box img');
 
             images.forEach(img => {
                 img.addEventListener('click', () => {
@@ -216,7 +691,6 @@
                 });
             });
 
-            // Close on click outside
             lightbox.addEventListener('click', (e) => {
                 if (e.target !== lightboxImg) {
                     lightbox.classList.remove('active');
@@ -226,8 +700,5 @@
     </script>
 
 </body>
+
 </html>
-
-
-
-

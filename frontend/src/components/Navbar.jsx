@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Home, BookOpen, Brain, Calendar, Menu, X, User, LogOut, FileText } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Home, BookOpen, Brain, Calendar, Menu, X, User, LogOut, FileText, Bell, Check } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
 import API from "../api/axios";
+import logo from "../assets/logo.png";
+import ThemeToggle from "./ThemeToggle";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +39,55 @@ function Navbar() {
     return `${baseUrl}${profilePicture}`;
   };
 
+  // Notification State
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchNotifications();
+    }
+  }, [isLoggedIn]);
+
+  // Click outside to close notifications
+  const notificationRef = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setShowNotifications(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [notificationRef]);
+
+
+  const fetchNotifications = async () => {
+    try {
+      const { data } = await API.get("/user/notifications");
+      if (data.success) {
+        setNotifications(data.data);
+        setUnreadCount(data.unreadCount);
+      }
+    } catch (error) {
+      console.error("Failed to fetch notifications", error);
+    }
+  };
+
+  const markAsRead = async (id) => {
+    try {
+      await API.put(`/user/notifications/${id}/read`);
+      setNotifications(prev => prev.map(n => n._id === id ? { ...n, readBy: [...n.readBy, userData._id] } : n));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (error) {
+      console.error("Failed to mark read", error);
+    }
+  };
+
+
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem("accessToken");
@@ -50,7 +101,7 @@ function Navbar() {
     { name: "Learning", path: "/notes", icon: BookOpen },
     { name: "PYQ", path: "/pyq", icon: FileText },
     { name: "Quiz", path: "/quiz", icon: Brain },
-    { name: "Events", path: "/events", icon: Calendar },
+    { name: "Task Planner", path: "/events", icon: Calendar },
     { name: "Profile", path: "/profile", icon: User, isProfile: true },
   ];
 
@@ -64,14 +115,14 @@ function Navbar() {
   return (
     <>
       {/* Top Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 shadow-sm z-40">
+      <nav className="fixed top-0 left-0 right-0 h-16 bg-[var(--background)]/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
           {/* Logo */}
           <div
             className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition flex-shrink-0"
             onClick={() => navigate("/")}
           >
-            <span className="text-2xl font-bold text-blue-600">🎓</span>
+            <img src={logo} alt="Logo" className="h-10 w-10 object-contain" />
             <span className="text-xl font-bold text-gray-800 whitespace-nowrap">Sarvottam Institute</span>
           </div>
 
@@ -100,14 +151,7 @@ function Navbar() {
 
           {/* Right Section */}
           <div className="flex items-center gap-4 flex-shrink-0">
-            {/* Search Bar */}
-            {isLoggedIn && (
-              <input
-                type="text"
-                placeholder="Search"
-                className="hidden xl:block w-40 px-3 py-1.5 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            )}
+
 
             {/* Auth Buttons */}
             {!isLoggedIn ? (
@@ -129,6 +173,69 @@ function Navbar() {
               <>
                 {/* User Profile Display */}
                 <div className="hidden sm:flex items-center gap-3">
+
+                  {/* Notification Bell */}
+                  <div className="relative" ref={notificationRef}>
+                    <button
+                      onClick={() => setShowNotifications(!showNotifications)}
+                      className="p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-full transition relative"
+                    >
+                      <Bell size={20} />
+                      {unreadCount > 0 && (
+                        <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 text-white text-xs flex items-center justify-center rounded-full border border-white">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </button>
+
+                    {/* Notification Dropdown */}
+                    {showNotifications && (
+                      <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50">
+                        <div className="p-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                          <h3 className="font-semibold text-gray-700">Notifications</h3>
+                          <button onClick={fetchNotifications} className="text-xs text-blue-600 hover:underline">Refresh</button>
+                        </div>
+                        <div className="max-h-96 overflow-y-auto">
+                          {notifications.length > 0 ? (
+                            notifications.map((note) => {
+                              const isRead = note.readBy.some(id => id === userData?._id) || note.readBy.includes(userData?._id);
+                              return (
+                                <div
+                                  key={note._id}
+                                  className={`p-4 border-b border-gray-50 hover:bg-gray-50 transition ${!isRead ? 'bg-blue-50/50' : ''}`}
+                                >
+                                  <div className="flex justify-between items-start gap-2">
+                                    <h4 className={`text-sm font-medium ${!isRead ? 'text-blue-700' : 'text-gray-800'}`}>
+                                      {note.title}
+                                    </h4>
+                                    {!isRead && (
+                                      <button
+                                        onClick={() => markAsRead(note._id)}
+                                        title="Mark as read"
+                                        className="text-gray-400 hover:text-blue-600"
+                                      >
+                                        <Check size={14} />
+                                      </button>
+                                    )}
+                                  </div>
+                                  <p className="text-xs text-gray-600 mt-1 line-clamp-3">{note.message}</p>
+                                  <span className="text-[10px] text-gray-400 mt-2 block">
+                                    {new Date(note.createdAt).toLocaleDateString()}
+                                  </span>
+                                </div>
+                              );
+                            })
+                          ) : (
+                            <div className="p-8 text-center text-gray-500 text-sm">
+                              No notifications
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <ThemeToggle />
                   {profilePicture ? (
                     <img
                       src={getProfilePictureUrl()}

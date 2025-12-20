@@ -94,7 +94,7 @@ function Subjects() {
         totalNotes += ss.notes?.length || 0;
         // Add video counts if available in structure in future
 
-        const ssProgress = subjectsProgress.find((p) => p.subjectId === ss.id);
+        const ssProgress = subjectsProgress.find((p) => String(p.subjectId) === String(ss.id));
         if (ssProgress) {
           notesCompleted += ssProgress.notesCompleted?.length || 0;
           lecturesCompleted += ssProgress.videosCompleted?.length || 0;
@@ -108,7 +108,7 @@ function Subjects() {
     } else {
       // For regular subjects like Maths
       const progressData = subjectsProgress.find(
-        (p) => p.subjectId === subject.id
+        (p) => String(p.subjectId) === String(subject.id)
       );
 
       totalNotes = subject.notes?.length || 0;

@@ -209,67 +209,7 @@ const EventsPage = ({ tasks, events, onTasksUpdate, onEventsUpdate }) => {
         </div>
       </section>
 
-      {/* Events Section (Read-Only) */}
-      <section>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <h2 className="text-3xl font-bold text-gray-900">Upcoming Events</h2>
-          {/* Add Event button removed */}
-        </div>
 
-        <div className="bg-white p-4 rounded-xl mb-6 border border-gray-200 shadow-sm">
-          {/* ... Keep Notification UI ... */}
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Calendar className="w-5 h-5" /></div>
-              <div>
-                <label htmlFor="notification-time" className="font-semibold text-gray-900 block">Event Reminders</label>
-                <p className="text-xs text-gray-500">Get notified before events start</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <select id="notification-time" value={notificationOffset} onChange={(e) => setNotificationOffset(e.target.value)} disabled={notificationPermission !== "granted"} className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed text-gray-900 min-w-[140px]">
-                <option value="none">No notifications</option>
-                <option value="day">1 day before</option>
-                <option value="hour">1 hour before</option>
-                <option value="30min">30 mins before</option>
-              </select>
-              {notificationPermission !== "granted" && <button onClick={requestNotificationPermission} className="text-blue-600 hover:text-blue-700 font-medium text-sm hover:underline">Enable</button>}
-            </div>
-          </div>
-          {notificationPermission === "denied" && <div className="mt-3 text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-100">⚠️ Notifications are blocked in your browser settings.</div>}
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {events.map((ev) => (
-            <div key={ev._id} className="group bg-white p-5 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full">
-              <div>
-                <div className="flex items-start justify-between gap-2 mb-3">
-                  <div className="p-2 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    <Calendar className="w-5 h-5" />
-                  </div>
-                  {/* Edit/Delete buttons removed for events */}
-                </div>
-                <h3 className="font-bold text-gray-900 text-lg mb-1 line-clamp-1" title={ev.title}>{ev.title}</h3>
-                <p className="text-sm text-gray-600 mb-4 line-clamp-2 h-10" title={ev.event}>{ev.event}</p>
-              </div>
-              <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-medium text-gray-500">
-                <span>{new Date(ev.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}</span>
-                <span className="bg-gray-100 px-2 py-1 rounded text-gray-600">{new Date(ev.date).getFullYear()}</span>
-              </div>
-            </div>
-          ))}
-
-          {events.length === 0 && (
-            <div className="col-span-full py-12 text-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
-              <div className="w-16 h-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Calendar className="w-8 h-8" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900">No events scheduled</h3>
-              <p className="text-gray-500 mt-1 mb-4">Check back later for school events.</p>
-            </div>
-          )}
-        </div>
-      </section>
       {/* Modal logic removed */}
     </div>
   );

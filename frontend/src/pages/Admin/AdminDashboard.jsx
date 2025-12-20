@@ -23,7 +23,13 @@ import {
     Zap, // Added Zap
     TrendingUp, // Added TrendingUp
     PieChart as PieChartIcon, // Renamed to avoid split
-    GraduationCap // Added back
+    GraduationCap, // Added back
+    X,
+    ChevronUp,
+    ChevronDown,
+    Mail,
+    Shield,
+    User
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import API from "../../api/axios";
@@ -647,12 +653,20 @@ function StudentsTab() {
                     {filteredStudents.map((student) => (
                         <div
                             key={student._id}
-                            onClick={() => fetchUserAnalytics(student._id)}
+                            onClick={() => window.open(`/admin/users/${student._id}/analytics`, '_blank')}
                             className="bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 flex flex-col items-center text-center transition-all hover:shadow-lg hover:-translate-y-1 group cursor-pointer relative overflow-hidden"
                         >
-                            <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${selectedClass === '10' ? "from-purple-100 to-pink-100 text-purple-600" : "from-blue-100 to-cyan-100 text-blue-600"} flex items-center justify-center text-2xl font-bold mb-4 shadow-inner group-hover:scale-110 transition-transform`}>
-                                {student.name.charAt(0).toUpperCase()}
-                            </div>
+                            {student.profilePicture ? (
+                                <img
+                                    src={`${(import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api").replace('/api', '')}${student.profilePicture}`}
+                                    alt={student.name}
+                                    className="w-20 h-20 rounded-full object-cover mb-4 shadow-md group-hover:scale-110 transition-transform bg-slate-100"
+                                />
+                            ) : (
+                                <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${selectedClass === '10' ? "from-purple-100 to-pink-100 text-purple-600" : "from-blue-100 to-cyan-100 text-blue-600"} flex items-center justify-center text-2xl font-bold mb-4 shadow-inner group-hover:scale-110 transition-transform`}>
+                                    {student.name.charAt(0).toUpperCase()}
+                                </div>
+                            )}
                             <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1">{student.name}</h3>
                             <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">{student.email}</p>
 
@@ -783,11 +797,11 @@ const QuizAttemptCard = ({ attempt }) => {
             {expanded && (
                 <div className="mt-4 border-t border-slate-100 pt-4 space-y-3 animate__animated animate__fadeIn">
                     <h6 className="text-sm font-semibold text-slate-700">Detailed Report:</h6>
-                    {attempt.answers.filter(a => !a.isCorrect).length === 0 ? (
+                    {attempt.answers?.filter(a => !a.isCorrect).length === 0 ? (
                         <p className="text-emerald-600 text-sm font-medium bg-emerald-50 p-2 rounded-lg">🎉 Perfect score! No incorrect answers.</p>
                     ) : (
                         <div className="space-y-2">
-                            {attempt.answers.map((ans, idx) => (
+                            {attempt.answers?.map((ans, idx) => (
                                 !ans.isCorrect && (
                                     <div key={idx} className="bg-red-50 p-3 rounded-lg text-sm border border-red-100">
                                         <p className="font-semibold text-slate-800 mb-1">Q {ans.questionIndex + 1}</p>

@@ -1,11 +1,12 @@
 import AdminRequest from "../models/AdminRequest.js";
 import AdminUser from "../models/AdminUser.js";
 import User from "../models/Users.js";
-import Notification from "../models/Notification.js"; // Added Import
+import Notification from "../models/Notification.js";
 import PasswordReset from "../models/PasswordReset.js";
 import QuizAttempt from "../models/QuizAttempt.js";
 import Progress from "../models/Progress.js";
-import SubjectNotes from "../models/SubjectNotes.js"; // Added SubjectNotes import if not already there (it wasn't in the view_file of top 800 lines? Wait, let me check view_file 1112)
+import SubjectNotes from "../models/SubjectNotes.js";
+import Quiz from "../models/Quiz.js"; // Ensure Quiz model is registered
 import axios from "axios";
 import { sendOtp, verifyMojoAuthToken } from "./helperFunctions.js";
 import redis from "../conf/redis.js";

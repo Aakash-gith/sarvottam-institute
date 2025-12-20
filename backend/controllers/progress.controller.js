@@ -13,7 +13,15 @@ export const initSemesterProgress = async (req, res) => {
     }
 
     const clsId = parseInt(classId, 10);
-    const newSubjectIds = subjects.map((s) => s.id);
+
+    // Flatten all subject IDs including sub-subjects
+    const newSubjectIds = [];
+    subjects.forEach(s => {
+      newSubjectIds.push(s.id);
+      if (s.subSubjects && Array.isArray(s.subSubjects)) {
+        s.subSubjects.forEach(ss => newSubjectIds.push(ss.id));
+      }
+    });
 
 
     const existingProgress = await Progress.find({

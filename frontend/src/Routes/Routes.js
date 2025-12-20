@@ -23,3 +23,4 @@ export const adminSignup = "/admin/signup";
 export const adminRequestStatus = "/admin/request-status";
 export const adminForgotPassword = "/admin/forgot-password";
 export const adminDashboard = "/admin/dashboard";
+export const adminUserAnalytics = "/admin/users/:userId/analytics";

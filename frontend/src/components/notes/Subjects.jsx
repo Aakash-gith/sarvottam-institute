@@ -82,27 +82,51 @@ function Subjects() {
   const subjects = classData[currentClass]?.subjects || [];
 
   const subjectsWithProgress = subjects.map((subject) => {
-    const progressData = subjectsProgress.find(
-      (p) => p.subjectId === subject.id
-    );
-
-    // Calculate total notes count
+    let notesCompleted = 0;
+    let lecturesCompleted = 0;
     let totalNotes = 0;
+    let totalLectures = 0;
+    let completion = 0;
+
     if (subject.hasSubSubjects && subject.subSubjects) {
-      // For Science: sum notes from all sub-subjects
-      totalNotes = subject.subSubjects.reduce((sum, ss) => sum + (ss.notes?.length || 0), 0);
+      // For Science: sum notes and progress from all sub-subjects
+      subject.subSubjects.forEach((ss) => {
+        totalNotes += ss.notes?.length || 0;
+        // Add video counts if available in structure in future
+
+        const ssProgress = subjectsProgress.find((p) => p.subjectId === ss.id);
+        if (ssProgress) {
+          notesCompleted += ssProgress.notesCompleted?.length || 0;
+          lecturesCompleted += ssProgress.videosCompleted?.length || 0;
+        }
+      });
+
+      const totalItems = totalNotes + totalLectures;
+      if (totalItems > 0) {
+        completion = Math.round(((notesCompleted + lecturesCompleted) / totalItems) * 100);
+      }
     } else {
       // For regular subjects like Maths
+      const progressData = subjectsProgress.find(
+        (p) => p.subjectId === subject.id
+      );
+
       totalNotes = subject.notes?.length || 0;
+
+      if (progressData) {
+        notesCompleted = progressData.notesCompleted?.length || 0;
+        lecturesCompleted = progressData.videosCompleted?.length || 0;
+        completion = progressData.completion ?? 0;
+      }
     }
 
     return {
       ...subject,
-      lecturesCompleted: progressData?.videosCompleted?.length || 0,
-      notesCompleted: progressData?.notesCompleted?.length || 0,
-      totalNotes: totalNotes,
-      totalLectures: 0, // No videos yet
-      completion: progressData?.completion ?? 0,
+      lecturesCompleted,
+      notesCompleted,
+      totalNotes,
+      totalLectures,
+      completion,
     };
   });
 

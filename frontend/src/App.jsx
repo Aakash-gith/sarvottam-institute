@@ -25,6 +25,7 @@ import {
   adminRequestStatus,
   adminForgotPassword,
   adminDashboard,
+  adminUserAnalytics,
 } from "./Routes/Routes";
 
 import conf from "./conf/conf";
@@ -39,11 +40,12 @@ const NotesPage = React.lazy(() => import("./pages/NotesPage"));
 const PYQ = React.lazy(() => import("./pages/PYQ"));
 const Quiz = React.lazy(() => import("./pages/Quiz"));
 const Profile = React.lazy(() => import("./pages/Profile"));
-const AdminLogin = React.lazy(() => import("./pages/Admin/AdminLogin"));
-const AdminSignup = React.lazy(() => import("./pages/Admin/AdminSignup"));
-const AdminRequestStatus = React.lazy(() => import("./pages/Admin/AdminRequestStatus"));
-const AdminForgotPassword = React.lazy(() => import("./pages/Admin/AdminForgotPassword"));
-const AdminDashboard = React.lazy(() => import("./pages/Admin/AdminDashboard"));
+const AdminLogin = React.lazy(() => import("./pages/admin/AdminLogin"));
+const AdminSignup = React.lazy(() => import("./pages/admin/AdminSignup"));
+const AdminRequestStatus = React.lazy(() => import("./pages/admin/AdminRequestStatus"));
+const AdminForgotPassword = React.lazy(() => import("./pages/admin/AdminForgotPassword"));
+const AdminDashboard = React.lazy(() => import("./pages/admin/AdminDashboard"));
+const UserAnalyticsPage = React.lazy(() => import("./pages/admin/UserAnalyticsPage"));
 const CreateQuiz = React.lazy(() => import("./components/quiz/CreateQuiz"));
 const TakeQuiz = React.lazy(() => import("./components/quiz/TakeQuiz"));
 const QuizResults = React.lazy(() => import("./components/quiz/QuizResults"));
@@ -89,6 +91,7 @@ function App() {
           <Route path={adminRequestStatus} element={<AdminRequestStatus />} />
           <Route path={adminForgotPassword} element={<AdminForgotPassword />} />
           <Route path={adminDashboard} element={<AdminDashboard />} />
+          <Route path={adminUserAnalytics} element={<UserAnalyticsPage />} />
 
           {/* Protected Routes - Only accessible when logged in */}
           <Route path={events} element={<ProtectedRoute><Events /></ProtectedRoute>} />

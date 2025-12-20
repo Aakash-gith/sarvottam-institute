@@ -13,6 +13,12 @@ import {
     PlayCircle,
     PlusCircle
 } from "lucide-react";
+import {
+    createTask,
+    updateTask,
+    deleteTask as deleteTaskAPI,
+    getTasks
+} from "../api/tasks";
 import API from "../api/axios";
 import { classData } from "../classData";
 
@@ -29,44 +35,21 @@ const StudentDashboard = () => {
 
     // Task Planner Stats
     const [taskStats, setTaskStats] = useState({
-        totalTasks: 0,
         completedTasks: 0,
-        pendingTasks: 0,
-        inProgressSubjects: 0
+        pendingTasks: 0
     });
 
     const [continueLearning, setContinueLearning] = useState([]);
-
-    // Calculate Total Available Tasks from static data
-    const calculateTotalTasks = (cls) => {
-        let total = 0;
-        const currentClassData = classData[cls];
-        if (!currentClassData) return 0;
-
-        currentClassData.subjects.forEach(sub => {
-            if (sub.notes) total += sub.notes.length; // Assuming videos are part of 'content' but notes are the main trackable unit for now in static data structure logic provided previously. 
-            // Actually, based on previous files, 'notes' and 'videos' are separate locally but static data usually just lists 'notes' array which might handle both or we just count chapters.
-            // Let's count "Chapters" as tasks for simplicity if deep structure isn't fully unified in static data.
-            // Looking at classData.js, it has 'notes' array which seems to be chapters.
-
-            if (sub.subSubjects) {
-                sub.subSubjects.forEach(ss => {
-                    if (ss.notes) total += ss.notes.length;
-                });
-            }
-        });
-        return total;
-    };
 
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
                 setLoading(true);
                 // 1. Fetch User Stats (Streak)
-                const statsRes = await API.get("/quiz/user/stats");
+                const statsRes = await API.get("/quiz/stats");
                 const streak = statsRes.data.data.streak || 0;
 
-                // 2. Fetch Quiz History (For Avg Score, XP)
+                // 2. Fetch Quiz History (For Avg Score, XP, Weekly Hours)
                 const historyRes = await API.get("/quiz/history?limit=50");
                 const attempts = historyRes.data.data.attempts;
 
@@ -77,77 +60,43 @@ const StudentDashboard = () => {
                 // XP Calculation: Score * 10
                 const totalXP = attempts.reduce((acc, curr) => acc + ((curr.score || 0) * 10), 0);
 
-                // 3. Fetch Real Progress for Task Planner
-                // We need to fetch all subject progress for the user's class
+                // Calculate Weekly Hours
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+                const weeklyMinutes = attempts.reduce((acc, curr) => {
+                    const quizDate = new Date(curr.createdAt);
+                    if (quizDate > oneWeekAgo) {
+                        if (curr.endTime && curr.createdAt) {
+                            const duration = (new Date(curr.endTime) - new Date(curr.createdAt)) / 1000 / 60; // minutes
+                            return acc + duration;
+                        }
+                        return acc + 15; // Fallback estimate
+                    }
+                    return acc;
+                }, 0);
+                const weeklyHours = Math.round((weeklyMinutes / 60) * 10) / 10;
+
+                // 3. Fetch Tasks (Planner)
+                const tasksCompRes = await getTasks();
+                const tasks = tasksCompRes.tasks || [];
+                const completedTasks = tasks.filter(t => t.isCompleted).length;
+                const pendingTasks = tasks.length - completedTasks;
+
+                setTaskStats({
+                    completedTasks,
+                    pendingTasks
+                });
+
+                // 4. Fetch Real Progress for Continue Learning
                 const userClass = userData?.class || 10;
                 const progressRes = await API.get(`/progress/getSubjectProgress?classId=${userClass}`);
                 const progressData = Array.isArray(progressRes.data) ? progressRes.data : [];
 
-                // Calculate Task Stats
-                const totalAvailable = calculateTotalTasks(userClass);
-                let completedCount = 0;
-                let inProgressCount = 0;
-
-                // Aggregate completed items from backend progress
-                progressData.forEach(p => {
-                    const notesDone = p.notesCompleted?.length || 0;
-                    const videosDone = p.videosCompleted?.length || 0;
-                    // For "Total Tasks" we counted chapters. Let's count "Items" completed. 
-                    // To keep it simple and consistent: 
-                    // Task = 1 Chapter Note or Video. 
-                    // For now, let's just sum completed notes + videos as "Completed Tasks"
-                    completedCount += notesDone + videosDone;
-
-                    if (p.completion > 0 && p.completion < 100) {
-                        inProgressCount++;
-                    }
-                });
-
-                // Adjust Total: Since static data might not list every single video, 
-                // but we want a relative "Pending". 
-                // Let's set Total = Completed + (Approx Remaining Chapters * 2 items per chapter) 
-                // OR just use the handy logic: Total = Static Chapters. Completed = % of that?
-                // Let's try: Total Tasks = Static Chapters. 
-                // Completed Tasks = Completed Chapters (where completion > 80% maybe?)
-                // Actually user requested "Completed, Pending, In Progress".
-                // Let's stick to "Items". 
-                // If totalAvailable is strictly chapters, let's treat "Task" as "Study Chapter".
-                // We count a chapter as "Done" if the backend says it's done? 
-                // Backend tracks per subject. 
-                // Let's simplify: 
-                // Total Tasks = Total Chapters in Syllabus.
-                // Completed = Sum of completion % / 100 * Total Chapters? No that's fuzzy.
-
-                // Let's go with:
-                // Total Tasks = Total Chapters (from static classData)
-                // Completed = Number of subjects * (completion/100)? No.
-
-                // Let's use the provided counts:
-                // Completed = `progressData` sum of `notesRead`.
-                // Pending = Total - Completed.
-
-                // Refined Logic:
-                // Total Tasks = Total Chapters (Notes) in classData.
-                // Completed = sum of `notesCompleted.length` from backend.
-                // Pending = Total - Completed.
-
-                const totalChapters = calculateTotalTasks(userClass);
-                const completedChapters = progressData.reduce((acc, p) => acc + (p.notesCompleted?.length || 0), 0);
-
-                setTaskStats({
-                    totalTasks: totalChapters,
-                    completedTasks: completedChapters,
-                    pendingTasks: Math.max(0, totalChapters - completedChapters),
-                    inProgressSubjects: inProgressCount
-                });
-
                 // Prepare "Continue Learning"
-                // Find subjects with some progress but not 100%
                 const workingOn = [];
-                // Map backend progress back to subject names
                 const clsData = classData[userClass];
                 const allSubjects = clsData ? [...clsData.subjects] : [];
-                // Flatten sub-subjects
                 const flatsubs = [];
                 allSubjects.forEach(s => {
                     if (s.subSubjects) flatsubs.push(...s.subSubjects);
@@ -155,7 +104,8 @@ const StudentDashboard = () => {
                 });
 
                 progressData.forEach(p => {
-                    if (p.completion < 100) {
+                    // Only show subjects that have STARTED (completion > 0) but not finished
+                    if (p.completion > 0 && p.completion < 100) {
                         const sub = flatsubs.find(s => s.id === p.subjectId);
                         if (sub) {
                             workingOn.push({
@@ -169,8 +119,6 @@ const StudentDashboard = () => {
                     }
                 });
 
-                // If we have very few "In Progress", maybe show "Not Started" ones as suggestions?
-                // For now, just show active ones.
                 setContinueLearning(workingOn.slice(0, 3));
 
 
@@ -178,7 +126,7 @@ const StudentDashboard = () => {
                     streak,
                     avgScore,
                     totalXP,
-                    weeklyHours: 12.5 // Mock
+                    weeklyHours
                 });
 
             } catch (error) {
@@ -347,17 +295,6 @@ const StudentDashboard = () => {
                                         <span className="text-sm font-medium text-amber-700 dark:text-amber-400">Pending</span>
                                     </div>
                                     <div className="text-2xl font-bold text-amber-800 dark:text-amber-300">{taskStats.pendingTasks}</div>
-                                </div>
-                            </div>
-
-                            {/* In Progress */}
-                            <div>
-                                <div className="flex justify-between text-sm mb-2">
-                                    <span className="text-slate-600 dark:text-slate-400">Active Subjects</span>
-                                    <span className="font-bold text-slate-900 dark:text-white">{taskStats.inProgressSubjects}</span>
-                                </div>
-                                <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
-                                    <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${Math.min(100, (taskStats.inProgressSubjects / 6) * 100)}%` }}></div>
                                 </div>
                             </div>
 

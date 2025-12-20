@@ -383,7 +383,11 @@ function SingleNotes() {
                     <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                       {!isDone && !isInProgress && (
                         <button
-                          onClick={() => handleMarkNoteInProgress(noteId)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMarkNoteInProgress(noteId);
+                            if (pdfUrl) handleViewPdf(pdfUrl, note.title, noteId);
+                          }}
                           disabled={isPending}
                           className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-colors"
                         >

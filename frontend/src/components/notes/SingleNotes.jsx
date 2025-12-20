@@ -357,7 +357,7 @@ function SingleNotes() {
 
               return (
                 <div key={idx}
-                  onClick={() => !isDone && pdfUrl && handleViewPdf(pdfUrl, note.title, noteId)}
+                  onClick={() => pdfUrl && handleViewPdf(pdfUrl, note.title, noteId)}
                   className={`bg-white rounded-xl p-4 border transition-all hover:shadow-md cursor-pointer group 
                         ${isDone ? "border-green-300 bg-green-50/40" :
                       isInProgress ? "border-blue-300 bg-blue-50/40" : "border-gray-200 hover:border-blue-400"}`}>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 12 Activities - Magnetic Effects | Sarvottam Institute</title>
+    <style>
+        :root {
+            --accent: #818cf8;
+            /* Indigo */
+            --accent-soft: rgba(129, 140, 248, 0.15);
+            --accent-strong: #6366f1;
+            --accent-rgb: 129, 140, 248;
+
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #e0e7ff;
+            margin: 0;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 2rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-pill);
+            background: var(--accent-soft);
+            transition: var(--transition-fast);
+        }
+
+        .back-link:hover {
+            background: rgba(129, 140, 248, 0.25);
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        .activity-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .activity-badge {
+            background: rgba(129, 140, 248, 0.2);
+            color: #c7d2fe;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .objective {
+            font-weight: 600;
+            color: #a5b4fc;
+            margin-bottom: 1rem;
+        }
+
+        ul,
+        ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            color: #cbd5e1;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .observation-box {
+            background: rgba(129, 140, 248, 0.08);
+            border: 1px dashed rgba(129, 140, 248, 0.4);
+            padding: 1.2rem;
+            border-radius: 12px;
+        }
+
+        .observation-box h4 {
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="Chapter-12-Magnetism.html" class="back-link">&larr; Back to Chapter Notes</a>
+        <h1>Activities: Magnetic Effects</h1>
+
+        <!-- 12.1 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 12.1</span>
+                <h2>Oersted’s Experiment</h2>
+            </div>
+            <p class="objective">To show that a current-carrying wire produces a magnetic field.</p>
+            <ol>
+                <li>Take a straight thick copper wire and place it between points X and Y in an electric circuit.</li>
+                <li>Place a small compass near the copper wire.</li>
+                <li>Switch on the current. Observe the direction of deflection of the compass needle.</li>
+                <li>Reverse the direction of current and observe again.</li>
+            </ol>
+            <div class="observation-box">
+                <h4>Observation</h4>
+                <p>The compass needle is deflected on passing the current. If direction of current is reversed, the
+                    direction of deflection is also reversed.</p>
+                <p><strong>Conclusion:</strong> Electricity and Magnetism are linked. A current-carrying conductor
+                    produces a magnetic field around it.</p>
+            </div>
+        </div>
+
+        <!-- 12.2 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 12.2</span>
+                <h2>Magnetic Field Lines (Iron Filings)</h2>
+            </div>
+            <p class="objective">To visualize the magnetic field around a bar magnet.</p>
+            <ol>
+                <li>Fix a sheet of white paper on a drawing board.</li>
+                <li>Place a bar magnet in the center.</li>
+                <li>Sprinkle some iron filings uniformly around the bar magnet.</li>
+                <li>Tap the board gently.</li>
+            </ol>
+            <div class="observation-box">
+                <h4>Observation</h4>
+                <p>Iron filings arrange themselves in a pattern representing the magnetic field lines. The lines are
+                    denser near the poles.</p>
+            </div>
+        </div>
+
+        <!-- 12.3 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 12.3</span>
+                <h2>Drawing Field Lines with Compass</h2>
+            </div>
+            <p class="objective">To draw magnetic field lines using a compass.</p>
+            <ol>
+                <li>Place a magnet on a sheet of paper. Mark its boundary.</li>
+                <li>Place the compass near the North Pole of the magnet.</li>
+                <li>Mark the position of two ends of the needle.</li>
+                <li>Move the needle to a new position such that its south pole occupies the position previously occupied
+                    by its north pole.</li>
+                <li>Repeat until you reach the South Pol. Join the points.</li>
+            </ol>
+            <div class="observation-box">
+                <h4>Observation</h4>
+                <p>The path traced represents a magnetic field line. Lines emerge from North and merge at South.</p>
+            </div>
+        </div>
+
+        <!-- 12.4 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 12.4</span>
+                <h2>Concentric Field Lines</h2>
+            </div>
+            <p class="objective">To observe magnetic field around a straight conductor.</p>
+            <ol>
+                <li>Insert a long straight copper wire vertically through a cardboard.</li>
+                <li>Connect it to a battery and key.</li>
+                <li>Sprinkle iron filings on the cardboard. Switch on current and tap gently.</li>
+            </ol>
+            <div class="observation-box">
+                <h4>Observation</h4>
+                <p>Filings arrange in concentric circles around the wire.</p>
+            </div>
+        </div>
+
+        <!-- 12.5 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 12.5</span>
+                <h2>Field Direction (Right Hand Rule)</h2>
+            </div>
+            <p class="objective">To determine the direction of the magnetic field.</p>
+            <ol>
+                <li>Use the setup from Activity 12.4.</li>
+                <li>Place a compass at a point (say P) over a circle.</li>
+                <li>Observe the direction of the needle.</li>
+                <li>Reverse current direction.</li>
+            </ol>
+            <div class="observation-box">
+                <h4>Conclusion</h4>
+                <p>If current flows vertically up, field is anticlockwise. If down, field is clockwise (Right Hand Thumb
+                    Rule).</p>
+            </div>
+        </div>
+
+        <!-- 12.6 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 12.6</span>
+                <h2>Circular Loop Field</h2>
+            </div>
+            <p class="objective">To observe the magnetic field of a circular coil.</p>
+            <ol>
+                <li>Pass a circular coil through a cardboard.</li>
+                <li>Connect to battery. Sprinkle iron filings.</li>
+            </ol>
+            <div class="observation-box">
+                <h4>Observation</h4>
+                <p>Field lines are circular near the wire. As we move towards the center, they become larger and appear
+                    straight at the center.</p>
+            </div>
+        </div>
+
+        <!-- 12.7 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 12.7</span>
+                <h2>Force on Conductor (Kicking Wire)</h2>
+            </div>
+            <p class="objective">To demonstrate force on a current-carrying conductor in a magnetic field.</p>
+            <ol>
+                <li>Take a small aluminium rod AB. Suspend it horizontally using connecting wires.</li>
+                <li>Place a strong horseshoe magnet such that the rod lies between the poles.</li>
+                <li>Pass current through the rod from B to A.</li>
+            </ol>
+            <div class="observation-box">
+                <h4>Observation</h4>
+                <p>The rod gets displaced towards the left. If current is reversed, displacement is towards right.</p>
+                <p><strong>Conclusion:</strong> A mechanical force is exerted on a current-carrying conductor in a
+                    magnetic field (Fleming's Left Hand Rule).</p>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

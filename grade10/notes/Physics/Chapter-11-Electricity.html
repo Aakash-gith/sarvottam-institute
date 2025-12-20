@@ -7,26 +7,20 @@
     <title>Chapter 11 - Electricity | Class 10 Physics</title>
     <style>
         :root {
-
             --accent: #06b6d4;
             /* Cyan */
             --accent-soft: rgba(6, 182, 212, 0.15);
             --accent-strong: #0891b2;
-            --accent-rgb: 6, 182, 212;
-
             --bg: #0f172a;
             --bg-soft: #111827;
             --text-main: #e5e7eb;
             --text-soft: #9ca3af;
             --card-bg: #020617;
             --border-soft: #1f2937;
-            --danger: #f97373;
-            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
             --radius-xl: 20px;
             --radius-lg: 16px;
             --radius-pill: 999px;
             --transition-fast: 180ms ease-out;
-            --transition-med: 260ms ease-out;
         }
 
         * {
@@ -42,16 +36,6 @@
             line-height: 1.6;
             min-height: 100vh;
             scroll-behavior: smooth;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        img {
-            max-width: 100%;
-            display: block;
         }
 
         /* Layout */
@@ -153,16 +137,17 @@
             color: #e2e8f0;
         }
 
+        h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
         /* Cards & Grid */
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
         }
 
@@ -185,12 +170,20 @@
 
         .card ul,
         .card ol {
-            list-style: none;
             padding-left: 0.4rem;
             margin-bottom: 1rem;
         }
 
-        .card li {
+        .card ul {
+            list-style: none;
+        }
+
+        .card ol {
+            list-style-position: inside;
+            color: #cbd5e1;
+        }
+
+        .card ul li {
             position: relative;
             padding-left: 1.2rem;
             margin-bottom: 0.6rem;
@@ -198,7 +191,7 @@
             color: #cbd5e1;
         }
 
-        .card li::before {
+        .card ul li::before {
             content: "•";
             position: absolute;
             left: 0;
@@ -217,7 +210,6 @@
             margin: 1.2rem 0;
             font-family: 'Courier New', monospace;
             font-weight: 500;
-            position: relative;
         }
 
         .formula-box strong {
@@ -237,17 +229,10 @@
             text-align: center;
             color: #64748b;
             margin: 1rem 0;
-            min-height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-        }
-
-        .diagram-box span {
-            display: block;
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
         }
 
         .table-container {
@@ -281,9 +266,14 @@
             background: rgba(255, 255, 255, 0.02);
         }
 
-        .highlight-text {
+        .note-highlight {
             color: #fca5a5;
             font-weight: 500;
+        }
+
+        .activity-card {
+            border-left: 4px solid #facc15;
+            background: linear-gradient(to right, rgba(250, 204, 21, 0.05), transparent);
         }
 
         .activity-badge {
@@ -297,41 +287,31 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Lightbox */
-        .lightbox-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
+        .btn {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            backdrop-filter: blur(5px);
+            padding: 0.6rem 1.4rem;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 1rem;
         }
 
-        .lightbox-overlay.active {
-            opacity: 1;
-            pointer-events: all;
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 15px var(--accent-soft);
         }
 
-        .lightbox-image {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .lightbox-overlay.active .lightbox-image {
-            transform: scale(1);
+        .btn-primary:hover {
+            background: var(--accent-strong);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--accent-soft);
         }
     </style>
 </head>
@@ -348,14 +328,18 @@
                     <span class="badge" style="border-color: rgba(234, 179, 8, 0.5); color: #fde047;">Chapter 11</span>
                 </div>
                 <h1>Electricity</h1>
-                <p class="hero-subtitle">Improvised notes based on curriculum standards covering Charge, Current, Ohm's
-                    Law, and Resistive Circuits.</p>
+                <p class="hero-subtitle">Comprehensive notes covering Electric Current, Potential Difference, Ohm's Law,
+                    Resistance, Heating Effects, and Electric Power.</p>
+                <div class="hero-actions">
+                    <a href="Chapter-11-Activities.html" class="btn btn-primary">View Activities & Experiments
+                        &rarr;</a>
+                </div>
             </div>
             <div class="hero-card">
                 <div class="formula-box" style="margin:0; background: transparent; border: none; text-align: left;">
-                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem; color: #fff;">Q = ne</span>
-                    <span style="color: #94a3b8; font-family: sans-serif; font-size: 0.9rem;">Quantization of Charge:
-                        The foundation of electricity.</span>
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem; color: #fff;">V = IR</span>
+                    <span style="color: #94a3b8; font-family: sans-serif; font-size: 0.9rem;">Ohm's Law: The fundamental
+                        relationship between Voltage, Current, and Resistance.</span>
                 </div>
             </div>
         </header>
@@ -363,44 +347,34 @@
         <!-- 11.1 Electric Current & Circuit -->
         <section id="section-11.1">
             <span class="section-label">11.1 Fundamentals</span>
-            <h2>Electric Charge and Current</h2>
+            <h2>Electric Current and Circuit</h2>
             <div class="grid-2">
                 <div class="card">
-                    <h3>Electric Charge (Q)</h3>
-                    <p>Charge is a fundamental particle in an atom. It may be positive or negative.</p>
-                    <ul>
-                        <li>Like charges repel, unlike charges attract.</li>
-                        <li><strong>SI Unit:</strong> Coulomb (C).</li>
-                        <li>Charge on 1 electron (e) = 1.6 × 10⁻¹⁹ C.</li>
-                    </ul>
-                    <div class="formula-box">
-                        <strong>Quantization of Charge</strong>
-                        Q = ne<br>
-                        <span style="font-size:0.8em; opacity:0.7;">n = number of electrons<br>e = charge on 1
-                            electron</span>
-                    </div>
-                </div>
-                <div class="card">
                     <h3>Electric Current (I)</h3>
-                    <p>The rate of flow of charge is called current.</p>
+                    <p>The rate of flow of electric charge is called electric current.</p>
                     <div class="formula-box">
                         <strong>Formula</strong>
-                        I = Q / t<br>
-                        <span style="font-size:0.8em; opacity:0.7;">1 Ampere = 1 Coulomb / 1 second (1 Cs⁻¹)</span>
+                        I = Q / t
                     </div>
                     <ul>
-                        <li><strong>Small Units:</strong>
-                            <ul>
-                                <li>1 mA (Milliampere) = 10⁻³ A</li>
-                                <li>1 μA (Microampere) = 10⁻⁶ A</li>
-                            </ul>
-                        </li>
-                        <li><strong>Direction:</strong> Opposite to flow of electrons. (Positive → Negative).</li>
+                        <li><strong>Q:</strong> Net charge (Coulombs, C)</li>
+                        <li><strong>t:</strong> Time (Seconds, s)</li>
+                        <li><strong>SI Unit:</strong> Ampere (A)</li>
                     </ul>
-                    <div class="diagram-box" style="margin-top: 1rem;">
-                        <img src="images/circuit_simple.png" alt="Simple Electric Circuit Diagram"
+                    <p style="margin-top: 1rem;"><strong>Direction:</strong> Conventional current flows from Positive
+                        terminal to Negative terminal (Opposite to electron flow).</p>
+                </div>
+                <div class="card">
+                    <h3>Measurement & Circuit</h3>
+                    <ul>
+                        <li><strong>Ammeter:</strong> Device used to measure current.</li>
+                        <li>Connected in <span class="note-highlight">SERIES</span> in a circuit.</li>
+                        <li>It has very low resistance.</li>
+                    </ul>
+                    <div class="diagram-box" style="margin-top: 1rem; padding: 1rem;">
+                        <img src="images/circuit_simple.png" alt="Simple Electric Circuit"
                             style="width: 100%; border-radius: 8px;">
-                        <span>[Diagram: Simple Circuit with Cell, Key, Bulb, Ammeter]</span>
+                        <span style="margin-top: 0.5rem; font-size: 0.8rem;">[Simple Electric Circuit]</span>
                     </div>
                 </div>
             </div>
@@ -409,30 +383,35 @@
         <!-- 11.2 Electric Potential -->
         <section id="section-11.2">
             <span class="section-label">11.2 Potential</span>
-            <h2>Potential Difference (V)</h2>
+            <h2>Electric Potential Difference</h2>
             <div class="card">
                 <div class="grid-2">
                     <div>
-                        <h3>Definition</h3>
-                        <p>Work done to move a unit charge from one point to another.</p>
-                        <div class="formula-box">
-                            V = W / Q
-                        </div>
-                        <p><strong>1 Volt Definition:</strong><br>
-                            When 1 Joule of work is done in carrying 1 Coulomb charge, the potential difference is
-                            called 1 Volt.</p>
+                        <h3>Concept & Definition</h3>
+                        <p>Electric potential difference between two points in an electric circuit carrying some current
+                            is the work done to move a unit charge from one point to the other.</p>
+                        <p style="margin-top: 0.5rem; color: var(--text-soft);"><em>Analogy:</em> Water flows from high
+                            level to low level; similarly, charge flows from high potential to low potential.</p>
                     </div>
                     <div>
-                        <h3>Measurement</h3>
+                        <div class="formula-box">
+                            <strong>Formula</strong>
+                            V = W / Q
+                        </div>
                         <ul>
-                            <li><strong>Voltmeter:</strong> Instrument to measure PD.</li>
-                            <li><strong>Connection:</strong> Always in <span class="highlight-text">PARALLEL</span>.
-                            </li>
-                            <li>Has high resistance.</li>
-                            <li>Cells maintain potential difference in a circuit.</li>
-                            <li>Current flows from Higher Potential → Lower Potential.</li>
+                            <li><strong>W:</strong> Work done (Joule, J)</li>
+                            <li><strong>Q:</strong> Charge (Coulomb, C)</li>
+                            <li><strong>SI Unit:</strong> Volt (V)</li>
                         </ul>
                     </div>
+                </div>
+                <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-soft); padding-top: 1.5rem;">
+                    <h4>Voltmeter</h4>
+                    <ul>
+                        <li>Instrument used to measure potential difference.</li>
+                        <li>Connected in <span class="note-highlight">PARALLEL</span> across the points.</li>
+                        <li>It has high resistance.</li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -440,72 +419,105 @@
         <!-- 11.3 Circuit Diagram -->
         <section id="section-11.3">
             <span class="section-label">11.3 Components</span>
-            <h2>Circuit Diagram Components</h2>
+            <h2>Circuit Diagram</h2>
+            <p style="margin-bottom: 1rem; color: var(--text-soft);">Standard symbols used to represent electrical
+                components in circuit diagrams:</p>
             <div class="table-container">
-                <div class="diagram-box" style="padding: 0; background: transparent; border: none;">
-                    <img src="images/circuit_symbols_new.png" alt="Circuit Symbols Chart"
-                        style="width: 100%; max-width: 800px; border-radius: 12px; border: 1px solid #334155;">
+                <div style="padding: 1.5rem;">
+                    <img src="images/circuit_symbols_new.png" alt="Circuit Symbols"
+                        style="width: 100%; max-width: 800px; display: block; margin: 0 auto; border-radius: 8px;">
                 </div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Key Components</h3>
+                    <ul>
+                        <li><strong>Electric Cell/Battery:</strong> Source of potential difference.</li>
+                        <li><strong>Switch/Key:</strong> Makes or breaks the circuit.</li>
+                        <li><strong>Resistor:</strong> Opposes flow of current.</li>
+                        <li><strong>Rheostat:</strong> Variable resistance to control current.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Meters</h3>
+                    <ul>
+                        <li><strong>Ammeter (A):</strong> Measures Current.</li>
+                        <li><strong>Voltmeter (V):</strong> Measures Voltage.</li>
+                        <li><strong>Galvanometer (G):</strong> Detects presence of current.</li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
         <!-- 11.4 Ohm's Law -->
         <section id="section-11.4">
             <span class="section-label">11.4 Relationship</span>
-            <h2>Ohm's Law & Resistance</h2>
+            <h2>Ohm's Law</h2>
             <div class="grid-2">
                 <div class="card">
                     <h3>Statement</h3>
-                    <p>Potential difference across the two points of a metallic conductor is directly proportional to
-                        current passing through it, provided temperature remains constant.</p>
+                    <p>The potential difference (V) across the ends of a given metallic wire in an electric circuit is
+                        directly proportional to the current flowing through it, provided its temperature remains the
+                        same.</p>
                     <div class="formula-box">
                         V ∝ I<br>
                         V = IR
                     </div>
-                    <div class="diagram-box">
-                        <img src="images/ohm_graph.png" alt="Ohm's Law Graph V vs I">
-                        <span>[Diagram: V vs I Graph - Straight Line]</span>
-                    </div>
+                    <p>Where <strong>R</strong> is the Resistance (constant for a given wire at a given temp).</p>
                 </div>
                 <div class="card">
-                    <h3>Resistance (R)</h3>
-                    <p>Property to resist flow of charges.</p>
+                    <h3>V-I Graph</h3>
+                    <div class="diagram-box" style="padding: 1rem;">
+                        <img src="images/ohm_graph.png" alt="V-I Graph" style="width: 100%; border-radius: 8px;">
+                    </div>
+                    <p style="text-align: center; font-size: 0.9rem;">Straight line graph passing through origin
+                        indicates V ∝ I.</p>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 1.5rem;">
+                <h3>Resistance (R)</h3>
+                <p>It is the property of a conductor to resist the flow of charges through it.</p>
+                <div class="grid-2" style="margin-top: 1rem;">
                     <ul>
-                        <li><strong>1 Ohm (Ω):</strong> If potential difference is 1 V and current is 1 A, then
-                            resistance is 1 Ω.</li>
-                        <li><strong>Rheostat:</strong> Component to regulate current without changing voltage source.
-                        </li>
+                        <li><strong>Examples:</strong> Variable Resistance (Rheostat) is used to change current without
+                            changing voltage source.</li>
+                        <li><strong>Good Conductor:</strong> Low Resistance.</li>
+                        <li><strong>Insulator:</strong> Very High Resistance.</li>
                     </ul>
+                    <div class="formula-box" style="margin: 0;">
+                        <strong>SI Unit: Ohm (Ω)</strong>
+                        1 Ω = 1 V / 1 A
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- 11.5 Factors -->
         <section id="section-11.5">
-            <span class="section-label">11.5 Properties</span>
+            <span class="section-label">11.5 Factors</span>
             <h2>Factors Affecting Resistance</h2>
             <div class="grid-2">
                 <div class="card">
-                    <h3>Dependence Factors</h3>
+                    <h3>Factors</h3>
+                    <p>The resistance of a conductor depends on:</p>
                     <ol>
                         <li><strong>Length (l):</strong> Directly proportional (R ∝ l).</li>
-                        <li><strong>Area (A):</strong> Inversely proportional (R ∝ 1/A).</li>
-                        <li><strong>Temperature:</strong> Directly proportional.</li>
-                        <li><strong>Material:</strong> Depends on nature of material.</li>
+                        <li><strong>Area of Cross-section (A):</strong> Inversely proportional (R ∝ 1/A).</li>
+                        <li><strong>Nature of Material:</strong> Depends on atomic structure.</li>
+                        <li><strong>Temperature:</strong> Resistance increases with temperature for metals.</li>
                     </ol>
-                    <div class="formula-box" style="margin-top: 1rem;">
-                        R = ρ (l / A)
-                    </div>
                 </div>
                 <div class="card">
                     <h3>Resistivity (ρ)</h3>
-                    <p>Resistance offered by a cube of material of side 1m when current flows perpendicular to opposite
-                        faces.</p>
+                    <div class="formula-box">
+                        R = ρ (l / A)
+                    </div>
                     <ul>
-                        <li><strong>SI Unit:</strong> Ohm-meter (Ωm).</li>
-                        <li>Does not change with dimensions, only with material and temperature.</li>
-                        <li><strong>Metals/Alloys:</strong> Low resistivity (10⁻⁸ to 10⁻⁶ Ωm).</li>
-                        <li><strong>Insulators:</strong> High resistivity (10¹² to 10¹⁷ Ωm).</li>
-                        <li>Alloys don't oxidize vertically at high temps (Used in heaters).</li>
+                        <li><strong>ρ (Rho):</strong> Constant of proportionality called Electrical Resistivity.</li>
+                        <li><strong>SI Unit:</strong> Ohm-meter (Ω m).</li>
+                        <li>Characteristic property of material.</li>
+                        <li><strong>Metals/Alloys:</strong> Low resistivity (10⁻⁸ to 10⁻⁶ Ω m).</li>
+                        <li><strong>Insulators:</strong> High resistivity (10¹² to 10¹⁷ Ω m).</li>
                     </ul>
                 </div>
             </div>
@@ -514,164 +526,176 @@
         <!-- 11.6 System of Resistors -->
         <section id="section-11.6">
             <span class="section-label">11.6 Combinations</span>
-            <h2>System of Resistors</h2>
+            <h2>Resistance of a System of Resistors</h2>
 
             <!-- Series -->
             <div class="card" style="border-top: 4px solid var(--accent); margin-bottom: 2rem;">
-                <h3>1. Resistors in Series</h3>
-                <p>Two or more resistors connected end to end.</p>
+                <h3>11.6.1 Resistors in Series</h3>
                 <div class="grid-2">
                     <div>
-                        <h4>Derivation:</h4>
-                        <p>Total voltage drops is sum of individual drops:</p>
-                        <p style="font-family: monospace; color: var(--accent);">V = V₁ + V₂ + V₃</p>
-                        <p>Apply Ohm's Law (V=IR):</p>
-                        <p style="font-family: monospace;">IR = IR₁ + IR₂ + IR₃</p>
-                        <p style="font-family: monospace;">IR = I(R₁ + R₂ + R₃)</p>
-                        <p><strong>Result:</strong></p>
-                        <div class="formula-box">Rs = R₁ + R₂ + R₃</div>
-                        <div style="margin-top: 1rem;">
-                            <img src="images/resistors_series.png" alt="Resistors in Series Diagram"
-                                style="width: 100%; border-radius: 8px; border: 1px solid #334155;">
-                        </div>
-                    </div>
-                    <div>
-                        <h4>Key Points:</h4>
-                        <ul>
-                            <li>Current (I) is <strong>SAME</strong> in every part.</li>
-                            <li>Equivalent resistance is <strong>LARGER</strong> than largest individual resistance.
-                            </li>
+                        <p>Resistors are joined end to end.</p>
+                        <ul style="margin-top: 1rem;">
+                            <li><strong>Current:</strong> Same in every part of the circuit.</li>
+                            <li><strong>Potential Difference:</strong> Sum of PD across individual resistors equals
+                                total voltage. (V = V₁ + V₂ + V₃)</li>
                         </ul>
+                        <div class="formula-box">
+                            <strong>Equivalent Resistance</strong>
+                            Rs = R₁ + R₂ + R₃
+                        </div>
+                        <p class="note-highlight">Rs > Maximum individual resistance.</p>
+                    </div>
+                    <div class="diagram-box" style="margin: 0;">
+                        <img src="images/resistors_series.png" alt="Resistors in Series"
+                            style="width: 100%; border-radius: 8px;">
                     </div>
                 </div>
             </div>
 
             <!-- Parallel -->
-            <div class="card" style="border-top: 4px solid #f472b6;">
-                <h3>2. Resistors in Parallel</h3>
-                <p>Resistors connected between two common points.</p>
+            <div class="card" style="border-top: 4px solid #ec4899;">
+                <h3>11.6.2 Resistors in Parallel</h3>
                 <div class="grid-2">
                     <div>
-                        <h4>Derivation:</h4>
-                        <p>Total current is sum of branch currents:</p>
-                        <p style="font-family: monospace; color: #f472b6;">I = I₁ + I₂ + I₃</p>
-                        <p>Apply Ohm's Law (I=V/R):</p>
-                        <p style="font-family: monospace;">V/Rp = V/R₁ + V/R₂ + V/R₃</p>
-                        <p style="font-family: monospace;">V/Rp = V(1/R₁ + 1/R₂ + 1/R₃)</p>
-                        <p><strong>Result:</strong></p>
-                        <div class="formula-box">1/Rp = 1/R₁ + 1/R₂ + 1/R₃</div>
-                        <div style="margin-top: 1rem;">
-                            <img src="images/resistors_parallel.png" alt="Resistors in Parallel Diagram"
-                                style="width: 100%; border-radius: 8px; border: 1px solid #334155;">
-                        </div>
-                    </div>
-                    <div>
-                        <h4>Key Points:</h4>
-                        <ul>
-                            <li>Voltage (V) is <strong>SAME</strong> across each resistor.</li>
-                            <li>Equivalent resistance is <strong>LESS</strong> than smallest individual resistance.</li>
+                        <p>Resistors are connected between two common points.</p>
+                        <ul style="margin-top: 1rem;">
+                            <li><strong>Potential Difference:</strong> Same across each resistor.</li>
+                            <li><strong>Current:</strong> Sum of currents through branches equals total current. (I = I₁
+                                + I₂ + I₃)</li>
                         </ul>
+                        <div class="formula-box">
+                            <strong>Equivalent Resistance</strong>
+                            1/Rp = 1/R₁ + 1/R₂ + 1/R₃
+                        </div>
+                        <p class="note-highlight">Rp < Minimum individual resistance.</p>
+                    </div>
+                    <div class="diagram-box" style="margin: 0;">
+                        <img src="images/resistors_parallel.png" alt="Resistors in Parallel"
+                            style="width: 100%; border-radius: 8px;">
                     </div>
                 </div>
-
                 <div
-                    style="margin-top: 1.5rem; background: rgba(244, 114, 182, 0.1); padding: 1rem; border-radius: 8px;">
-                    <strong style="color: #f472b6;">Advantages of Parallel Combination:</strong>
-                    <ol style="margin-top: 0.5rem; margin-left: 1.5rem; font-size: 0.95rem;">
-                        <li>In series, if one component fails, the circuit is broken and none work. In parallel, others
-                            continue to work.</li>
-                        <li>Different appliances have different current requirements. This is satisfied in parallel
-                            (current divides).</li>
-                        <li>The total resistance in a parallel circuit is decreased, allowing efficient power usage.
-                        </li>
-                    </ol>
+                    style="margin-top: 1.5rem; background: rgba(236, 72, 153, 0.1); padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #ec4899;">Advantages of Parallel Combination in Domestic Circuits:</strong>
+                    <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                        <li>Each appliance has its own switch ( Independent operation).</li>
+                        <li>If one appliance fails, others continue to work.</li>
+                        <li>Each appliance gets the same voltage (220V).</li>
+                        <li>Total resistance is reduced, allowing required current for appliances.</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
         <!-- 11.7 Heating Effect -->
         <section id="section-11.7">
-            <span class="section-label">11.7 Thermal Effects</span>
-            <h2>Heating Effect & Applications</h2>
-            <div class="card" style="border-top: 4px solid var(--accent); margin-bottom: 2rem;">
-                <h3>Heating Effect of Electric Circuit</h3>
-                <p>If an electric circuit is purely resistive, the source of energy continually gets dissipated entirely
-                    in the form of heat.</p>
+            <span class="section-label">11.7 Heating</span>
+            <h2>Heating Effect of Electric Current</h2>
+            <div class="card">
+                <p>When electric current passes through a high resistance wire (like Nichrome), it becomes very hot and
+                    produces heat. This is the heating effect.</p>
                 <div class="formula-box">
-                    <strong>Heat Produced (Joule's Law)</strong>
+                    <strong>Joule's Law of Heating</strong>
                     H = I²Rt
                 </div>
-                <p><strong>Joule's Law of Heating:</strong> Heat produced in a resistor is:</p>
-                <ol>
-                    <li>Directly proportional to square of current (H ∝ I²).</li>
-                    <li>Directly proportional to resistance (H ∝ R).</li>
-                    <li>Directly proportional to time (H ∝ t).</li>
-                </ol>
-
-                <div class="grid-2" style="margin-top: 1.5rem;">
-                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
-                        <strong>Desirable Heating Effect</strong>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #a3e635;">Electric heater, Electric
-                            iron, Electric bulb, Electric fuse.</p>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
-                        <strong>Undesirable Heating Effect</strong>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #f87171;">Computers, Monitors (CRT),
-                            TV, Refrigerators.</p>
-                    </div>
-                </div>
+                <p>Heat produced (H) is directly proportional to:</p>
+                <ul>
+                    <li>Square of Current (I²)</li>
+                    <li>Resistance (R)</li>
+                    <li>Time (t) for which current flows</li>
+                </ul>
+                <p style="margin-top: 0.5rem;">Other forms: H = VIt, H = (V²/R)t</p>
             </div>
 
-            <div class="grid-2">
+            <div class="grid-2" style="margin-top: 1.5rem;">
                 <div class="card">
-                    <h3>Electric Bulb</h3>
-                    <p>Most power consumed by filament appears as heat, small part radiated as light.</p>
+                    <h3>Practical Applications</h3>
                     <ul>
-                        <li><strong>Filament:</strong> Tungsten.</li>
-                        <li>(i) Does not oxidize readily at high temp.</li>
-                        <li>(ii) High melting point (3380° C).</li>
-                        <li><strong>Gas Filling:</strong> Inactive gases like Nitrogen and Argon to prolong life.</li>
+                        <li><strong>Electric Iron, Toaster, Heater:</strong> Use alloys (like Nichrome) which have high
+                            resistivity and don't oxidize at high temps.</li>
+                        <li><strong>Electric Bulb:</strong> Filament (Tungsten) retains heat to emit light. High melting
+                            point (3380°C).</li>
                     </ul>
                 </div>
                 <div class="card">
                     <h3>Electric Fuse</h3>
-                    <p>Safety device to protect appliances from short circuit or overloading.</p>
+                    <p>Safety device connected in series.</p>
                     <ul>
-                        <li><strong>Material:</strong> Pure tin or alloy of copper and tin (Pb+Sn).</li>
-                        <li><strong>Connection:</strong> In series with Live wire.</li>
-                        <li><strong>Property:</strong> Low melting point.</li>
-                        <li><strong>Capacity:</strong> Slightly higher than appliance rating.</li>
+                        <li>Protects circuits from overloading and short-circuits.</li>
+                        <li>Made of Lead-Tin alloy (low melting point).</li>
+                        <li>Melts and breaks circuit if current exceeds rating.</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <!-- 11.8 Power -->
+        <!-- 11.8 Electric Power -->
         <section id="section-11.8">
-            <span class="section-label">11.8 Energy Rate</span>
-            <h2>Electric Power (P)</h2>
-            <div class="card">
-                <p>The rate at which electric energy is consumed or dissipated in an electric circuit.</p>
-                <div class="grid-2">
+            <span class="section-label">11.8 Power</span>
+            <h2>Electric Power</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Definition & Formula</h3>
+                    <p>Rate at which electrical energy is consumed or dissipated.</p>
                     <div class="formula-box">
                         P = VI<br>
                         P = I²R = V²/R
                     </div>
-                    <div>
-                        <ul>
-                            <li><strong>SI Unit:</strong> Watt (W).</li>
-                            <li>1 watt = 1 volt × 1 ampere.</li>
-                            <li><strong>Commercial Unit:</strong> kWh.</li>
-                            <li>1 kWh = 3.6 × 10⁶ Joules.</li>
-                            <li>1 kWh = 1 Unit of electric energy.</li>
-                        </ul>
+                    <ul>
+                        <li><strong>SI Unit:</strong> Watt (W).</li>
+                        <li>1 W = 1 Volt × 1 Ampere (1V × 1A).</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Commercial Unit of Energy</h3>
+                    <p><strong>Kilowatt-hour (kWh)</strong> or 'Unit'.</p>
+                    <div class="formula-box">
+                        1 kWh = 3.6 × 10⁶ J
                     </div>
+                    <p>Used for electricity bills.</p>
                 </div>
             </div>
         </section>
 
-    </div>
+        <!-- NCERT ACTIVITIES LINK -->
+        <section id="ncert-activities">
+            <span class="section-label">NCERT Lab</span>
+            <div class="section-title-row" style="margin-bottom: 2rem;">
+                <h2>Key Activities (11.1 to 11.6)</h2>
+                <div class="section-hint"
+                    style="color: var(--text-soft); font-size: 1rem; max-width: 38rem; margin-top: 0.5rem;">
+                    Detailed experiments on Ohm's Law, Resistance Factors, and Series/Parallel Circuits.
+                </div>
+            </div>
 
+            <div class="hero-card"
+                style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(8, 145, 178, 0.2)); border-color: rgba(6, 182, 212, 0.3); padding: 2rem;">
+                <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">🔬 Interactive Lab
+                        Activities
+                    </h3>
+                    <p style="max-width: 600px; color: #67e8f9; margin-bottom: 2rem; font-size: 1.1rem;">
+                        Explore observations like "Verification of Ohm's Law", "Factors affecting Resistance", and
+                        "Current in Series/Parallel Circuits".
+                    </p>
+                    <a href="Chapter-11-Activities.html" class="btn btn-primary"
+                        style="background: #06b6d4; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);">
+                        Explore All Activities &rarr;
+                    </a>
+                    <div class="badge-row" style="justify-content: center; margin-top: 2rem; gap: 0.8rem;">
+                        <span class="badge" style="border-color: rgba(6, 182, 212, 0.3); color: #a5f3fc;">Ohm's
+                            Law</span>
+                        <span class="badge"
+                            style="border-color: rgba(6, 182, 212, 0.3); color: #a5f3fc;">ResistanceFactors</span>
+                        <span class="badge" style="border-color: rgba(6, 182, 212, 0.3); color: #a5f3fc;">Series
+                            Circuit</span>
+                        <span class="badge" style="border-color: rgba(6, 182, 212, 0.3); color: #a5f3fc;">Parallel
+                            Circuit</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
     <script>
         // Lightbox Logic
         document.addEventListener('DOMContentLoaded', () => {

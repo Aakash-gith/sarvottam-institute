@@ -101,7 +101,7 @@ export const classData = {
                         color: "blue",
                         notes: [
                             { id: 1, title: "Chapter 9 - Light (Reflection and Refraction)", file: "/grade10/notes/Physics/Chapter-9-Light.html", isHTML: true },
-                            { id: 2, title: "Chapter 10 - The Human Eye and the Colourful World", file: "/grade10/notes/Physics/Chapter-2-Human-Eye.html", isHTML: true },
+                            { id: 2, title: "Chapter 10 - The Human Eye and the Colourful World", file: "/grade10/notes/Physics/Chapter-10-Human-Eye.html", isHTML: true },
                             { id: 3, title: "Chapter 11 - Electricity", file: "/grade10/notes/Physics/Chapter-11-Electricity.html", isHTML: true },
                             { id: 4, title: "Chapter 12 - Magnetic Effects of Electric Current", file: "/grade10/notes/Physics/Chapter-12-Magnetism.html", isHTML: true },
                         ],

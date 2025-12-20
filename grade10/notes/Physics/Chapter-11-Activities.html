@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 11 Activities - Electricity | Sarvottam Institute</title>
+    <style>
+        :root {
+            --accent: #06b6d4;
+            /* Cyan */
+            --accent-soft: rgba(6, 182, 212, 0.15);
+            --accent-strong: #0891b2;
+            --accent-rgb: 6, 182, 212;
+
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --danger: #f97373;
+            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+            --transition-med: 260ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Layout */
+        .page,
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+        }
+
+        h1 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            margin-bottom: 0.5rem;
+            color: #f1f5f9;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin: 0;
+            color: #e2e8f0;
+        }
+
+        /* Activity Card */
+        .activity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: transform var(--transition-fast);
+            border-left: 4px solid var(--accent);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(6, 182, 212, 0.4);
+        }
+
+        .activity-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .activity-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: rgba(234, 179, 8, 0.2);
+            color: #fde047;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            width: fit-content;
+        }
+
+        .activity-card h3 {
+            font-size: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .activity-card p {
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+
+        .activity-card ol,
+        .activity-card ul {
+            padding-left: 1.2rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+
+        .activity-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        .observation-box {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px dashed rgba(6, 182, 212, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        .observation-box strong {
+            color: #67e8f9;
+        }
+
+        @media (min-width: 640px) {
+            .activity-header {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .activity-header h2 {
+                margin-left: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Chapter 11: Activities & Experiments</h1>
+        <a href="Chapter-11-Electricity.html"
+            style="color: var(--accent); text-decoration: none; display: inline-block; margin-bottom: 2rem; font-weight: 500;">&larr;
+            Back to Notes</a>
+
+        <!-- Activity 11.1 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 11.1</span>
+                <h2>Verification of Ohm’s Law</h2>
+            </div>
+            <p><strong>Aim:</strong> To study the relationship between potential difference (V) across a resistor and
+                current (I) passing through it.</p>
+            <h3>Procedure:</h3>
+            <ol>
+                <li>Set up a circuit consisting of a nichrome wire XY of length 0.5m, an ammeter, a voltmeter, and four
+                    cells of 1.5V each.</li>
+                <li>Connect one cell. Record reading of Ammeter (I) and Voltmeter (V).</li>
+                <li>Connect two cells, three cells, and four cells successively. Record readings in each case.</li>
+                <li>Calculate V/I for each pair of readings.</li>
+                <li>Plot a graph of V vs I.</li>
+            </ol>
+            <div class="observation-box">
+                <strong>Observation:</strong> The ratio V/I is approximately constant. The graph is a straight line
+                passing through the origin.<br>
+                <strong>Conclusion:</strong> Potential difference is directly proportional to current (Ohm's Law
+                verified).
+            </div>
+        </div>
+
+        <!-- Activity 11.2 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 11.2</span>
+                <h2>Current Through Different Components</h2>
+            </div>
+            <p><strong>Aim:</strong> To observe that current flow depends on the nature of the electrical component.</p>
+            <h3>Procedure:</h3>
+            <ol>
+                <li>Take a nichrome wire, a torch bulb, and a 10W bulb.</li>
+                <li>Connect an ammeter and cells in a circuit with a gap XY.</li>
+                <li>Connect the nichrome wire in the gap XY. Note current.</li>
+                <li>Replace with the torch bulb, then the 10W bulb. Note current in each case.</li>
+            </ol>
+            <div class="observation-box">
+                <strong>Observation:</strong> Current is different for different components connected across the same
+                voltage source.<br>
+                <strong>Conclusion:</strong> Different components offer different resistance to current flow.
+            </div>
+        </div>
+
+        <!-- Activity 11.3 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 11.3</span>
+                <h2>Factors Affecting Resistance</h2>
+            </div>
+            <p><strong>Aim:</strong> To study the effect of length, area of cross-section, and material on resistance.
+            </p>
+            <h3>Procedure:</h3>
+            <ol>
+                <li>Complete an electric circuit consisting of a cell, ammeter, and a gap.</li>
+                <li>Connect a nichrome wire of length l (R1). Note current.</li>
+                <li>Connect a nichrome wire of length 2l (same thickness). Note current.</li>
+                <li>Connect a nichrome wire of length l but thicker (larger area). Note current.</li>
+                <li>Connect a copper wire of length l and same area. Note current.</li>
+            </ol>
+            <div class="observation-box">
+                <strong>Observation:</strong>
+                <ul>
+                    <li>Current decreases when length increases (Resistance increases).</li>
+                    <li>Current increases when wire is thicker (Resistance decreases).</li>
+                    <li>Current changes with material (Resistance depends on material nature).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Activity 11.4 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 11.4</span>
+                <h2>Current in a Series Circuit</h2>
+            </div>
+            <p><strong>Aim:</strong> To check if current is the same everywhere in a series selection.</p>
+            <h3>Procedure:</h3>
+            <ol>
+                <li>Join three resistors of different values (e.g., 1Ω, 2Ω, 3Ω) in series.</li>
+                <li>Connect an ammeter in the circuit between the battery and the first resistor. Note reading.</li>
+                <li>Change the position of the ammeter to between the resistors. Note reading.</li>
+            </ol>
+            <div class="observation-box">
+                <strong>Conclusion:</strong> The reading of the ammeter remains the same at all positions. In a series
+                combination involved, the current is constant throughout the circuit.
+            </div>
+        </div>
+
+        <!-- Activity 11.5 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 11.5</span>
+                <h2>Potential Difference in Series Combination</h2>
+            </div>
+            <p><strong>Aim:</strong> To verify the potential difference distribution in series.</p>
+            <h3>Procedure:</h3>
+            <ol>
+                <li>Connect three resistors R1, R2, R3 in series.</li>
+                <li>Measure the potential difference (V) across the combination.</li>
+                <li>Measure potential differences V1, V2, and V3 across each resistor individually.</li>
+            </ol>
+            <div class="observation-box">
+                <strong>Observation:</strong> V is equal to the sum of V1, V2, and V3.<br>
+                <strong>Conclusion:</strong> Total voltage is distributed across resistors in series.
+            </div>
+        </div>
+
+        <!-- Activity 11.6 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <span class="activity-badge">Activity 11.6</span>
+                <h2>Resistors in Parallel</h2>
+            </div>
+            <p><strong>Aim:</strong> To verify current and voltage properties in parallel combination.</p>
+            <h3>Procedure:</h3>
+            <ol>
+                <li>Connect three resistors in parallel to a battery.</li>
+                <li>Connect a voltmeter in parallel to the combination. Note reading.</li>
+                <li>Connect ammeters in series with each resistor branch to measure individual currents.</li>
+            </ol>
+            <div class="observation-box">
+                <strong>Observation:</strong>
+                <ol>
+                    <li>The potential difference across each resistor is the same.</li>
+                    <li>The total current is the sum of separate currents through each branch (I = I1 + I2 + I3).</li>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

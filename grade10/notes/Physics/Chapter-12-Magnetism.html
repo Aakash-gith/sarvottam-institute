@@ -1,639 +1,546 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 12 - Magnetic Effects of Electric Current</title>
+    <title>Chapter 12 - Magnetic Effects | Class 10 Physics</title>
     <style>
         :root {
-            
-            --accent: #06b6d4; /* Cyan */
-            --accent-soft: rgba(6, 182, 212, 0.15);
-            --accent-strong: #0891b2;
-            --accent-rgb: 6, 182, 212;
-            
+            --accent: #818cf8;
+            /* Indigo */
+            --accent-soft: rgba(129, 140, 248, 0.15);
+            --accent-strong: #6366f1;
+
             --bg: #0f172a;
             --bg-soft: #111827;
             --text-main: #e5e7eb;
             --text-soft: #9ca3af;
             --card-bg: #020617;
             --border-soft: #1f2937;
-            --danger: #f97373;
-            --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.85);
             --radius-xl: 20px;
             --radius-lg: 16px;
             --radius-pill: 999px;
             --transition-fast: 180ms ease-out;
-            --transition-med: 260ms ease-out;
         }
-        
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
 
-    body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
-        color: var(--text-main);
-        line-height: 1.6;
-        min-height: 100vh;
-        scroll-behavior: smooth;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top left, #1e1b4b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
 
-    /* Layout */
-    .page {
-        max-width: 1120px;
-        margin: 0 auto;
-        padding: 1.5rem 1.25rem 3rem;
-    }
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+        }
 
-    header {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        backdrop-filter: blur(14px);
-        background: linear-gradient(to right, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.9));
-        border-bottom: 1px solid rgba(55, 65, 81, 0.5);
-    }
+        /* Hero */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 4rem;
+            text-align: center;
+            align-items: center;
+        }
 
-    .nav-inner {
-        max-width: 1120px;
-        margin: 0 auto;
-        padding: 0.7rem 1.25rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1.5rem;
-    }
+        .badge-row {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
 
-    .logo {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        color: #e5e7eb;
-    }
+        .badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(129, 140, 248, 0.4);
+            color: #c7d2fe;
+            background: rgba(129, 140, 248, 0.1);
+        }
 
-    .logo-badge {
-        width: 26px;
-        height: 26px;
-        border-radius: 12px;
-        background: radial-gradient(circle at 20% 20%, #34d399, var(--accent) 60%, var(--accent-strong));
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.85rem;
-        color: #fff;
-        font-weight: 800;
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-    }
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.1;
+            background: linear-gradient(to right, #fff, #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
 
-    .nav-links {
-        display: flex;
-        gap: 0.4rem;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-soft);
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-    .nav-links a {
-        font-size: 0.78rem;
-        padding: 0.35rem 0.8rem;
-        border-radius: var(--radius-pill);
-        border: 1px solid transparent;
-        color: var(--text-soft);
-        transition: all var(--transition-fast);
-    }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 2rem;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 2rem;
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 20px var(--accent-soft);
+        }
 
-    .nav-links a:hover {
-        background: rgba(31, 41, 55, 0.85);
-        border-color: rgba(55, 65, 81, 0.9);
-        color: #e5e7eb;
-        transform: translateY(-1px);
-    }
+        .btn:hover {
+            transform: translateY(-2px);
+            background: var(--accent-strong);
+            box-shadow: 0 8px 30px var(--accent-soft);
+        }
 
-    .nav-links a.primary-link {
-        border-color: rgba(var(--accent-rgb), 0.7);
-        background: linear-gradient(135deg, var(--accent-soft), rgba(var(--accent-rgb), 0.1));
-        color: #fff;
-    }
+        /* Sections */
+        section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 6rem;
+        }
 
-    .nav-links a.primary-link:hover {
-        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-        color: #fff;
-        border-color: transparent;
-        box-shadow: 0 15px 40px var(--accent-soft);
-    }
+        .section-label {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
 
-    /* Hero */
-    .hero {
-        display: grid;
-        grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
-        gap: 2.5rem;
-        align-items: center;
-        margin-top: 2.3rem;
-        margin-bottom: 3rem;
-    }
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #f8fafc;
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 1rem;
+        }
 
-    .hero-text h1 {
-        font-size: clamp(2.1rem, 3vw + 1.2rem, 3.2rem);
-        line-height: 1.1;
-        margin-bottom: 0.75rem;
-    }
+        h3 {
+            font-size: 1.4rem;
+            color: #e0e7ff;
+            margin-bottom: 1rem;
+        }
 
-    .hero-subtitle {
-        font-size: 0.98rem;
-        color: var(--text-soft);
-        max-width: 33rem;
-        margin-bottom: 1.4rem;
-    }
+        /* Grid & Cards */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
 
-    .badge-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.6rem;
-        margin-bottom: 1.4rem;
-    }
+        .card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(31, 41, 55, 0.8);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            transition: var(--transition-fast);
+        }
 
-    .badge {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.09em;
-        padding: 0.3rem 0.8rem;
-        border-radius: var(--radius-pill);
-        border: 1px solid rgba(148, 163, 184, 0.5);
-        color: #cbd5f5;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-    }
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            background: rgba(17, 24, 39, 0.8);
+        }
 
-    .badge-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 999px;
-        background: var(--accent);
-        box-shadow: 0 0 0 4px var(--accent-soft);
-    }
+        /* Lists */
+        ul {
+            list-style: none;
+            padding-left: 0.5rem;
+        }
 
-    .hero-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.8rem;
-    }
+        li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: #cbd5e1;
+        }
 
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.6rem 1.4rem;
-        border-radius: var(--radius-pill);
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all var(--transition-med);
-        cursor: pointer;
-    }
+        li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 1.2em;
+            line-height: 1;
+        }
 
-    .btn-primary {
-        background: var(--accent);
-        color: #fff;
-        border: 1px solid transparent;
-        box-shadow: 0 4px 15px var(--accent-soft);
-    }
+        /* Diagrams & Formulas */
+        .diagram-box {
+            background: #020617;
+            border: 1px dashed #4b5563;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            color: #64748b;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            min-height: 200px;
+        }
 
-    .btn-primary:hover {
-        background: var(--accent-strong);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px var(--accent-soft);
-    }
+        .diagram-box img {
+            max-width: 100%;
+            border-radius: 8px;
+            object-fit: contain;
+        }
 
-    .btn-secondary {
-        background: rgba(31, 41, 55, 0.6);
-        color: #e5e7eb;
-        border: 1px solid rgba(75, 85, 99, 0.5);
-    }
+        .formula-box {
+            background: linear-gradient(135deg, rgba(129, 140, 248, 0.1), rgba(99, 102, 241, 0.1));
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(129, 140, 248, 0.3);
+            color: #a5b4fc;
+            font-family: monospace;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
 
-    .btn-secondary:hover {
-        background: rgba(55, 65, 81, 0.8);
-        border-color: #9ca3af;
-        transform: translateY(-2px);
-    }
+        /* Bottom Link */
+        .hero-card {
+            background: linear-gradient(135deg, rgba(129, 140, 248, 0.1), rgba(50, 50, 100, 0.3));
+            border: 1px solid rgba(129, 140, 248, 0.3);
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            text-align: center;
+        }
+    </style>
+</head>
 
-    .hero-visual { position: relative; }
-
-    .hero-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-xl);
-        padding: 1.5rem;
-        box-shadow: var(--shadow-soft);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hero-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(to right, #34d399, var(--accent));
-    }
-
-    .diagram-placeholder {
-        width: 100%;
-        aspect-ratio: 16/9;
-        background: #0f172a;
-        border-radius: var(--radius-lg);
-        border: 1px dashed #334155;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #64748b;
-        font-size: 0.85rem;
-        margin-bottom: 1rem;
-        overflow: hidden;
-    }
-    
-    .diagram-placeholder img { width: 100%; height: 100%; object-fit: cover; }
-    .diagram-placeholder.fit-contain img { object-fit: contain; }
-
-    /* Sections */
-    section { margin-bottom: 5rem; scroll-margin-top: 6rem; }
-    
-    .section-label {
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
-        color: var(--accent);
-        margin-bottom: 0.5rem;
-        font-weight: 700;
-    }
-
-    .section-title-row { margin-bottom: 2rem; }
-    h2 { font-size: 2rem; margin-bottom: 0.5rem; color: #f1f5f9; }
-    .section-hint { color: var(--text-soft); font-size: 1rem; max-width: 38rem; }
-
-    /* Cards & Grid */
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-
-    .card {
-        background: rgba(17, 24, 39, 0.6);
-        border: 1px solid rgba(31, 41, 55, 0.6);
-        border-radius: var(--radius-lg);
-        padding: 1.5rem;
-        transition: transform var(--transition-fast), border-color var(--transition-fast);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .card:hover {
-        transform: translateY(-3px);
-        border-color: rgba(55, 65, 81, 0.9);
-        background: rgba(17, 24, 39, 0.8);
-    }
-
-    .card h3 {
-        font-size: 1.25rem;
-        margin-bottom: 0.8rem;
-        color: #e2e8f0;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .card p { font-size: 0.95rem; color: #cbd5e1; margin-bottom: 1rem; line-height: 1.65; }
-    .card > *:last-child { margin-bottom: 0; }
-    .card .activity-box, .card .tip-box, .card .question-box { margin-top: auto; }
-
-    .card ul, .card ol {
-        list-style: none;
-        padding-left: 0.4rem;
-        margin-bottom: 1rem;
-    }
-
-    .card li {
-        position: relative;
-        padding-left: 1.2rem;
-        margin-bottom: 0.6rem;
-        font-size: 0.92rem;
-        color: #cbd5e1;
-    }
-
-    .card li::before {
-        content: "•";
-        position: absolute;
-        left: 0;
-        color: var(--accent);
-        font-weight: bold;
-    }
-
-    /* Feature Boxes */
-    .tip-box, .question-box, .activity-box {
-        margin-top: 1.2rem;
-        padding: 1rem;
-        border-radius: 12px;
-        font-size: 0.9rem;
-        line-height: 1.5;
-    }
-
-    .tip-box {
-        background: rgba(16, 185, 129, 0.08);
-        border: 1px solid rgba(16, 185, 129, 0.2);
-        color: #d1fae5;
-    }
-    .tip-box strong { color: #34d399; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-
-    .question-box {
-        background: rgba(234, 179, 8, 0.08);
-        border: 1px solid rgba(234, 179, 8, 0.2);
-        color: #fef08a;
-    }
-    .question-box strong { color: #facc15; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-
-    .activity-box {
-        background: rgba(59, 130, 246, 0.08);
-        border: 1px solid rgba(59, 130, 246, 0.2);
-        color: #dbeafe;
-    }
-    .activity-box strong { color: #60a5fa; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-
-    .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
-    .tag {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.6rem;
-        border-radius: 6px;
-        background: rgba(255, 255, 255, 0.07);
-        color: #9ca3af;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* Tables */
-    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border-soft); background: rgba(255, 255, 255, 0.02); }
-    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; table-layout: fixed; }
-    th { padding: 1rem; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; background: rgba(255, 255, 255, 0.05); color: var(--accent); width: 50%; white-space: nowrap; }
-    td { padding: 1rem; border-bottom: 1px solid var(--border-soft); color: #cbd5e1; vertical-align: top; line-height: 1.6; }
-    tr:last-child td { border-bottom: none; }
-    th:not(:last-child), td:not(:last-child) { border-right: 1px solid rgba(255, 255, 255, 0.2); }
-    tr:nth-child(even) td { background: rgba(255, 255, 255, 0.02); }
-
-    /* Media Queries */
-    @media (max-width: 768px) {
-        .hero { grid-template-columns: 1fr; gap: 2rem; }
-        .nav-inner { flex-direction: column; gap: 1rem; }
-        h1 { font-size: 2.2rem; }
-        .grid-ecosystem { grid-template-columns: 1fr; }
-    }
-    
-    /* Lightbox */
-    .lightbox-overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center;
-        z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-        backdrop-filter: blur(5px);
-    }
-    .lightbox-overlay.active { opacity: 1; pointer-events: all; }
-    .lightbox-image {
-        max-width: 90%; max-height: 90%; object-fit: contain;
-        transform: scale(0.9); transition: transform 0.3s ease;
-        border-radius: 8px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    }
-    .lightbox-overlay.active .lightbox-image { transform: scale(1); }
-    .diagram-placeholder img { cursor: zoom-in; }
-
-    </style></head>
 <body>
-    <div class="container">
-        <h1>Chapter 12 - Magnetic Effects of Electric Current</h1>
-        <p style="text-align: center; color: #999; margin-bottom: 30px;">Class X Physics | CBSE</p>
+    <div class="page">
+        <!-- Hero -->
+        <header class="hero">
+            <div class="badge-row">
+                <span class="badge">Class 10</span>
+                <span class="badge">Physics</span>
+                <span class="badge">Chapter 12</span>
+            </div>
+            <h1>Magnetic Effects of<br>Electric Current</h1>
+            <p class="hero-subtitle">
+                Understanding the intricate relationship between Electricity and Magnetism, Field Lines, Electromagnets,
+                and Domestic Circuits.
+            </p>
+            <a href="Chapter-12-Activities.html" class="btn">View Activities & Experiments &rarr;</a>
+        </header>
 
-        <h2>Magnetic Field</h2>
-        <p>A magnetic field is a region in space where a magnetic force can be experienced by a magnetic pole or a current-carrying conductor.</p>
-        <ul>
-            <li><strong>Magnetic Field Lines:</strong> Imaginary lines that show direction and strength of magnetic field</li>
-            <li><strong>Field Lines Properties:</strong> Always form closed loops, start from North and end at South poles</li>
-            <li><strong>Magnetic Induction (B):</strong> Measured in Tesla (T) or Gauss</li>
-            <li><strong>Direction:</strong> Determined by right-hand rule</li>
-        </ul>
+        <!-- 1. Magnetic Field & 2. Field Lines & 3. Bar Magnet -->
+        <section id="section-12.1">
+            <span class="section-label">12.1 Basics</span>
+            <h2>Magnetic Field & Field Lines</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Magnetic Field</h3>
+                    <p>A region around a magnet or a current-carrying conductor in which its magnetic force can be
+                        experienced.</p>
+                    <ul>
+                        <li><strong>SI Unit:</strong> Tesla (T).</li>
+                        <li><strong>Nature:</strong> Vector quantity (Has both Magnitude and Direction).</li>
+                        <li><strong>Detection:</strong> Can be detected using a magnetic compass (a freely suspended
+                            small bar magnet).</li>
+                    </ul>
+                    <div class="diagram-box" style="margin-top: 1rem;">
+                        <img src="images/magnet_field_lines.png" alt="Magnetic Field Lines of Bar Magnet"
+                            style="max-height: 250px;">
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Characteristics of Field Lines</h3>
+                    <p>Magnetic field lines are imaginary lines used to represent magnetic fields.</p>
+                    <ul>
+                        <h3>Properties</h3>
+                        <li>Field lines emerge from the North pole and enter the South pole outside the magnet.</li>
+                        <li>Inside the magnet, field lines go from South to North, forming closed loops.</li>
+                        <li>Magnetic field lines are closed curves.</li>
+                        <li>Closer field lines indicate a stronger magnetic field.</li>
+                        <li>Field lines never intersect each other. (If they did, there would be two directions of
+                            magnetic field at one point, which is impossible).</li>
+                        <li>The strength of the magnetic field is determined by the degree of closeness of field lines.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-        <h2>Magnetic Field due to Electric Current</h2>
+        <!-- 4. Oersted, 5. Right Hand Rule, 6. Straight Conductor, 7. Circular Loop -->
+        <section id="section-12.2">
+            <span class="section-label">12.2 Electromagnetism</span>
+            <h2>Magnetic Field due to Current</h2>
 
-        <h3>1. Straight Conductor</h3>
-        <div class="formula-box">
-            B = (Î¼â‚€I)/(2Ï€r)<br>
-            where Î¼â‚€ = permeability of free space = 4Ï€ Ã— 10â»â· TÂ·m/A<br>
-            I = current, r = perpendicular distance from wire<br>
-            <br>
-            <strong>Direction:</strong> Right-hand thumb rule - thumb points in direction of current, fingers curl in direction of field lines
-        </div>
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3>Oersted's Discovery</h3>
+                <p>H. C. Oersted was the first to discover that Electric current produces a magnetic field. This
+                    established the link between electricity and magnetism.</p>
+            </div>
 
-        <h3>2. Circular Conductor (at center)</h3>
-        <div class="formula-box">
-            B = (Î¼â‚€I)/(2r)<br>
-            where r = radius of the loop
-        </div>
+            <div class="grid-2">
+                <!-- Straight Conductor & Right Hand Rule -->
+                <div class="card">
+                    <h3>Straight Conductor</h3>
+                    <ul>
+                        <li>It can be represented by concentric circles at every point on conductor.</li>
+                        <li>Direction can be given by right hand thumb rule or compass.</li>
+                        <li>Circles are closer near the conductor.</li>
+                        <li>Magnetic field ∝ Strength of current</li>
+                        <!-- Correcting 'conduction' to 'conductor' for clarity while maintaining structure -->
+                        <li>Magnetic field ∝ 1 / Distance from conductor</li>
+                    </ul>
 
-        <h3>3. Solenoid</h3>
-        <div class="formula-box">
-            B = Î¼â‚€nI<br>
-            where n = number of turns per unit length = N/L<br>
-            N = total number of turns, L = length of solenoid<br>
-            <br>
-            <strong>Field inside:</strong> Uniform and parallel to axis<br>
-            <strong>Field outside:</strong> Negligible
-        </div>
+                    <div class="formula-box">
+                        <strong>Right Hand Thumb Rule</strong><br>
+                        "Imagine you are holding a current carrying straight conductor in your right hand such that the
+                        thumb is pointing towards the direction of current. Then the fingers wrapped around the
+                        conductor give the direction of magnetic field."
+                    </div>
 
-        <h2>Force on Current-Carrying Conductor in Magnetic Field</h2>
-        <p>When a current-carrying conductor is placed in a magnetic field perpendicular to it, a force acts on it.</p>
+                    <div class="diagram-box">
+                        <img src="images/right_hand_thumb.png" alt="Right Hand Thumb Rule" style="max-height: 200px;">
+                    </div>
+                </div>
 
-        <div class="formula-box">
-            F = BIL sinÎ¸<br>
-            where B = magnetic field strength, I = current, L = length of conductor, Î¸ = angle between current and field<br>
-            <br>
-            <strong>Maximum Force:</strong> F = BIL (when Î¸ = 90Â°)<br>
-            <br>
-            <strong>Direction:</strong> Fleming's Left-Hand Rule<br>
-            - Thumb: Force direction<br>
-            - Index: Magnetic field direction<br>
-            - Middle: Current direction
-        </div>
+                <!-- Circular Loop -->
+                <div class="card">
+                    <h3>Circular Loop</h3>
+                    <ul>
+                        <li>It can be represented by concentric circle at every point.</li>
+                        <li>Circles become larger and larger as we move away.</li>
+                        <li>Every point on wire carrying current would give rise to magnetic field appearing as straight
+                            line at centre of the loop.</li>
+                        <li>The direction of magnetic field inside the loop is same.</li>
+                    </ul>
+                    <div class="diagram-box" style="margin-top: 1rem;">
+                        <img src="images/circular_loop_field.png" alt="Circular Loop Magnetic Field"
+                            style="max-height: 250px;">
+                    </div>
+                    <br>
+                    <strong>Factors affecting magnetic field of a circular current carrying conductor</strong>
+                    <ul>
+                        <li>Magnetic field ∝ Current passing through the conductor</li>
+                        <li>Magnetic field ∝ 1 / Distance from conductor</li>
+                        <li>Magnetic field ∝ No. of turns in the coil</li>
+                    </ul>
+                    <p>Magnetic field is additive in nature i.e., magnetic field of one loop adds up to magnetic field
+                        of another loop. This is because the current in each circular turn has same direction.</p>
+                </div>
+            </div>
 
-        <h2>Torque on a Current Loop in Magnetic Field</h2>
-        <div class="formula-box">
-            Ï„ = NBIA sinÎ¸<br>
-            where N = number of turns, B = magnetic field, I = current<br>
-            A = area of loop, Î¸ = angle between normal and field<br>
-            <br>
-            <strong>Maximum Torque:</strong> Ï„ = NBIA (when Î¸ = 90Â°)
-        </div>
+            <!-- 9. Solenoid & 10. Electromagnet vs Permanent Magnet -->
+            <div class="card" style="margin-top: 2rem;">
+                <h3>Solenoid</h3>
+                <div class="grid-2">
+                    <div>
+                        <p>A coil of many circular turns of insulated copper wire wrapped closely in a cylindrical form.
+                        </p>
+                        <ul>
+                            <li>Magnetic field of a solenoid is similar to that of a bar magnet.</li>
+                            <li>Magnetic field is uniform inside the solenoid and represented by parallel field lines.
+                            </li>
+                            <li>Direction of magnetic field
+                                <ul>
+                                    <li>(i) Outside the solenoid : North to South</li>
+                                    <li>(ii) Inside the solenoid : South to North</li>
+                                </ul>
+                            </li>
+                            <li>Solenoid can be used to magnetise a magnetic material like soft iron.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="diagram-box">
+                            <img src="images/solenoid.png" alt="Solenoid Diagram"
+                                style="width: 100%; border-radius: 8px;">
+                        </div>
+                    </div>
+                </div>
 
-        <h2>Electromagnetic Induction</h2>
-        <p>When magnetic flux through a conductor changes, an EMF is induced in the conductor (Faraday's Law).</p>
+                <!-- Comparison Table -->
+                <div
+                    style="overflow-x: auto; margin-top: 2rem; border-radius: 12px; border: 1px solid var(--border-soft);">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; color: #cbd5e1;">
+                        <thead style="background: rgba(129, 140, 248, 0.1);">
+                            <tr>
+                                <th style="padding: 1rem; color: var(--accent);">Electromagnet</th>
+                                <th style="padding: 1rem; color: var(--accent);">Permanent Magnet</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 1rem; border-bottom: 1px solid var(--border-soft);">1. It is a
+                                    temporary magnet, so, can be easily demagnetised.</td>
+                                <td style="padding: 1rem; border-bottom: 1px solid var(--border-soft);">1. Cannot be
+                                    easily demagnetised.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border-bottom: 1px solid var(--border-soft);">2. Strength can
+                                    be varied.</td>
+                                <td style="padding: 1rem; border-bottom: 1px solid var(--border-soft);">2. Strength is
+                                    fixed.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border-bottom: 1px solid var(--border-soft);">3. Polarity can
+                                    be reversed.</td>
+                                <td style="padding: 1rem; border-bottom: 1px solid var(--border-soft);">3. Polarity
+                                    cannot be reversed.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem;">4. Generally strong magnet.</td>
+                                <td style="padding: 1rem;">4. Generally weak magnet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
 
-        <div class="formula-box">
-            Îµ = -dÎ¦/dt<br>
-            where Î¦ = magnetic flux = BÂ·AÂ·cosÎ¸<br>
-            <br>
-            <strong>Induced Current:</strong><br>
-            I_induced = Îµ/R = -(1/R)dÎ¦/dt
-        </div>
+        <!-- 11. Force on Conductor & 12. Fleming's Left Hand Rule -->
+        <section id="section-12.3">
+            <span class="section-label">12.3 Force & Motion</span>
+            <h2>Force on Current-Carrying Conductor</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Ampere's Observation</h3>
+                    <p>A magnet exerts an equal and opposite force on a current-carrying conductor.</p>
+                    <ul>
+                        <li>Force causes displacement (Motion).</li>
+                        <li><strong>Max Displacement:</strong> When Current is Perpendicular (90°) to Magnetic Field.
+                        </li>
+                        <li>Direction of force reverses if current direction is reversed.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Fleming's Left Hand Rule</h3>
+                    <p>Stretch thumb, forefinger, and middle finger mutually perpendicular.</p>
+                    <ul>
+                        <li><strong>Forefinger:</strong> Magnetic Field.</li>
+                        <li><strong>Middle Finger:</strong> Current.</li>
+                        <li><strong>Thumb:</strong> Force / Motion.</li>
+                    </ul>
+                    <p><strong>Application:</strong> Used in Electric Motors.</p>
+                    <div class="diagram-box" style="margin-top: 1rem;">
+                        <img src="images/fleming_left_hand.png" alt="Fleming's Left Hand Rule"
+                            style="max-height: 200px;">
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <h2>Magnetic Flux</h2>
-        <div class="formula-box">
-            Î¦ = BA cosÎ¸<br>
-            where B = magnetic field, A = area, Î¸ = angle between B and normal to area<br>
-            <br>
-            <strong>Unit:</strong> Weber (Wb) = TeslaÂ·mÂ²<br>
-            <br>
-            <strong>For Solenoid:</strong> Î¦ = Î¼â‚€NIA
-        </div>
+        <!-- 13, 14, 15, 16. Domestic Circuits & Safety -->
+        <section id="section-12.4">
+            <span class="section-label">12.4 Circuits</span>
+            <h2>Domestic Electric Circuits</h2>
 
-        <h2>Lenz's Law</h2>
-        <p>The direction of induced current is such that it opposes the change in magnetic flux that produced it.</p>
-        <div class="important-box">
-            <strong>Statement:</strong> If the magnetic flux through a loop increases, the induced current will create a magnetic field opposing this increase. Conversely, if flux decreases, induced current opposes the decrease.
-        </div>
+            <div class="diagram-box" style="margin-bottom: 2rem;">
+                <img src="images/domestic_circuit.png" alt="Domestic Circuit Diagram"
+                    style="width: 100%; max-width: 600px; border-radius: 8px;">
+            </div>
 
-        <h2>Motional EMF</h2>
-        <p>When a conductor moves through a magnetic field, EMF is induced.</p>
-        <div class="formula-box">
-            Îµ = BLv<br>
-            where B = magnetic field, L = length of conductor, v = velocity perpendicular to both B and L<br>
-            <br>
-            For a rectangular loop:<br>
-            Îµ = BLv (only the moving side contributes)
-        </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Domestic Electric Circuits</h3>
+                    <ul>
+                        <li>There are three kinds of wires used:
+                            <ul>
+                                <li>(i) Live wire (positive) with red insulation cover.</li>
+                                <li>(ii) Neutral wire (negative) with black insulation cover.</li>
+                                <li>(iii) Earth wire with green insulation cover.</li>
+                            </ul>
+                        </li>
+                        <li>The potential difference between live and neutral wire in India is 220 V.</li>
+                        <li>Pole &rarr; Main supply &rarr; Fuse &rarr; Electricity meter &rarr; Distribution box &rarr;
+                            To separate circuits</li>
+                    </ul>
+                </div>
+                <!-- Earth Wire -->
+                <div class="card">
+                    <h3>Earth Wire</h3>
+                    <p>Protects us from electric shock in case of leakage of current especially in metallic body
+                        appliances. It provides a low resistance path for current in case of leakage of current.</p>
 
-        <h2>AC Generator (Alternating Current Generator)</h2>
-        <p>Converts mechanical energy into electrical energy using electromagnetic induction.</p>
-        <ul>
-            <li><strong>Principle:</strong> Coil rotates in uniform magnetic field, magnetic flux changes periodically</li>
-            <li><strong>EMF generated:</strong> Îµ = Îµâ‚€ sin(Ï‰t)</li>
-            <li><strong>Peak EMF:</strong> Îµâ‚€ = NBAÏ‰</li>
-            <li><strong>Frequency:</strong> f = Ï‰/(2Ï€) = (number of poles Ã— rotations per second)/2</li>
-        </ul>
+                    <h3 style="margin-top: 1.5rem;">Safety devices :</h3>
+                    <ul>
+                        <li>(i) Electric fuse</li>
+                        <li>(ii) Earth wire</li>
+                        <li>(iii) MCB (Miniature Circuit Breaker)</li>
+                    </ul>
+                </div>
+            </div>
 
-        <h2>DC Motor</h2>
-        <p>Converts electrical energy into mechanical energy.</p>
-        <div class="important-box">
-            <strong>Key Components:</strong>
-            <ul>
-                <li>Coil - carries current</li>
-                <li>Magnetic field - permanent magnets or electromagnets</li>
-                <li>Commutator - maintains torque in one direction</li>
-                <li>Brushes - maintain electrical contact</li>
-            </ul>
-        </div>
+            <div class="card" style="margin-top: 2rem;">
+                <div class="grid-2">
+                    <div>
+                        <h3>Short Circuit</h3>
+                        <p>When live wire comes in direct contact with neutral wire accidentally.</p>
+                        <ul>
+                            <li>Resistance of circuit becomes low.</li>
+                            <li>Can result in overloading.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Overloading</h3>
+                        <p>When current drawn is more than current carrying capacity of a conductor, it results in
+                            overloading.</p>
+                        <strong>Causes of overloading :</strong>
+                        <ul>
+                            <li>(i) Accidental hike in voltage supply.</li>
+                            <li>(ii) Use of more than one appliance in a single socket.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <h2>Transformer</h2>
-        <p>Converts AC from one voltage to another without changing frequency.</p>
-        <div class="formula-box">
-            V_s/V_p = N_s/N_p = 1/k<br>
-            where V_s, V_p = secondary, primary voltages<br>
-            N_s, N_p = secondary, primary turns<br>
-            k = turns ratio<br>
-            <br>
-            <strong>For ideal transformer:</strong><br>
-            V_p Ã— I_p = V_s Ã— I_s (Power conservation)<br>
-            <br>
-            <strong>Step-up:</strong> N_s > N_p, V_s > V_p<br>
-            <strong>Step-down:</strong> N_s < N_p, V_s < V_p
-        </div>
+        <!-- Extra Concept (Retained as valuable context) -->
+        <section id="extra">
+            <span class="section-label">Extension</span>
+            <h2>Magnetism in Medicine</h2>
+            <div class="card">
+                <p>Weak magnetic fields are produced in the human body by the movement of charged particles (ions) along
+                    nerves.</p>
+                <ul>
+                    <li><strong>Key Organs:</strong> Heart and Brain.</li>
+                    <li><strong>MRI (Magnetic Resonance Imaging):</strong> Uses strong magnetic fields to obtain images
+                        of internal organs.</li>
+                </ul>
+            </div>
+        </section>
 
-        <h2>Eddy Currents</h2>
-        <p>When a conductor moves through a changing magnetic field or vice versa, circular currents (eddy currents) are induced in the conductor.</p>
-        <ul>
-            <li><strong>Applications:</strong> Electromagnetic braking, metal detectors</li>
-            <li><strong>Effect:</strong> Produces heat, causes energy loss in transformers</li>
-            <li><strong>Reduction:</strong> Use laminated cores in transformers</li>
-        </ul>
+        <!-- NCERT Activities Link -->
+        <section id="ncert-activities">
+            <span class="section-label">Lab Experiments</span>
+            <h2>NCERT Activities</h2>
+            <div class="hero-card">
+                <h3>Explore Practical Applications</h3>
+                <p style="margin: 1rem 0 2rem; color: #a5b4fc;">
+                    Detailed step-by-step activities including Oersted's Experiment, Mapping Field Lines, and observing
+                    forces.
+                </p>
+                <a href="Chapter-12-Activities.html" class="btn">View All 7 Activities &rarr;</a>
+            </div>
+        </section>
 
-        <h2>Important Comparison Table</h2>
-        <table>
-            <tr>
-                <th>Concept</th>
-                <th>Electric Field</th>
-                <th>Magnetic Field</th>
-            </tr>
-            <tr>
-                <td>Cause</td>
-                <td>Electric charges</td>
-                <td>Moving charges (current)</td>
-            </tr>
-            <tr>
-                <td>Direction</td>
-                <td>Radial (+ to -)</td>
-                <td>Circular (around conductor)</td>
-            </tr>
-            <tr>
-                <td>Force on charge</td>
-                <td>F = qE</td>
-                <td>F = qvÃ—B</td>
-            </tr>
-            <tr>
-                <td>Work done</td>
-                <td>Can do work</td>
-                <td>No work (perpendicular to v)</td>
-            </tr>
-        </table>
-
-        <div style="margin-top: 40px; padding: 20px; background: #ffe7f0; border-radius: 8px; text-align: center;">
-            <h3 style="color: #f5576c; margin-bottom: 15px;">Key Takeaways</h3>
-            <ul style="list-style: none; margin: 0;">
-                <li>âœ“ B = (Î¼â‚€I)/(2Ï€r) (Magnetic field from current)</li>
-                <li>âœ“ F = BIL sinÎ¸ (Force on conductor)</li>
-                <li>âœ“ Îµ = -dÎ¦/dt (Faraday's Law)</li>
-                <li>âœ“ Ï„ = NBIA sinÎ¸ (Torque on loop)</li>
-                <li>âœ“ V_s/V_p = N_s/N_p (Transformer equation)</li>
-                <li>âœ“ Lenz's Law governs induced current direction</li>
-            </ul>
-            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">CBSE | NCERT | Class X Physics</p>
-        </div>
     </div>
-
-    <script>
-        // Lightbox Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const lightbox = document.createElement('div');
-            lightbox.className = 'lightbox-overlay';
-            lightbox.innerHTML = '<img src="" alt="Lightbox Image" class="lightbox-image">';
-            document.body.appendChild(lightbox);
-
-            const lightboxImg = lightbox.querySelector('img');
-
-            // Select all images inside diagram placeholders
-            const images = document.querySelectorAll('.diagram-placeholder img');
-
-            images.forEach(img => {
-                img.addEventListener('click', () => {
-                    lightboxImg.src = img.src;
-                    lightboxImg.alt = img.alt;
-                    lightbox.classList.add('active');
-                });
-            });
-
-            // Close on click outside
-            lightbox.addEventListener('click', (e) => {
-                if (e.target !== lightboxImg) {
-                    lightbox.classList.remove('active');
-                }
-            });
-        });
-    </script>
-
 </body>
+
 </html>
-
-
-
-

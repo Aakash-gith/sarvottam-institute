@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10 - Human Eye | Class 10 Physics</title>
+    <style>
+        :root {
+            --accent: #818cf8;
+            /* Indigo */
+            --accent-soft: rgba(129, 140, 248, 0.15);
+            --accent-strong: #6366f1;
+
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --card-bg: #020617;
+            --border-soft: #1f2937;
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-pill: 999px;
+            --transition-fast: 180ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617 50%, #000);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+        }
+
+        /* Hero */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 4rem;
+            text-align: center;
+            align-items: center;
+        }
+
+        .badge-row {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            color: #a5f3fc;
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.1;
+            background: linear-gradient(to right, #fff, #a5f3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-soft);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 2rem;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 2rem;
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 4px 20px var(--accent-soft);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            background: var(--accent-strong);
+            color: #fff;
+            box-shadow: 0 8px 30px var(--accent-soft);
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 6rem;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #f8fafc;
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #cffafe;
+            margin-bottom: 1rem;
+        }
+
+        /* Grid & Cards */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            transition: var(--transition-fast);
+        }
+
+        .card:hover {
+            border-color: rgba(6, 182, 212, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Content Styling */
+        ul {
+            list-style: none;
+            padding-left: 0.5rem;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.5rem;
+            color: var(--text-soft);
+        }
+
+        li::before {
+            content: "•";
+            color: var(--accent);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), transparent);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .diagram-box {
+            background: #000;
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--border-soft);
+            overflow: hidden;
+        }
+
+        .diagram-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        /* Navigation */
+        .nav-card {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .page {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <header class="hero">
+            <div class="badge-row">
+                <span class="badge">Physics</span>
+                <span class="badge">Chapter 10</span>
+            </div>
+            <h1>The Human Eye &<br>The Colourful World</h1>
+            <p class="hero-subtitle">
+                Exploring the structure of the eye, defects of vision, atmospheric refraction, and the beautiful
+                phenomena of dispersion and scattering.
+            </p>
+        </header>
+
+        <!-- 10.1 The Human Eye -->
+        <section id="human-eye">
+            <span class="section-label">10.1 Anatomy</span>
+            <h2>The Human Eye</h2>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Structure</h3>
+                    <ul>
+                        <li><strong>Cornea:</strong> Transparent outer layer where most refraction occurs.</li>
+                        <li><strong>Iris:</strong> Controls the size of the pupil.</li>
+                        <li><strong>Pupil:</strong> Regulates the amount of light entering the eye.</li>
+                        <li><strong>Eye lens (crystalline lens):</strong> Focuses light on the retina.</li>
+                        <li><strong>Retina:</strong> Light-sensitive screen where image forms.</li>
+                        <li><strong>Optic nerve:</strong> Transmits electrical signals to the brain.</li>
+                        <li><strong>Ciliary muscles:</strong> Modifies curvature of the lens.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Working & Accommodation</h3>
+                    <p>Image formation on retina is <strong>Real and Inverted</strong>.</p>
+                    <ul>
+                        <li><strong>Power of Accommodation:</strong> Ability of the eye lens to adjust its focal length.
+                        </li>
+                        <li><strong>Near Point:</strong> Least distance of distinct vision (25 cm).</li>
+                        <li><strong>Far Point:</strong> Infinity for a normal eye.</li>
+                        <li><strong>Cataract:</strong> Clouding of the eye lens causing vision loss; treated via
+                            surgery.</li>
+                    </ul>
+                    <div class="diagram-box">
+                        <img src="images/human_eye.png" alt="Human Eye Structure" style="max-height: 300px;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10.2 Defects of Vision -->
+        <section id="defects">
+            <span class="section-label">10.2 Vision</span>
+            <h2>Defects of Vision & Correction</h2>
+
+            <div class="grid-3">
+                <!-- Myopia -->
+                <!-- Myopia -->
+                <div class="card" style="grid-column: span 3;">
+                    <h3>Myopia (Near-sightedness)</h3>
+                    <ul>
+                        <li>A myopic person can see nearby objects clearly but cannot see distant objects clearly.</li>
+                        <li>Image is formed in front of retina.</li>
+                        <li>The far point (F) of a myopic eye is less than infinity.</li>
+                    </ul>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
+                        <div>
+                            <h4 style="color: #fff; margin-bottom: 0.5rem;">Causes of Myopia</h4>
+                            <ul>
+                                <li>Excessive curvature of eye lens.</li>
+                                <li>Elongation of eye ball.</li>
+                            </ul>
+
+                            <h4 style="color: #fff; margin-top: 1rem; margin-bottom: 0.5rem;">Correction</h4>
+                            <p>Use of concave lens of appropriate power.</p>
+                        </div>
+                        <div class="diagram-box" style="margin: 0; padding: 0.5rem; background: #000;">
+                            <img src="images/myopia_diagrams.png" alt="Myopia Correction Diagrams"
+                                style="width: 100%; border-radius: 4px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hypermetropia -->
+                <div class="card">
+                    <h3>Hypermetropia (Far-sightedness)</h3>
+                    <p>Can see distant objects clearly but nearby objects are blurry.</p>
+                    <ul>
+                        <li><strong>Near Point:</strong> Farther than 25 cm.</li>
+                        <li><strong>Image Formation:</strong> <em>Behind</em> the retina.</li>
+                        <li><strong>Causes:</strong> Long focal length of lens or Short eyeball.</li>
+                        <li><strong>Correction:</strong> Convex Lens.</li>
+                    </ul>
+                </div>
+
+                <!-- Presbyopia -->
+                <div class="card">
+                    <h3>Presbyopia</h3>
+                    <p>Age-related vision defect resulting in difficulty to read nearby objects.</p>
+                    <ul>
+                        <li><strong>Cause:</strong> Weakening of ciliary muscles & Reduced flexibility of lens.</li>
+                        <li><strong>Correction:</strong> Bi-focal lenses (Both Concave & Convex).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="diagram-box">
+                <img src="images/vision_defects.png" alt="Vision Defects & Corrections"
+                    style="max-height: 400px; width: 100%;">
+            </div>
+        </section>
+
+        <!-- 10.3 & 10.4 Refraction & Dispersion -->
+        <section id="prism">
+            <span class="section-label">10.3 & 10.4 Light</span>
+            <h2>Refraction & Dispersion by Prism</h2>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Refraction Through Prism</h3>
+                    <ul>
+                        <li><strong>Angle of Prism:</strong> Angle between two lateral faces.</li>
+                        <li><strong>Incident Ray:</strong> Ray entering the prism.</li>
+                        <li><strong>Refracted Ray:</strong> Ray traveling inside the prism.</li>
+                        <li><strong>Emergent Ray:</strong> Ray leaving the prism.</li>
+                        <li><strong>Angle of Deviation:</strong> Angle between incident ray component and emergent ray.
+                        </li>
+                    </ul>
+                    <div class="diagram-box">
+                        <img src="images/prism_refraction.png" alt="Refraction through Prism"
+                            style="max-height: 250px;">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Dispersion & Rainbow</h3>
+                    <p><strong>Dispersion:</strong> Splitting of white light into its component colours (VIBGYOR).</p>
+                    <ul>
+                        <li><strong>Spectrum:</strong> The band of coloured components of a light beam.</li>
+                        <li><strong>Rainbow:</strong> Natural spectrum in sky due to dispersion of sunlight by
+                            raindrops.</li>
+                    </ul>
+                    <p><strong>Process:</strong> Refraction & Dispersion &rarr; Internal Reflection &rarr; Refraction.
+                    </p>
+                    <div class="diagram-box">
+                        <img src="images/rainbow.png" alt="Rainbow Formation" style="max-height: 300px;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10.5 Atmospheric Refraction -->
+        <section id="atmosphere">
+            <span class="section-label">10.5 Atmosphere</span>
+            <h2>Atmospheric Refraction</h2>
+            <p>Refraction of light caused by different layers of the atmosphere having varying densities.</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Twinkling of Stars</h3>
+                    <ul>
+                        <li>Starlight undergoes continuous refraction.</li>
+                        <li>Atmosphere is dynamic (density changes).</li>
+                        <li>Apparent position and brightness of star fluctuates.</li>
+                        <li><strong>Planets don't twinkle:</strong> They are closer, act as extended sources; average
+                            variation is zero.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Advance Sunrise & Delayed Sunset</h3>
+                    <ul>
+                        <li>Sun is visible 2 mins before actual sunrise and 2 mins after actual sunset.</li>
+                        <li>Due to atmospheric refraction, sun appears slightly higher than the horizon.</li>
+                        <li>Also causes flattening of Sun's disc at horizon.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10.6 Scattering -->
+        <section id="scattering">
+            <span class="section-label">10.6 Scattering</span>
+            <h2>Scattering of Light</h2>
+
+            <div class="grid-3">
+                <div class="card">
+                    <h3>Tyndall Effect</h3>
+                    <p>Scattering of light by colloidal particles makes the path of a beam visible.</p>
+                    <ul>
+                        <li>Seen in smoke-filled rooms.</li>
+                        <li>Sunlight through canopy of a dense forest.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Sky Blue Colour</h3>
+                    <p>Fine particles in air scatter smaller wavelengths (Blue) more than larger wavelengths (Red).</p>
+                    <p class="formula-box" style="font-size:0.9rem; padding: 0.5rem;">Scattering ∝ 1/λ⁴</p>
+                    <p>At high altitudes (no atmosphere), sky appears dark.</p>
+                </div>
+                <div class="card">
+                    <h3>Reddish Sun</h3>
+                    <p>At Sunrise/Sunset, light travels longer distance through atmosphere.</p>
+                    <ul>
+                        <li>Blue light gets scattered away.</li>
+                        <li>Only Red (longer wavelength) reaches our eyes.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="nav-card">
+            <h2>Explore More</h2>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                <a href="Chapter-12-Magnetism.html" class="btn"
+                    style="background: transparent; border: 1px solid var(--accent);">Magnetic Effects</a>
+                <!-- Link to main dashboard or other chapters can be added here -->
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

@@ -31,6 +31,7 @@ const StudentDashboard = () => {
         avgScore: 0,
         totalXP: 0,
         weeklyHours: 0,
+        completedChapters: 0,
     });
 
     // Task Planner Stats
@@ -119,14 +120,19 @@ const StudentDashboard = () => {
                     }
                 });
 
-                setContinueLearning(workingOn.slice(0, 3));
+                // Calculate Completed Chapters (sum of notesCompleted across all subjects)
+                const completedChapters = progressData.reduce((acc, curr) => {
+                    return acc + (curr.notesCompleted?.length || 0);
+                }, 0);
 
+                setContinueLearning(workingOn.slice(0, 3));
 
                 setStats({
                     streak,
                     avgScore,
                     totalXP,
-                    weeklyHours
+                    weeklyHours,
+                    completedChapters
                 });
 
             } catch (error) {
@@ -176,7 +182,7 @@ const StudentDashboard = () => {
                             <BookOpen className="text-blue-300" size={20} />
                             <span className="text-sm text-blue-100">Completed</span>
                         </div>
-                        <div className="text-2xl font-bold">{taskStats.completedTasks} <span className="text-sm font-normal opacity-70">Ch</span></div>
+                        <div className="text-2xl font-bold">{stats.completedChapters} <span className="text-sm font-normal opacity-70">Ch</span></div>
                     </div>
 
                     {/* Stat Card 3 */}

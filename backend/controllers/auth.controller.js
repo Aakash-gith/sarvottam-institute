@@ -88,6 +88,7 @@ export const login = async (req, res) => {
         email: user.email,
         class: user.class,
         streak: user.streak,
+        profilePicture: user.profilePicture,
       },
     });
   } catch (err) {

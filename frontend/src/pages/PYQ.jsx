@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 import { FileText, Eye, ArrowLeft, Filter, X, Lock } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import API from "../api/axios";
@@ -127,9 +127,9 @@ function PYQ() {
                 <meta name="description" content="Access previous year questions for Class 9 and Class 10" />
             </Helmet>
 
-            <Navbar />
+            <Sidebar />
 
-            <div className="max-w-7xl mx-auto w-full px-6 py-12 mt-16">
+            <div className="max-w-7xl mx-auto w-full px-6 py-12 ml-[120px]">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between">

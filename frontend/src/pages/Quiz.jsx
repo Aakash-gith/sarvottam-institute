@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Navbar } from "../components/index.components";
+import Sidebar from "../components/Sidebar";
 import { Brain, History, Target, Clock, Mail, ChevronRight } from "lucide-react";
 
 function Quiz() {
@@ -8,8 +8,8 @@ function Quiz() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <div className="transition-all duration-300 pt-24 md:pt-28 px-6 md:px-10">
+      <Sidebar />
+      <div className="transition-all duration-300 pt-8 px-6 md:px-10 ml-[120px]">
         <div className="max-w-5xl mx-auto pb-16">
 
           {/* Header */}

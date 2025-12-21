@@ -432,3 +432,40 @@ export const markNotificationRead = async (req, res) => {
   }
 };
 
+// Search users
+export const searchUsers = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { q } = req.query;
+
+    if (!q || !q.trim()) {
+      return res.json({
+        success: true,
+        data: []
+      });
+    }
+
+    const users = await User.find({
+      _id: { $ne: userId },
+      $or: [
+        { name: { $regex: q, $options: 'i' } },
+        { email: { $regex: q, $options: 'i' } }
+      ]
+    })
+      .select('name email profilePicture class streak')
+      .limit(10);
+
+    res.json({
+      success: true,
+      data: users
+    });
+  } catch (error) {
+    console.error("Search users error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to search users",
+      error: error.message
+    });
+  }
+};
+

@@ -16,6 +16,7 @@ import authMiddleware from "./middleware/auth.middleware.js";
 import progressRoutes from "./routes/progress.routes.js";
 import subjectNotesRoutes from "./routes/subjectsNotes.routes.js";
 import pyqRoutes from "./routes/pyq.routes.js";
+import messageRoutes from "./routes/message.routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,7 +32,7 @@ if (!fs.existsSync(uploadsDir)) {
 
 const app = express();
 
-// reset Core Middleware reset
+// Core Middleware
 app.use(cookieParser());
 app.use(express.json());
 app.use((req, res, next) => {
@@ -78,7 +79,7 @@ app.get("/", (req, res) => {
   });
 });
 
-// reset API Routes reset
+// API Routes
 app.use("/api/auth", authRoutes);
 console.log("Mounting /api/admin routes...");
 app.use("/api/admin", adminRoutes);
@@ -87,8 +88,11 @@ app.use("/api/task", authMiddleware, taskRoutes);
 app.use("/api/quiz", authMiddleware, quizRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/progress", authMiddleware, progressRoutes);
-app.use("/api/subjectNotes", subjectNotesRoutes); //TODO add admin and auth middleware
+app.use("/api/subjectNotes", subjectNotesRoutes);
 app.use("/api/pyq", pyqRoutes);
+
+console.log("Mounting /api/message routes...");
+app.use("/api/message", messageRoutes);
 
 const grade10Path = path.join(__dirname, "../grade10");
 const grade9Path = path.join(__dirname, "../grade9");
@@ -99,24 +103,19 @@ app.use("/grade9", express.static(grade9Path));
 const frontendPath = path.join(__dirname, "../frontend/dist");
 app.use(express.static(frontendPath));
 
-// app.get(/.*/, (req, res) => {
-//   res.sendFile(path.join(frontendPath, "index.html"));
-// });
-// reset 404 Fallback reset
 // Direct debug route
 app.post("/api/admin/send-notification", (req, res) => {
   console.log("Direct route /api/admin/send-notification HIT!");
-  // We can even try to call the controller here if we import it, but let's just return success first.
   res.status(200).json({ success: true, message: "Direct route works!" });
 });
 
-// reset 404 Fallback reset
+// 404 Fallback
 app.use((req, res) => {
   console.log(`[404] Route not found: ${req.method} ${req.url}`);
   res.status(404).json({ message: "Route not found" });
 });
 
-//  Start Server
+// Start Server
 const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
@@ -127,4 +126,3 @@ const startServer = async () => {
 };
 
 startServer();
-// Trigger restart

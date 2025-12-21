@@ -29,7 +29,11 @@ import {
     ChevronDown,
     Mail,
     Shield,
-    User
+    User,
+    MessageSquare,
+    Camera,
+    Trash2,
+    Loader2
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import API from "../../api/axios";
@@ -41,21 +45,35 @@ import NotificationsManager from "../../components/admin/NotificationsManager";
 import AdminRequests from "../../components/admin/AdminRequests";
 import AdminManagement from "../../components/admin/AdminManagement"; // Added
 import AdminUserAnalytics from "../../components/admin/AdminUserAnalytics";
+import AdminChat from "../../components/admin/AdminChat";
 import ClockWidget from "../../components/clock-01";
 import ThemeToggle from "../../components/ThemeToggle";
 import logo from "../../assets/logo.png";
+import "../../components/Sidebar.css"; // Import shared Sidebar styles
 
 function AdminDashboard() {
     const [adminInfo, setAdminInfo] = useState(null);
-    const [stats, setStats] = useState(null); // Added stats state
+    const [stats, setStats] = useState(null);
     const [activeTab, setActiveTab] = useState("dashboard");
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [activeCategory, setActiveCategory] = useState("manage");
+    const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const navigate = useNavigate();
+
+    const getProfilePictureUrl = () => {
+        if (!adminInfo?.userId?.profilePicture) return null;
+        const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000';
+        return `${baseUrl}${adminInfo.userId.profilePicture}`;
+    };
+
+    // Import Sidebar Styles (Ensure this file exists and is global or scoped correctly)
+    // Note: We are relying on ../../components/Sidebar.css being present
+    // You might need to add: import "../../components/Sidebar.css"; at the top if not already there.
 
     useEffect(() => {
         fetchAdminInfo();
-        fetchStats(); // Fetch stats on mount
+        fetchStats();
     }, []);
 
     const fetchAdminInfo = async () => {
@@ -76,7 +94,6 @@ function AdminDashboard() {
             setStats(data.data);
         } catch (error) {
             console.error("Failed to fetch dashboard stats:", error);
-            // Don't block render, just allow stats to be null (will show loaders/zeros)
         }
     };
 
@@ -97,160 +114,243 @@ function AdminDashboard() {
         );
     }
 
-    const menuItems = [
-        {
-            id: "dashboard",
-            label: "Dashboard",
-            icon: LayoutDashboard, // Use LayoutDashboard icon
-            visible: true,
+    const categoryMenus = {
+        manage: {
+            title: "Overview",
+            items: [
+                { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, visible: true },
+                { id: "chat", label: "Chat", icon: MessageSquare, visible: true },
+            ]
         },
-        {
-            id: "students",
-            label: "Students",
-            icon: GraduationCap,
-            visible: true,
+        users: {
+            title: "User Management",
+            items: [
+                { id: "students", label: "Students", icon: GraduationCap, visible: true },
+                { id: "admin", label: "Admins", icon: Users, visible: true },
+            ]
         },
-        {
-            id: "book-upload", // Rename to satisfy "Upload Notes"
-            label: "Upload Notes",
-            icon: BookOpen,
-            visible: adminInfo?.permissions?.uploadNotes,
+        content: {
+            title: "Content",
+            items: [
+                { id: "book-upload", label: "Upload Notes", icon: BookOpen, visible: adminInfo?.permissions?.uploadNotes },
+                { id: "pyq-upload", label: "Upload PYQ", icon: FileText, visible: adminInfo?.permissions?.uploadPYQ },
+            ]
         },
-        {
-            id: "pyq-upload",
-            label: "Upload PYQ",
-            icon: FileText,
-            visible: adminInfo?.permissions?.uploadPYQ,
-        },
-        {
-            id: "notifications",
-            label: "Send Notifications",
-            icon: Bell,
-            visible: adminInfo?.permissions?.sendNotifications,
-        },
-        {
-            id: "admin", // Rename "admin-requests" to "admin"
-            label: "Admin",
-            icon: Users,
-            visible: true, // Visible to everyone, roles handled inside
-        },
-    ];
+        system: {
+            title: "System",
+            items: [
+                { id: "notifications", label: "Notifications", icon: Bell, visible: adminInfo?.permissions?.sendNotifications },
+            ]
+        }
+    };
+
+    // Helper to get active items for current category
+    const currentCategoryItems = categoryMenus[activeCategory]?.items.filter(item => item.visible) || [];
 
     return (
-        <div className="flex h-screen bg-transparent overflow-hidden font-poppins selection:bg-blue-500 selection:text-white">
+        <div className="flex h-screen bg-slate-50 dark:bg-slate-950 font-poppins selection:bg-blue-500 selection:text-white overflow-hidden">
+
+            {/* --- NEW STUDENT SIDEBAR CONCEPT --- */}
             {/* Sidebar */}
-            <div
-                className={`${sidebarOpen ? "w-72" : "w-20"
-                    } text-slate-800 dark:text-white transition-all duration-500 ease-in-out flex flex-col shadow-2xl z-50 relative`}
-                style={{ background: 'var(--sidebar-bg)' }}
+            <aside
+                className={`sidebar ${isSidebarExpanded ? 'expanded' : ''}`}
+                onMouseLeave={() => setIsSidebarExpanded(false)}
             >
-                {/* Logo Area */}
-                <div
-                    className="h-20 flex items-center justify-between px-6 border-b border-blue-500/10 dark:border-slate-800 bg-transparent cursor-pointer hover:bg-blue-500/5 dark:hover:bg-slate-900 transition-colors group"
-                    onClick={() => setActiveTab('dashboard')}
-                >
-                    <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap">
-                        <img src={logo} alt="Sarvottam Logo" className="h-10 w-10 object-contain group-hover:scale-110 transition-transform duration-300" />
-                        <span className={`font-bold text-xl tracking-wide transition-opacity duration-300 ${sidebarOpen ? "opacity-100" : "opacity-0 invisible w-0"}`}>
-                            Sarvottam
-                        </span>
-                    </div>
-                </div>
+                {/* LEFT PANE (Categories) */}
+                <div className="left">
+                    <img
+                        src={logo}
+                        alt="Sarvottam"
+                        className="sidebar-brand-logo"
+                        onClick={() => setActiveTab('dashboard')}
+                        onMouseEnter={() => setIsSidebarExpanded(true)}
+                    />
 
-                {/* Navigation */}
-                <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-2 scrollbar-thin scrollbar-thumb-slate-700">
-                    {menuItems.filter(item => item.visible).map((item) => (
-                        <button
-                            key={item.id}
-                            onClick={() => setActiveTab(item.id)}
-                            className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group relative overflow-hidden ${activeTab === item.id
-                                ? "bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg shadow-blue-500/20 text-white translate-x-1"
-                                : "text-slate-600 dark:text-slate-400 hover:bg-blue-500/5 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-white hover:translate-x-1"
-                                }`}
-                        >
-                            <item.icon size={22} className={`min-w-[22px] transition-transform duration-300 ${activeTab === item.id ? "scale-110 text-white" : "group-hover:scale-110"}`} />
-                            <span className={`whitespace-nowrap font-medium transition-all duration-300 origin-left ${sidebarOpen ? "opacity-100 scale-100" : "opacity-0 scale-0 invisible w-0"}`}>
-                                {item.label}
-                            </span>
-
-                            {/* Active Indicator Glow */}
-                            {activeTab === item.id && (
-                                <div className="absolute inset-0 bg-white/10 blur-md rounded-xl"></div>
-                            )}
-                        </button>
-                    ))}
-                </nav>
-
-                {/* Footer / Toggle */}
-                <div className="p-4 border-t border-blue-500/10 dark:border-slate-800 bg-transparent">
                     <button
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="w-full flex items-center justify-center p-2 rounded-lg hover:bg-blue-500/5 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"
+                        className={activeCategory === "manage" ? "active" : ""}
+                        onClick={() => setActiveCategory("manage")}
+                        onMouseEnter={() => setIsSidebarExpanded(true)}
+                        title="Overview"
                     >
-                        {sidebarOpen ? <Menu size={20} /> : <ChevronRight size={20} />}
+                        <LayoutDashboard size={22} />
                     </button>
+
                     <button
-                        onClick={handleLogout}
-                        className={`mt-4 w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 group overflow-hidden ${!sidebarOpen && "justify-center"}`}
+                        className={activeCategory === "users" ? "active" : ""}
+                        onClick={() => setActiveCategory("users")}
+                        onMouseEnter={() => setIsSidebarExpanded(true)}
+                        title="Users"
                     >
-                        <LogOut size={20} className="min-w-[20px] group-hover:rotate-12 transition-transform" />
-                        <span className={`whitespace-nowrap font-medium transition-all duration-300 ${sidebarOpen ? "opacity-100" : "opacity-0 w-0 invisible"}`}>
-                            Logout
-                        </span>
+                        <Users size={22} />
                     </button>
-                </div>
-            </div>
 
-            {/* Main Content */}
-            <div className="flex-1 flex flex-col overflow-hidden bg-white/30 dark:bg-transparent relative transition-colors duration-500">
-                {/* Decorative Background Elements */}
-                <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-100/50 to-transparent -z-10"></div>
+                    <button
+                        className={activeCategory === "content" ? "active" : ""}
+                        onClick={() => setActiveCategory("content")}
+                        onMouseEnter={() => setIsSidebarExpanded(true)}
+                        title="Content"
+                    >
+                        <BookOpen size={22} />
+                    </button>
 
-                {/* Header */}
-                <header className="h-20 bg-[var(--background)]/80 dark:bg-slate-900/50 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shadow-sm z-10 sticky top-0 transition-colors duration-500 gap-8">
-                    <div className="flex items-center gap-8 flex-1">
-                        <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-700 to-slate-900 dark:from-white dark:to-slate-300 capitalize truncate">
-                            {activeTab === 'dashboard' ? `Hello, ${adminInfo?.userId?.name.split(' ')[0] || 'Admin'}!` : (activeTab === 'profile' ? 'My Profile' : menuItems.find(i => i.id === activeTab)?.label)}
-                        </h1>
-                    </div>
+                    <button
+                        className={activeCategory === "system" ? "active" : ""}
+                        onClick={() => setActiveCategory("system")}
+                        onMouseEnter={() => setIsSidebarExpanded(true)}
+                        title="System"
+                    >
+                        <Settings size={22} />
+                    </button>
 
-                    <div className="flex items-center gap-2">
-                        {/* Digital Clock */}
-                        <div className="hidden md:flex items-center justify-center bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 px-4 py-1.5 rounded-2xl shadow-sm">
-                            <ClockWidgetCompact />
-                        </div>
-                        <ThemeToggle />
-                        <div className="hidden md:flex flex-col items-end mr-2">
-                            <span className="text-sm font-semibold text-slate-800 dark:text-white">{adminInfo?.userId?.name || adminInfo?.name || "Master Admin"}</span>
-                            <span className="text-xs text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded-full border border-blue-100 dark:border-blue-800 capitalize">
-                                {adminInfo?.role?.replace('_', ' ')}
-                            </span>
-                        </div>
-                        <div
-                            className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg ring-2 ring-white dark:ring-slate-700 cursor-pointer hover:scale-105 transition-transform"
-                            onClick={() => setActiveTab('profile')}
-                            title="Go to Profile"
-                        >
-                            {adminInfo?.userId?.name?.charAt(0).toUpperCase() || "A"}
-                        </div>
-                    </div>
-                </header>
-
-                {/* Content Area */}
-                <main className="flex-1 overflow-y-auto p-8 scroll-smooth scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-300">
-                    <div className="max-w-7xl mx-auto animate__animated animate__fadeInUp animate__faster">
-                        {activeTab === "dashboard" && <OverviewTab adminInfo={adminInfo} stats={stats} setActiveTab={setActiveTab} />}
-                        {activeTab === "profile" && <ProfileTab adminInfo={adminInfo} />}
-                        {activeTab === "students" && <StudentsTab />}
-                        {activeTab === "book-upload" && <NotesUpload />}
-                        {activeTab === "pyq-upload" && <PYQUpload />}
-                        {activeTab === "notifications" && <NotificationsManager />}
-                        {activeTab === "admin" && (
-                            <AdminManagement adminInfo={adminInfo} />
+                    <div className="bottom-actions">
+                        {/* User Profile Picture (Mini) */}
+                        {adminInfo?.userId?.profilePicture ? (
+                            <img
+                                src={getProfilePictureUrl()}
+                                alt="Profile"
+                                className="user-avatar-mini"
+                                onClick={() => setIsProfileModalOpen(true)}
+                                onMouseEnter={() => setIsSidebarExpanded(true)}
+                                title="View Profile Picture"
+                                style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', cursor: 'pointer', border: '2px solid var(--primary, #0fb4b3)' }}
+                            />
+                        ) : (
+                            <div
+                                className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg cursor-pointer"
+                                onClick={() => setActiveTab('profile')}
+                                onMouseEnter={() => setIsSidebarExpanded(true)}
+                            >
+                                {adminInfo?.userId?.name?.charAt(0).toUpperCase() || "A"}
+                            </div>
                         )}
+
+                        <button
+                            onClick={() => setActiveTab('profile')}
+                            onMouseEnter={() => setIsSidebarExpanded(true)}
+                            title="Settings"
+                        >
+                            <Settings size={22} />
+                        </button>
+                        <button
+                            onClick={handleLogout}
+                            onMouseEnter={() => setIsSidebarExpanded(true)}
+                            title="Logout"
+                        >
+                            <LogOut size={22} />
+                        </button>
+                    </div>
+                </div>
+
+                {/* RIGHT PANE (Menu Items) */}
+                <div
+                    className="right"
+                    onMouseEnter={() => setIsSidebarExpanded(true)}
+                >
+                    <h1>{categoryMenus[activeCategory]?.title}</h1>
+                    <nav className="buttons">
+                        {currentCategoryItems.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                                <button
+                                    key={item.id}
+                                    className={activeTab === item.id ? "active" : ""}
+                                    onClick={() => setActiveTab(item.id)}
+                                >
+                                    <div className="icon-box">
+                                        <Icon size={20} />
+                                    </div>
+                                    <span>{item.label}</span>
+                                </button>
+                            );
+                        })}
+                    </nav>
+                </div>
+            </aside>
+
+            {/* --- MAIN CONTENT (Shifted Right) --- */}
+            <div className="flex-1 flex flex-col min-w-0 ml-[80px] lg:ml-[100px] transition-all duration-300">
+
+
+                <main className={`flex-1 flex flex-col min-h-0 ${activeTab === 'chat' ? 'p-6 lg:p-8' : 'p-6 lg:p-10 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300'}`}>
+                    <div className={`${activeTab === 'chat' ? 'flex-1 flex flex-col overflow-hidden' : 'max-w-7xl mx-auto w-full'}`}>
+
+                        {/* Inline Page Header (Replaces the horizontal navbar) */}
+                        {activeTab !== 'chat' && (
+                            <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-200 dark:border-slate-800 pb-8">
+                                <div>
+                                    <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white capitalize tracking-tight">
+                                        {activeTab.replace('-', ' ')}
+                                    </h1>
+                                    <p className="text-slate-500 dark:text-slate-400 mt-2 text-lg">
+                                        Manage and monitor your {activeTab.replace('-', ' ')} metrics.
+                                    </p>
+                                </div>
+
+                                <div className="flex items-center gap-6 bg-white dark:bg-slate-900 p-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                                    <ClockWidgetCompact />
+                                    <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-700"></div>
+                                    <ThemeToggle />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Content rendering based on active tab */}
+                        <div className={`animate__animated animate__fadeInUp animate__faster ${activeTab === 'chat' ? 'flex-1 flex flex-col min-h-0' : ''}`}>
+                            {activeTab === "dashboard" && <OverviewTab adminInfo={adminInfo} stats={stats} setActiveTab={setActiveTab} />}
+                            {activeTab === "profile" && <ProfileTab adminInfo={adminInfo} onUpdate={fetchAdminInfo} />}
+                            {activeTab === "students" && <StudentsTab />}
+                            {activeTab === "book-upload" && <NotesUpload />}
+                            {activeTab === "pyq-upload" && <PYQUpload />}
+                            {activeTab === "notifications" && <NotificationsManager />}
+                            {activeTab === "chat" && <AdminChat />}
+                            {activeTab === "admin" && (
+                                <AdminManagement adminInfo={adminInfo} />
+                            )}
+                        </div>
                     </div>
                 </main>
             </div>
+
+            {/* Profile Picture Modal */}
+            {isProfileModalOpen && (
+                <div
+                    className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm"
+                    onClick={() => setIsProfileModalOpen(false)}
+                >
+                    <div className="relative max-w-lg w-full bg-white dark:bg-gray-900 p-2 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
+                        <img
+                            src={getProfilePictureUrl()}
+                            alt="Profile Full Size"
+                            className="w-full h-auto rounded-xl object-contain max-h-[80vh]"
+                        />
+                        <button
+                            className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition"
+                            onClick={() => setIsProfileModalOpen(false)}
+                        >
+                            <LogOut size={20} className="rotate-180" />
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+// Compact Clock for Header
+function ClockWidgetCompact() {
+    const [time, setTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => setTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    return (
+        <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-mono text-sm">
+            <Clock size={16} className="text-blue-500" />
+            <span>
+                {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </span>
         </div>
     );
 }
@@ -432,7 +532,77 @@ function StatCard({ icon: Icon, title, description, color, delay, onClick }) {
     );
 }
 
-function ProfileTab({ adminInfo }) {
+function ProfileTab({ adminInfo, onUpdate }) {
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = React.useRef(null);
+
+    const getProfilePictureUrl = () => {
+        if (!adminInfo?.userId?.profilePicture) return null;
+        const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000';
+        return `${baseUrl}${adminInfo.userId.profilePicture}`;
+    };
+
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Check file type
+        if (!file.type.startsWith('image/')) {
+            toast.error("Please upload an image file");
+            return;
+        }
+
+        // Check file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error("File size should be less than 5MB");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("profilePicture", file);
+
+        setUploading(true);
+        try {
+            const response = await API.post("/user/upload-profile-picture", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+
+            if (response.data.success) {
+                toast.success("Profile picture updated!");
+                if (onUpdate) onUpdate();
+            }
+        } catch (error) {
+            console.error("Upload failed:", error);
+            toast.error("Failed to upload image");
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleRemovePicture = async () => {
+        if (!window.confirm("Are you sure you want to remove your profile picture?")) return;
+
+        setUploading(true);
+        try {
+            const response = await API.delete("/user/remove-profile-picture");
+            if (response.data.success) {
+                toast.success("Profile picture removed");
+                if (onUpdate) onUpdate();
+            }
+        } catch (error) {
+            console.error("Removal failed:", error);
+            toast.error("Failed to remove profile picture");
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const profilePic = getProfilePictureUrl();
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Profile Card */}
@@ -440,11 +610,49 @@ function ProfileTab({ adminInfo }) {
                 <div className="bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-3xl shadow-lg border border-slate-100 dark:border-slate-800 overflow-hidden relative transition-colors duration-300">
                     <div className="h-32 bg-gradient-to-r from-blue-500 to-purple-600"></div>
                     <div className="px-6 pb-6 text-center -mt-12 relative">
-                        <div className="w-24 h-24 mx-auto bg-white dark:bg-slate-900 rounded-full p-1 shadow-lg transition-colors duration-300">
-                            <div className="w-full h-full bg-slate-900 dark:bg-black text-white rounded-full flex items-center justify-center text-3xl font-bold">
-                                {adminInfo?.userId?.name?.charAt(0).toUpperCase() || "A"}
+                        <div className="w-24 h-24 mx-auto bg-white dark:bg-slate-900 rounded-full p-1 shadow-lg transition-colors duration-300 relative group">
+                            {profilePic ? (
+                                <img src={profilePic} alt="Admin" className="w-full h-full rounded-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full bg-slate-900 dark:bg-black text-white rounded-full flex items-center justify-center text-3xl font-bold">
+                                    {adminInfo?.userId?.name?.charAt(0).toUpperCase() || "A"}
+                                </div>
+                            )}
+
+                            {/* Hover Overlay */}
+                            <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 cursor-pointer" onClick={handleUploadClick}>
+                                <div className="p-1.5 bg-white text-slate-900 rounded-full hover:bg-blue-50 transition-colors" title="Upload Photo">
+                                    <Camera size={16} />
+                                </div>
+                                {profilePic && (
+                                    <div
+                                        className="p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                        title="Remove Photo"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleRemovePicture();
+                                        }}
+                                    >
+                                        <Trash2 size={16} />
+                                    </div>
+                                )}
                             </div>
+
+                            {uploading && (
+                                <div className="absolute inset-0 bg-white/60 dark:bg-slate-900/60 rounded-full flex items-center justify-center z-10">
+                                    <Loader2 className="animate-spin text-blue-500" size={24} />
+                                </div>
+                            )}
                         </div>
+
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                        />
+
                         <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-4">{adminInfo?.userId?.name || "Master Admin"}</h2>
                         <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">{adminInfo?.userId?.email || "admin@example.com"}</p>
 
@@ -832,31 +1040,6 @@ function PermissionItem({ name, allowed }) {
 }
 
 // Compact Clock Widget for Header
-function ClockWidgetCompact() {
-    const [time, setTime] = useState(new Date());
 
-    useEffect(() => {
-        const timer = setInterval(() => setTime(new Date()), 1000);
-        return () => clearInterval(timer);
-    }, []);
-
-    const formatTime = (num) => String(num).padStart(2, "0");
-    const hours = time.getHours() % 12 || 12;
-    const minutes = formatTime(time.getMinutes());
-    const ampm = time.getHours() >= 12 ? 'PM' : 'AM';
-
-    return (
-        <div className="flex items-center gap-3 text-slate-800 dark:text-white">
-            <Clock size={18} className="text-brand-indigo dark:text-brand-rose" />
-            <span className="text-xl font-bold font-mono tracking-widest">
-                {hours}:{minutes} <span className="text-xs font-sans text-slate-500 dark:text-slate-400">{ampm}</span>
-            </span>
-            <div className="h-4 w-[1px] bg-slate-300 dark:bg-slate-700 mx-1"></div>
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                {time.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
-            </span>
-        </div>
-    );
-}
 
 export default AdminDashboard;

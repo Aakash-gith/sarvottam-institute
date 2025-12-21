@@ -1,0 +1,244 @@
+/* Sidebar.css */
+.sidebar {
+    /* Use global primary or fallback */
+    --color-primary: var(--primary, #0fb4b3);
+    position: fixed;
+    overflow: hidden;
+    top: 24px;
+    left: 24px;
+    bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    width: 80px;
+    border-radius: 20px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 50;
+    background: var(--sidebar-bg, #ffffff);
+    border: 1px solid var(--border, #e5e7eb);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Left and Right Panes */
+.sidebar .left,
+.sidebar .right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    transition: 0.4s;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- LEFT PANE --- */
+.sidebar .left {
+    z-index: 20;
+    left: 0;
+    width: 80px;
+    background: var(--sidebar-left-bg, #f8fafc);
+    /* Slightly off-white for depth */
+    align-items: center;
+    border-right: 1px solid var(--border, #e5e7eb);
+    overflow: hidden;
+}
+
+.sidebar .right {
+    left: 80px;
+    width: 240px;
+    background: var(--sidebar-bg, #ffffff);
+    color: var(--sidebar-foreground, #0f1f3c);
+    translate: -100% 0;
+    align-items: flex-start;
+    z-index: 10;
+}
+
+/* Dark Mode Variables (Fallbacks if not in :root) */
+:root {
+    --sidebar-bg: #ffffff;
+    --sidebar-left-bg: #f8fafc;
+    --sidebar-foreground: #0f1f3c;
+    --border: #e5e7eb;
+}
+
+.dark {
+    --sidebar-bg: #0f172a;
+    --sidebar-left-bg: #1e293b;
+    --sidebar-foreground: #f8fafc;
+    --border-color: #334155;
+}
+
+/* Logo / User Avatar in Left */
+/* Logo / Brand */
+.sidebar-brand-logo {
+    width: 48px;
+    height: 48px;
+    margin: 34px 0 30px;
+    object-fit: contain;
+    /* kept contain to ensure full logo visible, standard for logos */
+    border-radius: 50%;
+    /* Circular */
+    cursor: pointer;
+    transition: transform 0.2s;
+    background: white;
+    /* Ensure transparency doesn't look weird if logo is png */
+    padding: 2px;
+    /* Optional padding */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-brand-logo:hover {
+    transform: scale(1.1);
+}
+
+/* Mini User Avatar in Bottom Actions */
+.sidebar .left img.user-avatar-mini {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-bottom: 4px;
+    border: 2px solid var(--color-primary);
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* Left Panel Buttons (Categories) */
+.sidebar .left button {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 12px;
+    color: var(--muted-foreground, #64748b);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar .left button:hover {
+    color: var(--primary);
+    background: var(--secondary, rgba(0, 0, 0, 0.05));
+    transform: translateY(-2px);
+}
+
+/* Active state for Category Buttons */
+.sidebar .left button.active {
+    color: var(--primary-foreground, white);
+    background: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(15, 180, 179, 0.3);
+}
+
+/* Bottom actions (Logout etc) */
+.sidebar .left .bottom-actions {
+    margin-top: auto;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    /* Center content horizontally */
+    width: 100%;
+}
+
+/* --- RIGHT PANE (CONTENT) --- */
+.sidebar .right h1 {
+    color: var(--sidebar-foreground, #0f1f3c);
+    /* Use variable for responsive text color */
+    letter-spacing: 0.5px;
+    font-size: 20px;
+    font-weight: 600;
+    width: 100%;
+    padding: 0 24px;
+    margin: 42px 0 24px;
+    white-space: nowrap;
+}
+
+.sidebar .right .buttons {
+    display: grid;
+    width: 100%;
+    padding: 0 16px;
+    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    box-sizing: border-box;
+    overflow-y: auto;
+    /* Allow scrolling if too many items */
+    max-height: calc(100vh - 120px);
+    scrollbar-width: none;
+    /* Hide scrollbar for cleaner look */
+}
+
+/* Styling for the Grid Items in Right Panel */
+/* Styling for the Grid Items in Right Panel */
+.sidebar .right button {
+    padding: 12px 8px;
+    background: var(--sidebar-item-bg, #f1f5f9);
+    /* Slightly darker than sidebar bg */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: 14px;
+    cursor: pointer;
+    color: var(--sidebar-foreground, #0f1f3c);
+    transition: all 0.25s ease;
+    height: 95px;
+}
+
+.sidebar .right button .icon-box {
+    background: var(--secondary, #f0f4f8);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 20px;
+    display: grid;
+    place-items: center;
+    transition: all 0.3s ease;
+    color: var(--muted-foreground, #64748b);
+}
+
+.sidebar .right button span {
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.sidebar .right button:hover {
+    color: var(--primary, #0fb4b3);
+    background: var(--accent, #eef2ff);
+    border-color: var(--primary, #0fb4b3);
+    transform: translateY(-2px);
+}
+
+.sidebar .right button:hover .icon-box {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 4px 10px rgba(64, 102, 255, 0.3);
+}
+
+/* --- HOVER INTERACTIONS --- */
+
+/* Expand sidebar when explicit expanded class is present */
+.sidebar.expanded {
+    width: 320px;
+    /* 80px left + 240px right */
+}
+
+.sidebar.expanded .right {
+    translate: 0;
+    /* Slide right panel into view */
+}
+
+/* Optional: Rounding adjustments during expansion */
+.sidebar.expanded .left {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.sidebar.expanded .right {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}

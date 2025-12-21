@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Navbar, EventsPage } from "../components/index.components";
+import { EventsPage } from "../components/index.components";
+import Sidebar from "../components/Sidebar";
 import { getTasks, getEvents } from "../api/tasks";
 
 // State management for tasks and events with backend integration
@@ -44,10 +45,10 @@ function Events() {
   }, []);
   return (
     <div className="flex h-screen bg-gray-50">
-      <Navbar />
+      <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 transition-all duration-300 pt-20">
+      <div className="flex-1 transition-all duration-300 ml-[120px]">
         <div className="m-4 h-full overflow-auto">
           <div className="max-w-[980px] w-full mx-auto h-full">
             {loading ? (

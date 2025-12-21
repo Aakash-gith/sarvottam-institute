@@ -46,6 +46,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    blockedUsers: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    deletedChats: [{
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      deletedAt: { type: Date, default: Date.now }
+    }]
   },
   { timestamps: true }
 );

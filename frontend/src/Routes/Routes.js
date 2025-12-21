@@ -16,6 +16,11 @@ export const quizTake = "/quiz/attempt/:attemptId";
 export const quizResults = "/quiz/results/:attemptId";
 export const quizHistory = "/quiz/history";
 export const profile = "/profile";
+export const importantQuestions = "/important-questions";
+export const ncertSolutions = "/ncert-solutions";
+export const ncertExemplar = "/ncert-exemplar";
+export const books = "/books";
+export const chat = "/chat";
 
 // Admin routes
 export const adminLogin = "/admin/login";

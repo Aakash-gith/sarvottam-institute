@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getQuizHistory, deleteQuizAttempt } from "../../api/quiz";
 import { toast } from "react-hot-toast";
-import { Navbar } from "../index.components";
+import Sidebar from "../Sidebar";
 import { Trash2, X, History, ArrowLeft, ChevronLeft, ChevronRight, CheckCircle, XCircle, Calendar, Play } from "lucide-react";
 
 function QuizHistory() {
@@ -106,8 +106,8 @@ function QuizHistory() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Navbar />
-      <div className="flex-1 transition-all duration-300 overflow-auto">
+      <Sidebar />
+      <div className="flex-1 transition-all duration-300 overflow-auto ml-[120px]">
         <div className="min-h-screen p-6">
           <div className="max-w-4xl mx-auto">
 

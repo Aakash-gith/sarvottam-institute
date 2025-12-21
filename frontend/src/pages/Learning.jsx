@@ -1,5 +1,6 @@
 import React from "react";
-import { Navbar, HeaderBar } from "../components/index.components";
+
+import Sidebar from "../components/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { BookOpen, TrendingUp, ChevronRight } from "lucide-react";
 
@@ -8,12 +9,12 @@ function Learning() {
 
     return (
         <div className="flex h-screen bg-gray-50">
-            <Navbar />
+            <Sidebar />
 
             {/* Main Content Area */}
-            <div className="flex-1 transition-all duration-300">
+            <div className="flex-1 transition-all duration-300 ml-[120px]">
                 <div className="p-6 md:p-10 rounded-lg gap-5 flex flex-col h-full overflow-auto">
-                    <HeaderBar />
+
                     <div className="max-w-4xl mx-auto w-full">
                         <div className="text-center mb-10">
                             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Learning Center</h1>

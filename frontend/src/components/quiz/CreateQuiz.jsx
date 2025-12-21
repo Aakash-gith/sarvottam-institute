@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createQuiz } from "../../api/quiz";
 import { toast } from "react-hot-toast";
-import { Navbar } from "../index.components";
+import Sidebar from "../Sidebar";
 import { Play, Clock, HelpCircle, ArrowLeft, Sparkles } from "lucide-react";
 
 function CreateQuiz() {
@@ -85,8 +85,8 @@ function CreateQuiz() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Navbar />
-      <div className="flex-1 transition-all duration-300 overflow-auto">
+      <Sidebar />
+      <div className="flex-1 transition-all duration-300 overflow-auto ml-[120px]">
         <div className="min-h-screen p-6">
           <div className="max-w-2xl mx-auto">
 
@@ -139,8 +139,8 @@ function CreateQuiz() {
                           type="button"
                           onClick={() => setFormData(prev => ({ ...prev, topic }))}
                           className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all ${formData.topic === topic
-                              ? "bg-blue-600 text-white"
-                              : "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                            ? "bg-blue-600 text-white"
+                            : "bg-blue-50 text-blue-600 hover:bg-blue-100"
                             }`}
                         >
                           {topic}
@@ -178,8 +178,8 @@ function CreateQuiz() {
                         type="button"
                         onClick={() => setFormData(prev => ({ ...prev, numberOfQuestions: num }))}
                         className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${formData.numberOfQuestions === num
-                            ? "bg-blue-600 text-white shadow-md"
-                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          ? "bg-blue-600 text-white shadow-md"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                           }`}
                       >
                         {num}
@@ -216,8 +216,8 @@ function CreateQuiz() {
                         type="button"
                         onClick={() => setFormData(prev => ({ ...prev, timeLimit: time }))}
                         className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${formData.timeLimit === time
-                            ? "bg-blue-600 text-white shadow-md"
-                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          ? "bg-blue-600 text-white shadow-md"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                           }`}
                       >
                         {time}m

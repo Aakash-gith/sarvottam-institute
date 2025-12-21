@@ -8,6 +8,9 @@ const router = express.Router();
 // All routes require authentication
 router.use(authMiddleware);
 
+// Search users
+router.get("/search", userController.searchUsers);
+
 // Get user profile stats
 router.get("/profile-stats", userController.getProfileStats);
 

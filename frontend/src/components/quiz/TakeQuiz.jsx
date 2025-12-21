@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getActiveQuiz, submitAnswer, submitQuiz } from "../../api/quiz";
 import { toast } from "react-hot-toast";
-import { Navbar } from "../index.components";
+import Sidebar from "../Sidebar";
 import { Clock, ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
 
 function TakeQuiz() {
@@ -145,8 +145,8 @@ function TakeQuiz() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Navbar />
-      <div className="flex-1 transition-all duration-300 pt-20">
+      <Sidebar />
+      <div className="flex-1 transition-all duration-300 ml-[120px]">
         <div className="min-h-screen p-6">
           <div className="max-w-4xl mx-auto">
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getQuizResults, sendExplanationEmail } from "../../api/quiz";
 import { toast } from "react-hot-toast";
-import { Navbar } from "../index.components";
+import Sidebar from "../Sidebar";
 import { Mail, CheckCircle, XCircle, ArrowRight, RotateCcw, History } from "lucide-react";
 
 function QuizResults() {
@@ -98,8 +98,8 @@ function QuizResults() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Navbar />
-      <div className="flex-1 transition-all duration-300 overflow-auto">
+      <Sidebar />
+      <div className="flex-1 transition-all duration-300 overflow-auto ml-[120px]">
         <div className="min-h-screen p-6">
           <div className="max-w-2xl mx-auto">
 

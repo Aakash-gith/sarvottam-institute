@@ -26,6 +26,11 @@ import {
   adminForgotPassword,
   adminDashboard,
   adminUserAnalytics,
+  importantQuestions,
+  ncertSolutions,
+  ncertExemplar,
+  books,
+  chat,
 } from "./Routes/Routes";
 
 import conf from "./conf/conf";
@@ -40,6 +45,10 @@ const NotesPage = React.lazy(() => import("./pages/NotesPage"));
 const PYQ = React.lazy(() => import("./pages/PYQ"));
 const Quiz = React.lazy(() => import("./pages/Quiz"));
 const Profile = React.lazy(() => import("./pages/Profile"));
+const ImportantQuestions = React.lazy(() => import("./pages/ImportantQuestions"));
+const NcertSolutions = React.lazy(() => import("./pages/NcertSolutions"));
+const NcertExemplar = React.lazy(() => import("./pages/NcertExemplar"));
+const Books = React.lazy(() => import("./pages/Books"));
 const AdminLogin = React.lazy(() => import("./pages/Admin/AdminLogin"));
 const AdminSignup = React.lazy(() => import("./pages/Admin/AdminSignup"));
 const AdminRequestStatus = React.lazy(() => import("./pages/Admin/AdminRequestStatus"));
@@ -52,6 +61,7 @@ const QuizResults = React.lazy(() => import("./components/quiz/QuizResults"));
 const QuizHistory = React.lazy(() => import("./components/quiz/QuizHistory"));
 const PhysicsChapters = React.lazy(() => import("./components/notes/PhysicsChapters"));
 const NotesViewer = React.lazy(() => import("./components/notes/NotesViewer"));
+const Chat = React.lazy(() => import("./pages/Chat"));
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Skeleton } from "./components/Skeleton"; // Use our new Skeleton component
@@ -94,6 +104,7 @@ function App() {
           <Route path={adminUserAnalytics} element={<UserAnalyticsPage />} />
 
           {/* Protected Routes - Only accessible when logged in */}
+          <Route path={chat} element={<ProtectedRoute><Chat /></ProtectedRoute>} />
           <Route path={events} element={<ProtectedRoute><Events /></ProtectedRoute>} />
           <Route path={notes} element={<ProtectedRoute><Notes /></ProtectedRoute>} />
           <Route path={subjectNotes} element={<ProtectedRoute><SubjectNotes /></ProtectedRoute>} />
@@ -107,6 +118,10 @@ function App() {
           <Route path={quizResults} element={<ProtectedRoute><QuizResults /></ProtectedRoute>} />
           <Route path={quizHistory} element={<ProtectedRoute><QuizHistory /></ProtectedRoute>} />
           <Route path={profile} element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path={importantQuestions} element={<ProtectedRoute><ImportantQuestions /></ProtectedRoute>} />
+          <Route path={ncertSolutions} element={<ProtectedRoute><NcertSolutions /></ProtectedRoute>} />
+          <Route path={ncertExemplar} element={<ProtectedRoute><NcertExemplar /></ProtectedRoute>} />
+          <Route path={books} element={<ProtectedRoute><Books /></ProtectedRoute>} />
         </Routes>
       </React.Suspense>
     </>

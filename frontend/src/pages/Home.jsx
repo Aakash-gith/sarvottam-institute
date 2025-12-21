@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 import { Dashboard, Calendar, CreateEvent } from "../components/index.components"; // Keep old dashboard for now just in case, but we use StudentDashboard
 import StudentDashboard from "../components/StudentDashboard";
 import GradeCard from "../components/GradeCard";
@@ -27,10 +27,10 @@ function Home() {
         <title>Home | Sarvottam Institute</title>
         <meta name="description" content="Sarvottam Institute - Excellence in Education for Grades 9 & 10" />
       </Helmet>
-      <Navbar />
+      {status && <Sidebar />}
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8 flex-1 mt-16">
+      <div className={`max-w-7xl mx-auto px-6 py-8 flex-1 ${status ? 'ml-[120px]' : ''}`}>
         {status ? (
           <>
             {/* For Logged In Users - New Student Dashboard */}

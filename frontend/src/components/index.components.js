@@ -2,7 +2,7 @@ import Signup from "./auth/Signup";
 import Login from "./auth/Login";
 import Verify from "./auth/Verify";
 import ForgotPass from "./auth/ForgotPass";
-import Navbar from "./Navbar";
+
 import HeaderBar from "./HeaderBar";
 import Dashboard from "./Dashboard";
 import Calendar from "./Calendar";
@@ -19,7 +19,7 @@ export {
   Login,
   Verify,
   ForgotPass,
-  Navbar,
+
   HeaderBar,
   Dashboard,
   Calendar,

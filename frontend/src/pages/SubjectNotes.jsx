@@ -10,7 +10,7 @@ function SubjectNotes() {
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 transition-all duration-300 ml-[120px]">
+      <div className="flex-1 transition-all duration-300 ml-0 md:ml-[120px] pt-16 md:pt-0">
         <div className="pb-0 pr-0 rounded-lg gap-5 flex flex-col h-full">
 
 

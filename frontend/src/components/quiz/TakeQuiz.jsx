@@ -146,24 +146,24 @@ function TakeQuiz() {
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar />
-      <div className="flex-1 transition-all duration-300 ml-[120px]">
-        <div className="min-h-screen p-6">
+      <div className="flex-1 transition-all duration-300 ml-0 md:ml-[120px]">
+        <div className="min-h-screen pt-20 md:pt-10 p-4 md:p-6">
           <div className="max-w-4xl mx-auto">
 
             {/* Header */}
-            <div className="flex justify-between items-center mb-8 bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-              <div className="flex-1">
-                <h1 className="text-xl font-bold text-gray-900">{quizData.topic}</h1>
-                <p className="text-sm text-gray-500">Question {currentQuestionIndex + 1} of {quizData.totalQuestions}</p>
+            <div className="flex justify-between items-center mb-6 bg-white rounded-xl p-3 md:p-4 shadow-sm border border-gray-200">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-lg md:text-xl font-bold text-gray-900 truncate">{quizData.topic}</h1>
+                <p className="text-xs md:text-sm text-gray-500">Question {currentQuestionIndex + 1} of {quizData.totalQuestions}</p>
               </div>
-              <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-mono text-xl font-bold ${isTimeWarning ? "bg-red-100 text-red-600" : "bg-green-100 text-green-600"}`}>
-                <Clock size={24} />
+              <div className={`flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-xl font-mono text-lg md:text-xl font-bold ${isTimeWarning ? "bg-red-100 text-red-600" : "bg-green-100 text-green-600"}`}>
+                <Clock size={20} className="md:w-6 md:h-6" />
                 {minutes}:{seconds.toString().padStart(2, "0")}
               </div>
             </div>
 
             {/* Quiz Card */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+            <div className="bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-200">
 
               {/* Progress Bar */}
               <div className="mb-8">
@@ -180,7 +180,7 @@ function TakeQuiz() {
               </div>
 
               {/* Question */}
-              <h2 className="text-xl font-bold text-gray-900 mb-6">
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-6">
                 {currentQuestion.questionText}
               </h2>
 

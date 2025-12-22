@@ -31,6 +31,12 @@ import {
   ncertExemplar,
   books,
   chat,
+  videoLearning,
+  videoLearningSubject,
+  videoLearningContent,
+  videoLearningChapter,
+  videoWatchMaths,
+  videoWatchScience,
 } from "./Routes/Routes";
 
 import conf from "./conf/conf";
@@ -62,6 +68,8 @@ const QuizHistory = React.lazy(() => import("./components/quiz/QuizHistory"));
 const PhysicsChapters = React.lazy(() => import("./components/notes/PhysicsChapters"));
 const NotesViewer = React.lazy(() => import("./components/notes/NotesViewer"));
 const Chat = React.lazy(() => import("./pages/Chat"));
+const VideoLearning = React.lazy(() => import("./pages/VideoLearning/VideoLearning"));
+const VideoPlayerPage = React.lazy(() => import("./pages/VideoLearning/VideoPlayerPage"));
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Skeleton } from "./components/Skeleton"; // Use our new Skeleton component
@@ -122,6 +130,12 @@ function App() {
           <Route path={ncertSolutions} element={<ProtectedRoute><NcertSolutions /></ProtectedRoute>} />
           <Route path={ncertExemplar} element={<ProtectedRoute><NcertExemplar /></ProtectedRoute>} />
           <Route path={books} element={<ProtectedRoute><Books /></ProtectedRoute>} />
+          <Route path={videoLearning} element={<ProtectedRoute><VideoLearning /></ProtectedRoute>} />
+          <Route path={videoLearningSubject} element={<ProtectedRoute><VideoLearning /></ProtectedRoute>} />
+          <Route path={videoLearningContent} element={<ProtectedRoute><VideoLearning /></ProtectedRoute>} />
+          <Route path={videoLearningChapter} element={<ProtectedRoute><VideoLearning /></ProtectedRoute>} />
+          <Route path={videoWatchMaths} element={<ProtectedRoute><VideoPlayerPage /></ProtectedRoute>} />
+          <Route path={videoWatchScience} element={<ProtectedRoute><VideoPlayerPage /></ProtectedRoute>} />
         </Routes>
       </React.Suspense>
     </>

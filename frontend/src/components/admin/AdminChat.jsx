@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     Search, Edit, MoreHorizontal,
     Smile, Paperclip, Send, Image, Lock, MessageSquare, X, File,
-    Check, CheckCheck, Trash2, Slash, Eraser
+    Check, CheckCheck, Trash2, Slash, Eraser, ChevronLeft
 } from 'lucide-react';
 import API from '../../api/axios';
 import EmojiPicker from 'emoji-picker-react';
@@ -28,6 +28,14 @@ const AdminChat = () => {
 
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [showChatMenu, setShowChatMenu] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+    // Resize listener
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 1024);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Fetch conversations (recent chats)
     useEffect(() => {
@@ -263,8 +271,9 @@ const AdminChat = () => {
     };
 
     return (
-        <div className="flex-1 flex h-full min-h-0 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden animate__animated animate__fadeIn">
-            <div className="w-80 bg-white border-r border-gray-200 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10">
+        <div className="flex-1 flex h-full min-h-0 bg-white lg:rounded-3xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] lg:border border-slate-100 overflow-hidden animate__animated animate__fadeIn">
+            {/* Chat List Side (Hidden on mobile if a chat is active) */}
+            <div className={`${isMobile && activeChat ? 'hidden' : 'flex'} w-full lg:w-80 bg-white border-r border-gray-200 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10`}>
                 <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-white">
                     <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Chat</h2>
                     <div className="flex gap-1">
@@ -359,26 +368,39 @@ const AdminChat = () => {
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col bg-white overflow-hidden">
+            {/* Chat Window Side (Hidden on mobile if no chat is active) */}
+            <div className={`${isMobile && !activeChat ? 'hidden' : 'flex'} flex-1 flex flex-col bg-white overflow-hidden`}>
                 {activeChat ? (
-                    <>
-                        <div className="h-20 border-b border-gray-100 flex justify-between items-center px-8 shadow-sm bg-white/50 backdrop-blur-md z-10">
-                            <div className="flex items-center gap-4">
-                                <div className="relative">
+                    <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                        <div className="h-16 lg:h-20 border-b border-gray-100 flex justify-between items-center px-4 lg:px-8 shadow-sm bg-white/50 backdrop-blur-md z-10">
+                            <div className="flex items-center gap-2 lg:gap-4 min-w-0">
+                                {isMobile && (
+                                    <button
+                                        onClick={() => setActiveChat(null)}
+                                        className="p-2 -ml-2 hover:bg-gray-100 rounded-full text-gray-500"
+                                    >
+                                        <ChevronLeft size={24} />
+                                    </button>
+                                )}
+                                <div className="relative flex-shrink-0">
                                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6264A7] to-[#464775] flex items-center justify-center text-white font-bold shadow-md">
                                         {activeChat.avatar}
                                     </div>
                                     <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${activeChat.status === 'online' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
                                 </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-gray-900">{activeChat.name}</h2>
-                                    <span className={`text-xs font-medium ${activeChat.status === 'online' ? 'text-green-600' : 'text-yellow-600'}`}>
+                                <div className="min-w-0">
+                                    <h2 className="text-sm lg:text-lg font-bold text-gray-900 leading-tight truncate">{activeChat.name}</h2>
+                                    <p className={`text-[10px] lg:text-xs font-medium ${activeChat.status === 'online' ? 'text-green-600' : 'text-yellow-600'}`}>
                                         {activeChat.status === 'online' ? 'Available' : 'Offline'}
                                         {activeChat.isBlocked && <span className="ml-2 text-red-500">(Blocked)</span>}
-                                    </span>
+                                    </p>
                                 </div>
                             </div>
-                            <div className="flex gap-3 items-center">
+                            <div className="flex items-center gap-1 lg:gap-3">
+                                <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-100">
+                                    <Lock size={12} className="text-emerald-500" />
+                                    <span className="text-[10px] font-medium text-gray-500 whitespace-nowrap">Encrypted</span>
+                                </div>
                                 <div className="relative">
                                     <button
                                         onClick={() => setShowChatMenu(!showChatMenu)}
@@ -414,31 +436,27 @@ const AdminChat = () => {
                                         </div>
                                     )}
                                 </div>
-                                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-100">
-                                    <Lock size={12} className="text-emerald-500" />
-                                    <span className="text-[10px] font-medium text-gray-500">End-to-end Encrypted</span>
-                                </div>
                             </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6 bg-white scrollbar-thin">
+                        <div className="flex-1 overflow-y-auto px-4 lg:px-8 py-4 lg:py-6 space-y-4 lg:space-y-6 bg-white scrollbar-thin">
                             <div className="flex flex-col items-center gap-2 py-4">
                                 <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
                                     <Lock size={14} className="text-gray-400" />
                                 </div>
-                                <p className="text-[10px] text-gray-400 font-medium text-center max-w-xs">Messages are end-to-end encrypted. No one outside of this chat, not even the admins, can read or listen to them.</p>
-                                <span className="bg-gray-100 text-gray-500 text-xs px-3 py-1.5 rounded-full font-medium mt-2">Today</span>
+                                <p className="text-[10px] text-gray-400 font-medium text-center max-w-xs px-4">Messages are end-to-end encrypted and only visible to you and the student.</p>
+                                <span className="bg-gray-100 text-gray-500 text-[10px] lg:text-xs px-3 py-1.5 rounded-full font-medium mt-2">Today</span>
                             </div>
                             {messages.map((msg) => (
                                 <div key={msg.id} className={`flex group ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`flex gap-2 max-w-[70%] ${msg.sender === 'me' ? 'flex-row-reverse' : 'flex-row'}`}>
+                                    <div className={`flex gap-2 max-w-[85%] lg:max-w-[70%] ${msg.sender === 'me' ? 'flex-row-reverse' : 'flex-row'}`}>
                                         {msg.sender !== 'me' && (
-                                            <div className="w-8 h-8 rounded-full bg-gray-100 flex-shrink-0 flex items-center justify-center text-xs font-bold text-gray-600 self-end mb-1">
+                                            <div className="w-8 h-8 rounded-full bg-gray-100 flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-gray-600 self-end mb-1">
                                                 {activeChat.avatar}
                                             </div>
                                         )}
                                         <div className={`flex flex-col ${msg.sender === 'me' ? 'items-end' : 'items-start'}`}>
-                                            <div className={`p-4 rounded-2xl shadow-sm text-[15px] leading-relaxed relative ${msg.sender === 'me'
+                                            <div className={`p-3 lg:p-4 rounded-2xl shadow-sm text-sm lg:text-[15px] leading-relaxed relative ${msg.sender === 'me'
                                                 ? 'bg-[#E8EBFA] text-gray-900 rounded-br-sm'
                                                 : 'bg-white border border-gray-100 text-gray-900 rounded-bl-sm shadow-[0_2px_8px_rgba(0,0,0,0.04)]'
                                                 }`}>
@@ -475,7 +493,7 @@ const AdminChat = () => {
                             <div ref={scrollRef} />
                         </div>
 
-                        <div className="p-6 bg-white border-t border-gray-100 relative">
+                        <div className="p-4 lg:p-6 bg-white border-t border-gray-100 relative">
                             {selectedFile && (
                                 <div className="absolute bottom-full left-6 mb-2 p-2 bg-white border border-gray-200 rounded-lg shadow-lg flex items-center gap-3">
                                     {selectedFile.type === 'image' ? (
@@ -493,23 +511,23 @@ const AdminChat = () => {
 
                             {showEmojiPicker && (
                                 <div className="absolute bottom-24 left-6 z-20">
-                                    <EmojiPicker onEmojiClick={onEmojiClick} width={300} height={400} />
+                                    <EmojiPicker onEmojiClick={onEmojiClick} width={isMobile ? "100%" : 300} height={400} />
                                 </div>
                             )}
 
                             <div className="flex flex-col border border-gray-200 rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-[#6264A7]/20 focus-within:border-[#6264A7] transition-all bg-white">
                                 <input
                                     type="text"
-                                    placeholder="Type a new message..."
-                                    className="w-full p-4 bg-transparent outline-none text-[15px] placeholder-gray-400 min-h-[60px]"
+                                    placeholder="Type a message..."
+                                    className="w-full p-3 lg:p-4 bg-transparent outline-none text-sm lg:text-[15px] placeholder-gray-400 min-h-[50px] lg:min-h-[60px]"
                                     value={messageInput}
                                     onChange={(e) => setMessageInput(e.target.value)}
                                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                                 />
                                 <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileSelect} />
-                                <div className="flex justify-between items-center px-4 py-2.5 border-t border-gray-50 bg-[#F8F9FD] rounded-b-2xl">
+                                <div className="flex justify-between items-center px-4 py-2 border-t border-gray-50 bg-[#F8F9FD] rounded-b-2xl">
                                     <div className="flex gap-1 text-gray-500">
-                                        <button className="p-2 hover:bg-white hover:text-[#6264A7] rounded-lg transition-all" onClick={() => toast.success("Format enabled")}>
+                                        <button className="p-2 hover:bg-white hover:text-[#6264A7] rounded-lg transition-all" onClick={() => toast.success("Feature coming soon")}>
                                             <Edit size={18} />
                                         </button>
                                         <button className="p-2 hover:bg-white hover:text-[#6264A7] rounded-lg transition-all" onClick={triggerFileUpload}>
@@ -518,28 +536,28 @@ const AdminChat = () => {
                                         <button className={`p-2 hover:bg-white hover:text-[#6264A7] rounded-lg transition-all ${showEmojiPicker ? 'text-[#6264A7] bg-white' : ''}`} onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
                                             <Smile size={18} />
                                         </button>
-                                        <button className="p-2 hover:bg-white hover:text-[#6264A7] rounded-lg transition-all" onClick={() => { fileInputRef.current.accept = "image/*"; triggerFileUpload(); }}>
+                                        <button className="hidden sm:block p-2 hover:bg-white hover:text-[#6264A7] rounded-lg transition-all" onClick={() => { fileInputRef.current.accept = "image/*"; triggerFileUpload(); }}>
                                             <Image size={18} />
                                         </button>
                                     </div>
                                     <button
                                         onClick={handleSendMessage}
                                         disabled={!messageInput.trim() && !selectedFile}
-                                        className={`p-2.5 rounded-xl transition-all duration-200 ${messageInput.trim() || selectedFile ? 'bg-[#6264A7] text-white shadow-md' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                                        className={`p-2 lg:p-2.5 rounded-xl transition-all duration-200 ${messageInput.trim() || selectedFile ? 'bg-[#6264A7] text-white shadow-md' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
                                     >
                                         <Send size={18} />
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </>
+                    </div>
                 ) : (
-                    <div className="flex-1 flex flex-col items-center justify-center bg-gray-50/50">
-                        <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 border border-gray-100">
-                            <MessageSquare size={48} className="text-[#6264A7] opacity-20" />
+                    <div className="flex-1 flex flex-col items-center justify-center bg-gray-50/50 p-6">
+                        <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 lg:mb-6 border border-gray-100">
+                            <MessageSquare size={36} className="lg:size-48 text-[#6264A7] opacity-20" />
                         </div>
-                        <h2 className="text-xl font-bold text-gray-900 mb-2">Select a Student</h2>
-                        <p className="text-gray-500 max-w-sm text-center text-sm">Choose a student from the sidebar to start a conversation.</p>
+                        <h2 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">Select a Student</h2>
+                        <p className="text-gray-500 max-w-sm text-center text-xs lg:text-sm">Choose a student from the list to start a conversation.</p>
                     </div>
                 )}
             </div>

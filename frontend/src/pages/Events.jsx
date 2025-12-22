@@ -48,9 +48,9 @@ function Events() {
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 transition-all duration-300 ml-[120px]">
-        <div className="m-4 h-full overflow-auto">
-          <div className="max-w-[980px] w-full mx-auto h-full">
+      <div className="flex-1 transition-all duration-300 ml-0 md:ml-[120px]">
+        <div className="m-0 md:m-4 pt-16 md:pt-0 h-full overflow-auto">
+          <div className="max-w-full md:max-w-[980px] w-full mx-auto h-full">
             {loading ? (
               <div className="flex justify-center items-center h-full">
                 <div className="text-xl text-gray-600">Loading tasks and events...</div>

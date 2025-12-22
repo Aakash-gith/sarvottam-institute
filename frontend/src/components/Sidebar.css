@@ -12,7 +12,7 @@
     gap: 0px;
     width: 80px;
     border-radius: 20px;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 50;
     background: var(--sidebar-bg, #ffffff);
     border: 1px solid var(--border, #e5e7eb);
@@ -241,4 +241,53 @@
 .sidebar.expanded .right {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 768px) {
+    .sidebar {
+        /* Reset positioning for full height slide-in */
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: 100vh;
+        width: 320px;
+        /* Force width on mobile */
+        border-radius: 0;
+        transform: translateX(-110%);
+        /* Hidden by default */
+        box-shadow: none;
+        /* Shadow handled by open state or none */
+    }
+
+    /* Open State */
+    .sidebar.mobile-open {
+        transform: translateX(0);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Ensure right panel is visible when open */
+    .sidebar.mobile-open .right {
+        translate: 0;
+    }
+
+    /* Adjust internal layout if needed */
+    .sidebar .left {
+        height: 100%;
+        border-right: 1px solid var(--border);
+    }
+
+    .sidebar .right {
+        /* On mobile, right panel is always "active" if sidebar is open */
+        height: 100%;
+        width: 240px;
+        /* Fill remaining width of 320px container */
+    }
+
+    /* Hide the brand logo in sidebar left pane on mobile because we might have a top bar logo or just menu button */
+    /* Or keep it but adjust margins */
+    .sidebar-brand-logo {
+        margin-top: 60px;
+        /* Space for close button if needed, though close button is in right pane */
+    }
 }

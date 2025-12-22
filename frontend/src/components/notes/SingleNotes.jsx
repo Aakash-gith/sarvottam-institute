@@ -289,44 +289,51 @@ function SingleNotes() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 animate-in fade-in duration-500">
+    <div className="min-h-screen bg-gray-50 p-3 md:p-6 animate-in fade-in duration-500">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <button onClick={handleBack} className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-4 group">
+        <div className="mb-4 md:mb-8">
+          <button onClick={handleBack} className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-4 group pl-12 md:pl-0">
             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-            Back to {parentSubject ? parentSubject.name : "Subjects"}
+            <span className="hidden sm:inline">Back to {parentSubject ? parentSubject.name : "Subjects"}</span>
+            <span className="sm:hidden">Back</span>
           </button>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${getSubjectGradient()} flex items-center justify-center text-3xl shadow-md`}>
+                <div className={`w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br ${getSubjectGradient()} flex items-center justify-center text-2xl md:text-3xl shadow-md shrink-0`}>
                   {subject.icon}
                 </div>
-                <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{subject.name}</h1>
-                  <p className="text-gray-500">{content.notes.length} Chapters available</p>
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-xl md:text-3xl font-bold text-gray-900 leading-tight">{subject.name}</h1>
+                  <p className="text-sm text-gray-500">{content.notes.length} Chapters available</p>
                 </div>
               </div>
 
-              {/* Progress Circle */}
-              <div className="flex items-center gap-4 bg-gray-50 px-6 py-3 rounded-xl">
-                <div className="relative w-16 h-16">
-                  <svg className="w-16 h-16 -rotate-90">
-                    <circle cx="32" cy="32" r="28" stroke="#e5e7eb" strokeWidth="6" fill="none" />
-                    <circle cx="32" cy="32" r="28" stroke="#22c55e" strokeWidth="6" fill="none"
+              {/* Progress Circle & Stats Container */}
+              <div className="flex items-center gap-4 bg-gray-50 px-4 md:px-6 py-3 rounded-xl">
+                <div className="relative w-12 h-12 md:w-16 md:h-16 shrink-0">
+                  <svg className="w-12 h-12 md:w-16 md:h-16 -rotate-90">
+                    <circle cx="24" cy="24" r="21" className="md:hidden" stroke="#e5e7eb" strokeWidth="4" fill="none" />
+                    <circle cx="24" cy="24" r="21" className="md:hidden" stroke="#22c55e" strokeWidth="4" fill="none"
+                      strokeDasharray={`${2 * Math.PI * 21}`}
+                      strokeDashoffset={`${2 * Math.PI * 21 * (1 - (displayPercentage / 100))}`}
+                      strokeLinecap="round"
+                    />
+                    <circle cx="32" cy="32" r="28" className="hidden md:block" stroke="#e5e7eb" strokeWidth="6" fill="none" />
+                    <circle cx="32" cy="32" r="28" className="hidden md:block" stroke="#22c55e" strokeWidth="6" fill="none"
                       strokeDasharray={`${2 * Math.PI * 28}`}
                       strokeDashoffset={`${2 * Math.PI * 28 * (1 - (displayPercentage / 100))}`}
-                      strokeLinecap="round" className="transition-all duration-500"
+                      strokeLinecap="round"
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-lg font-bold text-green-600">{displayPercentage}%</span>
+                    <span className="text-sm md:text-lg font-bold text-green-600">{displayPercentage}%</span>
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Overall Progress</p>
-                  <p className="text-sm font-medium text-gray-700">{completedItems} / {totalItems} completed</p>
+                  <p className="text-xs md:text-sm text-gray-500">Progress</p>
+                  <p className="text-xs md:text-sm font-medium text-gray-700">{completedItems}/{totalItems} done</p>
                 </div>
               </div>
             </div>
@@ -362,25 +369,25 @@ function SingleNotes() {
                         ${isDone ? "border-green-300 bg-green-50/40" :
                       isInProgress ? "border-blue-300 bg-blue-50/40" : "border-gray-200 hover:border-blue-400"}`}>
 
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
+                    <div className="flex items-center gap-3 md:gap-4 flex-1">
+                      <div className={`w-10 h-10 md:w-11 md:h-11 rounded-xl flex items-center justify-center shrink-0 
                           ${isDone ? "bg-green-100 text-green-600" :
                           isInProgress ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-500 group-hover:bg-blue-100 group-hover:text-blue-600"}`}>
-                        {isDone ? <CheckCircle size={22} /> : isInProgress ? <Clock size={22} /> : <FileText size={22} />}
+                        {isDone ? <CheckCircle size={20} /> : isInProgress ? <Clock size={20} /> : <FileText size={20} />}
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-semibold text-gray-400">Ch {idx + 1}</span>
-                          <h3 className="text-gray-900 font-semibold">{note.title}</h3>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start gap-2">
+                          <span className="text-[10px] font-semibold text-gray-400 mt-1 shrink-0">Ch {idx + 1}</span>
+                          <h3 className="text-sm md:text-base text-gray-900 font-semibold leading-snug">{note.title}</h3>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-[10px] text-gray-500 mt-0.5">
                           {isDone ? "Completed" : isInProgress ? "In Progress" : "Not Started"}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center gap-2 justify-end sm:justify-start" onClick={(e) => e.stopPropagation()}>
                       {!isDone && !isInProgress && (
                         <button
                           onClick={(e) => {
@@ -396,9 +403,12 @@ function SingleNotes() {
                       )}
 
                       <button
-                        onClick={() => handleMarkNoteRead(noteId)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMarkNoteRead(noteId);
+                        }}
                         disabled={isDone || isPending}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm
+                        className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all shadow-sm
                             ${isDone ? "bg-green-100 text-green-700 cursor-default" :
                             "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-md"}`}
                       >
@@ -425,7 +435,7 @@ function SingleNotes() {
                         {isDone ? <CheckCircle size={20} /> : <Play size={20} />}
                       </div>
                       <div>
-                        <h3 className="font-semibold text-gray-900 line-clamp-1">{video.title}</h3>
+                        <h3 className="font-semibold text-gray-900 leading-snug">{video.title}</h3>
                         <p className="text-xs text-gray-500">Video Lecture</p>
                       </div>
                     </div>

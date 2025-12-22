@@ -57,9 +57,21 @@ function AdminDashboard() {
     const [activeTab, setActiveTab] = useState("dashboard");
     const [activeCategory, setActiveCategory] = useState("manage");
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleResize = () => {
+            const mobile = window.innerWidth < 1024;
+            setIsMobile(mobile);
+            if (!mobile) setIsMobileOpen(false);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const getProfilePictureUrl = () => {
         if (!adminInfo?.userId?.profilePicture) return null;
@@ -67,35 +79,44 @@ function AdminDashboard() {
         return `${baseUrl}${adminInfo.userId.profilePicture}`;
     };
 
-    // Import Sidebar Styles (Ensure this file exists and is global or scoped correctly)
-    // Note: We are relying on ../../components/Sidebar.css being present
-    // You might need to add: import "../../components/Sidebar.css"; at the top if not already there.
-
-    useEffect(() => {
-        fetchAdminInfo();
-        fetchStats();
-    }, []);
-
     const fetchAdminInfo = async () => {
         try {
             const { data } = await API.get("/admin/info");
-            setAdminInfo(data.data);
-            setLoading(false);
+            if (data.success) {
+                setAdminInfo(data.data);
+            }
         } catch (error) {
             console.error("Failed to fetch admin info:", error);
-            toast.error("Failed to load admin profile");
-            navigate("/admin/login");
+            if (error.response?.status === 401 || error.response?.status === 403) {
+                handleLogout();
+            }
         }
     };
 
     const fetchStats = async () => {
         try {
             const { data } = await API.get("/admin/dashboard-stats");
-            setStats(data.data);
+            if (data.success) {
+                setStats(data.data);
+            }
         } catch (error) {
             console.error("Failed to fetch dashboard stats:", error);
         }
     };
+
+    useEffect(() => {
+        const initDashboard = async () => {
+            setLoading(true);
+            try {
+                await Promise.all([fetchAdminInfo(), fetchStats()]);
+            } catch (err) {
+                console.error("Dashboard init error:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        initDashboard();
+    }, []);
 
     const handleLogout = () => {
         localStorage.clear();
@@ -118,28 +139,29 @@ function AdminDashboard() {
         manage: {
             title: "Overview",
             items: [
-                { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, visible: true },
-                { id: "chat", label: "Chat", icon: MessageSquare, visible: true },
+                { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, visible: true },
+                { id: 'chat', label: 'Support Chat', icon: MessageSquare, visible: true },
             ]
         },
         users: {
             title: "User Management",
             items: [
-                { id: "students", label: "Students", icon: GraduationCap, visible: true },
-                { id: "admin", label: "Admins", icon: Users, visible: true },
+                { id: 'students', label: 'Students', icon: GraduationCap, visible: true },
+                { id: 'admin', label: 'Admins', icon: Shield, visible: adminInfo?.role === 'master_admin' },
             ]
         },
         content: {
-            title: "Content",
+            title: "Content Control",
             items: [
-                { id: "book-upload", label: "Upload Notes", icon: BookOpen, visible: adminInfo?.permissions?.uploadNotes },
-                { id: "pyq-upload", label: "Upload PYQ", icon: FileText, visible: adminInfo?.permissions?.uploadPYQ },
+                { id: 'book-upload', label: 'Notes Upload', icon: Upload, visible: adminInfo?.permissions?.uploadNotes },
+                { id: 'pyq-upload', label: 'PYQ Upload', icon: FileText, visible: adminInfo?.permissions?.uploadPYQ },
+                { id: 'notifications', label: 'Notifications', icon: Bell, visible: adminInfo?.permissions?.sendNotifications },
             ]
         },
         system: {
-            title: "System",
+            title: "System Settings",
             items: [
-                { id: "notifications", label: "Notifications", icon: Bell, visible: adminInfo?.permissions?.sendNotifications },
+                { id: 'profile', label: 'My Profile', icon: User, visible: true },
             ]
         }
     };
@@ -147,13 +169,45 @@ function AdminDashboard() {
     // Helper to get active items for current category
     const currentCategoryItems = categoryMenus[activeCategory]?.items.filter(item => item.visible) || [];
 
+    const handleTabChange = (tabId) => {
+        setActiveTab(tabId);
+        if (isMobile) setIsMobileOpen(false);
+    };
+
+    const handleCategoryClick = (catId) => {
+        setActiveCategory(catId);
+        if (isMobile) {
+            // If it's a direct link to dashboard, close menu
+            if (catId === 'manage') {
+                // but usually user wants to see the submenu items on mobile?
+                // The current design shows a submenu in 'right' pane.
+                // So on mobile, clicking a category should stay in menu but update 'right' pane items.
+            }
+        }
+    };
+
     return (
         <div className="flex h-screen bg-slate-50 dark:bg-slate-950 font-poppins selection:bg-blue-500 selection:text-white overflow-hidden">
+            {/* Mobile Hamburger Button */}
+            {isMobile && !isMobileOpen && (
+                <button
+                    className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
+                    onClick={() => setIsMobileOpen(true)}
+                >
+                    <Menu size={24} />
+                </button>
+            )}
 
-            {/* --- NEW STUDENT SIDEBAR CONCEPT --- */}
-            {/* Sidebar */}
+            {/* Mobile Backdrop */}
+            {isMobile && isMobileOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm animate-in fade-in duration-200"
+                    onClick={() => setIsMobileOpen(false)}
+                />
+            )}
+
             <aside
-                className={`sidebar ${isSidebarExpanded ? 'expanded' : ''}`}
+                className={`sidebar ${isSidebarExpanded ? 'expanded' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}
                 onMouseLeave={() => setIsSidebarExpanded(false)}
             >
                 {/* LEFT PANE (Categories) */}
@@ -162,14 +216,14 @@ function AdminDashboard() {
                         src={logo}
                         alt="Sarvottam"
                         className="sidebar-brand-logo"
-                        onClick={() => setActiveTab('dashboard')}
-                        onMouseEnter={() => setIsSidebarExpanded(true)}
+                        onClick={() => { setActiveTab('dashboard'); if (isMobile) setIsMobileOpen(false); }}
+                        onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
                     />
 
                     <button
                         className={activeCategory === "manage" ? "active" : ""}
-                        onClick={() => setActiveCategory("manage")}
-                        onMouseEnter={() => setIsSidebarExpanded(true)}
+                        onClick={() => handleCategoryClick("manage")}
+                        onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
                         title="Overview"
                     >
                         <LayoutDashboard size={22} />
@@ -177,8 +231,8 @@ function AdminDashboard() {
 
                     <button
                         className={activeCategory === "users" ? "active" : ""}
-                        onClick={() => setActiveCategory("users")}
-                        onMouseEnter={() => setIsSidebarExpanded(true)}
+                        onClick={() => handleCategoryClick("users")}
+                        onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
                         title="Users"
                     >
                         <Users size={22} />
@@ -186,8 +240,8 @@ function AdminDashboard() {
 
                     <button
                         className={activeCategory === "content" ? "active" : ""}
-                        onClick={() => setActiveCategory("content")}
-                        onMouseEnter={() => setIsSidebarExpanded(true)}
+                        onClick={() => handleCategoryClick("content")}
+                        onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
                         title="Content"
                     >
                         <BookOpen size={22} />
@@ -195,8 +249,8 @@ function AdminDashboard() {
 
                     <button
                         className={activeCategory === "system" ? "active" : ""}
-                        onClick={() => setActiveCategory("system")}
-                        onMouseEnter={() => setIsSidebarExpanded(true)}
+                        onClick={() => handleCategoryClick("system")}
+                        onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
                         title="System"
                     >
                         <Settings size={22} />
@@ -210,30 +264,30 @@ function AdminDashboard() {
                                 alt="Profile"
                                 className="user-avatar-mini"
                                 onClick={() => setIsProfileModalOpen(true)}
-                                onMouseEnter={() => setIsSidebarExpanded(true)}
+                                onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
                                 title="View Profile Picture"
                                 style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', cursor: 'pointer', border: '2px solid var(--primary, #0fb4b3)' }}
                             />
                         ) : (
                             <div
                                 className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg cursor-pointer"
-                                onClick={() => setActiveTab('profile')}
-                                onMouseEnter={() => setIsSidebarExpanded(true)}
+                                onClick={() => { setActiveTab('profile'); if (isMobile) setIsMobileOpen(false); }}
+                                onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
                             >
                                 {adminInfo?.userId?.name?.charAt(0).toUpperCase() || "A"}
                             </div>
                         )}
 
                         <button
-                            onClick={() => setActiveTab('profile')}
-                            onMouseEnter={() => setIsSidebarExpanded(true)}
+                            onClick={() => { setActiveTab('profile'); if (isMobile) setIsMobileOpen(false); }}
+                            onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
                             title="Settings"
                         >
                             <Settings size={22} />
                         </button>
                         <button
                             onClick={handleLogout}
-                            onMouseEnter={() => setIsSidebarExpanded(true)}
+                            onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
                             title="Logout"
                         >
                             <LogOut size={22} />
@@ -244,9 +298,21 @@ function AdminDashboard() {
                 {/* RIGHT PANE (Menu Items) */}
                 <div
                     className="right"
-                    onMouseEnter={() => setIsSidebarExpanded(true)}
+                    onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
                 >
-                    <h1>{categoryMenus[activeCategory]?.title}</h1>
+                    <div className="flex items-center justify-between pr-4 mt-[42px] mb-[24px]">
+                        <h1 className="!m-0 !pl-6 !w-auto">
+                            {categoryMenus[activeCategory]?.title}
+                        </h1>
+                        {isMobile && (
+                            <button
+                                onClick={() => setIsMobileOpen(false)}
+                                className="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
+                            >
+                                <X size={24} />
+                            </button>
+                        )}
+                    </div>
                     <nav className="buttons">
                         {currentCategoryItems.map((item) => {
                             const Icon = item.icon;
@@ -254,7 +320,7 @@ function AdminDashboard() {
                                 <button
                                     key={item.id}
                                     className={activeTab === item.id ? "active" : ""}
-                                    onClick={() => setActiveTab(item.id)}
+                                    onClick={() => handleTabChange(item.id)}
                                 >
                                     <div className="icon-box">
                                         <Icon size={20} />
@@ -268,10 +334,10 @@ function AdminDashboard() {
             </aside>
 
             {/* --- MAIN CONTENT (Shifted Right) --- */}
-            <div className="flex-1 flex flex-col min-w-0 ml-[80px] lg:ml-[100px] transition-all duration-300">
+            <div className="flex-1 flex flex-col min-w-0 ml-0 lg:ml-[80px] pt-16 lg:pt-0 transition-all duration-300">
 
 
-                <main className={`flex-1 flex flex-col min-h-0 ${activeTab === 'chat' ? 'p-6 lg:p-8' : 'p-6 lg:p-10 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300'}`}>
+                <main className={`flex-1 flex flex-col min-h-0 ${activeTab === 'chat' ? 'p-0 lg:p-8' : 'p-4 lg:p-10 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300'}`}>
                     <div className={`${activeTab === 'chat' ? 'flex-1 flex flex-col overflow-hidden' : 'max-w-7xl mx-auto w-full'}`}>
 
                         {/* Inline Page Header (Replaces the horizontal navbar) */}
@@ -286,7 +352,7 @@ function AdminDashboard() {
                                     </p>
                                 </div>
 
-                                <div className="flex items-center gap-6 bg-white dark:bg-slate-900 p-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                                <div className="hidden md:flex items-center gap-6 bg-white dark:bg-slate-900 p-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                                     <ClockWidgetCompact />
                                     <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-700"></div>
                                     <ThemeToggle />
@@ -298,7 +364,7 @@ function AdminDashboard() {
                         <div className={`animate__animated animate__fadeInUp animate__faster ${activeTab === 'chat' ? 'flex-1 flex flex-col min-h-0' : ''}`}>
                             {activeTab === "dashboard" && <OverviewTab adminInfo={adminInfo} stats={stats} setActiveTab={setActiveTab} />}
                             {activeTab === "profile" && <ProfileTab adminInfo={adminInfo} onUpdate={fetchAdminInfo} />}
-                            {activeTab === "students" && <StudentsTab />}
+                            {activeTab === "students" && <StudentsTab isMobile={isMobile} />}
                             {activeTab === "book-upload" && <NotesUpload />}
                             {activeTab === "pyq-upload" && <PYQUpload />}
                             {activeTab === "notifications" && <NotificationsManager />}
@@ -707,7 +773,7 @@ function ProfileTab({ adminInfo, onUpdate }) {
     );
 }
 
-function StudentsTab() {
+function StudentsTab({ isMobile }) {
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
@@ -774,16 +840,16 @@ function StudentsTab() {
                     {/* Class 9 Card */}
                     <div
                         onClick={() => setSelectedClass('9')}
-                        className="group relative overflow-hidden bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 p-10 cursor-pointer transition-all hover:-translate-y-2 hover:shadow-2xl hover:border-blue-200"
+                        className="group relative overflow-hidden bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 p-6 lg:p-10 cursor-pointer transition-all hover:-translate-y-2 hover:shadow-2xl hover:border-blue-200"
                     >
-                        <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <BookOpen size={120} className="text-blue-600 dark:text-blue-400" />
+                        <div className="absolute top-0 right-0 p-4 lg:p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <BookOpen size={isMobile ? 80 : 120} className="text-blue-600 dark:text-blue-400" />
                         </div>
-                        <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <BookOpen size={40} />
+                        <div className="w-14 h-14 lg:w-20 lg:h-20 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-4 lg:mb-6 group-hover:scale-110 transition-transform">
+                            <BookOpen size={isMobile ? 28 : 40} />
                         </div>
-                        <h3 className="text-3xl font-bold text-slate-800 dark:text-white mb-2">Class 9th</h3>
-                        <p className="text-slate-500 dark:text-slate-400">View and manage students enrolled in Class 9.</p>
+                        <h3 className="text-2xl lg:text-3xl font-bold text-slate-800 dark:text-white mb-2">Class 9th</h3>
+                        <p className="text-sm lg:text-base text-slate-500 dark:text-slate-400">View and manage students enrolled in Class 9.</p>
                         <div className="mt-6 flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold group-hover:translate-x-2 transition-transform">
                             View Students <ChevronRight size={20} />
                         </div>
@@ -792,16 +858,16 @@ function StudentsTab() {
                     {/* Class 10 Card */}
                     <div
                         onClick={() => setSelectedClass('10')}
-                        className="group relative overflow-hidden bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 p-10 cursor-pointer transition-all hover:-translate-y-2 hover:shadow-2xl hover:border-purple-200"
+                        className="group relative overflow-hidden bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 p-6 lg:p-10 cursor-pointer transition-all hover:-translate-y-2 hover:shadow-2xl hover:border-purple-200"
                     >
-                        <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <GraduationCap size={120} className="text-purple-600 dark:text-purple-400" />
+                        <div className="absolute top-0 right-0 p-4 lg:p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <GraduationCap size={isMobile ? 80 : 120} className="text-purple-600 dark:text-purple-400" />
                         </div>
-                        <div className="w-20 h-20 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <GraduationCap size={40} />
+                        <div className="w-14 h-14 lg:w-20 lg:h-20 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center mb-4 lg:mb-6 group-hover:scale-110 transition-transform">
+                            <GraduationCap size={isMobile ? 28 : 40} />
                         </div>
-                        <h3 className="text-3xl font-bold text-slate-800 dark:text-white mb-2">Class 10th</h3>
-                        <p className="text-slate-500 dark:text-slate-400">View and manage students enrolled in Class 10.</p>
+                        <h3 className="text-2xl lg:text-3xl font-bold text-slate-800 dark:text-white mb-2">Class 10th</h3>
+                        <p className="text-sm lg:text-base text-slate-500 dark:text-slate-400">View and manage students enrolled in Class 10.</p>
                         <div className="mt-6 flex items-center gap-2 text-purple-600 dark:text-purple-400 font-semibold group-hover:translate-x-2 transition-transform">
                             View Students <ChevronRight size={20} />
                         </div>
@@ -857,41 +923,41 @@ function StudentsTab() {
                     <p className="text-slate-400">No students enrolled in Class {selectedClass} matching your search.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-6">
                     {filteredStudents.map((student) => (
                         <div
                             key={student._id}
                             onClick={() => window.open(`/admin/users/${student._id}/analytics`, '_blank')}
-                            className="bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 flex flex-col items-center text-center transition-all hover:shadow-lg hover:-translate-y-1 group cursor-pointer relative overflow-hidden"
+                            className="bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-3 lg:p-6 flex flex-col items-center text-center transition-all hover:shadow-lg hover:-translate-y-1 group cursor-pointer relative overflow-hidden"
                         >
                             {student.profilePicture ? (
                                 <img
                                     src={`${(import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api").replace('/api', '')}${student.profilePicture}`}
                                     alt={student.name}
-                                    className="w-20 h-20 rounded-full object-cover mb-4 shadow-md group-hover:scale-110 transition-transform bg-slate-100"
+                                    className="w-12 h-12 lg:w-20 lg:h-20 rounded-full object-cover mb-2 lg:mb-4 shadow-md group-hover:scale-110 transition-transform bg-slate-100"
                                 />
                             ) : (
-                                <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${selectedClass === '10' ? "from-purple-100 to-pink-100 text-purple-600" : "from-blue-100 to-cyan-100 text-blue-600"} flex items-center justify-center text-2xl font-bold mb-4 shadow-inner group-hover:scale-110 transition-transform`}>
+                                <div className={`w-12 h-12 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br ${selectedClass === '10' ? "from-purple-100 to-pink-100 text-purple-600" : "from-blue-100 to-cyan-100 text-blue-600"} flex items-center justify-center text-lg lg:text-2xl font-bold mb-2 lg:mb-4 shadow-inner group-hover:scale-110 transition-transform`}>
                                     {student.name.charAt(0).toUpperCase()}
                                 </div>
                             )}
-                            <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1">{student.name}</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">{student.email}</p>
+                            <h3 className="text-sm lg:text-lg font-bold text-slate-800 dark:text-white mb-0.5 lg:mb-1 line-clamp-1">{student.name}</h3>
+                            <p className="text-[10px] lg:text-sm text-slate-500 dark:text-slate-400 mb-2 lg:mb-3 line-clamp-1">{student.email}</p>
 
-                            <div className="w-full grid grid-cols-2 gap-2 text-sm mb-4">
-                                <div className="bg-slate-50 dark:bg-slate-800 p-2 rounded-lg">
-                                    <span className="block text-slate-400 text-xs">Class</span>
+                            <div className="w-full grid grid-cols-2 gap-1 lg:gap-2 text-[10px] lg:text-sm mb-2 lg:mb-4">
+                                <div className="bg-slate-50 dark:bg-slate-800 p-1 lg:p-2 rounded-lg">
+                                    <span className="block text-slate-400 text-[8px] lg:text-xs">Class</span>
                                     <span className="font-semibold text-slate-700 dark:text-slate-300">{student.class}th</span>
                                 </div>
-                                <div className="bg-amber-50 dark:bg-amber-900/20 p-2 rounded-lg">
-                                    <span className="block text-amber-500/80 text-xs">Streak</span>
+                                <div className="bg-amber-50 dark:bg-amber-900/20 p-1 lg:p-2 rounded-lg">
+                                    <span className="block text-amber-500/80 text-[8px] lg:text-xs">Streak</span>
                                     <span className="font-semibold text-amber-600 dark:text-amber-500">🔥 {student.streak || 0}</span>
                                 </div>
                             </div>
 
-                            <div className="w-full pt-3 border-t border-slate-50 dark:border-slate-800 mt-auto">
-                                <span className="text-xs font-semibold text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 group-hover:text-blue-600">
-                                    <Activity size={14} /> View Analytics
+                            <div className="w-full pt-2 lg:pt-3 border-t border-slate-50 dark:border-slate-800 mt-auto">
+                                <span className="text-[10px] lg:text-xs font-semibold text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 group-hover:text-blue-600">
+                                    <Activity size={isMobile ? 12 : 14} /> Analytics
                                 </span>
                             </div>
                         </div>
@@ -901,52 +967,67 @@ function StudentsTab() {
 
             {/* Analytics Modal */}
             {selectedUserForAnalytics && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate__animated animate__fadeIn">
-                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto animate__animated animate__zoomIn animate__faster relative">
-                        <div className="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur z-10">
-                            <div>
-                                <h3 className="text-xl font-bold text-slate-800">
-                                    Student Report: {userAnalytics?.user?.name}
-                                </h3>
-                                <p className="text-sm text-slate-500">{userAnalytics?.user?.email}</p>
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-2 lg:p-4 animate__animated animate__fadeIn">
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto animate__animated animate__zoomIn animate__faster relative">
+                        <div className="p-4 lg:p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur z-10">
+                            <div className="flex items-start gap-3 min-w-0 flex-1 mr-4">
+                                <button
+                                    onClick={closeAnalyticsModal}
+                                    className="mt-0.5 p-1 -ml-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500 dark:text-slate-400"
+                                >
+                                    <ChevronLeft size={isMobile ? 24 : 28} />
+                                </button>
+                                <div className="min-w-0 flex-1">
+                                    <h3 className="text-base lg:text-xl font-bold text-slate-800 dark:text-white truncate">
+                                        Student Report: {userAnalytics?.user?.name}
+                                    </h3>
+                                    <div className="flex items-center gap-2 mt-1 min-w-0">
+                                        <span className="shrink-0 px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded text-[8px] lg:text-xs font-bold uppercase whitespace-nowrap">
+                                            Class {userAnalytics?.user?.class || selectedClass}
+                                        </span>
+                                        <p className="text-[9px] lg:text-sm text-slate-500 dark:text-slate-400 truncate min-w-0">
+                                            {userAnalytics?.user?.email}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <button onClick={closeAnalyticsModal} className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors">
-                                <X size={24} />
+                            <button onClick={closeAnalyticsModal} className="p-2 -mr-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors shrink-0">
+                                <X size={isMobile ? 20 : 24} />
                             </button>
                         </div>
 
                         {analyticsLoading ? (
-                            <div className="p-20 flex justify-center">
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                            <div className="p-12 lg:p-20 flex justify-center">
+                                <div className="animate-spin rounded-full h-10 lg:h-12 w-10 lg:w-12 border-b-2 border-blue-600"></div>
                             </div>
                         ) : (
-                            <div className="p-8 space-y-8">
+                            <div className="p-4 lg:p-8 space-y-4 lg:space-y-8">
                                 {/* Stats Overview */}
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <BookOpen className="text-blue-600" size={24} />
-                                            <h4 className="font-semibold text-slate-700">Notes Read</h4>
+                                <div className="grid grid-cols-3 gap-2 lg:gap-6">
+                                    <div className="bg-blue-50 dark:bg-blue-900/20 p-3 lg:p-6 rounded-2xl border border-blue-100 dark:border-blue-800">
+                                        <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-3 mb-1 lg:mb-2">
+                                            <BookOpen className="text-blue-600 dark:text-blue-400" size={isMobile ? 16 : 24} />
+                                            <h4 className="text-[10px] lg:text-base font-semibold text-slate-700 dark:text-slate-300">Notes</h4>
                                         </div>
-                                        <p className="text-4xl font-bold text-blue-700">
+                                        <p className="text-xl lg:text-4xl font-bold text-blue-700 dark:text-blue-300">
                                             {userAnalytics?.progress?.reduce((acc, curr) => acc + (curr.notesRead || 0), 0) || 0}
                                         </p>
                                     </div>
-                                    <div className="bg-purple-50 p-6 rounded-2xl border border-purple-100">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <Clock className="text-purple-600" size={24} />
-                                            <h4 className="font-semibold text-slate-700">Lectures Watched</h4>
+                                    <div className="bg-purple-50 dark:bg-purple-900/20 p-3 lg:p-6 rounded-2xl border border-purple-100 dark:border-purple-800">
+                                        <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-3 mb-1 lg:mb-2">
+                                            <Clock className="text-purple-600 dark:text-purple-400" size={isMobile ? 16 : 24} />
+                                            <h4 className="text-[10px] lg:text-base font-semibold text-slate-700 dark:text-slate-300">Videos</h4>
                                         </div>
-                                        <p className="text-4xl font-bold text-purple-700">
+                                        <p className="text-xl lg:text-4xl font-bold text-purple-700 dark:text-purple-300">
                                             {userAnalytics?.progress?.reduce((acc, curr) => acc + (curr.lecturesWatched || 0), 0) || 0}
                                         </p>
                                     </div>
-                                    <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <User className="text-emerald-600" size={24} />
-                                            <h4 className="font-semibold text-slate-700">Quizzes Taken</h4>
+                                    <div className="bg-emerald-50 dark:bg-emerald-900/20 p-3 lg:p-6 rounded-2xl border border-emerald-100 dark:border-emerald-800">
+                                        <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-3 mb-1 lg:mb-2">
+                                            <TrendingUp className="text-emerald-600 dark:text-emerald-400" size={isMobile ? 16 : 24} />
+                                            <h4 className="text-[10px] lg:text-base font-semibold text-slate-700 dark:text-slate-300">Quizzes</h4>
                                         </div>
-                                        <p className="text-4xl font-bold text-emerald-700">
+                                        <p className="text-xl lg:text-4xl font-bold text-emerald-700 dark:text-emerald-300">
                                             {userAnalytics?.quizAttempts?.length || 0}
                                         </p>
                                     </div>
@@ -954,8 +1035,8 @@ function StudentsTab() {
 
                                 {/* Quiz History */}
                                 <div>
-                                    <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                        <Activity size={20} className="text-blue-500" /> Quiz History
+                                    <h4 className="text-base lg:text-lg font-bold text-slate-800 dark:text-white mb-3 lg:mb-4 flex items-center gap-2">
+                                        <Activity size={isMobile ? 18 : 20} className="text-blue-500" /> Quiz History
                                     </h4>
                                     {userAnalytics?.quizAttempts?.length === 0 ? (
                                         <div className="text-center py-10 bg-slate-50 rounded-xl border border-slate-100 border-dashed">
@@ -983,14 +1064,14 @@ const QuizAttemptCard = ({ attempt }) => {
     const [expanded, setExpanded] = useState(false);
 
     return (
-        <div className="border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 hover:shadow-md transition-shadow bg-white dark:bg-slate-800/50">
+        <div className="border border-slate-200 dark:border-slate-700/50 rounded-xl p-3 lg:p-4 hover:shadow-md transition-shadow bg-white dark:bg-slate-800/50">
             <div
                 className="flex justify-between items-center cursor-pointer select-none"
                 onClick={() => setExpanded(!expanded)}
             >
                 <div>
-                    <h5 className="font-bold text-slate-800 dark:text-white">{attempt.quiz?.title || attempt.topic}</h5>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    <h5 className="font-bold text-sm lg:text-base text-slate-800 dark:text-white">{attempt.quiz?.title || attempt.topic}</h5>
+                    <p className="text-[10px] lg:text-sm text-slate-500 dark:text-slate-400 mt-0.5 lg:mt-1">
                         {new Date(attempt.startTime).toLocaleDateString()} • Score:
                         <span className={`font-bold ml-1 ${attempt.score >= 70 ? 'text-emerald-600 dark:text-emerald-400' : attempt.score >= 40 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'}`}>
                             {Math.round(attempt.score)}%

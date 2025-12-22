@@ -140,33 +140,33 @@ const EventsPage = ({ tasks, events, onTasksUpdate, onEventsUpdate }) => {
   }, [tasks]);
 
   return (
-    <div className="p-6 bg-white rounded-xl border border-gray-200 shadow-sm text-gray-900 space-y-8 overflow-y-auto">
+    <div className="w-full max-w-full overflow-hidden p-3 md:p-6 bg-white rounded-xl border border-gray-200 shadow-sm text-gray-900 space-y-4 md:space-y-8 overflow-y-auto">
       {/* Tasks Section */}
       <section>
-        <h2 className="text-3xl font-bold mb-4">Task Planner - Manage Your Tasks</h2>
+        <h2 className="text-lg md:text-3xl font-bold mb-2 md:mb-4">Task Planner - Manage Your Tasks</h2>
         {/* ... (Keep existing form and task list) */}
-        <form onSubmit={handleAddTask} className="bg-gray-50 p-4 rounded-lg mb-6 flex flex-col md:flex-row gap-4 items-end border border-gray-200">
+        <form onSubmit={handleAddTask} className="bg-gray-50 p-3 md:p-4 rounded-lg mb-4 md:mb-6 flex flex-col md:flex-row gap-3 md:gap-4 items-end border border-gray-200">
           {/* ... form content ... */}
-          <div className="flex-1">
+          <div className="flex-1 w-full">
             <label className="block text-sm font-medium text-gray-700">Task Description</label>
             <input type="text" value={taskDesc} onChange={(e) => setTaskDesc(e.target.value)} placeholder="e.g., Complete math assignment" className="mt-1 w-full bg-white text-gray-900 px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors" />
           </div>
-          <div className="flex gap-4">
-            <div>
+          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            <div className="w-full">
               <label className="block text-sm font-medium text-gray-700">Start Date</label>
-              <input type="date" value={taskStart} onChange={(e) => setTaskStart(e.target.value)} className="mt-1 bg-white text-gray-900 px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors" />
+              <input type="date" value={taskStart} onChange={(e) => setTaskStart(e.target.value)} className="mt-1 w-full bg-white text-gray-900 px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors" />
             </div>
-            <div>
+            <div className="w-full">
               <label className="block text-sm font-medium text-gray-700">Target Date</label>
-              <input type="date" value={taskEnd} onChange={(e) => setTaskEnd(e.target.value)} className="mt-1 bg-white text-gray-900 px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors" />
+              <input type="date" value={taskEnd} onChange={(e) => setTaskEnd(e.target.value)} className="mt-1 w-full bg-white text-gray-900 px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors" />
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md flex items-center gap-2 transition-colors shadow-sm">
-              <Plus className="w-5 h-5" /> {editingTask ? "Update Task" : "Add Task"}
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <button type="submit" className="flex-1 md:flex-none bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md flex justify-center items-center gap-2 transition-colors shadow-sm whitespace-nowrap h-[50px]">
+              <Plus className="w-5 h-5" /> {editingTask ? "Update" : "Add Task"}
             </button>
             {editingTask && (
-              <button type="button" onClick={() => { setTaskDesc(""); setTaskStart(""); setTaskEnd(""); setEditingTask(null); }} className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors">
+              <button type="button" onClick={() => { setTaskDesc(""); setTaskStart(""); setTaskEnd(""); setEditingTask(null); }} className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors h-[50px]">
                 Cancel
               </button>
             )}
@@ -180,8 +180,8 @@ const EventsPage = ({ tasks, events, onTasksUpdate, onEventsUpdate }) => {
             const endDateStr = new Date(group.endDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 
             return (
-              <div key={idx} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <h3 className="font-bold text-lg mb-2 text-gray-900">Tasks for {startDateStr} - {endDateStr}</h3>
+              <div key={idx} className="bg-gray-50 p-3 md:p-4 rounded-lg border border-gray-200">
+                <h3 className="font-bold text-base md:text-lg mb-2 text-gray-900">Tasks for {startDateStr} - {endDateStr}</h3>
                 <div className="flex items-center gap-4 mb-3">
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div className="bg-green-500 h-2.5 rounded-full transition-all duration-500" style={{ width: `${group.percentage}%` }} />
@@ -190,14 +190,14 @@ const EventsPage = ({ tasks, events, onTasksUpdate, onEventsUpdate }) => {
                 </div>
                 <div className="space-y-3">
                   {group.tasks.map((task) => (
-                    <div key={task._id} className="bg-white p-3 rounded-lg border border-gray-200 flex items-center justify-between hover:shadow-sm transition-shadow">
-                      <div className="flex items-center gap-4">
-                        <input type="checkbox" checked={!!task.isCompleted} onChange={() => toggleTaskCompletion(task._id)} className="h-5 w-5 rounded text-blue-600 focus:ring-blue-500 border-gray-300" />
-                        <p className={`font-semibold ${task.isCompleted ? "line-through text-gray-400" : "text-gray-900"}`}>{task.description}</p>
+                    <div key={task._id} className="bg-white p-2 md:p-3 rounded-lg border border-gray-200 flex items-center justify-between gap-3 hover:shadow-sm transition-shadow">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <input type="checkbox" checked={!!task.isCompleted} onChange={() => toggleTaskCompletion(task._id)} className="h-5 w-5 rounded text-blue-600 focus:ring-blue-500 border-gray-300 flex-shrink-0" />
+                        <p className={`font-semibold text-sm md:text-base break-words leading-tight ${task.isCompleted ? "line-through text-gray-400" : "text-gray-900"}`}>{task.description}</p>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <button onClick={() => handleEditTask(task)} className="text-gray-400 hover:text-blue-600 transition-colors" title="Edit task"><Edit2 className="w-5 h-5" /></button>
-                        <button onClick={() => deleteTask(task._id)} className="text-red-400 hover:text-red-600 transition-colors"><Trash2 className="w-6 h-6" /></button>
+                      <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
+                        <button onClick={() => handleEditTask(task)} className="p-1.5 text-gray-400 hover:text-blue-600 transition-colors hover:bg-blue-50 rounded-full" title="Edit task"><Edit2 className="w-4 h-4 md:w-5 md:h-5" /></button>
+                        <button onClick={() => deleteTask(task._id)} className="p-1.5 text-red-400 hover:text-red-600 transition-colors hover:bg-red-50 rounded-full"><Trash2 className="w-4 h-4 md:w-5 md:h-5" /></button>
                       </div>
                     </div>
                   ))}

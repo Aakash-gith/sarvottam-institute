@@ -86,8 +86,8 @@ function CreateQuiz() {
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar />
-      <div className="flex-1 transition-all duration-300 overflow-auto ml-[120px]">
-        <div className="min-h-screen p-6">
+      <div className="flex-1 transition-all duration-300 overflow-auto ml-0 md:ml-[120px]">
+        <div className="min-h-screen pt-20 md:pt-10 p-4 md:p-6">
           <div className="max-w-2xl mx-auto">
 
             {/* Back Button */}
@@ -100,14 +100,15 @@ function CreateQuiz() {
             </button>
 
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 mb-4 shadow-lg">
-                <Sparkles size={32} className="text-white" />
+              <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 mb-4 shadow-lg">
+                <Sparkles size={28} className="text-white md:hidden" />
+                <Sparkles size={32} className="text-white hidden md:block" />
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New Quiz</h1>
-              <p className="text-gray-600">Test your knowledge with a personalized quiz</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Create New Quiz</h1>
+              <p className="text-gray-600 text-sm md:text-base">Test your knowledge with a personalized quiz</p>
             </div>
 
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+            <div className="bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-200">
               <form onSubmit={handleSubmit} className="space-y-6">
 
                 {/* Topic Input */}

@@ -129,7 +129,7 @@ function PYQ() {
 
             <Sidebar />
 
-            <div className="max-w-7xl mx-auto w-full px-6 py-12 ml-[120px]">
+            <div className="max-w-7xl mx-auto w-full px-6 py-8 md:py-12 ml-0 md:ml-[120px] pt-16 md:pt-0">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between">

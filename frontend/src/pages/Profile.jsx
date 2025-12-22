@@ -299,7 +299,7 @@ function Profile() {
     return (
       <div className="flex h-screen bg-gray-50">
         <Sidebar />
-        <div className="flex-1 flex items-center justify-center ml-[120px]">
+        <div className="flex-1 flex items-center justify-center ml-0 md:ml-[120px] pt-16 md:pt-0">
           <div className="text-gray-600 text-lg flex items-center gap-3">
             <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
             Loading profile...
@@ -312,10 +312,10 @@ function Profile() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="flex-1 flex flex-col min-h-screen ml-[120px]">
+      <div className="flex-1 flex flex-col min-h-screen ml-0 md:ml-[120px] pt-16 md:pt-0">
 
 
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6">
           <div className="max-w-6xl mx-auto">
             {/* Profile Header - Clean Modern Design */}
             {activeView === 'settings' && (
@@ -629,7 +629,7 @@ function Profile() {
                     </h3>
 
                     {/* Accuracy Ring */}
-                    <div className="flex items-center gap-6">
+                    <div className="flex flex-col sm:flex-row items-center gap-6">
                       <div className="relative w-32 h-32">
                         <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                           <circle

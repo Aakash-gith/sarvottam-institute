@@ -9,7 +9,7 @@ function Quiz() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="transition-all duration-300 pt-8 px-6 md:px-10 ml-[120px]">
+      <div className="transition-all duration-300 pt-16 md:pt-8 px-6 md:px-10 ml-0 md:ml-[120px]">
         <div className="max-w-5xl mx-auto pb-16">
 
           {/* Header */}

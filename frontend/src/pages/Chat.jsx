@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import {
     Search, Edit, MoreHorizontal,
     Smile, Paperclip, Send, Image, Lock, MessageSquare, X, File,
-    Check, CheckCheck, Trash2, Slash, Eraser
+    Check, CheckCheck, Trash2, Slash, Eraser, ArrowLeft
 } from 'lucide-react';
 import API from '../api/axios';
 import EmojiPicker from 'emoji-picker-react';
@@ -239,6 +240,25 @@ const Chat = () => {
             toast.error("Failed to unblock user");
         }
     };
+    const emojiPickerRef = useRef(null);
+
+    // Close emoji picker when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+                setShowEmojiPicker(false);
+            }
+        };
+
+        if (showEmojiPicker) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showEmojiPicker]);
+
     const onEmojiClick = (emojiObject) => {
         setMessageInput(prev => prev + emojiObject.emoji);
     };
@@ -267,17 +287,27 @@ const Chat = () => {
     }
 
 
+    const navigate = useNavigate();
+
     return (
         <div className="flex h-screen bg-slate-50 dark:bg-slate-950 font-poppins">
             <Sidebar />
 
-            <div className="flex-1 flex ml-[80px] lg:ml-[100px] p-6 lg:p-10 h-screen overflow-hidden">
-                <div className="flex-1 flex bg-white dark:bg-slate-900 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 dark:border-slate-800 overflow-hidden animate__animated animate__fadeIn">
+            <div className="flex-1 flex ml-0 md:ml-[80px] lg:ml-[100px] p-0 md:p-6 lg:p-10 h-screen overflow-hidden">
+                <div className="flex-1 flex bg-white dark:bg-slate-900 md:rounded-3xl shadow-none md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-0 md:border border-slate-100 dark:border-slate-800 overflow-hidden animate__animated animate__fadeIn relative">
                     {/* Chat List Sidebar */}
-                    <div className="w-80 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10">
+                    <div className={`${activeChat ? 'hidden md:flex' : 'flex'} w-full md:w-80 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10`}>
                         {/* Header */}
                         <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-white">
-                            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Chat</h2>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => navigate('/')}
+                                    className="md:hidden p-2 -ml-2 hover:bg-gray-100 rounded-full text-gray-600 transition-colors"
+                                >
+                                    <ArrowLeft size={20} />
+                                </button>
+                                <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Chat</h2>
+                            </div>
                             <div className="flex gap-1">
                                 <button className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors">
                                     <MoreHorizontal size={20} />
@@ -303,7 +333,7 @@ const Chat = () => {
                         </div>
 
                         {/* Chat List or Search Results */}
-                        <div className="flex-1 overflow-y-auto px-2 space-y-1">
+                        <div className="flex-1 overflow-y-auto px-2 space-y-1 pb-20 md:pb-0">
                             {searchQuery ? (
                                 // Search Results
                                 <div>
@@ -385,12 +415,20 @@ const Chat = () => {
                     </div>
 
                     {/* Main Chat Area */}
-                    <div className="flex-1 flex flex-col bg-white dark:bg-slate-900 overflow-hidden">
+                    <div className={`${!activeChat ? 'hidden md:flex' : 'flex'} flex-1 flex-col bg-white dark:bg-slate-900 overflow-hidden w-full h-full absolute md:relative z-20 md:z-auto`}>
                         {activeChat ? (
                             <>
                                 {/* Header */}
-                                <div className="h-20 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center px-8 shadow-sm bg-white/50 dark:bg-slate-900/50 backdrop-blur-md z-10">
-                                    <div className="flex items-center gap-4">
+                                <div className="h-20 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center px-4 md:px-8 shadow-sm bg-white/50 dark:bg-slate-900/50 backdrop-blur-md z-10">
+                                    <div className="flex items-center gap-2 md:gap-4">
+                                        {/* Back Button for Mobile */}
+                                        <button
+                                            onClick={() => setActiveChat(null)}
+                                            className="md:hidden p-2 -ml-2 hover:bg-gray-100 rounded-full text-gray-600"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                                        </button>
+
                                         <div className="relative">
                                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6264A7] to-[#464775] flex items-center justify-center text-white font-bold shadow-md">
                                                 {activeChat.avatar}
@@ -447,7 +485,7 @@ const Chat = () => {
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-slate-800 rounded-full border border-gray-100 dark:border-slate-700">
+                                        <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-slate-800 rounded-full border border-gray-100 dark:border-slate-700">
                                             <Lock size={12} className="text-emerald-500" />
                                             <span className="text-[10px] font-medium text-gray-500">End-to-end Encrypted</span>
                                         </div>
@@ -456,7 +494,7 @@ const Chat = () => {
 
                                 {/* Messages */}
                                 {/* Messages Area */}
-                                <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6 bg-white dark:bg-slate-900 scrollbar-thin scrollbar-thumb-gray-200">
+                                <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-6 bg-white dark:bg-slate-900 scrollbar-thin scrollbar-thumb-gray-200 pb-32 md:pb-6">
                                     <div className="flex flex-col items-center gap-2 py-4">
                                         <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
                                             <Lock size={14} className="text-gray-400" />
@@ -466,7 +504,7 @@ const Chat = () => {
                                     </div>
                                     {messages.map((msg) => (
                                         <div key={msg.id} className={`flex group ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}>
-                                            <div className={`flex gap-2 max-w-[70%] ${msg.sender === 'me' ? 'flex-row-reverse' : 'flex-row'}`}>
+                                            <div className={`flex gap-2 max-w-[85%] md:max-w-[70%] ${msg.sender === 'me' ? 'flex-row-reverse' : 'flex-row'}`}>
                                                 {msg.sender !== 'me' && (
                                                     <div className="w-8 h-8 rounded-full bg-gray-100 flex-shrink-0 flex items-center justify-center text-xs font-bold text-gray-600 self-end mb-1">
                                                         {activeChat.avatar}
@@ -513,7 +551,7 @@ const Chat = () => {
                                 </div>
 
                                 {/* Input Area */}
-                                <div className="p-6 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 relative">
+                                <div className="p-4 md:p-6 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 relative mb-2 md:mb-0">
                                     {/* File Preview */}
                                     {selectedFile && (
                                         <div className="absolute bottom-full left-6 mb-2 p-2 bg-white border border-gray-200 rounded-lg shadow-lg flex items-center gap-3">
@@ -539,7 +577,7 @@ const Chat = () => {
 
                                     {/* Emoji Picker */}
                                     {showEmojiPicker && (
-                                        <div className="absolute bottom-24 left-6 z-20">
+                                        <div className="absolute bottom-24 left-6 z-20" ref={emojiPickerRef}>
                                             <EmojiPicker onEmojiClick={onEmojiClick} width={300} height={400} />
                                         </div>
                                     )}
@@ -620,7 +658,7 @@ const Chat = () => {
                                     <MessageSquare size={48} className="text-[#6264A7]" />
                                 </div>
                                 <h2 className="text-xl font-bold text-gray-900 mb-2">Welcome to Chat</h2>
-                                <p className="text-gray-500 max-w-sm text-center">Select a conversation from the left or start a new one to begin messaging.</p>
+                                <p className="text-gray-500 max-w-sm text-center px-4">Select a conversation to start messaging or search for someone new.</p>
                             </div>
                         )}
                     </div>

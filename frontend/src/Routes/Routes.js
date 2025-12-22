@@ -21,6 +21,12 @@ export const ncertSolutions = "/ncert-solutions";
 export const ncertExemplar = "/ncert-exemplar";
 export const books = "/books";
 export const chat = "/chat";
+export const videoLearning = "/video-learning";
+export const videoLearningSubject = "/video-learning/:subjectId"; // e.g. /video-learning/maths
+export const videoLearningContent = "/video-learning/:subjectId/:contentId"; // e.g. /video-learning/science/physics OR /video-learning/maths/real-numbers
+export const videoLearningChapter = "/video-learning/:subjectId/:branchId/:chapterId";
+export const videoWatchMaths = "/video-learning/watch/:subjectId/:chapterId/:videoId";
+export const videoWatchScience = "/video-learning/watch/:subjectId/:branchId/:chapterId/:videoId";
 
 // Admin routes
 export const adminLogin = "/admin/login";

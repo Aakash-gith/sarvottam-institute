@@ -99,20 +99,20 @@ function QuizResults() {
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar />
-      <div className="flex-1 transition-all duration-300 overflow-auto ml-[120px]">
-        <div className="min-h-screen p-6">
+      <div className="flex-1 transition-all duration-300 overflow-auto ml-0 md:ml-[120px]">
+        <div className="min-h-screen pt-20 md:pt-10 p-4 md:p-6">
           <div className="max-w-2xl mx-auto">
 
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Quiz Results</h1>
-              <p className="text-gray-600">{results.topic}</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Quiz Results</h1>
+              <p className="text-gray-600 text-sm md:text-base">{results.topic}</p>
             </div>
 
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 mb-6">
+            <div className="bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-200 mb-6">
 
               {/* Score Circle */}
               <div className="text-center mb-8">
-                <div className="relative w-40 h-40 mx-auto mb-4">
+                <div className="relative w-32 h-32 md:w-40 md:h-40 mx-auto mb-4">
                   <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                     <circle
                       cx="50"
@@ -135,8 +135,8 @@ function QuizResults() {
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-4xl font-bold text-gray-900">{results.score}</span>
-                    <span className="text-gray-500">%</span>
+                    <span className="text-3xl md:text-4xl font-bold text-gray-900">{results.score}</span>
+                    <span className="text-gray-500 text-sm md:text-base">%</span>
                   </div>
                 </div>
 
@@ -147,24 +147,24 @@ function QuizResults() {
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-3 gap-4 mb-8">
-                <div className="bg-gray-50 p-4 rounded-xl text-center border border-gray-100">
-                  <div className="text-2xl font-bold text-gray-900">{results.totalQuestions}</div>
-                  <div className="text-gray-500 text-sm">Total Questions</div>
+              <div className="grid grid-cols-3 gap-2 md:gap-4 mb-8">
+                <div className="bg-gray-50 p-3 md:p-4 rounded-xl text-center border border-gray-100">
+                  <div className="text-xl md:text-2xl font-bold text-gray-900">{results.totalQuestions}</div>
+                  <div className="text-gray-500 text-[10px] md:text-sm">Total</div>
                 </div>
-                <div className="bg-green-50 p-4 rounded-xl text-center border border-green-100">
+                <div className="bg-green-50 p-3 md:p-4 rounded-xl text-center border border-green-100">
                   <div className="flex items-center justify-center gap-1">
-                    <CheckCircle size={20} className="text-green-600" />
-                    <span className="text-2xl font-bold text-green-600">{results.correctAnswers}</span>
+                    <CheckCircle size={16} className="text-green-600 md:w-5 md:h-5" />
+                    <span className="text-xl md:text-2xl font-bold text-green-600">{results.correctAnswers}</span>
                   </div>
-                  <div className="text-gray-500 text-sm">Correct</div>
+                  <div className="text-gray-500 text-[10px] md:text-sm">Correct</div>
                 </div>
-                <div className="bg-red-50 p-4 rounded-xl text-center border border-red-100">
+                <div className="bg-red-50 p-3 md:p-4 rounded-xl text-center border border-red-100">
                   <div className="flex items-center justify-center gap-1">
-                    <XCircle size={20} className="text-red-500" />
-                    <span className="text-2xl font-bold text-red-500">{results.incorrectAnswers}</span>
+                    <XCircle size={16} className="text-red-500 md:w-5 md:h-5" />
+                    <span className="text-xl md:text-2xl font-bold text-red-500">{results.incorrectAnswers}</span>
                   </div>
-                  <div className="text-gray-500 text-sm">Incorrect</div>
+                  <div className="text-gray-500 text-[10px] md:text-sm">Incorrect</div>
                 </div>
               </div>
 

@@ -107,8 +107,8 @@ function QuizHistory() {
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar />
-      <div className="flex-1 transition-all duration-300 overflow-auto ml-[120px]">
-        <div className="min-h-screen p-6">
+      <div className="flex-1 transition-all duration-300 overflow-auto ml-0 md:ml-[120px]">
+        <div className="min-h-screen pt-20 md:pt-10 p-4 md:p-6">
           <div className="max-w-4xl mx-auto">
 
             {/* Back Button */}
@@ -121,14 +121,15 @@ function QuizHistory() {
             </button>
 
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 mb-4 shadow-lg">
-                <History size={32} className="text-white" />
+              <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 mb-4 shadow-lg">
+                <History size={28} className="text-white md:hidden" />
+                <History size={32} className="text-white hidden md:block" />
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Quiz History</h1>
-              <p className="text-gray-600">Review your past quiz attempts</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Quiz History</h1>
+              <p className="text-gray-600 text-sm md:text-base">Review your past quiz attempts</p>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200">
+            <div className="bg-white rounded-2xl p-4 md:p-8 shadow-sm border border-gray-200">
 
               {history.length === 0 ? (
                 <div className="text-center py-16">
@@ -178,34 +179,34 @@ function QuizHistory() {
 
                             <div className="flex items-center gap-4">
                               {/* Score Circle */}
-                              <div className="text-center">
-                                <div className="relative w-20 h-20">
-                                  <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                                    <circle
-                                      cx="50"
-                                      cy="50"
-                                      r="40"
-                                      fill="none"
-                                      stroke="#e5e7eb"
-                                      strokeWidth="6"
-                                    />
-                                    <circle
-                                      cx="50"
-                                      cy="50"
-                                      r="40"
-                                      fill="none"
-                                      stroke="#3B82F6"
-                                      strokeWidth="6"
-                                      strokeDasharray={`${(attempt.score / 100) * 251} 251`}
-                                      strokeLinecap="round"
-                                    />
-                                  </svg>
-                                  <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="text-xl font-bold text-gray-900">{attempt.score}</span>
-                                  </div>
-                                </div>
-                                <p className="text-gray-500 text-xs mt-1">Accuracy</p>
-                              </div>
+                               <div className="text-center">
+                                 <div className="relative w-16 h-16 md:w-20 md:h-20">
+                                   <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                     <circle
+                                       cx="50"
+                                       cy="50"
+                                       r="40"
+                                       fill="none"
+                                       stroke="#e5e7eb"
+                                       strokeWidth="6"
+                                     />
+                                     <circle
+                                       cx="50"
+                                       cy="50"
+                                       r="40"
+                                       fill="none"
+                                       stroke="#3B82F6"
+                                       strokeWidth="6"
+                                       strokeDasharray={`${(attempt.score / 100) * 251} 251`}
+                                       strokeLinecap="round"
+                                     />
+                                   </svg>
+                                   <div className="absolute inset-0 flex items-center justify-center">
+                                     <span className="text-lg md:text-xl font-bold text-gray-900">{attempt.score}</span>
+                                   </div>
+                                 </div>
+                                 <p className="text-gray-500 text-[10px] md:text-xs mt-1">Accuracy</p>
+                               </div>
 
                               {/* Grade Badge */}
                               <div className={`px-5 py-3 rounded-xl font-bold text-lg ${grade.bg} ${grade.text}`}>

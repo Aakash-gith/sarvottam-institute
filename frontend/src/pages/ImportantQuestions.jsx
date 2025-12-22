@@ -5,7 +5,7 @@ function ImportantQuestions() {
     return (
         <div className="flex h-screen bg-gray-50">
             <Sidebar />
-            <div className="flex-1 transition-all duration-300 ml-[120px] p-8">
+            <div className="flex-1 transition-all duration-300 ml-0 md:ml-[120px] pt-16 md:pt-0 p-4 md:p-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-6">Important Questions</h1>
                 <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-200 text-center">
                     <div className="text-6xl mb-4">⭐</div>

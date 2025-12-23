@@ -14,7 +14,7 @@ export const transporter = nodemailer.createTransport({
   },
 });
 
-// Verify connection configuration
+// verifying file contention configuration
 transporter.verify(function (error, success) {
   if (error) {
     console.error("Transporter verification failed:", error);

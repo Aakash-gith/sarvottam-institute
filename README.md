@@ -1,6 +1,6 @@
 # 🎓 Sarvottam Institute
 
-Sarvottam Institute is a comprehensive full-stack educational web application designed to enhance the student learning experience. It provides an interactive platform for AI-powered quizzes, academic progress tracking, personalized learning materials, and campus management features.
+Sarvottam Institute is a comprehensive full-stack educational web application designed to enhance the student learning experience for both college and school-level (Grade 9-10) students. It provides an interactive platform for AI-powered quizzes, academic progress tracking, personalized learning materials, video lectures, and campus management features.
 
 ---
 
@@ -8,7 +8,7 @@ Sarvottam Institute is a comprehensive full-stack educational web application de
 
 ### 🧠 AI-Powered Quiz System
 
-- **Dynamic Quiz Generation**: Create quizzes on any topic using Bytez AI (Qwen/Qwen3-4B model)
+- **Dynamic Quiz Generation**: Create quizzes on any topic using Groq AI (Llama 3.3-70b-versatile model)
 - **Customizable Parameters**: Set number of questions (1-50) and time limits (1-180 minutes)
 - **Real-time Timer**: Auto-submit on timeout with progress tracking
 - **Detailed Results**: View score, accuracy, and performance grades (A+ to F)
@@ -25,8 +25,10 @@ Sarvottam Institute is a comprehensive full-stack educational web application de
 
 ### 📚 Learning Center
 
-- **Semester-wise Subjects**: Access course materials organized by semester (1-8)
-- **Notes & Videos**: View study notes (Google Drive) and video lectures (YouTube)
+- **Semester-wise Subjects**: Access course materials organized by semester (1-8) for college students
+- **School Curriculum**: Dedicated learning sections for Class 9 & 10 (Maths & Science) with video lectures and structured notes
+- **Digital Notes**: Premium quality HTML-based notes for Physics, Biology, and more
+- **Video Learning**: Integrated video lectures organized by subject and chapter
 - **Progress Tracking**: Mark lectures as watched and track completion
 
 ### 📅 Events & Calendar
@@ -47,6 +49,13 @@ Sarvottam Institute is a comprehensive full-stack educational web application de
 - **Secure Login/Signup**: JWT-based authentication with refresh tokens
 - **Email Verification**: OTP-based email verification for new accounts
 - **Password Reset**: Forgot password functionality with email OTP
+
+### 🛠️ Admin Dashboard
+
+- **Analytics**: Comprehensive visual reports on user growth, quiz activity, and system usage
+- **User Management**: View and manage detailed user profiles
+- **Activity Logs**: Track recent system activities including new registrations and events
+- **Content Management**: Tools to manage platform content
 
 ---
 
@@ -93,11 +102,15 @@ ACCESS_TOKEN_SECRET=your_access_token_secret
 REFRESH_TOKEN_SECRET=your_refresh_token_secret
 
 # Email Configuration (for OTP and quiz explanations)
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password
+MAIL_USER=your_email@gmail.com
+MAIL_PASS=your_app_password
 
 # AI API (for quiz generation)
-BYTEZ_API_KEY=your_bytez_api_key
+GROQ_API_KEY=your_groq_api_key
+
+# Redis (Upstash)
+UPSTASH_REDIS_REST_URL=your_upstash_redis_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
 ```
 
 4. Start the backend server:
@@ -160,7 +173,8 @@ The frontend will run on `http://localhost:5173`
 - **JWT** - Authentication
 - **Multer** - File Uploads
 - **Nodemailer** - Email Service
-- **Bytez.js** - AI Integration
+- **Bytez.js/Groq SDK** - AI Integration (Llama 3 via Groq)
+- **Upstash Redis** - Caching & Rate Limiting
 
 ---
 
@@ -186,6 +200,16 @@ Sarvottam Institute/
 │       ├── Routes/     # Route configuration
 │       ├── store/      # Redux store & slices
 │       └── main.jsx    # App entry point
+│
+├── grade9/             # Class 9 Static Content
+│   ├── notes/          # Subject notes
+│   ├── videos/         # Video learning resources
+│   └── [subjects].html # Subject landing pages
+│
+├── grade10/            # Class 10 Static Content
+│   ├── notes/          # Subject notes
+│   ├── videos/         # Video learning resources
+│   └── [subjects].html # Subject landing pages
 │
 └── README.md
 ```

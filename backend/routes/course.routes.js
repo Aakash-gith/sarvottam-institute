@@ -7,7 +7,8 @@ import {
     enrollStudent,
     updateCourse,
     deleteCourse,
-    generateCertificate
+    generateCertificate,
+    getMyEnrollments
 } from '../controllers/course.controller.js';
 import authMiddleware from '../middleware/auth.middleware.js';
 // import adminMiddleware from '../middleware/admin.middleware.js'; // If exists
@@ -20,6 +21,7 @@ router.get('/:id', getCourseById);
 
 // Protected routes
 router.post('/', authMiddleware, createCourse); // Should be admin/instructor only
+router.get('/my-enrollments', authMiddleware, getMyEnrollments);
 router.post('/:courseId/enroll', authMiddleware, enrollStudent);
 router.get('/:courseId/certificate', authMiddleware, generateCertificate);
 router.put('/:id', authMiddleware, updateCourse);

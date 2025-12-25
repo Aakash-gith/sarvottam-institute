@@ -4,8 +4,8 @@ import { v4 as uuidv4 } from 'uuid'; // v4 is not available, I'll use crypto
 import crypto from 'crypto';
 import axios from 'axios';
 
-const APP_ACCESS_KEY = '694c62466a127e1cf1253843';
-const APP_SECRET = 'GgwSzObrk3I96MaGcFLJtHhMhr3_t16TcGn6j2Y_SduuWg8dWon77OfFKgbGuVRn5RbEgfP1QhauhfZs3nlBzbX2XwO5VrRkosYPz51zqN9nYbSyUih3J0Gn3N8nvnWg_8xNTHXr4Ee0WjXKpyo0I011fdvvU-7DMG11OJukrD8=';
+const APP_ACCESS_KEY = process.env.HMS_ACCESS_KEY;
+const APP_SECRET = process.env.HMS_SECRET;
 
 export const getManagementToken = () => {
     const payload = {

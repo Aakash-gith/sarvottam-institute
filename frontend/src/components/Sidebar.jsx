@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
     Home,
     BookOpen,
+    PlayCircle,
     Brain,
     Calendar,
     User,
@@ -115,7 +116,8 @@ const Sidebar = () => {
         courses: {
             title: "Courses",
             items: [
-                { name: "All Courses", icon: Layers, path: "/courses" },
+                { name: "Paid Batches", icon: Layers, path: "/courses?type=paid" },
+                { name: "Free Batches", icon: PlayCircle, path: "/courses?type=free" },
             ]
         },
         // Settings / Extra category if needed, for now just these two main ones + profile link implies analytics

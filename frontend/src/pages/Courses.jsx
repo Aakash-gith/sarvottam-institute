@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "../components/Sidebar";
 import { getCourses, enrollInCourse } from "../api/courses";
@@ -9,11 +10,16 @@ import API from "../api/axios";
 
 function Courses() {
     const userData = useSelector((state) => state.auth.userData);
+    const location = useLocation();
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [enrolling, setEnrolling] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [activeTab, setActiveTab] = useState("all");
+
+    // Get Filter Type from URL
+    const queryParams = new URLSearchParams(location.search);
+    const typeFilter = queryParams.get("type"); // 'paid' or 'free'
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -30,11 +36,31 @@ function Courses() {
     }, []);
 
     const filteredCourses = courses.filter(course => {
+        // 1. Search Filter
         const matchSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase());
-        // For now, tab filters could be mocked or based on descriptions if available
-        // Assuming we allow filtering by simple logic or future fields
-        if (activeTab === "all") return matchSearch;
-        return matchSearch;
+
+        // 2. Type Filter (Paid vs Free)
+        let matchType = true;
+        if (typeFilter === 'paid') {
+            matchType = course.price > 0;
+        } else if (typeFilter === 'free') {
+            matchType = course.price === 0;
+        }
+
+        // 3. Class Filter
+        // Relaxed match: Check if course.classLevel includes the user's class number
+        const userClass = userData?.class?.toString();
+        const matchClass = userClass ? course.classLevel?.toLowerCase().includes(userClass) : true;
+
+        // Ensure price is treated as number
+        const price = Number(course.price);
+        if (typeFilter === 'paid') {
+            matchType = price > 0;
+        } else if (typeFilter === 'free') {
+            matchType = price === 0;
+        }
+
+        return matchSearch && matchType && matchClass;
     });
 
     const handlePayment = async (course) => {
@@ -108,13 +134,13 @@ function Courses() {
             <Sidebar />
 
             <div className="flex-1 transition-all duration-300 ml-0 md:ml-[120px]">
-                <div className="max-w-7xl mx-auto p-4 md:p-8">
+                <div className="max-w-7xl mx-auto p-4 pt-20 md:p-8 md:pt-8">
                     {/* Header Section */}
                     <header className="mb-8">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                                    Our Courses
+                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white capitalize">
+                                    {typeFilter ? `${typeFilter} Batches` : 'All Batches'}
                                 </h1>
                                 <p className="text-gray-500 dark:text-slate-400 mt-1">
                                     Premium batches for your success
@@ -134,27 +160,25 @@ function Courses() {
                         </div>
 
                         {/* Tabs */}
-                        <div className="flex gap-4 mt-8 overflow-x-auto pb-2 no-scrollbar">
-                            {['all', 'Class 12', 'Class 11', 'Class 10', 'Class 9'].map((tab) => (
-                                <button
-                                    key={tab}
-                                    onClick={() => setActiveTab(tab)}
-                                    className={`px-5 py-2 rounded-full whitespace-nowrap text-sm font-semibold transition-all
-                                        ${activeTab === tab
-                                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                                            : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
-                                        }`}
-                                >
-                                    {tab === 'all' ? 'All Batches' : tab}
-                                </button>
-                            ))}
-                        </div>
+
                     </header>
 
                     {/* Course Grid */}
                     {loading ? (
                         <div className="flex justify-center py-20">
                             <Loader className="animate-spin text-blue-600" size={40} />
+                        </div>
+                    ) : filteredCourses.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-20 text-center">
+                            <div className="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6 text-slate-400">
+                                <Layers size={40} />
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                                No {typeFilter || ''} batches found
+                            </h3>
+                            <p className="text-slate-500 max-w-sm mx-auto">
+                                We couldn't find any courses matching your criteria {userData?.class ? `for Class ${userData.class}` : ''}.
+                            </p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

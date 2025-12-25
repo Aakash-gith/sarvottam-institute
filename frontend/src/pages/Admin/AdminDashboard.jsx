@@ -142,8 +142,13 @@ function AdminDashboard() {
             title: "Overview",
             items: [
                 { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, visible: true },
-                { id: 'courses', label: 'Courses', icon: Layers, visible: true },
                 { id: 'chat', label: 'Support Chat', icon: MessageSquare, visible: true },
+            ]
+        },
+        courses: {
+            title: "Course Management",
+            items: [
+                { id: 'courses', label: 'All Batches', icon: Layers, visible: true },
             ]
         },
         users: {
@@ -230,6 +235,15 @@ function AdminDashboard() {
                         title="Overview"
                     >
                         <LayoutDashboard size={22} />
+                    </button>
+
+                    <button
+                        className={activeCategory === "courses" ? "active" : ""}
+                        onClick={() => handleCategoryClick("courses")}
+                        onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
+                        title="Courses"
+                    >
+                        <Layers size={22} />
                     </button>
 
                     <button

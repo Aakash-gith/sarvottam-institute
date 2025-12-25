@@ -28,6 +28,7 @@ export const videoLearningChapter = "/video-learning/:subjectId/:branchId/:chapt
 export const videoWatchMaths = "/video-learning/watch/:subjectId/:chapterId/:videoId";
 export const videoWatchScience = "/video-learning/watch/:subjectId/:branchId/:chapterId/:videoId";
 export const courses = "/courses";
+export const myCourses = "/my-courses";
 export const liveClassHost = "/live-class/:classId/host";
 
 // Admin routes

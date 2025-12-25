@@ -1,6 +1,7 @@
 
 import Course from '../models/Course.js';
 import User from '../models/Users.js';
+import Enrollment from '../models/Enrollment.js';
 
 // Create a new course
 export const createCourse = async (req, res) => {
@@ -15,10 +16,7 @@ export const createCourse = async (req, res) => {
             title,
             description,
             instructor: req.user._id, // Assumes auth middleware populates req.user
-            price,
-            studentLimit,
-            features,
-            hasCertificate
+            ...req.body // Pass through new fields like classLevel, validityMode, etc.
         });
 
         const savedCourse = await newCourse.save();
@@ -29,14 +27,33 @@ export const createCourse = async (req, res) => {
 };
 
 // Get all courses (with optional status filter)
+// Get all courses (with optional status filter)
 export const getCourses = async (req, res) => {
     try {
-        const { status } = req.query;
-        const query = status ? { status } : {};
+        const { status, classLevel } = req.query;
+        let query = {};
+        if (status) query.status = status;
+        if (classLevel) query.classLevel = classLevel;
+
         const courses = await Course.find(query).populate('instructor', 'name email');
         res.status(200).json(courses);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching courses', error: error.message });
+    }
+};
+
+// Get My Enrollments
+export const getMyEnrollments = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        // Fetch enrollments and populate course details
+        const enrollments = await Enrollment.find({ user: userId })
+            .populate('course')
+            .sort({ createdAt: -1 });
+
+        res.status(200).json(enrollments);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching enrollments', error: error.message });
     }
 };
 

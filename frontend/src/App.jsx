@@ -37,6 +37,8 @@ import {
   videoLearningChapter,
   videoWatchMaths,
   videoWatchScience,
+  courses,
+  liveClassHost,
 } from "./Routes/Routes";
 
 import conf from "./conf/conf";
@@ -70,6 +72,8 @@ const NotesViewer = React.lazy(() => import("./components/notes/NotesViewer"));
 const Chat = React.lazy(() => import("./pages/Chat"));
 const VideoLearning = React.lazy(() => import("./pages/VideoLearning/VideoLearning"));
 const VideoPlayerPage = React.lazy(() => import("./pages/VideoLearning/VideoPlayerPage"));
+const Courses = React.lazy(() => import("./pages/Courses"));
+const LiveClassHost = React.lazy(() => import("./pages/LiveClassHost"));
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Skeleton } from "./components/Skeleton"; // Use our new Skeleton component
@@ -136,6 +140,10 @@ function App() {
           <Route path={videoLearningChapter} element={<ProtectedRoute><VideoLearning /></ProtectedRoute>} />
           <Route path={videoWatchMaths} element={<ProtectedRoute><VideoPlayerPage /></ProtectedRoute>} />
           <Route path={videoWatchScience} element={<ProtectedRoute><VideoPlayerPage /></ProtectedRoute>} />
+          <Route path={courses} element={<ProtectedRoute><Courses /></ProtectedRoute>} />
+
+
+          <Route path={liveClassHost} element={<ProtectedRoute><LiveClassHost /></ProtectedRoute>} />
         </Routes>
       </React.Suspense>
     </>

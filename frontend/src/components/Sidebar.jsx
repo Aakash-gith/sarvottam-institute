@@ -19,7 +19,8 @@ import {
     MessageSquare,
     MonitorPlay,
     Menu,
-    X
+    X,
+    Layers
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -111,6 +112,12 @@ const Sidebar = () => {
                 { name: "Video Learning", icon: MonitorPlay, path: "/video-learning" },
             ]
         },
+        courses: {
+            title: "Courses",
+            items: [
+                { name: "All Courses", icon: Layers, path: "/courses" },
+            ]
+        },
         // Settings / Extra category if needed, for now just these two main ones + profile link implies analytics
     };
 
@@ -188,6 +195,15 @@ const Sidebar = () => {
                         title="Learning"
                     >
                         <GraduationCap size={24} />
+                    </button>
+
+                    <button
+                        className={activeCategory === "courses" ? "active" : ""}
+                        onClick={() => handleCategoryClick("courses")}
+                        onMouseEnter={handleMouseEnter}
+                        title="Courses"
+                    >
+                        <Layers size={24} />
                     </button>
 
                     {/* Bottom Actions */}

@@ -33,7 +33,8 @@ import {
     MessageSquare,
     Camera,
     Trash2,
-    Loader2
+    Loader2,
+    Layers
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import API from "../../api/axios";
@@ -46,6 +47,7 @@ import AdminRequests from "../../components/admin/AdminRequests";
 import AdminManagement from "../../components/admin/AdminManagement"; // Added
 import AdminUserAnalytics from "../../components/admin/AdminUserAnalytics";
 import AdminChat from "../../components/admin/AdminChat";
+import AdminCourses from "../../components/admin/AdminCourses";
 import ClockWidget from "../../components/clock-01";
 import ThemeToggle from "../../components/ThemeToggle";
 import logo from "../../assets/logo.png";
@@ -140,6 +142,7 @@ function AdminDashboard() {
             title: "Overview",
             items: [
                 { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, visible: true },
+                { id: 'courses', label: 'Courses', icon: Layers, visible: true },
                 { id: 'chat', label: 'Support Chat', icon: MessageSquare, visible: true },
             ]
         },
@@ -247,14 +250,7 @@ function AdminDashboard() {
                         <BookOpen size={22} />
                     </button>
 
-                    <button
-                        className={activeCategory === "system" ? "active" : ""}
-                        onClick={() => handleCategoryClick("system")}
-                        onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
-                        title="System"
-                    >
-                        <Settings size={22} />
-                    </button>
+
 
                     <div className="bottom-actions">
                         {/* User Profile Picture (Mini) */}
@@ -278,13 +274,7 @@ function AdminDashboard() {
                             </div>
                         )}
 
-                        <button
-                            onClick={() => { setActiveTab('profile'); if (isMobile) setIsMobileOpen(false); }}
-                            onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
-                            title="Settings"
-                        >
-                            <Settings size={22} />
-                        </button>
+
                         <button
                             onClick={handleLogout}
                             onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
@@ -369,6 +359,7 @@ function AdminDashboard() {
                             {activeTab === "pyq-upload" && <PYQUpload />}
                             {activeTab === "notifications" && <NotificationsManager />}
                             {activeTab === "chat" && <AdminChat />}
+                            {activeTab === "courses" && <AdminCourses />}
                             {activeTab === "admin" && (
                                 <AdminManagement adminInfo={adminInfo} />
                             )}

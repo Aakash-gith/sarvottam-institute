@@ -75,7 +75,7 @@ export default function Login() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { status } = useSelector((state) => state.auth);
+  const { status, userData } = useSelector((state) => state.auth);
 
   // REMOVED: Auto-redirect useEffect
   // useEffect(() => {
@@ -133,7 +133,7 @@ export default function Login() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">You are already logged in</h2>
           <p className="text-gray-600 mb-8">
-            You are currently logged in as <span className="font-semibold text-blue-600">{useSelector(state => state.auth.userData?.name) || "User"}</span>.
+            You are currently logged in as <span className="font-semibold text-blue-600">{userData?.name || "User"}</span>.
           </p>
 
           <div className="space-y-3">

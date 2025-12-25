@@ -17,6 +17,8 @@ import progressRoutes from "./routes/progress.routes.js";
 import subjectNotesRoutes from "./routes/subjectsNotes.routes.js";
 import pyqRoutes from "./routes/pyq.routes.js";
 import messageRoutes from "./routes/message.routes.js";
+import courseRoutes from "./routes/course.routes.js";
+import liveClassRoutes from "./routes/liveClass.routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -93,6 +95,12 @@ app.use("/api/pyq", pyqRoutes);
 
 console.log("Mounting /api/message routes...");
 app.use("/api/message", messageRoutes);
+app.use("/api/courses", courseRoutes);
+app.use("/api/live-classes", liveClassRoutes);
+import paymentRoutes from "./routes/payment.routes.js";
+app.use("/api/payment", paymentRoutes);
+import uploadRoutes from "./routes/upload.routes.js";
+app.use("/api/upload", uploadRoutes);
 
 const grade10Path = path.join(__dirname, "../grade10");
 const grade9Path = path.join(__dirname, "../grade9");

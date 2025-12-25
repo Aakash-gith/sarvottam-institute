@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@100mslive/hms-video-store": "^0.13.0",
+    "@100mslive/roomkit-react": "^0.4.0",
     "@reduxjs/toolkit": "^2.10.1",
     "@tailwindcss/vite": "^4.1.16",
     "axios": "^1.13.1",

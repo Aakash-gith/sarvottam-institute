@@ -50,7 +50,8 @@ function Courses() {
         // 3. Class Filter
         // Relaxed match: Check if course.classLevel includes the user's class number
         const userClass = userData?.class?.toString();
-        const matchClass = userClass ? course.classLevel?.toLowerCase().includes(userClass) : true;
+        const isAdmin = userData?.role === 'admin';
+        const matchClass = (userClass && !isAdmin) ? course.classLevel?.toLowerCase().includes(userClass) : true;
 
         // Ensure price is treated as number
         const price = Number(course.price);
@@ -141,6 +142,7 @@ function Courses() {
                             <div>
                                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white capitalize">
                                     {typeFilter ? `${typeFilter} Batches` : 'All Batches'}
+                                    {userData?.class ? ` (Class ${userData.class})` : ''}
                                 </h1>
                                 <p className="text-gray-500 dark:text-slate-400 mt-1">
                                     Premium batches for your success
@@ -166,7 +168,10 @@ function Courses() {
                     {/* Course Grid */}
                     {loading ? (
                         <div className="flex justify-center py-20">
-                            <Loader className="animate-spin text-blue-600" size={40} />
+                            <div className="flex flex-col items-center gap-6">
+                                <div className="loader"></div>
+                                <p className="text-[#514b82] dark:text-[#5d56b0] font-bold text-lg animate-pulse tracking-wide">Loading...</p>
+                            </div>
                         </div>
                     ) : filteredCourses.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -176,9 +181,11 @@ function Courses() {
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
                                 No {typeFilter || ''} batches found
                             </h3>
-                            <p className="text-slate-500 max-w-sm mx-auto">
+                            <p className="text-slate-500 max-w-sm mx-auto mb-4">
                                 We couldn't find any courses matching your criteria {userData?.class ? `for Class ${userData.class}` : ''}.
                             </p>
+
+
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

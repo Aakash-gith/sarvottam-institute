@@ -25,7 +25,7 @@ const CourseModal = ({ isOpen, onClose, course, onSave }) => {
         subject: "All",
         validityMode: "days",
         validityValue: "365",
-        status: "draft"
+        status: "published"
     });
 
     useEffect(() => {
@@ -61,7 +61,7 @@ const CourseModal = ({ isOpen, onClose, course, onSave }) => {
                 subject: "All",
                 validityMode: "days",
                 validityValue: "365",
-                status: "draft"
+                status: "published"
             });
             setPreviewUrl("");
         }

@@ -100,7 +100,14 @@ function App() {
         position="top-right"
         toastOptions={conf.toast}
       />
-      <React.Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-white">Loading...</div>}>
+      <React.Suspense fallback={
+        <div className="flex items-center justify-center min-h-screen bg-white dark:bg-slate-900 transition-colors duration-300">
+          <div className="flex flex-col items-center gap-6">
+            <div className="loader"></div>
+            <p className="text-[#514b82] dark:text-[#5d56b0] font-bold text-lg animate-pulse tracking-wide">Loading Sarvottam...</p>
+          </div>
+        </div>
+      }>
         {/* ... existing Routes ... */}
         <Routes>
           <Route path={index} element={<Home />} />

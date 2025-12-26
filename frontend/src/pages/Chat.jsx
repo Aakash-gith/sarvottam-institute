@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import {
     Search, Edit, MoreHorizontal,
     Smile, Paperclip, Send, Image, Lock, MessageSquare, X, File,
-    Check, CheckCheck, Trash2, Slash, Eraser, ArrowLeft
+    Check, CheckCheck, Trash2, Slash, Eraser, ArrowLeft,
+    Pin, PinOff, Volume2, VolumeX, Mail, MailOpen, Info, User
 } from 'lucide-react';
 import API from '../api/axios';
 import EmojiPicker from 'emoji-picker-react';
@@ -64,6 +65,18 @@ const Chat = () => {
     useEffect(() => {
         setIsInitialLoad(true);
     }, [activeChat]);
+
+    // Handle deep linking from notifications
+    useEffect(() => {
+        if (location.state?.selectedChatId && chats.length > 0) {
+            const linkedChat = chats.find(c => c.id === location.state.selectedChatId);
+            if (linkedChat) {
+                setActiveChat(linkedChat);
+                // Clear state so we don't re-trigger on refresh if possible (though location state persists)
+                // navigate('.', { replace: true, state: {} }); // Optional: clear state
+            }
+        }
+    }, [chats, location.state]);
 
     // Fetch Messages & Poll for updates
     useEffect(() => {
@@ -240,6 +253,68 @@ const Chat = () => {
             toast.error("Failed to unblock user");
         }
     };
+
+    const handleTogglePin = async () => {
+        try {
+            await API.post('/message/pin', { userId: activeChat.id });
+            const isPinned = !activeChat.isPinned;
+            setActiveChat(prev => ({ ...prev, isPinned }));
+            setChats(prev => {
+                const updated = prev.map(c => c.id === activeChat.id ? { ...c, isPinned } : c);
+                // Simple sort: Pinned first
+                return updated.sort((a, b) => {
+                    if (a.isPinned && !b.isPinned) return -1;
+                    if (!a.isPinned && b.isPinned) return 1;
+                    return 0; // Keep existing order for rest
+                });
+            });
+            toast.success(isPinned ? "Chat pinned" : "Chat unpinned");
+            setShowChatMenu(false);
+        } catch (error) {
+            toast.error("Failed to update pin status");
+        }
+    };
+
+    const handleToggleMute = async () => {
+        try {
+            await API.post('/message/mute', { userId: activeChat.id });
+            const isMuted = !activeChat.isMuted;
+            setActiveChat(prev => ({ ...prev, isMuted }));
+            setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, isMuted } : c));
+            toast.success(isMuted ? "Chat muted" : "Chat unmuted");
+            setShowChatMenu(false);
+        } catch (error) {
+            toast.error("Failed to update mute status");
+        }
+    };
+
+    const handleToggleUnread = async () => {
+        try {
+            await API.post('/message/toggle-unread', { userId: activeChat.id });
+            const isMarkedUnread = !activeChat.isMarkedUnread;
+            setActiveChat(prev => ({ ...prev, isMarkedUnread, unread: isMarkedUnread ? 1 : 0 }));
+            setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, isMarkedUnread, unread: isMarkedUnread ? 1 : 0 } : c));
+
+            if (isMarkedUnread) {
+                toast.success("Marked as unread");
+                setActiveChat(null);
+            } else {
+                toast.success("Marked as read");
+            }
+            setShowChatMenu(false);
+        } catch (error) {
+            toast.error("Failed to update status");
+        }
+    };
+
+    const handleCompose = () => {
+        setActiveChat(null);
+        setSearchQuery("");
+        setTimeout(() => {
+            const searchInput = document.querySelector('input[placeholder="Search people..."]');
+            if (searchInput) searchInput.focus();
+        }, 100);
+    };
     const emojiPickerRef = useRef(null);
 
     // Close emoji picker when clicking outside
@@ -288,6 +363,7 @@ const Chat = () => {
 
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     return (
         <div className="flex h-screen bg-slate-50 dark:bg-slate-950 font-poppins">
@@ -393,7 +469,11 @@ const Chat = () => {
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex justify-between items-baseline mb-1">
                                                     <h3 className={`text-sm font-semibold truncate ${activeChat?.id === chat.id ? 'text-[#6264A7]' : 'text-gray-900'}`}>{chat.name}</h3>
-                                                    <span className={`text-xs ${activeChat?.id === chat.id ? 'text-[#6264A7]/70' : 'text-gray-400'}`}>{chat.time}</span>
+                                                    <div className="flex items-center gap-1">
+                                                        {chat.isPinned && <Pin size={10} className="text-gray-400 rotate-45" />}
+                                                        {chat.isMuted && <VolumeX size={10} className="text-gray-400" />}
+                                                        <span className={`text-xs ${activeChat?.id === chat.id ? 'text-[#6264A7]/70' : 'text-gray-400'}`}>{chat.time}</span>
+                                                    </div>
                                                 </div>
                                                 <p className={`text-xs truncate leading-relaxed ${chat.unread > 0
                                                     ? 'font-bold text-gray-900'
@@ -449,7 +529,7 @@ const Chat = () => {
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="flex gap-3 items-center">
+                                    <div className="flex gap-2 items-center">
                                         <div className="relative">
                                             <button
                                                 onClick={() => setShowChatMenu(!showChatMenu)}
@@ -459,33 +539,50 @@ const Chat = () => {
                                             </button>
 
                                             {showChatMenu && (
-                                                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-100 dark:border-slate-700 py-2 z-50 animate__animated animate__fadeIn animate__faster">
-                                                    <button
-                                                        onClick={handleClearChat}
-                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3"
-                                                    >
+                                                <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-100 dark:border-slate-700 py-2 z-50 animate__animated animate__fadeIn animate__faster">
+                                                    <button onClick={handleToggleUnread} className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3">
+                                                        {activeChat.isMarkedUnread ? <MailOpen size={16} /> : <Mail size={16} />}
+                                                        {activeChat.isMarkedUnread ? 'Mark as read' : 'Mark as unread'}
+                                                    </button>
+                                                    <button onClick={handleToggleMute} className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3">
+                                                        {activeChat.isMuted ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                                                        {activeChat.isMuted ? 'Unmute' : 'Mute'}
+                                                    </button>
+                                                    <button onClick={handleTogglePin} className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3">
+                                                        {activeChat.isPinned ? <PinOff size={16} /> : <Pin size={16} />}
+                                                        {activeChat.isPinned ? 'Unpin' : 'Pin'}
+                                                    </button>
+                                                    <button className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3">
+                                                        <User size={16} />
+                                                        View Details
+                                                    </button>
+
+                                                    <div className="my-1 border-t border-gray-100 dark:border-slate-700"></div>
+
+                                                    <button onClick={handleClearChat} className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3">
                                                         <Eraser size={16} className="text-blue-500" />
                                                         Clear History
                                                     </button>
-                                                    <button
-                                                        onClick={handleDeleteChat}
-                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3"
-                                                    >
+                                                    <button onClick={handleDeleteChat} className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3">
                                                         <Trash2 size={16} className="text-red-500" />
                                                         Delete Chat
                                                     </button>
+
                                                     <div className="my-1 border-t border-gray-100 dark:border-slate-700"></div>
-                                                    <button
-                                                        onClick={activeChat.isBlocked ? handleUnblockUser : handleBlockUser}
-                                                        className={`w-full px-4 py-2 text-left text-sm flex items-center gap-3 ${activeChat.isBlocked ? 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20' : 'text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'}`}
-                                                    >
+
+                                                    <button onClick={activeChat.isBlocked ? handleUnblockUser : handleBlockUser} className={`w-full px-4 py-2 text-left text-sm flex items-center gap-3 ${activeChat.isBlocked ? 'text-green-600 hover:bg-green-50' : 'text-red-600 hover:bg-red-50'}`}>
                                                         <Slash size={16} />
                                                         {activeChat.isBlocked ? 'Unblock User' : 'Block User'}
                                                     </button>
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-slate-800 rounded-full border border-gray-100 dark:border-slate-700">
+
+                                        <button onClick={handleCompose} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-500 transition-colors" title="New Chat">
+                                            <Edit size={20} />
+                                        </button>
+
+                                        <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-slate-800 rounded-full border border-gray-100 dark:border-slate-700 ml-2">
                                             <Lock size={12} className="text-emerald-500" />
                                             <span className="text-[10px] font-medium text-gray-500">End-to-end Encrypted</span>
                                         </div>

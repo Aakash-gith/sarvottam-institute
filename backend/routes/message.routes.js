@@ -7,7 +7,10 @@ import {
     clearChat,
     deleteChat,
     blockUser,
-    unblockUser
+    unblockUser,
+    togglePin,
+    toggleMute,
+    toggleUnread
 } from '../controllers/message.controller.js';
 import authMiddleware from '../middleware/auth.middleware.js';
 
@@ -23,5 +26,8 @@ router.delete('/clear/:userId', clearChat);
 router.delete('/delete/:userId', deleteChat);
 router.post('/block', blockUser);
 router.post('/unblock', unblockUser);
+router.post('/pin', togglePin);
+router.post('/mute', toggleMute);
+router.post('/toggle-unread', toggleUnread);
 
 export default router;

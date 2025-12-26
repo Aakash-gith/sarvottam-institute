@@ -53,6 +53,18 @@ const userSchema = new mongoose.Schema(
     deletedChats: [{
       userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
       deletedAt: { type: Date, default: Date.now }
+    }],
+    pinnedChats: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    mutedChats: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    markedUnreadChats: [{ // For manually marking as unread
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     }]
   },
   { timestamps: true }

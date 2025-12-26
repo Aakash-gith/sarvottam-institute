@@ -63,6 +63,25 @@ function AdminDashboard() {
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
+    // Refs for click outside
+    const mobileNotifRef = React.useRef(null);
+    const desktopNotifRef = React.useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            const isOutsideMobile = mobileNotifRef.current ? !mobileNotifRef.current.contains(event.target) : true;
+            const isOutsideDesktop = desktopNotifRef.current ? !desktopNotifRef.current.contains(event.target) : true;
+
+            if (isNotificationsOpen && isOutsideMobile && isOutsideDesktop) {
+                setIsNotificationsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isNotificationsOpen]);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -198,12 +217,52 @@ function AdminDashboard() {
         <div className="flex h-screen bg-slate-50 dark:bg-slate-950 font-poppins selection:bg-blue-500 selection:text-white overflow-hidden">
             {/* Mobile Hamburger Button */}
             {isMobile && !isMobileOpen && (
-                <button
-                    className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
-                    onClick={() => setIsMobileOpen(true)}
-                >
-                    <Menu size={24} />
-                </button>
+                <>
+                    <button
+                        className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
+                        onClick={() => setIsMobileOpen(true)}
+                    >
+                        <Menu size={24} />
+                    </button>
+                    <div ref={mobileNotifRef} className="fixed top-4 right-4 z-50">
+                        <button
+                            className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 relative"
+                            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                        >
+                            <Bell size={24} />
+                            {stats?.metrics?.pendingRequests > 0 && <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></span>}
+                        </button>
+                        {isNotificationsOpen && (
+                            <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden animate-in fade-in slide-in-from-top-2">
+                                <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                                    <h3 className="font-bold text-slate-800 dark:text-white">Notifications</h3>
+                                    <button onClick={() => setIsNotificationsOpen(false)} className="text-slate-400 hover:text-slate-600"><X size={16} /></button>
+                                </div>
+                                <div className="max-h-80 overflow-y-auto">
+                                    {stats?.metrics?.pendingRequests > 0 ? (
+                                        <div onClick={() => { navigate('/admin/request-status'); setIsNotificationsOpen(false); }} className="p-4 border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer">
+                                            <div className="flex items-start gap-3">
+                                                <div className="p-2 bg-blue-100 text-blue-600 rounded-full"><Users size={16} /></div>
+                                                <div>
+                                                    <p className="text-sm font-semibold text-slate-800 dark:text-white">New User Requests</p>
+                                                    <p className="text-xs text-slate-500">{stats.metrics.pendingRequests} students waiting for approval</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="p-8 text-center text-slate-500 text-sm flex flex-col items-center gap-2">
+                                            <Bell size={24} className="opacity-20" />
+                                            No new notifications
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="p-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-700 text-center">
+                                    <button onClick={() => { setActiveTab('notifications'); setIsNotificationsOpen(false); }} className="text-xs font-semibold text-blue-600 hover:text-blue-700">Manage Notifications</button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </>
             )}
 
             {/* Mobile Backdrop */}
@@ -356,7 +415,46 @@ function AdminDashboard() {
                                     </p>
                                 </div>
 
-                                <div className="hidden md:flex items-center gap-6 bg-white dark:bg-slate-900 p-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                                <div className="hidden md:flex items-center gap-6 bg-white dark:bg-slate-900 p-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 relative">
+                                    <div ref={desktopNotifRef} className="relative">
+                                        <button
+                                            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                                            className="relative p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 dark:text-slate-400"
+                                        >
+                                            <Bell size={20} />
+                                            {stats?.metrics?.pendingRequests > 0 && <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-900"></span>}
+                                        </button>
+                                        {isNotificationsOpen && (
+                                            <div className="absolute right-0 top-full mt-4 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden animate-in fade-in slide-in-from-top-2 z-50">
+                                                <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                                                    <h3 className="font-bold text-slate-800 dark:text-white">Notifications</h3>
+                                                    <button onClick={() => setIsNotificationsOpen(false)} className="text-slate-400 hover:text-slate-600"><X size={16} /></button>
+                                                </div>
+                                                <div className="max-h-80 overflow-y-auto">
+                                                    {stats?.metrics?.pendingRequests > 0 ? (
+                                                        <div onClick={() => { navigate('/admin/request-status'); setIsNotificationsOpen(false); }} className="p-4 border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer">
+                                                            <div className="flex items-start gap-3">
+                                                                <div className="p-2 bg-blue-100 text-blue-600 rounded-full"><Users size={16} /></div>
+                                                                <div>
+                                                                    <p className="text-sm font-semibold text-slate-800 dark:text-white">New User Requests</p>
+                                                                    <p className="text-xs text-slate-500">{stats.metrics.pendingRequests} students waiting for approval</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="p-8 text-center text-slate-500 text-sm flex flex-col items-center gap-2">
+                                                            <Bell size={24} className="opacity-20" />
+                                                            No new notifications
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="p-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-700 text-center">
+                                                    <button onClick={() => { setActiveTab('notifications'); setIsNotificationsOpen(false); }} className="text-xs font-semibold text-blue-600 hover:text-blue-700">Manage Notifications</button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-700"></div>
                                     <ClockWidgetCompact />
                                     <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-700"></div>
                                     <ThemeToggle />

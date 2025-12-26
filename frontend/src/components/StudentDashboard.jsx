@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
     BookOpen,
+    Bell,
     Trophy,
     Clock,
     Zap,
@@ -165,9 +166,10 @@ const StudentDashboard = () => {
                 <div className="relative z-10 mb-6">
                     <h1 className="text-2xl md:text-3xl font-bold mb-1">Welcome back, {userData?.name?.split(" ")[0]}! 👋</h1>
                     <p className="text-blue-100 opacity-90 text-sm md:text-base">You're doing great! Keep up the momentum.</p>
-                    <div className="absolute top-0 right-0 flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1 md:px-4 md:py-2 rounded-full">
+
+                    <div className="hidden md:flex absolute top-4 right-4 items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
                         <Zap className="text-yellow-400 fill-yellow-400" size={16} />
-                        <span className="font-bold text-sm md:text-base">{stats.streak} Day Streak</span>
+                        <span className="font-bold">{stats.streak} Day Streak</span>
                     </div>
                 </div>
 

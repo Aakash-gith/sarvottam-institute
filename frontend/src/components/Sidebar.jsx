@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import {
     Home,
+    Bell,
     BookOpen,
     PlayCircle,
     Brain,
@@ -48,6 +50,29 @@ const Sidebar = () => {
     /* State for Profile Image Modal */
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
+    /* Notification State */
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+    const [systemNotifications, setSystemNotifications] = useState([]);
+    const [unreadChats, setUnreadChats] = useState([]);
+
+    // Refs for click outside
+    const mobileNotifRef = React.useRef(null);
+    const desktopNotifRef = React.useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            const isOutsideMobile = mobileNotifRef.current ? !mobileNotifRef.current.contains(event.target) : true;
+            const isOutsideDesktop = desktopNotifRef.current ? !desktopNotifRef.current.contains(event.target) : true;
+
+            if (isNotificationsOpen && isOutsideMobile && isOutsideDesktop) {
+                setIsNotificationsOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isNotificationsOpen]);
+
     // Fetch profile picture
     useEffect(() => {
         const fetchProfilePicture = async () => {
@@ -63,6 +88,147 @@ const Sidebar = () => {
         };
         fetchProfilePicture();
     }, [isLoggedIn, userData]);
+
+    // Chat Notification Logic
+    const [chatStates, setChatStates] = useState({}); // { [chatId]: unreadCount }
+
+    useEffect(() => {
+        if (!isLoggedIn) return;
+
+        const pollMessages = async () => {
+            try {
+                const response = await API.get('/message/conversations');
+                if (response.data.success) {
+                    const chats = response.data.data;
+                    const newChatStates = {};
+                    let hasChanges = false;
+                    let shouldNotify = Object.keys(chatStates).length > 0; // Don't notify on first load
+
+                    chats.forEach(chat => {
+                        const prevUnread = chatStates[chat.id] || 0;
+                        const currentUnread = chat.unread || 0;
+
+                        // Check for new messages (unread count increased)
+                        if (shouldNotify && currentUnread > prevUnread) {
+                            toast((t) => (
+                                <div
+                                    onClick={() => {
+                                        toast.dismiss(t.id);
+                                        navigate('/chat', { state: { selectedChatId: chat.id } });
+                                    }}
+                                    className="cursor-pointer flex flex-col gap-1 min-w-[200px]"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                                        <p className="font-bold text-slate-800">New Message</p>
+                                    </div>
+                                    <p className="font-medium text-blue-600 text-sm">{chat.name}</p>
+                                    <p className="text-xs text-slate-500 truncate">{chat.lastMessage}</p>
+                                </div>
+                            ), {
+                                duration: 5000,
+                                position: 'top-center',
+                                style: {
+                                    background: '#fff',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '12px',
+                                    boxShadow: '0 8px 24px rgba(0,0,0,0.12)'
+                                }
+                            });
+                        }
+
+                        if (prevUnread !== currentUnread) hasChanges = true;
+                        newChatStates[chat.id] = currentUnread;
+                    });
+
+                    // Only update state if unread counts changed/length diff to avoid unnecessary re-renders
+                    if (hasChanges || Object.keys(chatStates).length !== chats.length) {
+                        setChatStates(newChatStates);
+                    }
+                    setUnreadChats(chats.filter(c => c.unread > 0));
+                }
+            } catch (error) {
+                // Silent error
+            }
+        };
+
+        const interval = setInterval(pollMessages, 5000);
+        return () => clearInterval(interval);
+    }, [isLoggedIn, chatStates]);
+
+    // Fetch System Notifications
+    useEffect(() => {
+        if (!isLoggedIn) return;
+        const fetchSystemNotifications = async () => {
+            try {
+                const res = await API.get("/user/notifications");
+                if (res.data.success) {
+                    setSystemNotifications(res.data.data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch notifications");
+            }
+        };
+        fetchSystemNotifications();
+    }, [isLoggedIn, isNotificationsOpen]);
+
+    const handleNotificationClick = async (item) => {
+        setIsNotificationsOpen(false);
+        if (item.type === 'chat') {
+            navigate('/chat', { state: { selectedChatId: item.id } });
+        } else {
+            // System notification
+            if (!item.read) {
+                try {
+                    await API.put(`/user/notifications/${item.id}/read`);
+                    setSystemNotifications(prev => prev.map(n => n._id === item.id ? { ...n, readBy: [...n.readBy, userData._id] } : n));
+                } catch (e) { console.error(e); }
+            }
+        }
+    };
+
+    const allNotifications = [
+        ...unreadChats.map(c => ({
+            id: c.id,
+            type: 'chat',
+            title: c.name,
+            message: c.lastMessage || 'New message',
+            time: c.time || new Date(),
+            read: false,
+            initial: c.name ? c.name.charAt(0) : '?'
+        })),
+        ...systemNotifications.map(n => ({
+            id: n._id,
+            type: 'system',
+            title: n.title,
+            message: n.message,
+            time: n.createdAt,
+            read: n.readBy && n.readBy.includes(userData?._id),
+            initial: 'S'
+        }))
+    ].sort((a, b) => new Date(b.time) - new Date(a.time));
+
+    const unreadCountTotal = unreadChats.length + systemNotifications.filter(n => !n.readBy.includes(userData?._id)).length;
+
+    // Sync active category with current path
+    useEffect(() => {
+        const path = location.pathname;
+        if (
+            path.startsWith('/notes') ||
+            path.startsWith('/pyq') ||
+            path.startsWith('/important-questions') ||
+            path.startsWith('/quiz') ||
+            path.startsWith('/ncert') ||
+            path.startsWith('/books') ||
+            path.startsWith('/video-learning')
+        ) {
+            setActiveCategory("learning");
+        } else if (path.startsWith('/courses')) {
+            setActiveCategory("courses");
+        } else {
+            setActiveCategory("home");
+        }
+    }, [location.pathname]);
 
     // Handle Resize for Mobile Check
     useEffect(() => {
@@ -127,13 +293,13 @@ const Sidebar = () => {
         setActiveCategory(category);
         if (category === "home") {
             navigate("/");
-            if (isMobile) setIsMobileOpen(false);
+            // Sidebar stays open on mobile
         }
     };
 
     const handleNavigation = (path) => {
         navigate(path);
-        if (isMobile) setIsMobileOpen(false);
+        // Sidebar stays open on mobile
     };
 
     // Sidebar interaction handlers
@@ -148,13 +314,63 @@ const Sidebar = () => {
     return (
         <>
             {/* Mobile Hamburger Button */}
+            {/* Mobile Hamburger Button & Bell */}
             {isMobile && !isMobileOpen && location.pathname !== '/chat' && (
-                <button
-                    className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
-                    onClick={() => setIsMobileOpen(true)}
-                >
-                    <Menu size={24} />
-                </button>
+                <>
+                    <button
+                        className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
+                        onClick={() => setIsMobileOpen(true)}
+                    >
+                        <Menu size={24} />
+                    </button>
+                    <div ref={mobileNotifRef} className="fixed top-4 right-4 z-50">
+                        <button
+                            className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 relative"
+                            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                        >
+                            <Bell size={24} />
+                            {unreadCountTotal > 0 && <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></span>}
+                        </button>
+
+                        {isNotificationsOpen && (
+                            <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in slide-in-from-top-2">
+                                <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+                                    <h3 className="font-bold text-slate-800 dark:text-white">Notifications</h3>
+                                    <button onClick={() => setIsNotificationsOpen(false)} className="text-slate-400 hover:text-red-500"><X size={16} /></button>
+                                </div>
+                                <div className="max-h-[60vh] overflow-y-auto">
+                                    {allNotifications.length > 0 ? (
+                                        allNotifications.map(item => (
+                                            <div
+                                                key={item.id + item.type}
+                                                onClick={() => handleNotificationClick(item)}
+                                                className={`p-4 border-b border-slate-50 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex gap-3 ${!item.read ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}
+                                            >
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${item.type === 'chat' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}`}>
+                                                    {item.type === 'chat' ? (item.initial) : <Bell size={16} />}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex justify-between items-start mb-1">
+                                                        <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{item.title}</p>
+                                                        <span className="text-[10px] text-slate-400 whitespace-nowrap ml-2">{new Date(item.time).toLocaleDateString()}</span>
+                                                    </div>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{item.message}</p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="p-8 text-center text-slate-500 text-sm flex flex-col items-center gap-2">
+                                            <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-2">
+                                                <Bell size={20} className="text-slate-400" />
+                                            </div>
+                                            No new notifications
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </>
             )}
 
             {/* Mobile Backdrop */}
@@ -176,7 +392,6 @@ const Sidebar = () => {
                         src={logo}
                         alt="Sarvottam Institute"
                         className="sidebar-brand-logo"
-                        onClick={() => { navigate('/'); if (isMobile) setIsMobileOpen(false); }}
                         onMouseEnter={handleMouseEnter}
                     />
 
@@ -221,6 +436,57 @@ const Sidebar = () => {
                                 title="View Profile Picture"
                             />
                         )}
+
+                        <div ref={desktopNotifRef} className="relative">
+                            <button
+                                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                                onMouseEnter={handleMouseEnter}
+                                title="Notifications"
+                                className="relative flex"
+                            >
+                                <Bell size={22} />
+                                {unreadCountTotal > 0 && <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></span>}
+                            </button>
+
+                            {/* Desktop Popover */}
+                            {isNotificationsOpen && !isMobile && (
+                                <div className="absolute left-full bottom-0 mb-[-12px] ml-4 w-80 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[60] animate-in fade-in slide-in-from-left-2">
+                                    <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+                                        <h3 className="font-bold text-slate-800 dark:text-white">Notifications</h3>
+                                        <button onClick={() => setIsNotificationsOpen(false)} className="text-slate-400 hover:text-red-500"><X size={16} /></button>
+                                    </div>
+                                    <div className="max-h-80 overflow-y-auto">
+                                        {allNotifications.length > 0 ? (
+                                            allNotifications.map(item => (
+                                                <div
+                                                    key={item.id + item.type}
+                                                    onClick={() => handleNotificationClick(item)}
+                                                    className={`p-4 border-b border-slate-50 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex gap-3 ${!item.read ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}
+                                                >
+                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${item.type === 'chat' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}`}>
+                                                        {item.type === 'chat' ? (item.initial) : <Bell size={16} />}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex justify-between items-start mb-1">
+                                                            <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{item.title}</p>
+                                                            <span className="text-[10px] text-slate-400 whitespace-nowrap ml-2">{new Date(item.time).toLocaleDateString()}</span>
+                                                        </div>
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{item.message}</p>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="p-8 text-center text-slate-500 text-sm flex flex-col items-center gap-2">
+                                                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-2">
+                                                    <Bell size={20} className="text-slate-400" />
+                                                </div>
+                                                No new notifications
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
 
                         <button
                             onClick={() => { navigate('/profile?view=settings'); if (isMobile) setIsMobileOpen(false); }}

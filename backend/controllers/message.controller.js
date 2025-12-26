@@ -135,6 +135,10 @@ export const getConversations = async (req, res) => {
                 // If otherUser is just an ID (populate failed), use a placeholder
                 const hasPopulated = typeof otherUser === 'object' && otherUser !== null && otherUser.name;
 
+                const isPinned = currentUser.pinnedChats?.includes(otherUserId);
+                const isMuted = currentUser.mutedChats?.includes(otherUserId);
+                const isMarkedUnread = currentUser.markedUnreadChats?.includes(otherUserId);
+
                 conversationsMap.set(otherUserId, {
                     id: otherUserId,
                     name: hasPopulated ? otherUser.name : "User",
@@ -145,7 +149,10 @@ export const getConversations = async (req, res) => {
                     time: msg.createdAt,
                     unread: 0,
                     status: 'online',
-                    isBlocked: currentUser.blockedUsers && currentUser.blockedUsers.includes(otherUserId)
+                    isBlocked: currentUser.blockedUsers && currentUser.blockedUsers.includes(otherUserId),
+                    isPinned,
+                    isMuted,
+                    isMarkedUnread
                 });
             }
 
@@ -155,7 +162,20 @@ export const getConversations = async (req, res) => {
             }
         });
 
-        const conversations = Array.from(conversationsMap.values()).sort((a, b) => b.time - a.time);
+        // Loop again to adjust unread count if marked unread manually
+        for (let [id, val] of conversationsMap) {
+            if (val.isMarkedUnread && val.unread === 0) {
+                val.unread = 1; // Force visual indicator
+            }
+        }
+
+        const conversations = Array.from(conversationsMap.values()).sort((a, b) => {
+            // Pinned first
+            if (a.isPinned && !b.isPinned) return -1;
+            if (!a.isPinned && b.isPinned) return 1;
+            // Then logic: recent message time
+            return new Date(b.time) - new Date(a.time);
+        });
         res.status(200).json({ success: true, data: conversations });
     } catch (error) {
         console.error("Error fetching conversations:", error);
@@ -239,5 +259,72 @@ export const unblockUser = async (req, res) => {
     } catch (error) {
         console.error("Error unblocking user:", error);
         res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+// Toggle Pin Chat
+export const togglePin = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const myId = req.user._id;
+        const user = await User.findById(myId);
+
+        let action = 'pinned';
+        if (user.pinnedChats && user.pinnedChats.includes(userId)) {
+            await User.findByIdAndUpdate(myId, { $pull: { pinnedChats: userId } });
+            action = 'unpinned';
+        } else {
+            await User.findByIdAndUpdate(myId, { $addToSet: { pinnedChats: userId } });
+        }
+        res.status(200).json({ success: true, message: `Chat ${action}`, action });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error" });
+    }
+};
+
+// Toggle Mute Chat
+export const toggleMute = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const myId = req.user._id;
+        const user = await User.findById(myId);
+
+        let action = 'muted';
+        if (user.mutedChats && user.mutedChats.includes(userId)) {
+            await User.findByIdAndUpdate(myId, { $pull: { mutedChats: userId } });
+            action = 'unmuted';
+        } else {
+            await User.findByIdAndUpdate(myId, { $addToSet: { mutedChats: userId } });
+        }
+        res.status(200).json({ success: true, message: `Chat ${action}`, action });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error" });
+    }
+};
+
+// Toggle Unread
+export const toggleUnread = async (req, res) => {
+    try {
+        const { userId } = req.body; // chat user id
+        const myId = req.user._id;
+        const user = await User.findById(myId);
+
+        let action = 'unread';
+        if (user.markedUnreadChats && user.markedUnreadChats.includes(userId)) {
+            // Mark as Read (remove from unread list AND essentially call markMessagesAsRead)
+            await User.findByIdAndUpdate(myId, { $pull: { markedUnreadChats: userId } });
+            // Also update actual messages
+            await Message.updateMany(
+                { sender: userId, receiver: myId, status: { $ne: 'read' } },
+                { $set: { status: 'read' } }
+            );
+            action = 'read';
+        } else {
+            // Mark as unread
+            await User.findByIdAndUpdate(myId, { $addToSet: { markedUnreadChats: userId } });
+        }
+        res.status(200).json({ success: true, message: `Marked as ${action}`, action });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error" });
     }
 };

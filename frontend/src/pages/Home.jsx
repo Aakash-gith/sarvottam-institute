@@ -30,7 +30,7 @@ function Home() {
       {status && <Sidebar />}
 
       {/* Main Content */}
-      <div className={`px-4 md:px-6 py-8 flex-1 ${status ? 'ml-0 w-full md:ml-[120px] md:w-[calc(100%-120px)]' : 'max-w-7xl mx-auto'}`}>
+      <div className={`px-4 md:px-6 flex-1 ${status ? 'pt-20 pb-8 md:py-8 ml-0 w-full md:ml-[120px] md:w-[calc(100%-120px)]' : 'py-8 max-w-7xl mx-auto'}`}>
         {status ? (
           <>
             {/* For Logged In Users - New Student Dashboard */}

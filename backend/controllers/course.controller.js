@@ -83,19 +83,46 @@ export const enrollStudent = async (req, res) => {
         }
 
         if (course.enrolledStudents.includes(userId)) {
-            return res.status(400).json({ message: 'Student already enrolled' });
+            // Check if enrollment record exists too, if not create it (fix inconsistency)
+            const existingEnrollment = await Enrollment.findOne({ user: userId, course: courseId });
+            if (existingEnrollment) {
+                return res.status(400).json({ message: 'Student already enrolled' });
+            }
+            // If inconsistent (in course but no enrollment doc), proceed to create enrollment
         }
 
         if (course.enrolledStudents.length >= course.studentLimit) {
             return res.status(400).json({ message: 'Course is full' });
         }
 
-        // Add student to course
-        course.enrolledStudents.push(userId);
-        await course.save();
+        // Add student to course if not already there
+        if (!course.enrolledStudents.includes(userId)) {
+            course.enrolledStudents.push(userId);
+            await course.save();
+        }
+
+        // Calculate Access Expiry
+        let expiresAt = new Date();
+        if (course.validityMode === 'days') {
+            const days = parseInt(course.validityValue) || 365;
+            expiresAt.setDate(expiresAt.getDate() + days);
+        } else {
+            expiresAt = new Date(course.validityValue); // '2025-12-31'
+        }
+
+        // Create Enrollment Record
+        const enrollment = new Enrollment({
+            user: userId,
+            course: courseId,
+            expiresAt,
+            status: 'active'
+        });
+
+        await enrollment.save();
 
         res.status(200).json({ message: 'Enrolled successfully', course });
     } catch (error) {
+        console.error("Enrollment Error:", error);
         res.status(500).json({ message: 'Error enrolling student', error: error.message });
     }
 };

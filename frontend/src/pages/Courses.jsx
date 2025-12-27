@@ -123,7 +123,15 @@ function Courses() {
                 const data = await getCourses();
                 setCourses(data);
             } catch (error) {
-                toast.error("Enrollment failed");
+                // If already enrolled, treat as success but notify user
+                if (error.response?.status === 400 && error.response.data.message.includes("already enrolled")) {
+                    toast.success("You are already enrolled!");
+                    // Refresh to ensure UI sync
+                    const data = await getCourses();
+                    setCourses(data);
+                } else {
+                    toast.error(error.response?.data?.message || "Enrollment failed");
+                }
             } finally {
                 setEnrolling(null);
             }
@@ -233,23 +241,38 @@ function Courses() {
                                                 </div>
                                             </div>
 
+                                            {/* Features List */}
+                                            {course.features && course.features.length > 0 && (
+                                                <ul className="mb-4 space-y-1">
+                                                    {course.features.slice(0, 2).map((feature, idx) => (
+                                                        <li key={idx} className="flex items-center gap-2 text-xs text-gray-600 dark:text-slate-300">
+                                                            <CheckCircle size={12} className="text-green-500" />
+                                                            {feature}
+                                                        </li>
+                                                    ))}
+                                                    {course.features.length > 2 && (
+                                                        <li className="text-[10px] text-blue-500 font-medium pl-5">+ {course.features.length - 2} more features</li>
+                                                    )}
+                                                </ul>
+                                            )}
+
                                             {/* Features Divider */}
                                             <div className="border-t border-gray-100 dark:border-slate-700 my-3"></div>
 
                                             <div className="flex justify-between items-center mb-4">
                                                 <div className="flex items-end gap-2">
                                                     <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                                                        ₹{course.price}
+                                                        {course.price > 0 ? `₹${course.price}` : 'Free'}
                                                     </span>
                                                     {course.price > 0 && (
-                                                        <span className="text-sm text-gray-400 line-through mb-1">
-                                                            ₹{originalPrice}
-                                                        </span>
-                                                    )}
-                                                    {course.price > 0 && (
-                                                        <span className="text-xs text-green-600 font-bold mb-1 bg-green-50 dark:bg-green-900/30 px-1 rounded">
-                                                            40% OFF
-                                                        </span>
+                                                        <>
+                                                            <span className="text-sm text-gray-400 line-through mb-1">
+                                                                ₹{originalPrice}
+                                                            </span>
+                                                            <span className="text-xs text-green-600 font-bold mb-1 bg-green-50 dark:bg-green-900/30 px-1 rounded">
+                                                                40% OFF
+                                                            </span>
+                                                        </>
                                                     )}
                                                 </div>
                                             </div>
@@ -258,19 +281,24 @@ function Courses() {
                                                 <button className="py-2.5 px-4 rounded-xl text-sm font-semibold border border-gray-200 dark:border-slate-600 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700 transition cursor-pointer">
                                                     Explore
                                                 </button>
-                                                <button
-                                                    onClick={() => handleEnroll(course)}
-                                                    disabled={enrolling === course._id || isEnrolled}
-                                                    className={`py-2.5 px-4 rounded-xl text-sm font-bold text-white transition shadow-lg
-                                                        ${isEnrolled
-                                                            ? 'bg-green-600 hover:bg-green-700'
-                                                            : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30'
-                                                        }`}
-                                                >
-                                                    {enrolling === course._id ? (
-                                                        <Loader className="animate-spin mx-auto" size={18} />
-                                                    ) : isEnrolled ? "Enrolled" : "Enroll Now"}
-                                                </button>
+                                                {isEnrolled ? (
+                                                    <a
+                                                        href="/my-courses"
+                                                        className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-center"
+                                                    >
+                                                        Open Course
+                                                    </a>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => handleEnroll(course)}
+                                                        disabled={enrolling === course._id}
+                                                        className="py-2.5 px-4 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 transition-all flex items-center justify-center"
+                                                    >
+                                                        {enrolling === course._id ? (
+                                                            <Loader className="animate-spin" size={18} />
+                                                        ) : "Enroll Now"}
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

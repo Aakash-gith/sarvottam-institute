@@ -39,6 +39,7 @@ import {
   videoWatchScience,
   courses,
   myCourses,
+  courseLearning,
   liveClassHost,
 } from "./Routes/Routes";
 
@@ -75,6 +76,7 @@ const VideoLearning = React.lazy(() => import("./pages/VideoLearning/VideoLearni
 const VideoPlayerPage = React.lazy(() => import("./pages/VideoLearning/VideoPlayerPage"));
 const Courses = React.lazy(() => import("./pages/Courses"));
 const MyCourses = React.lazy(() => import("./pages/MyCourses"));
+const CourseLearning = React.lazy(() => import("./pages/CourseLearning"));
 const LiveClassHost = React.lazy(() => import("./pages/LiveClassHost"));
 
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -151,6 +153,7 @@ function App() {
           <Route path={videoWatchScience} element={<ProtectedRoute><VideoPlayerPage /></ProtectedRoute>} />
           <Route path={courses} element={<ProtectedRoute><Courses /></ProtectedRoute>} />
           <Route path={myCourses} element={<ProtectedRoute><MyCourses /></ProtectedRoute>} />
+          <Route path={courseLearning} element={<ProtectedRoute><CourseLearning /></ProtectedRoute>} />
 
 
           <Route path={liveClassHost} element={<ProtectedRoute><LiveClassHost /></ProtectedRoute>} />

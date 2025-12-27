@@ -24,3 +24,14 @@ export const joinLiveClass = async (classId) => {
     const response = await API.get(`/live-classes/${classId}/join`);
     return response.data;
 }
+
+export const getCourseProgress = async (courseId) => {
+    const response = await API.get(`/courses/${courseId}/progress`);
+    return response.data;
+}
+
+export const updateProgress = async (data) => {
+    // data: { courseId, contentId, type, score? }
+    const response = await API.post(`/courses/progress`, data);
+    return response.data;
+}

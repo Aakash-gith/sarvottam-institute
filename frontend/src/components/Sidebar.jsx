@@ -282,6 +282,7 @@ const Sidebar = () => {
         courses: {
             title: "Courses",
             items: [
+                { name: "My Batches", icon: BookOpen, path: "/my-courses" },
                 { name: "Paid Batches", icon: Layers, path: "/courses?type=paid" },
                 { name: "Free Batches", icon: PlayCircle, path: "/courses?type=free" },
             ]

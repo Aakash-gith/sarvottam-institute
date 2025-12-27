@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { Loader, BookOpen, Clock, Lock, PlayCircle, Calendar, AlertCircle } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import { toast } from "react-hot-toast";
 
 const MyCourses = () => {
+    const navigate = useNavigate();
     const [enrollments, setEnrollments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState("all"); // 'all', 'active', 'expired'
@@ -61,8 +63,8 @@ const MyCourses = () => {
                                     key={f}
                                     onClick={() => setFilter(f)}
                                     className={`px-6 py-2 rounded-lg text-sm font-semibold capitalize transition-all ${filter === f
-                                            ? 'bg-blue-600 text-white shadow-sm'
-                                            : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                                        ? 'bg-blue-600 text-white shadow-sm'
+                                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                                         }`}
                                 >
                                     {f}
@@ -100,8 +102,8 @@ const MyCourses = () => {
                                     <div
                                         key={item._id}
                                         className={`group bg-white dark:bg-slate-800 rounded-2xl p-4 md:p-6 border transition-all duration-300 flex flex-col md:flex-row gap-6 ${expired
-                                                ? 'border-slate-200 dark:border-slate-700 opacity-75 grayscale-[0.5]'
-                                                : 'border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-xl hover:border-blue-200 dark:hover:border-blue-900'
+                                            ? 'border-slate-200 dark:border-slate-700 opacity-75 grayscale-[0.5]'
+                                            : 'border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-xl hover:border-blue-200 dark:hover:border-blue-900'
                                             }`}
                                     >
                                         {/* Thumbnail */}
@@ -144,10 +146,10 @@ const MyCourses = () => {
 
                                                 {/* Validity Badge */}
                                                 <div className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full ${expired
-                                                        ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                                                        : daysLeft < 30
-                                                            ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-                                                            : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                                    ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                                                    : daysLeft < 30
+                                                        ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                                                        : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                                                     }`}>
                                                     <Clock size={14} />
                                                     {expired
@@ -176,9 +178,10 @@ const MyCourses = () => {
 
                                                 <button
                                                     disabled={expired}
+                                                    onClick={() => !expired && navigate(`/course/${course._id}/learn`)}
                                                     className={`px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition ${expired
-                                                            ? 'bg-slate-100 text-slate-400 cursor-not-allowed dark:bg-slate-800 dark:text-slate-600'
-                                                            : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/30'
+                                                        ? 'bg-slate-100 text-slate-400 cursor-not-allowed dark:bg-slate-800 dark:text-slate-600'
+                                                        : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/30'
                                                         }`}
                                                 >
                                                     {expired ? (

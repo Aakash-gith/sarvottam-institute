@@ -12,6 +12,9 @@ import EmojiPicker from 'emoji-picker-react';
 import toast from 'react-hot-toast';
 
 const Chat = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
     // State
     const [chats, setChats] = useState([]); // Active chats
     const [activeChat, setActiveChat] = useState(null);
@@ -360,10 +363,6 @@ const Chat = () => {
     const getAvatarInitials = (name) => {
         return name?.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || '??';
     }
-
-
-    const navigate = useNavigate();
-    const location = useLocation();
 
     return (
         <div className="flex h-screen bg-slate-50 dark:bg-slate-950 font-poppins">

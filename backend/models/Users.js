@@ -48,23 +48,30 @@ const userSchema = new mongoose.Schema(
     },
     blockedUsers: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      default: []
     }],
-    deletedChats: [{
-      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      deletedAt: { type: Date, default: Date.now }
-    }],
+    deletedChats: {
+      type: [{
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        deletedAt: { type: Date, default: Date.now }
+      }],
+      default: []
+    },
     pinnedChats: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      default: []
     }],
     mutedChats: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      default: []
     }],
     markedUnreadChats: [{ // For manually marking as unread
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      default: []
     }]
   },
   { timestamps: true }

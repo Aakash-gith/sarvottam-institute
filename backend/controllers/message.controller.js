@@ -11,10 +11,14 @@ export const sendMessage = async (req, res) => {
         const senderUser = await User.findById(senderId);
         const receiverUser = await User.findById(receiverId);
 
-        if (senderUser.blockedUsers.includes(receiverId)) {
+        if (!receiverUser) {
+            return res.status(404).json({ success: false, message: "Receiver not found" });
+        }
+
+        if (senderUser.blockedUsers?.includes(receiverId)) {
             return res.status(403).json({ success: false, message: "You have blocked this user" });
         }
-        if (receiverUser.blockedUsers.includes(senderId)) {
+        if (receiverUser.blockedUsers?.includes(senderId)) {
             return res.status(403).json({ success: false, message: "This user has blocked you" });
         }
 
@@ -54,7 +58,11 @@ export const getMessages = async (req, res) => {
 
         // Check if user has cleared this chat
         const currentUser = await User.findById(myId);
-        const deletionInfo = currentUser.deletedChats.find(d => d.userId.toString() === userId.toString());
+        if (!currentUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const deletionInfo = currentUser.deletedChats?.find(d => d.userId.toString() === userId.toString());
         const deleteThreshold = deletionInfo ? deletionInfo.deletedAt : new Date(0);
 
         console.log(`[Chat] Fetching messages between ${myId} and ${userId} after ${deleteThreshold}`);

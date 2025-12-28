@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default: null,
+      default: null, // Stores Cloudinary secure URL
     },
     blockedUsers: [{
       type: mongoose.Schema.Types.ObjectId,

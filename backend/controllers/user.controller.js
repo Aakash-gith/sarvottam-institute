@@ -2,43 +2,10 @@ import User from "../models/Users.js";
 import Notification from "../models/Notification.js";
 
 import QuizAttempt from "../models/QuizAttempt.js";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
+import cloudinary from "../conf/cloudinary.js";
+import { Readable } from 'stream';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
-// Configure multer for profile picture uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../uploads/profiles");
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, `profile-${req.user.id}-${uniqueSuffix}${path.extname(file.originalname)}`);
-  }
-});
-
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
-  if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only image files are allowed (jpeg, jpg, png, gif, webp)"), false);
-  }
-};
-
-export const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
-});
 
 // Get user profile stats
 export const getProfileStats = async (req, res) => {
@@ -272,6 +239,30 @@ export const updateClass = async (req, res) => {
   }
 };
 
+// Helper for stream upload
+const streamUpload = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "profile_pictures",
+        transformation: [
+          { width: 300, height: 300, crop: "fill", gravity: "face" },
+          { fetch_format: "auto", quality: "auto" }
+        ],
+        resource_type: "image"
+      },
+      (error, result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          reject(error);
+        }
+      }
+    );
+    Readable.from(buffer).pipe(stream);
+  });
+};
+
 // Upload profile picture
 export const uploadProfilePicture = async (req, res) => {
   try {
@@ -286,22 +277,28 @@ export const uploadProfilePicture = async (req, res) => {
 
     // Get the old profile picture to delete
     const user = await User.findById(userId);
-    const oldPicture = user?.profilePicture;
+    const oldPictureUrl = user?.profilePicture;
 
-    // Delete old profile picture if exists
-    if (oldPicture) {
-      const oldPath = path.join(__dirname, "..", oldPicture);
-      if (fs.existsSync(oldPath)) {
-        fs.unlinkSync(oldPath);
+    // Delete old profile picture if exists in Cloudinary
+    if (oldPictureUrl && oldPictureUrl.includes('cloudinary')) {
+      try {
+        // Extract public_id: profile_pictures/filename (without extension)
+        const regex = /profile_pictures\/([^/]+)\./;
+        const match = oldPictureUrl.match(regex);
+        if (match) {
+          const publicId = `profile_pictures/${match[1]}`;
+          await cloudinary.uploader.destroy(publicId);
+        }
+      } catch (err) {
+        console.error("Error deleting old image from Cloudinary:", err);
       }
     }
 
-    // Save new profile picture path
-    const profilePicturePath = `/uploads/profiles/${req.file.filename}`;
+    const result = await streamUpload(req.file.buffer);
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { profilePicture: profilePicturePath },
+      { profilePicture: result.secure_url },
       { new: true }
     ).select('name email profilePicture');
 
@@ -326,7 +323,6 @@ export const uploadProfilePicture = async (req, res) => {
 export const removeProfilePicture = async (req, res) => {
   try {
     const userId = req.user.id;
-
     const user = await User.findById(userId);
 
     if (!user) {
@@ -336,11 +332,17 @@ export const removeProfilePicture = async (req, res) => {
       });
     }
 
-    // Delete the file if exists
-    if (user.profilePicture) {
-      const filePath = path.join(__dirname, "..", user.profilePicture);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+    // Delete from Cloudinary if exists
+    if (user.profilePicture && user.profilePicture.includes('cloudinary')) {
+      try {
+        const regex = /profile_pictures\/([^/]+)\./;
+        const match = user.profilePicture.match(regex);
+        if (match) {
+          const publicId = `profile_pictures/${match[1]}`;
+          await cloudinary.uploader.destroy(publicId);
+        }
+      } catch (err) {
+        console.error("Error deleting image from Cloudinary:", err);
       }
     }
 

@@ -1,53 +1,23 @@
-import multer from "multer";
-import path from "path";
-import fs from "fs";
+import multer from 'multer';
 
-// Ensure directories exist
-const ensureDir = (dir) => {
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
-};
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        let uploadPath = "uploads/";
-
-        // Determine path based on field name or route
-        if (req.originalUrl.includes("pyq")) {
-            uploadPath += "pyq/";
-        } else if (req.originalUrl.includes("Note")) {
-            uploadPath += "notes/";
-        } else {
-            uploadPath += "misc/";
-        }
-
-        ensureDir(path.join(process.cwd(), uploadPath));
-        cb(null, uploadPath);
-    },
-    filename: function (req, file, cb) {
-        // Sanitize filename: remove special chars, keep extension
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        const ext = path.extname(file.originalname);
-        const basename = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9]/g, "_");
-        cb(null, basename + "-" + uniqueSuffix + ext);
-    },
-});
+// Use memory storage for Cloudinary upload (file is stored in buffer)
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = /pdf|jpeg|jpg|png/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
-
-    if (extname && mimetype) {
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
-        cb(new Error("Only PDF and Image files are allowed!"));
+        cb(new Error("Only .jpg, .png, .webp formats allowed!"), false);
     }
 };
 
-export const upload = multer({
-    storage: storage,
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
-    fileFilter: fileFilter,
+const upload = multer({
+    storage,
+    fileFilter,
+    limits: {
+        fileSize: 2 * 1024 * 1024 // 2MB max size
+    }
 });
+
+export default upload;

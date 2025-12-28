@@ -1,6 +1,6 @@
 import express from "express";
 import * as userController from "../controllers/user.controller.js";
-import { upload } from "../controllers/user.controller.js";
+import { upload } from "../middleware/upload.middleware.js";
 import authMiddleware from "../middleware/auth.middleware.js";
 
 const router = express.Router();
@@ -25,7 +25,7 @@ router.put("/update-class", userController.updateClass);
 
 // Profile picture routes
 router.get("/profile-picture", userController.getProfilePicture);
-router.post("/upload-profile-picture", upload.single("profilePicture"), userController.uploadProfilePicture);
+router.post("/upload-profile-pic", upload.single("profilePicture"), userController.uploadProfilePicture);
 router.delete("/remove-profile-picture", userController.removeProfilePicture);
 
 // Notification Routes

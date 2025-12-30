@@ -51,13 +51,29 @@ const StudentDashboard = () => {
         const fetchDashboardData = async () => {
             try {
                 setLoading(true);
-                // 1. Fetch User Stats (Streak)
-                const statsRes = await API.get("/quiz/stats");
-                const streak = statsRes.data.data.streak || 0;
 
-                // 2. Fetch Quiz History (For Avg Score, XP, Weekly Hours)
-                const historyRes = await API.get("/quiz/history?limit=50");
-                const attempts = historyRes.data.data.attempts;
+                // Prepare promises for concurrent fetching
+                const statsPromise = API.get("/quiz/stats").catch(err => ({ error: err }));
+                const historyPromise = API.get("/quiz/history?limit=50").catch(err => ({ error: err }));
+                const tasksPromise = getTasks().catch(err => ({ error: err }));
+                const progressPromise = (() => {
+                    const userClass = userData?.class || 10;
+                    return API.get(`/progress/getSubjectProgress?classId=${userClass}`).catch(err => ({ error: err }));
+                })();
+
+                // Execute all requests in parallel
+                const [statsRes, historyRes, tasksCompRes, progressRes] = await Promise.all([
+                    statsPromise,
+                    historyPromise,
+                    tasksPromise,
+                    progressPromise
+                ]);
+
+                // 1. Process User Stats
+                const streak = (!statsRes.error && statsRes.data?.data?.streak) || 0;
+
+                // 2. Process Quiz History
+                const attempts = (!historyRes.error && historyRes.data?.data?.attempts) ? historyRes.data.data.attempts : [];
 
                 // Calculate Quiz Stats
                 const totalQuizzes = attempts.length;
@@ -83,9 +99,8 @@ const StudentDashboard = () => {
                 }, 0);
                 const weeklyHours = Math.round((weeklyMinutes / 60) * 10) / 10;
 
-                // 3. Fetch Tasks (Planner)
-                const tasksCompRes = await getTasks();
-                const tasks = tasksCompRes.tasks || [];
+                // 3. Process Tasks
+                const tasks = (!tasksCompRes.error && tasksCompRes.tasks) ? tasksCompRes.tasks : [];
                 const completedTasks = tasks.filter(t => t.isCompleted).length;
                 const pendingTasks = tasks.length - completedTasks;
 
@@ -94,13 +109,12 @@ const StudentDashboard = () => {
                     pendingTasks
                 });
 
-                // 4. Fetch Real Progress for Continue Learning
-                const userClass = userData?.class || 10;
-                const progressRes = await API.get(`/progress/getSubjectProgress?classId=${userClass}`);
-                const progressData = Array.isArray(progressRes.data) ? progressRes.data : [];
+                // 4. Process Progress
+                const progressData = (!progressRes.error && Array.isArray(progressRes.data)) ? progressRes.data : [];
 
                 // Prepare "Continue Learning"
                 const workingOn = [];
+                const userClass = userData?.class || 10;
                 const clsData = classData[userClass];
                 const allSubjects = clsData ? [...clsData.subjects] : [];
                 const flatsubs = [];
@@ -125,7 +139,7 @@ const StudentDashboard = () => {
                     }
                 });
 
-                // Calculate Completed Chapters (sum of notesCompleted across all subjects)
+                // Calculate Completed Chapters
                 const completedChapters = progressData.reduce((acc, curr) => {
                     return acc + (curr.notesCompleted?.length || 0);
                 }, 0);

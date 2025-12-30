@@ -11,7 +11,7 @@ function HeaderBar() {
     const navigate = useNavigate();
     const userData = useSelector((state) => state.auth.userData);
     const [showNotifications, setShowNotifications] = useState(false);
-    const [profilePicture, setProfilePicture] = useState(null);
+    const profilePicture = userData?.profilePicture;
     const [currentTime, setCurrentTime] = useState(
         new Date().toLocaleTimeString("en-US", {
             hour: "2-digit",
@@ -32,21 +32,6 @@ function HeaderBar() {
         }, 1000);
         return () => clearInterval(interval);
     }, []);
-
-    const fetchProfilePicture = async () => {
-        try {
-            const response = await API.get("/user/profile-picture");
-            if (response.data.success) {
-                setProfilePicture(response.data.data.profilePicture);
-            }
-        } catch (error) {
-            console.error("Failed to fetch profile picture:", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchProfilePicture();
-    }, [userData]);
 
     const getProfilePictureUrl = () => {
         if (!profilePicture) return null;

@@ -37,8 +37,9 @@ const Sidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
-    const { userData, status: isLoggedIn } = useSelector((state) => state.auth.userData);
-    const [profilePicture, setProfilePicture] = useState(null);
+    const { userData, status: isLoggedIn } = useSelector((state) => state.auth);
+    // Use profile picture from Redux store directly
+    const profilePicture = userData?.profilePicture;
 
     // State to track which category is selected on the left
     const [activeCategory, setActiveCategory] = useState("home");
@@ -73,22 +74,6 @@ const Sidebar = () => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [isNotificationsOpen]);
-
-    // Fetch profile picture
-    useEffect(() => {
-        const fetchProfilePicture = async () => {
-            if (!isLoggedIn) return;
-            try {
-                const response = await API.get("/user/profile-picture");
-                if (response.data.success) {
-                    setProfilePicture(response.data.data.profilePicture);
-                }
-            } catch (error) {
-                console.error("Failed to fetch profile picture:", error);
-            }
-        };
-        fetchProfilePicture();
-    }, [isLoggedIn, userData]);
 
     // Chat Notification Logic
     const [chatStates, setChatStates] = useState({}); // { [chatId]: unreadCount }

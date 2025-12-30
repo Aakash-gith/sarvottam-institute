@@ -2,8 +2,7 @@ import User from "../models/Users.js";
 import Notification from "../models/Notification.js";
 
 import QuizAttempt from "../models/QuizAttempt.js";
-import cloudinary from "../conf/cloudinary.js";
-import { Readable } from 'stream';
+import imagekit from "../conf/imagekit.js";
 
 
 
@@ -239,30 +238,6 @@ export const updateClass = async (req, res) => {
   }
 };
 
-// Helper for stream upload
-const streamUpload = (buffer) => {
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      {
-        folder: "profile_pictures",
-        transformation: [
-          { width: 300, height: 300, crop: "fill", gravity: "face" },
-          { fetch_format: "auto", quality: "auto" }
-        ],
-        resource_type: "image"
-      },
-      (error, result) => {
-        if (result) {
-          resolve(result);
-        } else {
-          reject(error);
-        }
-      }
-    );
-    Readable.from(buffer).pipe(stream);
-  });
-};
-
 // Upload profile picture
 export const uploadProfilePicture = async (req, res) => {
   try {
@@ -275,30 +250,29 @@ export const uploadProfilePicture = async (req, res) => {
       });
     }
 
-    // Get the old profile picture to delete
-    const user = await User.findById(userId);
-    const oldPictureUrl = user?.profilePicture;
+    // Upload to ImageKit
+    const result = await imagekit.upload({
+      file: req.file.buffer, // ImageKit supports buffer directly
+      fileName: `profile-${userId}`,
+      folder: '/profile_pictures',
+      useUniqueFileName: false, // We want to overwrite if possible or keep consistent naming
+      overwriteFile: true, // Try to overwrite existing file
+    });
 
-    // Delete old profile picture if exists in Cloudinary
-    if (oldPictureUrl && oldPictureUrl.includes('cloudinary')) {
-      try {
-        // Extract public_id: profile_pictures/filename (without extension)
-        const regex = /profile_pictures\/([^/]+)\./;
-        const match = oldPictureUrl.match(regex);
-        if (match) {
-          const publicId = `profile_pictures/${match[1]}`;
-          await cloudinary.uploader.destroy(publicId);
-        }
-      } catch (err) {
-        console.error("Error deleting old image from Cloudinary:", err);
-      }
-    }
-
-    const result = await streamUpload(req.file.buffer);
+    // Construct transformed URL
+    const transformedUrl = imagekit.url({
+      src: result.url,
+      transformation: [{
+        height: "300",
+        width: "300",
+        focus: "face", // Face center crop
+        crop: "maintain_ratio"
+      }]
+    });
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { profilePicture: result.secure_url },
+      { profilePicture: transformedUrl },
       { new: true }
     ).select('name email profilePicture');
 
@@ -323,7 +297,12 @@ export const uploadProfilePicture = async (req, res) => {
 export const removeProfilePicture = async (req, res) => {
   try {
     const userId = req.user.id;
-    const user = await User.findById(userId);
+
+    // For ImageKit, we just remove the reference. 
+    // Since we use consistent file naming (profile-userId), 
+    // subsequent uploads will overwrite this anyway.
+
+    const user = await User.findByIdAndUpdate(userId, { profilePicture: null });
 
     if (!user) {
       return res.status(404).json({
@@ -331,23 +310,6 @@ export const removeProfilePicture = async (req, res) => {
         message: "User not found"
       });
     }
-
-    // Delete from Cloudinary if exists
-    if (user.profilePicture && user.profilePicture.includes('cloudinary')) {
-      try {
-        const regex = /profile_pictures\/([^/]+)\./;
-        const match = user.profilePicture.match(regex);
-        if (match) {
-          const publicId = `profile_pictures/${match[1]}`;
-          await cloudinary.uploader.destroy(publicId);
-        }
-      } catch (err) {
-        console.error("Error deleting image from Cloudinary:", err);
-      }
-    }
-
-    // Update user to remove profile picture
-    await User.findByIdAndUpdate(userId, { profilePicture: null });
 
     res.json({
       success: true,

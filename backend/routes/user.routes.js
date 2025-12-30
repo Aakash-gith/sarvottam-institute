@@ -25,7 +25,7 @@ router.put("/update-class", userController.updateClass);
 
 // Profile picture routes
 router.get("/profile-picture", userController.getProfilePicture);
-router.post("/upload-profile-pic", upload.single("profilePicture"), userController.uploadProfilePicture);
+router.post("/upload-profile-picture", upload.single("profilePicture"), userController.uploadProfilePicture);
 router.delete("/remove-profile-picture", userController.removeProfilePicture);
 
 // Notification Routes

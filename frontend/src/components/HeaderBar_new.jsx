@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
+import defaultUser from "../assets/default-user.png";
 
 function HeaderBar() {
     const dispatch = useDispatch();
@@ -92,21 +93,12 @@ function HeaderBar() {
                         <p className="text-white text-sm font-medium">{userData?.name?.split(" ")[0]}</p>
                         <p className="text-white/50 text-xs">Class {userData?.class === 9 ? "IX" : "X"}</p>
                     </div>
-                    {profilePicture ? (
-                        <img
-                            src={getProfilePictureUrl()}
-                            alt="Profile"
-                            className="w-10 h-10 rounded-full border-2 border-red-500 cursor-pointer hover:border-red-400 transition"
-                            onClick={() => navigate("/profile")}
-                        />
-                    ) : (
-                        <button
-                            onClick={() => navigate("/profile")}
-                            className="w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 transition flex items-center justify-center text-white"
-                        >
-                            <User size={20} />
-                        </button>
-                    )}
+                    <img
+                        src={getProfilePictureUrl() || defaultUser}
+                        alt="Profile"
+                        className="w-10 h-10 rounded-full border-2 border-red-500 cursor-pointer object-cover hover:border-red-400 transition"
+                        onClick={() => navigate("/profile")}
+                    />
                 </div>
 
                 {/* Logout */}

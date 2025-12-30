@@ -41,6 +41,7 @@ import {
   myCourses,
   courseLearning,
   liveClassHost,
+  notifications,
 } from "./Routes/Routes";
 
 import conf from "./conf/conf";
@@ -59,6 +60,7 @@ const ImportantQuestions = React.lazy(() => import("./pages/ImportantQuestions")
 const NcertSolutions = React.lazy(() => import("./pages/NcertSolutions"));
 const NcertExemplar = React.lazy(() => import("./pages/NcertExemplar"));
 const Books = React.lazy(() => import("./pages/Books"));
+const Notifications = React.lazy(() => import("./pages/Notifications"));
 const AdminLogin = React.lazy(() => import("./pages/Admin/AdminLogin"));
 const AdminSignup = React.lazy(() => import("./pages/Admin/AdminSignup"));
 const AdminRequestStatus = React.lazy(() => import("./pages/Admin/AdminRequestStatus"));
@@ -141,6 +143,7 @@ function App() {
           <Route path={quizResults} element={<ProtectedRoute><QuizResults /></ProtectedRoute>} />
           <Route path={quizHistory} element={<ProtectedRoute><QuizHistory /></ProtectedRoute>} />
           <Route path={profile} element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path={notifications} element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
           <Route path={importantQuestions} element={<ProtectedRoute><ImportantQuestions /></ProtectedRoute>} />
           <Route path={ncertSolutions} element={<ProtectedRoute><NcertSolutions /></ProtectedRoute>} />
           <Route path={ncertExemplar} element={<ProtectedRoute><NcertExemplar /></ProtectedRoute>} />

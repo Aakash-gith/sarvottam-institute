@@ -7,6 +7,7 @@ import {
 import API from '../../api/axios';
 import EmojiPicker from 'emoji-picker-react';
 import toast from 'react-hot-toast';
+import defaultUser from '../../../assets/default-user.png';
 
 const AdminChat = () => {
     // State
@@ -132,6 +133,17 @@ const AdminChat = () => {
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
+    const getUserAvatarUrl = (user) => {
+        if (!user.profilePicture) return null;
+        if (user.profilePicture.startsWith('http')) return user.profilePicture;
+        const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000';
+        return `${baseUrl}${user.profilePicture}`;
+    };
+
+    const getAvatarInitials = (name) => {
+        return name?.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || '??';
+    }
+
     const handleStartChat = (user) => {
         const existingChat = chats.find(c => c.id === user._id);
         if (existingChat) {
@@ -140,7 +152,8 @@ const AdminChat = () => {
             const newChat = {
                 id: user._id,
                 name: user.name,
-                avatar: user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase(),
+                avatar: getAvatarInitials(user.name),
+                profilePicture: user.profilePicture, // Include profilePicture
                 lastMessage: "Start a conversation",
                 time: "Now",
                 unread: 0,
@@ -151,6 +164,27 @@ const AdminChat = () => {
             setActiveChat(newChat);
         }
         setSearchQuery("");
+    };
+
+    // Helper for rendering avatar
+    const renderAvatar = (chatOrUser, size = "w-12 h-12", textSize = "text-sm", isOnlineIndicator = true) => {
+        const avatarUrl = getUserAvatarUrl(chatOrUser);
+        const imageUrl = avatarUrl || defaultUser;
+
+        return (
+            <div className="relative flex-shrink-0">
+                <img
+                    src={imageUrl}
+                    alt={chatOrUser.name}
+                    className={`${size} rounded-full object-cover shadow-sm border border-gray-100`}
+                />
+
+                {isOnlineIndicator && (
+                    <div className={`absolute bottom-0 right-0 w-[25%] h-[25%] rounded-full border-2 border-white ${chatOrUser.status === 'online' ? 'bg-green-500' : 'bg-yellow-500'
+                        }`}></div>
+                )}
+            </div>
+        );
     };
 
     const handleSendMessage = async () => {
@@ -311,8 +345,8 @@ const AdminChat = () => {
                                     onClick={() => handleStartChat(user)}
                                     className="flex items-center gap-3 p-3 h-[72px] min-h-[72px] flex-shrink-0 cursor-pointer rounded-xl hover:bg-gray-50 transition-all duration-200"
                                 >
-                                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-xs text-blue-600">
-                                        {user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-xs text-blue-600 overflow-hidden">
+                                        <img src={getUserAvatarUrl(user) || defaultUser} alt={user.name} className="w-full h-full object-cover" />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <h3 className="text-sm font-semibold text-gray-900 truncate">{user.name}</h3>
@@ -340,13 +374,8 @@ const AdminChat = () => {
                                         : 'hover:bg-gray-50'
                                         }`}
                                 >
-                                    <div className="relative flex-shrink-0">
-                                        <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm shadow-sm ${activeChat?.id === chat.id ? 'bg-[#6264A7] text-white' : 'bg-white border border-gray-100 text-[#6264A7]'
-                                            }`}>
-                                            {chat.avatar}
-                                        </div>
-                                        <div className={`absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white ${chat.status === 'online' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                                    </div>
+                                    {renderAvatar(chat, "w-12 h-12", "text-sm", true)}
+
                                     <div className="flex-1 min-w-0">
                                         <div className="flex justify-between items-baseline mb-0.5">
                                             <h3 className={`text-sm font-semibold truncate ${activeChat?.id === chat.id ? 'text-[#6264A7]' : 'text-gray-900'}`}>{chat.name}</h3>
@@ -382,12 +411,9 @@ const AdminChat = () => {
                                         <ChevronLeft size={24} />
                                     </button>
                                 )}
-                                <div className="relative flex-shrink-0">
-                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6264A7] to-[#464775] flex items-center justify-center text-white font-bold shadow-md">
-                                        {activeChat.avatar}
-                                    </div>
-                                    <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${activeChat.status === 'online' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                                </div>
+
+                                {renderAvatar(activeChat, "w-10 h-10", "text-xs lg:text-sm shadow-md", true)}
+
                                 <div className="min-w-0">
                                     <h2 className="text-sm lg:text-lg font-bold text-gray-900 leading-tight truncate">{activeChat.name}</h2>
                                     <p className={`text-[10px] lg:text-xs font-medium ${activeChat.status === 'online' ? 'text-green-600' : 'text-yellow-600'}`}>
@@ -451,8 +477,12 @@ const AdminChat = () => {
                                 <div key={msg.id} className={`flex group ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`flex gap-2 max-w-[85%] lg:max-w-[70%] ${msg.sender === 'me' ? 'flex-row-reverse' : 'flex-row'}`}>
                                         {msg.sender !== 'me' && (
-                                            <div className="w-8 h-8 rounded-full bg-gray-100 flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-gray-600 self-end mb-1">
-                                                {activeChat.avatar}
+                                            <div className="flex-shrink-0 self-end mb-1">
+                                                <img
+                                                    src={getUserAvatarUrl(activeChat) || defaultUser}
+                                                    alt={activeChat.name}
+                                                    className="w-8 h-8 rounded-full object-cover bg-gray-100"
+                                                />
                                             </div>
                                         )}
                                         <div className={`flex flex-col ${msg.sender === 'me' ? 'items-end' : 'items-start'}`}>

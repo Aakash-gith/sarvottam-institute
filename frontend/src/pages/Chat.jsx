@@ -10,6 +10,7 @@ import {
 import API from '../api/axios';
 import EmojiPicker from 'emoji-picker-react';
 import toast from 'react-hot-toast';
+import defaultUser from '../assets/default-user.png';
 
 const Chat = () => {
     const navigate = useNavigate();
@@ -142,6 +143,13 @@ const Chat = () => {
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
+    const getUserAvatarUrl = (user) => {
+        if (!user.profilePicture) return null;
+        if (user.profilePicture.startsWith('http')) return user.profilePicture;
+        const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000';
+        return `${baseUrl}${user.profilePicture}`;
+    };
+
     const handleStartChat = (user) => {
         const existingChat = chats.find(c => c.id === user._id);
         if (existingChat) {
@@ -151,6 +159,7 @@ const Chat = () => {
                 id: user._id,
                 name: user.name,
                 avatar: user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase(),
+                profilePicture: user.profilePicture, // Include profilePicture
                 lastMessage: "Start a conversation",
                 time: "Now",
                 unread: 0,
@@ -163,206 +172,29 @@ const Chat = () => {
         setSearchQuery("");
     };
 
-    const handleSendMessage = async () => {
-        if ((!messageInput.trim() && !selectedFile) || !activeChat) return;
+    // ... (rest of functions)
 
-        if (activeChat.isBlocked) {
-            toast.error("User is blocked");
-            return;
-        }
+    // Helper for rendering avatar
+    const renderAvatar = (chatOrUser, size = "w-12 h-12", textSize = "text-sm", isOnlineIndicator = true) => {
+        const avatarUrl = getUserAvatarUrl(chatOrUser);
+        const imageUrl = avatarUrl || defaultUser;
 
-        const tempId = Date.now();
-        const contentVal = messageInput;
-        const optimisticMessage = {
-            id: tempId,
-            text: contentVal,
-            sender: "me",
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            file: selectedFile,
-            status: 'sent'
-        };
+        return (
+            <div className="relative flex-shrink-0">
+                <img
+                    src={imageUrl}
+                    alt={chatOrUser.name}
+                    className={`${size} rounded-full object-cover shadow-sm border border-gray-100`}
+                />
 
-        setMessages(prev => [...prev, optimisticMessage]);
-        setMessageInput("");
-        setSelectedFile(null);
-        setShowEmojiPicker(false);
-
-        try {
-            const response = await API.post('/message/send', {
-                receiverId: activeChat.id,
-                content: contentVal,
-                file: optimisticMessage.file
-            });
-
-            if (response.data.success) {
-                const savedMsg = response.data.data;
-                setMessages(prev => prev.map(msg => msg.id === tempId ? {
-                    ...msg,
-                    id: savedMsg._id,
-                    status: savedMsg.status
-                } : msg));
-            }
-        } catch (error) {
-            console.error("Failed to send message", error);
-            const errorMsg = error.response?.data?.message || "Failed to send message";
-            toast.error(errorMsg);
-            setMessages(prev => prev.filter(msg => msg.id !== tempId));
-        }
+                {isOnlineIndicator && (
+                    <div className={`absolute bottom-0 right-0 w-[25%] h-[25%] rounded-full border-2 border-white ${chatOrUser.status === 'online' ? 'bg-green-500' :
+                        chatOrUser.status === 'busy' ? 'bg-red-500' : 'bg-yellow-500'
+                        }`}></div>
+                )}
+            </div>
+        );
     };
-
-    const handleClearChat = async () => {
-        try {
-            await API.delete(`/message/clear/${activeChat.id}`);
-            setMessages([]);
-            toast.success("Chat cleared");
-            setShowChatMenu(false);
-        } catch (error) {
-            toast.error("Failed to clear chat");
-        }
-    };
-
-    const handleDeleteChat = async () => {
-        try {
-            await API.delete(`/message/delete/${activeChat.id}`);
-            setChats(prev => prev.filter(c => c.id !== activeChat.id));
-            setActiveChat(null);
-            toast.success("Chat deleted");
-            setShowChatMenu(false);
-        } catch (error) {
-            toast.error("Failed to delete chat");
-        }
-    };
-
-    const handleBlockUser = async () => {
-        try {
-            await API.post('/message/block', { userId: activeChat.id });
-            setActiveChat(prev => ({ ...prev, isBlocked: true }));
-            setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, isBlocked: true } : c));
-            toast.success("User blocked");
-            setShowChatMenu(false);
-        } catch (error) {
-            toast.error("Failed to block user");
-        }
-    };
-
-    const handleUnblockUser = async () => {
-        try {
-            await API.post('/message/unblock', { userId: activeChat.id });
-            setActiveChat(prev => ({ ...prev, isBlocked: false }));
-            setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, isBlocked: false } : c));
-            toast.success("User unblocked");
-            setShowChatMenu(false);
-        } catch (error) {
-            toast.error("Failed to unblock user");
-        }
-    };
-
-    const handleTogglePin = async () => {
-        try {
-            await API.post('/message/pin', { userId: activeChat.id });
-            const isPinned = !activeChat.isPinned;
-            setActiveChat(prev => ({ ...prev, isPinned }));
-            setChats(prev => {
-                const updated = prev.map(c => c.id === activeChat.id ? { ...c, isPinned } : c);
-                // Simple sort: Pinned first
-                return updated.sort((a, b) => {
-                    if (a.isPinned && !b.isPinned) return -1;
-                    if (!a.isPinned && b.isPinned) return 1;
-                    return 0; // Keep existing order for rest
-                });
-            });
-            toast.success(isPinned ? "Chat pinned" : "Chat unpinned");
-            setShowChatMenu(false);
-        } catch (error) {
-            toast.error("Failed to update pin status");
-        }
-    };
-
-    const handleToggleMute = async () => {
-        try {
-            await API.post('/message/mute', { userId: activeChat.id });
-            const isMuted = !activeChat.isMuted;
-            setActiveChat(prev => ({ ...prev, isMuted }));
-            setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, isMuted } : c));
-            toast.success(isMuted ? "Chat muted" : "Chat unmuted");
-            setShowChatMenu(false);
-        } catch (error) {
-            toast.error("Failed to update mute status");
-        }
-    };
-
-    const handleToggleUnread = async () => {
-        try {
-            await API.post('/message/toggle-unread', { userId: activeChat.id });
-            const isMarkedUnread = !activeChat.isMarkedUnread;
-            setActiveChat(prev => ({ ...prev, isMarkedUnread, unread: isMarkedUnread ? 1 : 0 }));
-            setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, isMarkedUnread, unread: isMarkedUnread ? 1 : 0 } : c));
-
-            if (isMarkedUnread) {
-                toast.success("Marked as unread");
-                setActiveChat(null);
-            } else {
-                toast.success("Marked as read");
-            }
-            setShowChatMenu(false);
-        } catch (error) {
-            toast.error("Failed to update status");
-        }
-    };
-
-    const handleCompose = () => {
-        setActiveChat(null);
-        setSearchQuery("");
-        setTimeout(() => {
-            const searchInput = document.querySelector('input[placeholder="Search people..."]');
-            if (searchInput) searchInput.focus();
-        }, 100);
-    };
-    const emojiPickerRef = useRef(null);
-
-    // Close emoji picker when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
-                setShowEmojiPicker(false);
-            }
-        };
-
-        if (showEmojiPicker) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [showEmojiPicker]);
-
-    const onEmojiClick = (emojiObject) => {
-        setMessageInput(prev => prev + emojiObject.emoji);
-    };
-
-    const handleFileSelect = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                toast.error("File size must be less than 5MB");
-                return;
-            }
-            setSelectedFile({
-                name: file.name,
-                type: file.type.startsWith('image/') ? 'image' : 'file',
-                url: URL.createObjectURL(file)
-            });
-        }
-    };
-
-    const triggerFileUpload = () => {
-        fileInputRef.current?.click();
-    };
-
-    const getAvatarInitials = (name) => {
-        return name?.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || '??';
-    }
 
     return (
         <div className="flex h-screen bg-slate-50 dark:bg-slate-950 font-poppins">
@@ -421,8 +253,8 @@ const Chat = () => {
                                             onClick={() => handleStartChat(user)}
                                             className="flex items-center gap-3 p-3 cursor-pointer rounded-xl hover:bg-gray-50 transition-all duration-200"
                                         >
-                                            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-xs text-blue-600">
-                                                {getAvatarInitials(user.name)}
+                                            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-xs text-blue-600 overflow-hidden">
+                                                <img src={getUserAvatarUrl(user) || defaultUser} alt={user.name} className="w-full h-full object-cover" />
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <h3 className="text-sm font-semibold text-gray-900 truncate">{user.name}</h3>
@@ -456,15 +288,8 @@ const Chat = () => {
                                                 : 'hover:bg-gray-50'
                                                 }`}
                                         >
-                                            <div className="relative flex-shrink-0">
-                                                <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm shadow-sm ${activeChat?.id === chat.id ? 'bg-[#6264A7] text-white' : 'bg-white border border-gray-100 text-[#6264A7]'
-                                                    }`}>
-                                                    {chat.avatar}
-                                                </div>
-                                                <div className={`absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white ${chat.status === 'online' ? 'bg-green-500' :
-                                                    chat.status === 'busy' ? 'bg-red-500' : 'bg-yellow-500'
-                                                    }`}></div>
-                                            </div>
+                                            {renderAvatar(chat, "w-12 h-12", "text-sm", true)}
+
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex justify-between items-baseline mb-1">
                                                     <h3 className={`text-sm font-semibold truncate ${activeChat?.id === chat.id ? 'text-[#6264A7]' : 'text-gray-900'}`}>{chat.name}</h3>
@@ -508,14 +333,8 @@ const Chat = () => {
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
                                         </button>
 
-                                        <div className="relative">
-                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6264A7] to-[#464775] flex items-center justify-center text-white font-bold shadow-md">
-                                                {activeChat.avatar}
-                                            </div>
-                                            <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${activeChat.status === 'online' ? 'bg-green-500' :
-                                                activeChat.status === 'busy' ? 'bg-red-500' : 'bg-yellow-500'
-                                                }`}></div>
-                                        </div>
+                                        {renderAvatar(activeChat, "w-10 h-10", "text-xs", true)}
+
                                         <div>
                                             <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                                                 {activeChat.name}
@@ -602,8 +421,12 @@ const Chat = () => {
                                         <div key={msg.id} className={`flex group ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}>
                                             <div className={`flex gap-2 max-w-[85%] md:max-w-[70%] ${msg.sender === 'me' ? 'flex-row-reverse' : 'flex-row'}`}>
                                                 {msg.sender !== 'me' && (
-                                                    <div className="w-8 h-8 rounded-full bg-gray-100 flex-shrink-0 flex items-center justify-center text-xs font-bold text-gray-600 self-end mb-1">
-                                                        {activeChat.avatar}
+                                                    <div className="flex-shrink-0 self-end mb-1">
+                                                        <img
+                                                            src={getUserAvatarUrl(activeChat) || defaultUser}
+                                                            alt={activeChat.name}
+                                                            className="w-8 h-8 rounded-full object-cover bg-gray-100"
+                                                        />
                                                     </div>
                                                 )}
                                                 <div className={`flex flex-col ${msg.sender === 'me' ? 'items-end' : 'items-start'}`}>

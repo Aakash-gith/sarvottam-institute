@@ -31,6 +31,7 @@ import { logout } from "../store/authSlice";
 import API from "../api/axios";
 import "./Sidebar.css";
 import logo from "../assets/logo.png";
+import defaultUser from "../assets/default-user.png";
 
 const Sidebar = () => {
     const navigate = useNavigate();
@@ -428,9 +429,9 @@ const Sidebar = () => {
                     {/* Bottom Actions */}
                     <div className="bottom-actions">
                         {/* User Profile Picture (Mini) */}
-                        {isLoggedIn && profilePicture && (
+                        {isLoggedIn && (
                             <img
-                                src={getProfilePictureUrl()}
+                                src={getProfilePictureUrl() || defaultUser}
                                 alt="Profile"
                                 className="user-avatar-mini"
                                 onClick={() => setIsProfileModalOpen(true)}

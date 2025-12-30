@@ -51,6 +51,7 @@ import AdminCourses from "../../components/admin/AdminCourses";
 import ClockWidget from "../../components/clock-01";
 import ThemeToggle from "../../components/ThemeToggle";
 import logo from "../../assets/logo.png";
+import defaultUser from "../../assets/default-user.png";
 import "../../components/Sidebar.css"; // Import shared Sidebar styles
 
 function AdminDashboard() {
@@ -328,25 +329,15 @@ function AdminDashboard() {
 
                     <div className="bottom-actions">
                         {/* User Profile Picture (Mini) */}
-                        {adminInfo?.userId?.profilePicture ? (
-                            <img
-                                src={getProfilePictureUrl()}
-                                alt="Profile"
-                                className="user-avatar-mini"
-                                onClick={() => setIsProfileModalOpen(true)}
-                                onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
-                                title="View Profile Picture"
-                                style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', cursor: 'pointer', border: '2px solid var(--primary, #0fb4b3)' }}
-                            />
-                        ) : (
-                            <div
-                                className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg cursor-pointer"
-                                onClick={() => { setActiveTab('profile'); if (isMobile) setIsMobileOpen(false); }}
-                                onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
-                            >
-                                {adminInfo?.userId?.name?.charAt(0).toUpperCase() || "A"}
-                            </div>
-                        )}
+                        <img
+                            src={getProfilePictureUrl() || defaultUser}
+                            alt="Profile"
+                            className="user-avatar-mini"
+                            onClick={() => setIsProfileModalOpen(true)}
+                            onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
+                            title="View Profile Picture"
+                            style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', cursor: 'pointer', border: '2px solid var(--primary, #0fb4b3)' }}
+                        />
 
 
                         <button

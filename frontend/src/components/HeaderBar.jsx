@@ -49,6 +49,7 @@ function HeaderBar() {
 
   const getProfilePictureUrl = () => {
     if (!profilePicture) return null;
+    if (profilePicture.startsWith('http')) return profilePicture;
     const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000';
     return `${baseUrl}${profilePicture}`;
   };

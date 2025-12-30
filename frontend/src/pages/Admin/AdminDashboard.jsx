@@ -96,6 +96,7 @@ function AdminDashboard() {
 
     const getProfilePictureUrl = () => {
         if (!adminInfo?.userId?.profilePicture) return null;
+        if (adminInfo.userId.profilePicture.startsWith('http')) return adminInfo.userId.profilePicture;
         const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000';
         return `${baseUrl}${adminInfo.userId.profilePicture}`;
     };
@@ -707,6 +708,7 @@ function ProfileTab({ adminInfo, onUpdate }) {
 
     const getProfilePictureUrl = () => {
         if (!adminInfo?.userId?.profilePicture) return null;
+        if (adminInfo.userId.profilePicture.startsWith('http')) return adminInfo.userId.profilePicture;
         const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000';
         return `${baseUrl}${adminInfo.userId.profilePicture}`;
     };

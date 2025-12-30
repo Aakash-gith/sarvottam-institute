@@ -291,8 +291,17 @@ function Profile() {
 
   const getProfilePictureUrl = () => {
     if (!profilePicture) return null;
+    // If it's an external URL (e.g. ImageKit, Cloudinary), return it as is
+    if (profilePicture.startsWith('http://') || profilePicture.startsWith('https://')) {
+      return profilePicture;
+    }
+
+    // For local uploads
     const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000';
-    return `${baseUrl}${profilePicture}`;
+    const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+    const cleanPath = profilePicture.startsWith('/') ? profilePicture : `/${profilePicture}`;
+
+    return `${cleanBaseUrl}${cleanPath}`;
   };
 
   if (loading) {

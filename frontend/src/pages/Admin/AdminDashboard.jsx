@@ -34,7 +34,12 @@ import {
     Camera,
     Trash2,
     Loader2,
-    Layers
+    Layers,
+    Lock,
+    Unlock,
+    Key,
+    HelpCircle,
+    LayoutGrid
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import API from "../../api/axios";
@@ -65,23 +70,30 @@ function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
 
     // Refs for click outside
     const mobileNotifRef = React.useRef(null);
     const desktopNotifRef = React.useRef(null);
+    const profileMenuRef = React.useRef(null);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
             const isOutsideMobile = mobileNotifRef.current ? !mobileNotifRef.current.contains(event.target) : true;
             const isOutsideDesktop = desktopNotifRef.current ? !desktopNotifRef.current.contains(event.target) : true;
+            const isOutsideProfile = profileMenuRef.current ? !profileMenuRef.current.contains(event.target) : true;
 
             if (isNotificationsOpen && isOutsideMobile && isOutsideDesktop) {
                 setIsNotificationsOpen(false);
             }
+
+            if (showProfileMenu && isOutsideProfile) {
+                setShowProfileMenu(false);
+            }
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [isNotificationsOpen]);
+    }, [isNotificationsOpen, showProfileMenu]);
 
     const navigate = useNavigate();
 
@@ -276,11 +288,11 @@ function AdminDashboard() {
             )}
 
             <aside
-                className={`sidebar ${isSidebarExpanded ? 'expanded' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}
+                className={`sidebar ${isSidebarExpanded ? 'expanded' : ''} ${isMobileOpen ? 'mobile-open' : ''} ${showProfileMenu ? 'profile-menu-visible' : ''}`}
                 onMouseLeave={() => setIsSidebarExpanded(false)}
             >
                 {/* LEFT PANE (Categories) */}
-                <div className="left">
+                <div className={`left ${showProfileMenu ? 'overflow-visible-important' : ''}`}>
                     <img
                         src={logo}
                         alt="Sarvottam"
@@ -327,26 +339,71 @@ function AdminDashboard() {
 
 
 
-                    <div className="bottom-actions">
+                    <div className="bottom-actions relative" ref={profileMenuRef}>
                         {/* User Profile Picture (Mini) */}
-                        <img
-                            src={getProfilePictureUrl() || defaultUser}
-                            alt="Profile"
-                            className="user-avatar-mini"
-                            onClick={() => setIsProfileModalOpen(true)}
-                            onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
-                            title="View Profile Picture"
-                            style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', cursor: 'pointer', border: '2px solid var(--primary, #0fb4b3)' }}
-                        />
-
-
-                        <button
-                            onClick={handleLogout}
-                            onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
-                            title="Logout"
+                        <div
+                            className="relative"
+                            onClick={() => setShowProfileMenu(!showProfileMenu)}
                         >
-                            <LogOut size={22} />
-                        </button>
+                            <img
+                                src={getProfilePictureUrl() || defaultUser}
+                                alt="Profile"
+                                className={`user-avatar-mini cursor-pointer transition-transform duration-200 ${showProfileMenu ? 'scale-110 ring-2 ring-blue-500 box-content' : ''}`}
+                                onMouseEnter={() => !isMobile && setIsSidebarExpanded(true)}
+                                title="My Profile"
+                                style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--primary, #0fb4b3)' }}
+                            />
+                        </div>
+
+                        {/* Profile Dropdown Menu */}
+                        {showProfileMenu && (
+                            <div className="absolute left-[calc(100%+12px)] bottom-0 profile-dropdown-menu border border-slate-100 dark:border-slate-800 z-[100] animate-in fade-in slide-in-from-left-2 duration-200 cursor-default">
+
+                                {/* 1. Header Section */}
+                                <div className="p-3 pb-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+                                    <img
+                                        src={getProfilePictureUrl() || defaultUser}
+                                        alt="User"
+                                        className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="font-bold text-slate-800 dark:text-white truncate text-sm">{adminInfo?.userId?.name || "Admin User"}</h4>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{adminInfo?.userId?.email || "user@example.com"}</p>
+                                    </div>
+                                </div>
+
+                                {/* 2. Menu Items */}
+                                <div className="py-2 space-y-1">
+                                    <button onClick={() => { setActiveTab('profile'); setShowProfileMenu(false); }} className="profile-menu-item">
+                                        <User size={18} /> <span>Account</span>
+                                    </button>
+                                    <button className="profile-menu-item">
+                                        <LayoutGrid size={18} /> <span>Integrations</span>
+                                    </button>
+                                    <button onClick={() => { setActiveTab('profile'); setShowProfileMenu(false); }} className="profile-menu-item">
+                                        <Settings size={18} /> <span>Settings</span>
+                                    </button>
+                                    <button className="profile-menu-item">
+                                        <BookOpen size={18} /> <span>Guide</span>
+                                    </button>
+                                    <button className="profile-menu-item">
+                                        <HelpCircle size={18} /> <span>Help</span>
+                                    </button>
+                                </div>
+
+
+
+                                {/* 3. Sign Out */}
+                                <div className="border-t border-slate-100 dark:border-slate-800 pt-2 mt-1">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="profile-menu-item !text-red-500 hover:!bg-red-50 dark:hover:!bg-red-900/20"
+                                    >
+                                        <LogOut size={18} /> <span>Sign Out</span>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -458,7 +515,7 @@ function AdminDashboard() {
                         <div className={`animate__animated animate__fadeInUp animate__faster ${activeTab === 'chat' ? 'flex-1 flex flex-col min-h-0' : ''}`}>
                             {activeTab === "dashboard" && <OverviewTab adminInfo={adminInfo} stats={stats} setActiveTab={setActiveTab} />}
                             {activeTab === "profile" && <ProfileTab adminInfo={adminInfo} onUpdate={fetchAdminInfo} />}
-                            {activeTab === "students" && <StudentsTab isMobile={isMobile} />}
+                            {activeTab === "students" && <StudentsTab isMobile={isMobile} adminInfo={adminInfo} />}
                             {activeTab === "book-upload" && <NotesUpload />}
                             {activeTab === "pyq-upload" && <PYQUpload />}
                             {activeTab === "notifications" && <NotificationsManager />}
@@ -869,7 +926,7 @@ function ProfileTab({ adminInfo, onUpdate }) {
     );
 }
 
-function StudentsTab({ isMobile }) {
+function StudentsTab({ isMobile, adminInfo }) {
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
@@ -880,9 +937,55 @@ function StudentsTab({ isMobile }) {
     const [userAnalytics, setUserAnalytics] = useState(null);
     const [analyticsLoading, setAnalyticsLoading] = useState(false);
 
+    // Master Admin Actions State
+    const [actionLoading, setActionLoading] = useState(false);
+    const [confirmModal, setConfirmModal] = useState({ open: false, type: null, user: null });
+
+
     useEffect(() => {
         fetchStudents();
     }, []);
+
+    const handleLockToggle = async () => {
+        if (!confirmModal.user) return;
+        try {
+            setActionLoading(true);
+            const newLockedStatus = !confirmModal.user.isLocked;
+            const response = await API.put(`/admin/users/${confirmModal.user._id}/lock`, {
+                locked: newLockedStatus,
+                reason: "Administrative Action"
+            });
+            if (response.data.success) {
+                toast.success(`User ${newLockedStatus ? 'Locked' : 'Unlocked'} Successfully`);
+                setStudents(prev => prev.map(s => s._id === confirmModal.user._id ? { ...s, isLocked: newLockedStatus } : s));
+            }
+        } catch (error) {
+            console.error("Lock error", error);
+            toast.error("Failed to update lock status");
+        } finally {
+            setActionLoading(false);
+            setConfirmModal({ open: false, type: null, user: null });
+        }
+    };
+
+    const handlePasswordReset = async () => {
+        if (!confirmModal.user) return;
+        try {
+            setActionLoading(true);
+            const response = await API.put(`/admin/users/${confirmModal.user._id}/reset-password`, {
+                type: 'temp'
+            });
+            if (response.data.success) {
+                toast.success("Temporary password sent to user's email");
+            }
+        } catch (error) {
+            console.error("Reset error", error);
+            toast.error("Failed to reset password");
+        } finally {
+            setActionLoading(false);
+            setConfirmModal({ open: false, type: null, user: null });
+        }
+    };
 
     const fetchStudents = async () => {
         try {
@@ -1023,40 +1126,75 @@ function StudentsTab({ isMobile }) {
                     {filteredStudents.map((student) => (
                         <div
                             key={student._id}
-                            onClick={() => window.open(`/admin/users/${student._id}/analytics`, '_blank')}
-                            className="bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-3 lg:p-6 flex flex-col items-center text-center transition-all hover:shadow-lg hover:-translate-y-1 group cursor-pointer relative overflow-hidden"
+                            className={`bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-2xl shadow-sm border p-3 lg:p-6 flex flex-col items-center text-center transition-all hover:shadow-lg hover:-translate-y-1 group relative overflow-hidden ${student.isLocked ? 'border-red-400 bg-red-50/10' : 'border-slate-100 dark:border-slate-800'}`}
                         >
-                            {student.profilePicture ? (
-                                <img
-                                    src={`${(import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api").replace('/api', '')}${student.profilePicture}`}
-                                    alt={student.name}
-                                    className="w-12 h-12 lg:w-20 lg:h-20 rounded-full object-cover mb-2 lg:mb-4 shadow-md group-hover:scale-110 transition-transform bg-slate-100"
-                                />
-                            ) : (
-                                <div className={`w-12 h-12 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br ${selectedClass === '10' ? "from-purple-100 to-pink-100 text-purple-600" : "from-blue-100 to-cyan-100 text-blue-600"} flex items-center justify-center text-lg lg:text-2xl font-bold mb-2 lg:mb-4 shadow-inner group-hover:scale-110 transition-transform`}>
-                                    {student.name.charAt(0).toUpperCase()}
+                            {/* Locked Indicator */}
+                            {student.isLocked && (
+                                <div className="absolute top-2 right-2 flex items-center gap-1 bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-[10px] font-bold z-10">
+                                    <Lock size={12} /> LOCKED
                                 </div>
                             )}
-                            <h3 className="text-sm lg:text-lg font-bold text-slate-800 dark:text-white mb-0.5 lg:mb-1 line-clamp-1">{student.name}</h3>
-                            <p className="text-[10px] lg:text-sm text-slate-500 dark:text-slate-400 mb-2 lg:mb-3 line-clamp-1">{student.email}</p>
 
-                            <div className="w-full grid grid-cols-2 gap-1 lg:gap-2 text-[10px] lg:text-sm mb-2 lg:mb-4">
-                                <div className="bg-slate-50 dark:bg-slate-800 p-1 lg:p-2 rounded-lg">
-                                    <span className="block text-slate-400 text-[8px] lg:text-xs">Class</span>
-                                    <span className="font-semibold text-slate-700 dark:text-slate-300">{student.class}th</span>
+                            {/* Master Admin Controls (Top Left) */}
+                            {adminInfo?.role === 'master_admin' && (
+                                <div className="absolute top-2 left-2 flex flex-col gap-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setConfirmModal({ open: true, type: 'lock', user: student });
+                                        }}
+                                        className={`p-1.5 rounded-full shadow-sm text-white transition-colors ${student.isLocked ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-red-500 hover:bg-red-600'}`}
+                                        title={student.isLocked ? "Unlock Account" : "Lock Account"}
+                                    >
+                                        {student.isLocked ? <Unlock size={14} /> : <Lock size={14} />}
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setConfirmModal({ open: true, type: 'reset', user: student });
+                                        }}
+                                        className="p-1.5 rounded-full bg-amber-500 hover:bg-amber-600 text-white shadow-sm transition-colors"
+                                        title="Reset Password"
+                                    >
+                                        <Key size={14} />
+                                    </button>
                                 </div>
-                                <div className="bg-amber-50 dark:bg-amber-900/20 p-1 lg:p-2 rounded-lg">
-                                    <span className="block text-amber-500/80 text-[8px] lg:text-xs">Streak</span>
-                                    <span className="font-semibold text-amber-600 dark:text-amber-500">🔥 {student.streak || 0}</span>
-                                </div>
-                            </div>
+                            )}
 
-                            <div className="w-full pt-2 lg:pt-3 border-t border-slate-50 dark:border-slate-800 mt-auto">
-                                <span className="text-[10px] lg:text-xs font-semibold text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 group-hover:text-blue-600">
-                                    <Activity size={isMobile ? 12 : 14} /> Analytics
-                                </span>
+                            <div className="cursor-pointer w-full flex flex-col items-center" onClick={() => window.open(`/admin/users/${student._id}/analytics`, '_blank')}>
+                                {student.profilePicture ? (
+                                    <img
+                                        src={`${(import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api").replace('/api', '')}${student.profilePicture}`}
+                                        alt={student.name}
+                                        className={`w-12 h-12 lg:w-20 lg:h-20 rounded-full object-cover mb-2 lg:mb-4 shadow-md group-hover:scale-110 transition-transform bg-slate-100 ${student.isLocked ? 'grayscale' : ''}`}
+                                    />
+                                ) : (
+                                    <div className={`w-12 h-12 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br ${selectedClass === '10' ? "from-purple-100 to-pink-100 text-purple-600" : "from-blue-100 to-cyan-100 text-blue-600"} flex items-center justify-center text-lg lg:text-2xl font-bold mb-2 lg:mb-4 shadow-inner group-hover:scale-110 transition-transform ${student.isLocked ? 'grayscale' : ''}`}>
+                                        {student.name.charAt(0).toUpperCase()}
+                                    </div>
+                                )}
+                                <h3 className="text-sm lg:text-lg font-bold text-slate-800 dark:text-white mb-0.5 lg:mb-1 line-clamp-1">{student.name}</h3>
+                                <p className="text-[10px] lg:text-sm text-slate-500 dark:text-slate-400 mb-2 lg:mb-3 line-clamp-1">{student.email}</p>
+
+                                <div className="w-full grid grid-cols-2 gap-1 lg:gap-2 text-[10px] lg:text-sm mb-2 lg:mb-4">
+                                    <div className="bg-slate-50 dark:bg-slate-800 p-1 lg:p-2 rounded-lg">
+                                        <span className="block text-slate-400 text-[8px] lg:text-xs">Class</span>
+                                        <span className="font-semibold text-slate-700 dark:text-slate-300">{student.class}th</span>
+                                    </div>
+                                    <div className="bg-amber-50 dark:bg-amber-900/20 p-1 lg:p-2 rounded-lg">
+                                        <span className="block text-amber-500/80 text-[8px] lg:text-xs">Streak</span>
+                                        <span className="font-semibold text-amber-600 dark:text-amber-500">🔥 {student.streak || 0}</span>
+                                    </div>
+                                </div>
+
+                                <div className="w-full pt-2 lg:pt-3 border-t border-slate-50 dark:border-slate-800 mt-auto">
+                                    <span className="text-[10px] lg:text-xs font-semibold text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 group-hover:text-blue-600">
+                                        <Activity size={isMobile ? 12 : 14} /> Analytics
+                                    </span>
+                                </div>
                             </div>
                         </div>
+
                     ))}
                 </div>
             )}
@@ -1148,12 +1286,60 @@ function StudentsTab({ isMobile }) {
                                 </div>
                             </div>
                         )}
+
+                        {/* Confirmation Modal */}
+                        {confirmModal.open && (
+                            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[150] p-4">
+                                <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-sm w-full p-6 animate__animated animate__zoomIn animate__faster">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className={`p-3 rounded-full ${confirmModal.type === 'lock' ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-600'}`}>
+                                            {confirmModal.type === 'lock' && (confirmModal.user?.isLocked ? <Unlock size={24} /> : <Lock size={24} />)}
+                                            {confirmModal.type === 'reset' && <Key size={24} />}
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-bold text-slate-800 dark:text-white">
+                                                {confirmModal.type === 'lock'
+                                                    ? (confirmModal.user?.isLocked ? "Unlock Account?" : "Lock Account?")
+                                                    : "Reset Password?"
+                                                }
+                                            </h3>
+                                            <p className="text-sm text-slate-500">Action for: <b>{confirmModal.user?.name}</b></p>
+                                        </div>
+                                    </div>
+
+                                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-6 bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700">
+                                        {confirmModal.type === 'lock'
+                                            ? `Are you sure you want to ${confirmModal.user?.isLocked ? 'unlock' : 'lock'} this account? ${!confirmModal.user?.isLocked ? 'The user will be prevented from logging in.' : ''}`
+                                            : "Are you sure you want to reset this user's password? A temporary password will be sent to their email."
+                                        }
+                                    </p>
+
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={() => setConfirmModal({ open: false, type: null, user: null })}
+                                            className="flex-1 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-200 transition-colors"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={confirmModal.type === 'lock' ? handleLockToggle : handlePasswordReset}
+                                            disabled={actionLoading}
+                                            className={`flex-1 py-2 rounded-xl text-white font-semibold transition-colors flex items-center justify-center gap-2 ${confirmModal.type === 'lock' ? 'bg-red-600 hover:bg-red-700' : 'bg-amber-500 hover:bg-amber-600'}`}
+                                        >
+                                            {actionLoading ? <Loader2 size={18} className="animate-spin" /> : "Confirm"}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
         </div>
-    )
+    );
 }
+
+
 
 // Sub-component for individual quiz attempt
 const QuizAttemptCard = ({ attempt }) => {
@@ -1215,8 +1401,6 @@ function PermissionItem({ name, allowed }) {
         </div>
     );
 }
-
-// Compact Clock Widget for Header
 
 
 export default AdminDashboard;

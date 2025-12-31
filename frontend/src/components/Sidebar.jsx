@@ -23,7 +23,9 @@ import {
     MonitorPlay,
     Menu,
     X,
-    Layers
+    Layers,
+    LayoutGrid,
+    HelpCircle
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -60,20 +62,27 @@ const Sidebar = () => {
     // Refs for click outside
     const mobileNotifRef = React.useRef(null);
     const desktopNotifRef = React.useRef(null);
+    const profileMenuRef = React.useRef(null);
+
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
             const isOutsideMobile = mobileNotifRef.current ? !mobileNotifRef.current.contains(event.target) : true;
             const isOutsideDesktop = desktopNotifRef.current ? !desktopNotifRef.current.contains(event.target) : true;
+            const isOutsideProfile = profileMenuRef.current ? !profileMenuRef.current.contains(event.target) : true;
 
             if (isNotificationsOpen && isOutsideMobile && isOutsideDesktop) {
                 setIsNotificationsOpen(false);
+            }
+            if (showProfileMenu && isOutsideProfile) {
+                setShowProfileMenu(false);
             }
         };
 
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [isNotificationsOpen]);
+    }, [isNotificationsOpen, showProfileMenu]);
 
     // Chat Notification Logic
     const [chatStates, setChatStates] = useState({}); // { [chatId]: unreadCount }
@@ -370,11 +379,11 @@ const Sidebar = () => {
             )}
 
             <aside
-                className={`sidebar ${isExpanded ? 'expanded' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}
+                className={`sidebar ${isExpanded ? 'expanded' : ''} ${isMobileOpen ? 'mobile-open' : ''} ${showProfileMenu ? 'profile-menu-visible' : ''}`}
                 onMouseLeave={handleMouseLeave}
             >
                 {/* --- LEFT PANE (Categories) --- */}
-                <div className="left">
+                <div className={`left ${showProfileMenu ? 'overflow-visible-important' : ''}`}>
                     {/* Institute Logo */}
                     <img
                         src={logo}
@@ -412,17 +421,77 @@ const Sidebar = () => {
                     </button>
 
                     {/* Bottom Actions */}
-                    <div className="bottom-actions">
-                        {/* User Profile Picture (Mini) */}
+                    <div className="bottom-actions relative" ref={profileMenuRef}>
+                        {/* User Profile Picture (Mini) with Dropdown */}
                         {isLoggedIn && (
-                            <img
-                                src={getProfilePictureUrl() || defaultUser}
-                                alt="Profile"
-                                className="user-avatar-mini"
-                                onClick={() => setIsProfileModalOpen(true)}
-                                onMouseEnter={handleMouseEnter}
-                                title="View Profile Picture"
-                            />
+                            <div className="relative">
+                                <img
+                                    src={getProfilePictureUrl() || defaultUser}
+                                    alt="Profile"
+                                    className={`user-avatar-mini cursor-pointer transition-transform duration-200 ${showProfileMenu ? 'scale-110 ring-2 ring-blue-500 box-content' : ''}`}
+                                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                                    // Removed modal open on click, now toggles menu
+                                    onMouseEnter={handleMouseEnter}
+                                    title="My Profile"
+                                    style={{
+                                        width: '36px',
+                                        height: '36px',
+                                        borderRadius: '50%',
+                                        objectFit: 'cover',
+                                        border: '2px solid var(--primary, #0fb4b3)'
+                                    }}
+                                />
+
+                                {/* Profile Dropdown Menu */}
+                                {showProfileMenu && (
+                                    <div className="absolute left-[calc(100%+12px)] bottom-0 profile-dropdown-menu border border-slate-100 dark:border-slate-800 z-[100] animate-in fade-in slide-in-from-left-2 duration-200 cursor-default">
+
+                                        {/* 1. Header Section */}
+                                        <div className="p-3 pb-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+                                            <img
+                                                src={getProfilePictureUrl() || defaultUser}
+                                                alt="User"
+                                                className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                                            />
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="font-bold text-slate-800 dark:text-white truncate text-sm">{userData?.name || "Student"}</h4>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{userData?.email || ""}</p>
+                                            </div>
+                                        </div>
+
+                                        {/* 2. Menu Items */}
+                                        <div className="py-2 space-y-1">
+                                            <button onClick={() => { navigate('/profile'); setShowProfileMenu(false); }} className="profile-menu-item">
+                                                <User size={18} /> <span>Account</span>
+                                            </button>
+                                            <button className="profile-menu-item">
+                                                <LayoutGrid size={18} /> <span>Integrations</span>
+                                            </button>
+                                            <button onClick={() => { navigate('/profile?view=settings'); setShowProfileMenu(false); }} className="profile-menu-item">
+                                                <Settings size={18} /> <span>Settings</span>
+                                            </button>
+                                            <button className="profile-menu-item">
+                                                <BookOpen size={18} /> <span>Guide</span>
+                                            </button>
+                                            <button className="profile-menu-item">
+                                                <HelpCircle size={18} /> <span>Help</span>
+                                            </button>
+                                        </div>
+
+
+
+                                        {/* 3. Sign Out */}
+                                        <div className="border-t border-slate-100 dark:border-slate-800 pt-2 mt-1">
+                                            <button
+                                                onClick={handleLogout}
+                                                className="profile-menu-item !text-red-500 hover:!bg-red-50 dark:hover:!bg-red-900/20"
+                                            >
+                                                <LogOut size={18} /> <span>Sign Out</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         )}
 
                         <div ref={desktopNotifRef} className="relative">
@@ -476,20 +545,7 @@ const Sidebar = () => {
                             )}
                         </div>
 
-                        <button
-                            onClick={() => { navigate('/profile?view=settings'); if (isMobile) setIsMobileOpen(false); }}
-                            onMouseEnter={handleMouseEnter}
-                            title="Settings"
-                        >
-                            <Settings size={22} />
-                        </button>
-                        <button
-                            onClick={isLoggedIn ? handleLogout : () => navigate('/auth/login')}
-                            onMouseEnter={handleMouseEnter}
-                            title={isLoggedIn ? "Logout" : "Login"}
-                        >
-                            {isLoggedIn ? <LogOut size={22} /> : <User size={22} />}
-                        </button>
+
                     </div>
                 </div>
 

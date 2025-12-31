@@ -8,7 +8,7 @@ import Progress from "../models/Progress.js";
 import SubjectNotes from "../models/SubjectNotes.js";
 import Quiz from "../models/Quiz.js"; // Ensure Quiz model is registered
 import axios from "axios";
-import { sendOtp, verifyMojoAuthToken } from "./helperFunctions.js";
+import { sendOtp, verifyMojoAuthToken, sendEmail } from "./helperFunctions.js";
 import redis from "../conf/redis.js";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
@@ -18,12 +18,6 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// EmailJS Config
-const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
-const EMAILJS_PRIVATE_KEY = process.env.EMAILJS_PRIVATE_KEY;
 
 const otpEmailTemplate = (otp) => `
 <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
@@ -36,80 +30,6 @@ const otpEmailTemplate = (otp) => `
 
 const MASTER_ADMIN_EMAIL = "arsir.personal@gmail.com";
 
-// Send email notification (keeping the original helper for admin requests)
-// Send email helper (Via EmailJS)
-const sendEmail = async (to, subject, html) => {
-    try {
-        const data = {
-            service_id: EMAILJS_SERVICE_ID,
-            template_id: EMAILJS_TEMPLATE_ID,
-            user_id: EMAILJS_PUBLIC_KEY,
-            accessToken: EMAILJS_PRIVATE_KEY,
-            template_params: {
-                to_email: to,
-                otp: html, // NOTE: Assuming we create a generic template that takes 'otp' or 'message_html'. 
-                // However, EmailJS templates are static. We need to pass the "message" or "otp".
-                // Since the user has 'template_m8444qj' which is likely an OTP template, we should verify usage.
-                // For 'AdminRequest', we are sending complex HTML. EmailJS free tier might struggle with custom HTML if the template expects 'otp'.
-                // Strategy: Pass the entire HTML as a variable if the template allows, OR just rely on 'otp' var if that's what we have.
-                // Current template `template_m8444qj` is likely just for OTP.
-                // But for 'Subject' support, we need a flexible template.
-                // Assuming 'template_m8444qj' has {{otp}} and {{to_email}}.
-                // If we send admin notifications, we might need a different template or hack it.
-                // Let's assume 'otp' variable can hold the message content for now.
-                otp: html.replace(/<[^>]*>?/gm, ''), // Stripping HTML for safety if template is text-only, or sending raw if it supports HTML.
-                // Wait, if the template is an OTP template, it will say "Your verification code is..."
-                // Sending "Admin access approved" inside that will look weird.
-                // Ideally, user needs a second "Generic" template.
-                // But let's try to map 'otp' to the main content.
-                // BETTER: Send raw text message for admin notifications if complex HTML isn't supported.
-                app_name: "Sarvottam Institute"
-            }
-        };
-
-        // If we are just sending OTP (most cases), 'html' is the OTP or contains it.
-        // Let's look at how sendEmail is called.
-        // 1. Admin Request: html is complex HTML.
-        // 2. Approve Admin: html is complex HTML. 
-        // 3. Login OTP: html IS the OTP template string (which is just the OTP code wrapped in divs).
-
-        // CRITICAL FIX: The current 'otpEmailTemplate' implementation in THIS file returns HTML string with OTP.
-        // EmailJS template expects {{otp}}.
-        // We should pass just the content.
-
-        // Logic: specific handling.
-        // If subject includes "OTP", treat 'html' as containing the OTP code or just extract it?
-        // Actually, 'helperFunctions.js' passes just the OTP code to 'template_params.otp'.
-        // Here, 'sendEmail' receives (to, subject, html).
-        // WE CANNOT EASILY SUPPORT GENERIC EMAILS with a single OTP template.
-        // We will do our best by passing the subject as 'app_name' (maybe?) and the content as 'otp'.
-
-        // RE-READING helperFunctions.js:
-        // const sendOtpEmail = async (email, otp) => { ... template_params: { otp: otp } ... }
-
-        // In admin.controller.js calls:
-        // await sendEmail(email, "Subject", otpEmailTemplate(otp)); -> This passes HTML string.
-
-        // We need to change the CALLERS to pass just the OTP if it's an OTP email.
-        // But 'sendEmail' is also used for "Admin Request" notifications which are NOT OTPs.
-
-        // PROBLEM: We have ONE template ID `template_m8444qj` which is designed for OTPs.
-        // Sending generic admin notifications through it will look like "Your OTP is: <div>...</div>".
-        // It's ugly but functional for now.
-
-        // Let's just send the raw text/html into the 'otp' field and hope the template renders it.
-        // Many EmailJS templates use {{{otp}}} for unescaped HTML. If it uses {{otp}}, it will escape it.
-
-        console.log(`[EmailJS] Sending email to ${to}...`);
-        const response = await axios.post('https://api.emailjs.com/api/v1.0/email/send', data, {
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        console.log("[EmailJS] Success:", response.data);
-    } catch (error) {
-        console.error("Email send failed:", error.response?.data || error.message);
-    }
-};
 
 // Admin signup request
 export const requestAdminAccess = async (req, res) => {
@@ -476,6 +396,16 @@ export const adminLoginNew = async (req, res) => {
         // Check if user has admin access
         const adminUser = await AdminUser.findOne({ email, isActive: true }).populate("userId");
 
+        if (adminUser && adminUser.userId && adminUser.userId.isLocked) {
+            return res.status(403).json({
+                success: false,
+                message: "Account is locked",
+                data: {
+                    reason: adminUser.userId.lockReason || "Contact administrator"
+                }
+            });
+        }
+
         if (!adminUser) {
             // Check if there's a pending request
             const pendingRequest = await AdminRequest.findOne({
@@ -834,7 +764,7 @@ export const verifyOTPAndResetPassword = async (req, res) => {
 // Get All Users (for Admin Analytics)
 export const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find({}, "name email class streak lastLoginDate");
+        const users = await User.find({}, "name email class streak lastLoginDate isLocked lockReason");
         res.json({
             success: true,
             data: users,
@@ -1037,7 +967,7 @@ export const getDashboardStats = async (req, res) => {
 export const getAllAdmins = async (req, res) => {
     try {
         console.log("getAllAdmins called by:", req.user?.userId);
-        const admins = await AdminUser.find().populate("userId", "name email profilePicture");
+        const admins = await AdminUser.find().populate("userId", "name email profilePicture isLocked");
         res.json({
             success: true,
             data: admins
@@ -1124,3 +1054,91 @@ export const sendNotification = async (req, res) => {
     }
 };
 
+
+// Lock/Unlock User Account
+export const lockUser = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { locked, reason } = req.body;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        user.isLocked = locked;
+        user.lockReason = locked ? reason : null;
+        await user.save();
+
+        // Audit Log (console for now, ideally DB)
+        console.log(`[AUDIT] User ${user.email} was ${locked ? 'LOCKED' : 'UNLOCKED'} by Admin ${req.user.id}. Reason: ${reason}`);
+
+        res.json({
+            success: true,
+            message: `User account ${locked ? 'locked' : 'unlocked'} successfully`,
+            data: {
+                userId: user._id,
+                isLocked: user.isLocked
+            }
+        });
+    } catch (error) {
+        console.error("Lock User Error:", error);
+        res.status(500).json({ success: false, message: "Error updating lock status" });
+    }
+};
+
+// Reset User Password (Master Admin)
+export const resetUserPassword = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { type } = req.body; // 'temp' or 'link'
+
+        // Verify Master Admin permissions (Middleware should handle this, but double check)
+        // Note: adminMiddleware verifies role. Assuming route is protected.
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        if (type === 'temp') {
+            // Generate temporary password
+            const tempPassword = Math.random().toString(36).slice(-8);
+            const hashedPassword = await bcryptjs.hash(tempPassword, 10);
+
+            user.password = hashedPassword;
+            await user.save();
+
+            // Send email
+            await sendEmail(
+                user.email,
+                "Password Reset by Admin",
+                `
+                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2>Password Reset</h2>
+                    <p>Your password has been reset by the administrator.</p>
+                    <p>Your new temporary password is:</p>
+                    <h3 style="background: #f4f4f5; padding: 10px; display: inline-block; font-family: monospace;">${tempPassword}</h3>
+                    <p>Please login and change your password immediately.</p>
+                </div>
+                `
+            );
+
+            console.log(`[AUDIT] Password reset for ${user.email} by Admin ${req.user.id}`);
+
+            res.json({
+                success: true,
+                message: "Temporary password sent to user email"
+            });
+        } else {
+            // Link logic (re-use forgot password flow or send manual link)
+            // For now, leveraging existing sendOtp logic for reset
+            // BUT, this is an admin action. Let's just stick to temp password as primary request.
+            return res.status(400).json({ success: false, message: "Link reset not implemented yet, use 'temp'" });
+        }
+
+    } catch (error) {
+        console.error("Reset User Password Error:", error);
+        res.status(500).json({ success: false, message: "Error resetting password" });
+    }
+};

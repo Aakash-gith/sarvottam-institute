@@ -46,6 +46,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null, // Stores Cloudinary secure URL
     },
+    isLocked: {
+      type: Boolean,
+      default: false,
+    },
+    lockReason: {
+      type: String,
+      default: null,
+    },
+
     blockedUsers: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

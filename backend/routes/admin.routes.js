@@ -18,6 +18,8 @@ import {
     updateAdminPermissions, // Added
     toggleAdminAccess, // Added
     sendNotification, // Added
+    lockUser, // Added
+    resetUserPassword, // Added
 } from "../controllers/admin.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
 import { adminMiddleware, masterAdminMiddleware } from "../middleware/admin.middleware.js";
@@ -49,6 +51,10 @@ router.put("/reject/:requestId", authMiddleware, masterAdminMiddleware, rejectAd
 // User Analytics Routes (Admin only)
 router.get("/users", authMiddleware, adminMiddleware, getAllUsers);
 router.get("/users/:userId/analytics", authMiddleware, adminMiddleware, getUserAnalytics);
+
+// User Management (Master Admin Only)
+router.put("/users/:userId/lock", authMiddleware, masterAdminMiddleware, lockUser);
+router.put("/users/:userId/reset-password", authMiddleware, masterAdminMiddleware, resetUserPassword);
 
 // Admin Management Routes
 router.get("/list", authMiddleware, adminMiddleware, getAllAdmins);

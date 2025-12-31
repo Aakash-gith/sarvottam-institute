@@ -5,15 +5,11 @@ import User from "../models/Users.js";
 import mojoAuth from "../conf/mojoauth.js";
 import axios from "axios";
 import otpGenerator from "otp-generator";
+import nodemailer from "nodemailer"; // Added Nodemailer
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
 
-// EmailJS Config
-const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
-const EMAILJS_PRIVATE_KEY = process.env.EMAILJS_PRIVATE_KEY;
 
 // Generate Tokens
 export const generateTokens = (user) => {
@@ -72,38 +68,50 @@ export const refreshToken = async (req, res) => {
 };
 
 
-// EMAIL (Via EmailJS REST API)
-const sendOtpEmail = async (email, otp) => {
+// GENERIC EMAIL FUNCTION (NODEMAILER)
+export const sendEmail = async (to, subject, html) => {
   try {
-    const data = {
-      service_id: EMAILJS_SERVICE_ID,
-      template_id: EMAILJS_TEMPLATE_ID,
-      user_id: EMAILJS_PUBLIC_KEY,
-      accessToken: EMAILJS_PRIVATE_KEY,
-      template_params: {
-        to_email: email,
-        otp: String(otp), // Force string
-        app_name: "Sarvottam Institute"
-      }
-    };
+    const user = process.env.GMAIL_USER;
+    const pass = process.env.GMAIL_PASS;
 
-    console.log(`[EmailJS] Sending OTP ${otp} to ${email}...`);
+    if (!user || !pass) {
+      console.warn("[Nodemailer] Missing GMAIL_USER or GMAIL_PASS. Emails will not send.");
+      throw new Error("Missing Gmail Credentials in .env");
+    }
 
-    // EmailJS REST API endpoint
-    const response = await axios.post('https://api.emailjs.com/api/v1.0/email/send', data, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user, pass }
     });
 
-    console.log("[EmailJS] Success:", response.data);
-    return true;
+    const info = await transporter.sendMail({
+      from: `"Sarvottam Institute" <${user}>`,
+      to,
+      subject,
+      html
+    });
 
+    console.log(`[Nodemailer] Email sent to ${to}: ${info.messageId}`);
+    return true;
   } catch (error) {
-    console.error("[EmailJS] FAILED:", error.response?.data || error.message);
-    throw new Error(`EmailJS Failed: ${JSON.stringify(error.response?.data || error.message)}`);
+    console.error("[Nodemailer] Failed:", error.message);
+    throw error;
   }
 };
+
+// Internal Helper for OTP (uses the generic function)
+const sendOtpEmail = async (email, otp) => {
+  const html = `
+    <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+      <h2 style="color: #2563eb;">Sarvottam Institute</h2>
+      <p>Your Verification Code:</p>
+      <h1 style="letter-spacing: 5px; font-size: 32px; color: #000;">${otp}</h1>
+      <p>This code will expire in 5 minutes.</p>
+    </div>
+  `;
+  return await sendEmail(email, "Your Verification Code", html);
+};
+
 
 // USER HELPERS
 export const checkUserExists = async (email) => {

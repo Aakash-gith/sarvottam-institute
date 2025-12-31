@@ -40,7 +40,16 @@ export const login = async (req, res) => {
     const user = await checkUserExists(email);
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    // Check if account is locked
+    if (user.isLocked) {
+      return res.status(403).json({
+        message: "Account is locked",
+        reason: user.lockReason || "Contact administrator for support"
+      });
+    }
+
     const valid = await bcrypt.compare(password, user.password);
+
     if (!valid) return res.status(401).json({ message: "Invalid credentials" });
 
     // Calculate streak based on daily login

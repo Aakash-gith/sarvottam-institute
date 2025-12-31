@@ -7,7 +7,7 @@ import {
 import API from '../../api/axios';
 import EmojiPicker from 'emoji-picker-react';
 import toast from 'react-hot-toast';
-import defaultUser from '../../../assets/default-user.png';
+import defaultUser from '../../assets/default-user.png';
 
 const AdminChat = () => {
     // State

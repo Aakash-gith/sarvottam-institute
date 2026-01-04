@@ -163,44 +163,41 @@ html {
 }
 
 .dark {
-  /* DARK MODE: Provided Image Specs (Deep Navy + Teal) */
-  --background: #020617;
-  /* Deep Navy (Main Page) */
+  /* DARK MODE: Global Color System (#141E30 Primary, #3F5E96 Secondary) */
+  --background: #141E30;
+  /* Primary Dark Background */
   --foreground: #ffffff;
-  /* Primary Headings (White) */
-  --card: #1e293b;
-  /* Card Surface (Slate-800) */
+  /* Primary Text */
+  --card: #1c2b4a;
+  /* Card Surface (Slightly lighter than background) */
   --card-foreground: #ffffff;
-  --popover: #1e293b;
+  --popover: #1c2b4a;
   --popover-foreground: #ffffff;
-  --primary: #0891b2;
-  /* Brand Teal (Primary Buttons/Links) */
+  --primary: #3F5E96;
+  /* Secondary Surfaces & Highlights */
   --primary-foreground: #ffffff;
-  --secondary: #0f172a;
-  /* Navy Surface (Slate-900) */
-  --secondary-foreground: #9ca3af;
-  --muted: #0f172a;
-  --muted-foreground: #9ca3af;
-  /* Body Text (Gray-400) */
-  --accent: #f59e0b;
-  /* Accent Gold */
-  --accent-foreground: #020617;
+  --secondary: #16243d;
+  /* Deeper Surface */
+  --secondary-foreground: #94a3b8;
+  --muted: #16243d;
+  --muted-foreground: #94a3b8;
+  /* Body Text (Slate-400) */
+  --accent: #3F5E96;
+  /* Brand Highlight */
+  --accent-foreground: #ffffff;
   --destructive: #ef4444;
-  --border: #334155;
-  /* Border Line (Slate-700) */
-  --input: #334155;
-  --ring: #0891b2;
-  /* Brand Teal */
+  --border: #2d4a7a;
+  /* Muted Borders */
+  --input: #2d4a7a;
+  --ring: #3F5E96;
 
-  --sidebar: #020617;
+  --sidebar: #141E30;
   --sidebar-foreground: #ffffff;
-  --sidebar-bg: #020617;
+  --sidebar-bg: #1c2b4a;
 
-  --bg-banner-gradient: linear-gradient(to right, #0f172a, #1e3a8a);
-  /* Slate 900 to Brand Dark */
-
-  --bg-gradient-dark: #020617;
-  /* Solid Deep Navy Background */
+  --bg-banner-gradient: linear-gradient(135deg, #141E30 0%, #3F5E96 100%);
+  --bg-gradient-dark: #141E30;
+  /* Solid Primary Dark */
 }
 
 @layer base {
@@ -220,51 +217,83 @@ html {
   }
 
   /* Lightweight dark-mode rescue styles for utility-first markup */
-  .dark .bg-white {
+  .dark .bg-white,
+  .dark .bg-gray-50,
+  .dark .bg-slate-50,
+  .dark .bg-blue-50,
+  .dark .bg-indigo-50,
+  .dark .bg-purple-50,
+  .dark .bg-emerald-50,
+  .dark .bg-amber-50,
+  .dark .bg-red-50 {
     background-color: var(--card) !important;
   }
 
-  .dark .text-gray-900 {
+  .dark .bg-white\/10,
+  .dark .bg-blue-50\/50,
+  .dark .bg-slate-900\/50 {
+    background-color: rgba(63, 94, 150, 0.1) !important;
+  }
+
+  .dark .text-gray-900,
+  .dark .text-slate-900 {
     color: var(--foreground) !important;
   }
 
-  .dark .text-gray-800 {
+  .dark .text-gray-800,
+  .dark .text-slate-800 {
     color: var(--foreground) !important;
   }
 
   .dark .text-gray-700,
-  .dark .text-gray-600 {
+  .dark .text-gray-600,
+  .dark .text-slate-600,
+  .dark .text-slate-500 {
     color: var(--muted-foreground) !important;
   }
 
   .dark .border-gray-200,
-  .dark .border-gray-100 {
+  .dark .border-gray-100,
+  .dark .border-slate-200,
+  .dark .border-slate-100 {
     border-color: var(--border) !important;
   }
+
+  /* Smooth transition for theme switching */
+  * {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
 }
+
 /* Custom Loader */
 .loader {
-    width: 120px;
-    height: 22px;
-    border-radius: 20px;
-    color: #514b82;
-    border: 2px solid;
-    position: relative;
+  width: 120px;
+  height: 22px;
+  border-radius: 20px;
+  color: #514b82;
+  border: 2px solid;
+  position: relative;
 }
+
 .loader::before {
-    content: "";
-    position: absolute;
-    margin: 2px;
-    inset: 0 100% 0 0;
-    border-radius: inherit;
-    background: currentColor;
-    animation: l6 2s infinite;
+  content: "";
+  position: absolute;
+  margin: 2px;
+  inset: 0 100% 0 0;
+  border-radius: inherit;
+  background: currentColor;
+  animation: l6 2s infinite;
 }
+
 @keyframes l6 {
-    100% {inset:0}
+  100% {
+    inset: 0
+  }
 }
 
 .dark .loader {
-    color: #4f46e5;
-    border-color: #4f46e5;
+  color: #4f46e5;
+  border-color: #4f46e5;
 }

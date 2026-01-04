@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { LogOut, User, Bell, Clock, Flame } from "lucide-react";
+import { LogOut, User, Bell, Clock, Flame, Info } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import defaultUser from "../assets/default-user.png";
+import { toast } from "react-hot-toast";
 
 function HeaderBar() {
     const dispatch = useDispatch();
@@ -41,10 +42,66 @@ function HeaderBar() {
     };
 
     const handleLogout = () => {
-        dispatch(logout());
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("user");
-        navigate("/auth/login", { replace: true });
+        toast((t) => (
+            <div className="flex flex-col gap-3 p-1">
+                <div className="flex items-center gap-2 text-amber-600">
+                    <Info size={20} />
+                    <span className="font-bold">Sign Out?</span>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Are you sure you want to sign out?</p>
+                <div className="flex gap-2 mt-2">
+                    <button
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            await performLogout();
+                        }}
+                        className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg text-xs font-bold hover:bg-red-600 transition-colors"
+                    >
+                        Yes, Sign Out
+                    </button>
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="flex-1 px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-bold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: 5000,
+            position: 'top-center',
+            style: {
+                background: 'white',
+                border: '1px solid #e2e8f0',
+                borderRadius: '16px',
+                padding: '12px',
+                boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)'
+            }
+        });
+    };
+
+    const performLogout = async () => {
+        const loadingToast = toast.loading("Signing out...");
+        try {
+            const id = userData?._id;
+            const token = localStorage.getItem("refreshToken");
+
+            if (id && token) {
+                await API.post("/auth/logout", { id, token });
+            }
+
+            dispatch(logout());
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("user");
+            navigate("/auth/login", { replace: true });
+            toast.success("Logged out successfully", { id: loadingToast });
+        } catch (error) {
+            console.error("Logout failed:", error);
+            dispatch(logout());
+            localStorage.clear();
+            navigate("/auth/login", { replace: true });
+            toast.dismiss(loadingToast);
+        }
     };
 
     return (

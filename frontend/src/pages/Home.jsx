@@ -22,7 +22,7 @@ function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-background dark:to-background">
+    <div className="flex flex-col min-h-screen bg-background transition-colors duration-300">
       <Helmet>
         <title>Home | Sarvottam Institute</title>
         <meta name="description" content="Sarvottam Institute - Excellence in Education for Grades 9 & 10" />
@@ -68,22 +68,22 @@ function Home() {
             </div>
 
             {/* Explore Subjects Section */}
-            <div className="bg-white dark:bg-card rounded-xl shadow-sm border border-gray-200 dark:border-border p-12 text-center mb-12">
+            <div className="bg-card rounded-xl shadow-sm border border-border p-12 text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">Explore Subjects</h2>
               <p className="text-gray-600 dark:text-muted-foreground mb-8">
                 Focused learning resources for Mathematics and Science for grades 9 and 10
               </p>
               <div className="inline-block bg-blue-50 dark:bg-slate-900/50 rounded-lg p-8 w-full max-w-2xl">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col items-center p-6 bg-white dark:bg-card rounded-lg border border-blue-200 dark:border-slate-700">
+                  <div className="flex flex-col items-center p-6 bg-card rounded-lg border border-border">
                     <div className="text-4xl mb-3">🔢</div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Mathematics</h3>
-                    <p className="text-gray-600 dark:text-slate-400 text-sm mt-2">Algebra, Geometry, Statistics and more</p>
+                    <h3 className="text-lg font-semibold text-foreground">Mathematics</h3>
+                    <p className="text-muted-foreground text-sm mt-2">Algebra, Geometry, Statistics and more</p>
                   </div>
-                  <div className="flex flex-col items-center p-6 bg-white dark:bg-card rounded-lg border border-blue-200 dark:border-slate-700">
+                  <div className="flex flex-col items-center p-6 bg-card rounded-lg border border-border">
                     <div className="text-4xl mb-3">🧪</div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Science</h3>
-                    <p className="text-gray-600 dark:text-slate-400 text-sm mt-2">Physics, Chemistry, Biology and more</p>
+                    <h3 className="text-lg font-semibold text-foreground">Science</h3>
+                    <p className="text-muted-foreground text-sm mt-2">Physics, Chemistry, Biology and more</p>
                   </div>
                 </div>
               </div>

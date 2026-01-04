@@ -23,6 +23,16 @@ router.put("/update-semester", userController.updateSemester);
 // Update user class
 router.put("/update-class", userController.updateClass);
 
+// Update user theme
+router.put("/update-theme", userController.updateTheme);
+
+// Change password
+router.put("/change-password", userController.changePassword);
+
+// Update settings
+router.put("/update-settings", userController.updateSettings);
+
+
 // Profile picture routes
 router.get("/profile-picture", userController.getProfilePicture);
 router.post("/upload-profile-picture", upload.single("profilePicture"), userController.uploadProfilePicture);

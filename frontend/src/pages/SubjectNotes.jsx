@@ -6,7 +6,7 @@ import Sidebar from "../components/Sidebar";
 
 function SubjectNotes() {
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-background">
       <Sidebar />
 
       {/* Main Content Area */}

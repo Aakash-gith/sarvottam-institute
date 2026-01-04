@@ -281,15 +281,15 @@ function SingleNotes() {
   const displayPercentage = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
 
 
-  if (!subject) return <div className="p-8 text-center bg-gray-50 min-h-screen">Subject not found</div>;
+  if (!subject) return <div className="p-8 text-center bg-background min-h-screen">Subject not found</div>;
   if (loading) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-3 md:p-6 animate-in fade-in duration-500">
+    <div className="min-h-screen bg-background p-3 md:p-6 animate-in fade-in duration-500">
       <div className="max-w-6xl mx-auto">
         <div className="mb-4 md:mb-8">
           <button onClick={handleBack} className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-4 group pl-12 md:pl-0">
@@ -298,7 +298,7 @@ function SingleNotes() {
             <span className="sm:hidden">Back</span>
           </button>
 
-          <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-200">
+          <div className="bg-card rounded-xl p-4 md:p-6 shadow-sm border border-border">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className={`w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br ${getSubjectGradient()} flex items-center justify-center text-2xl md:text-3xl shadow-md shrink-0`}>
@@ -365,9 +365,9 @@ function SingleNotes() {
               return (
                 <div key={idx}
                   onClick={() => pdfUrl && handleViewPdf(pdfUrl, note.title, noteId)}
-                  className={`bg-white rounded-xl p-4 border transition-all hover:shadow-md cursor-pointer group 
+                  className={`bg-card rounded-xl p-4 border transition-all hover:shadow-md cursor-pointer group 
                         ${isDone ? "border-green-300 bg-green-50/40" :
-                      isInProgress ? "border-blue-300 bg-blue-50/40" : "border-gray-200 hover:border-blue-400"}`}>
+                      isInProgress ? "border-blue-300 bg-blue-50/40" : "border-border hover:border-primary"}`}>
 
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
                     <div className="flex items-center gap-3 md:gap-4 flex-1">

@@ -20,11 +20,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const otpEmailTemplate = (otp) => `
-<div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-  <h2 style="color: #2563eb;">Sarvottam Institute</h2>
-  <p>Your Verification Code:</p>
-  <h1 style="letter-spacing: 5px; font-size: 32px; color: #000;">${otp}</h1>
-  <p>This code will expire in 5 minutes.</p>
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+  <div style="background-color: #2563eb; padding: 24px; text-align: center;">
+    <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Sarvottam Institute</h1>
+  </div>
+  <div style="padding: 32px; background-color: #ffffff;">
+    <p style="color: #4b5563; font-size: 16px; margin-bottom: 24px;">Hello,</p>
+    <p style="color: #4b5563; font-size: 16px; margin-bottom: 8px;">Your verification code is:</p>
+    <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; text-align: center; margin-bottom: 24px;">
+      <h2 style="letter-spacing: 8px; font-size: 32px; color: #111827; margin: 0;">${otp}</h2>
+    </div>
+    <p style="color: #6b7280; font-size: 14px; margin-bottom: 24px;">This code will expire in 10 minutes. For security, please do not share this code with anyone.</p>
+    <hr style="border: 0; border-top: 1px solid #e5e7eb; margin-bottom: 24px;" />
+    <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 0;">&copy; ${new Date().getFullYear()} Sarvottam Institute. All rights reserved.</p>
+  </div>
 </div>
 `;
 
@@ -510,7 +519,7 @@ export const sendLoginOTP = async (req, res) => {
             });
         }
 
-        // Send OTP via MojoAuth
+        // Send OTP via Nodemailer
         const result = await sendOtp({ email }, "admin_login");
 
         if (!result.success) {
@@ -566,7 +575,7 @@ export const verifyLoginOTP = async (req, res) => {
             });
         }
 
-        // Verify with MojoAuth
+        // Verify with Nodemailer local logic
         try {
             await verifyMojoAuthToken(otp, state_id);
         } catch (err) {
@@ -643,7 +652,7 @@ export const forgotPasswordSendOTP = async (req, res) => {
             });
         }
 
-        // Send OTP via MojoAuth
+        // Send OTP via Nodemailer
         // We use "admin_login" type to bypass the "User" collection check in sendOtp, 
         // effectively reusing the logic just for sending OTP and setting Redis state.
         const result = await sendOtp({ email }, "admin_login");
@@ -708,7 +717,7 @@ export const verifyOTPAndResetPassword = async (req, res) => {
             });
         }
 
-        // Verify with MojoAuth
+        // Verify with Nodemailer local logic
         try {
             await verifyMojoAuthToken(otp, state_id);
         } catch (err) {

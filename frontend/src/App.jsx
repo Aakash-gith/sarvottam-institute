@@ -84,19 +84,29 @@ const LiveClassHost = React.lazy(() => import("./pages/LiveClassHost"));
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Skeleton } from "./components/Skeleton"; // Use our new Skeleton component
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { setTheme } from "./store/themeSlice";
 
 function App() {
-  const theme = useSelector((state) => state.theme.mode);
+  const mode = useSelector((state) => state.theme.mode);
+  const userData = useSelector((state) => state.auth.userData);
+  const dispatch = useDispatch();
+
+  // Sync theme with user preference on mount/login
+  useEffect(() => {
+    if (userData?.theme && userData.theme !== mode) {
+      dispatch(setTheme(userData.theme));
+    }
+  }, [userData]);
 
   useEffect(() => {
-    if (theme === "dark") {
+    if (mode === "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
-  }, [theme]);
+  }, [mode]);
 
   return (
     <>
@@ -105,10 +115,10 @@ function App() {
         toastOptions={conf.toast}
       />
       <React.Suspense fallback={
-        <div className="flex items-center justify-center min-h-screen bg-white dark:bg-slate-900 transition-colors duration-300">
+        <div className="flex items-center justify-center min-h-screen bg-background transition-colors duration-300">
           <div className="flex flex-col items-center gap-6">
             <div className="loader"></div>
-            <p className="text-[#514b82] dark:text-[#5d56b0] font-bold text-lg animate-pulse tracking-wide">Loading Sarvottam...</p>
+            <p className="text-accent dark:text-primary font-bold text-lg animate-pulse tracking-wide">Loading Sarvottam...</p>
           </div>
         </div>
       }>

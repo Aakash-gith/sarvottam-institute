@@ -89,6 +89,7 @@ app.use("/api/event", authMiddleware, eventRoutes);
 app.use("/api/task", authMiddleware, taskRoutes);
 app.use("/api/quiz", authMiddleware, quizRoutes);
 app.use("/api/user", userRoutes);
+
 app.use("/api/progress", authMiddleware, progressRoutes);
 app.use("/api/subjectNotes", subjectNotesRoutes);
 app.use("/api/pyq", pyqRoutes);

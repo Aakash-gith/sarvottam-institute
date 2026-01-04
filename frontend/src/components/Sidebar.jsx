@@ -25,7 +25,8 @@ import {
     X,
     Layers,
     LayoutGrid,
-    HelpCircle
+    HelpCircle,
+    Info
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -246,10 +247,66 @@ const Sidebar = () => {
     };
 
     const handleLogout = () => {
-        dispatch(logout());
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("user");
-        navigate("/auth/login", { replace: true });
+        toast((t) => (
+            <div className="flex flex-col gap-3 p-1">
+                <div className="flex items-center gap-2 text-amber-600">
+                    <Info size={20} />
+                    <span className="font-bold">Sign Out?</span>
+                </div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Are you sure you want to sign out?</p>
+                <div className="flex gap-2 mt-2">
+                    <button
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            await performLogout();
+                        }}
+                        className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg text-xs font-bold hover:bg-red-600 transition-colors"
+                    >
+                        Yes, Sign Out
+                    </button>
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="flex-1 px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: 5000,
+            position: 'top-center',
+            style: {
+                background: 'var(--card, #fff)',
+                border: '1px solid var(--border, #e2e8f0)',
+                borderRadius: '16px',
+                padding: '12px',
+                boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)'
+            }
+        });
+    };
+
+    const performLogout = async () => {
+        const loadingToast = toast.loading("Signing out...");
+        try {
+            const id = userData?._id;
+            const token = localStorage.getItem("refreshToken");
+
+            if (id && token) {
+                await API.post("/auth/logout", { id, token });
+            }
+
+            dispatch(logout());
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("user");
+            navigate("/auth/login", { replace: true });
+            toast.success("Logged out successfully", { id: loadingToast });
+        } catch (error) {
+            console.error("Logout failed:", error);
+            dispatch(logout());
+            localStorage.clear();
+            navigate("/auth/login", { replace: true });
+            toast.dismiss(loadingToast);
+        }
     };
 
     // Define menus for the Right Panel based on Left Panel selection
@@ -464,9 +521,6 @@ const Sidebar = () => {
                                             <button onClick={() => { navigate('/profile'); setShowProfileMenu(false); }} className="profile-menu-item">
                                                 <User size={18} /> <span>Account</span>
                                             </button>
-                                            <button className="profile-menu-item">
-                                                <LayoutGrid size={18} /> <span>Integrations</span>
-                                            </button>
                                             <button onClick={() => { navigate('/profile?view=settings'); setShowProfileMenu(false); }} className="profile-menu-item">
                                                 <Settings size={18} /> <span>Settings</span>
                                             </button>
@@ -494,7 +548,8 @@ const Sidebar = () => {
                             </div>
                         )}
 
-                        <div ref={desktopNotifRef} className="relative">
+                        {/* Desktop notification bell - Hidden per request to move to dashboard */}
+                        <div ref={desktopNotifRef} className="relative hidden">
                             <button
                                 onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
                                 onMouseEnter={handleMouseEnter}

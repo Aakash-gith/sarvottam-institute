@@ -161,7 +161,7 @@ function AdminDashboard() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-slate-950">
+            <div className="flex items-center justify-center min-h-screen bg-background">
                 <div className="relative">
                     <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
                     <div className="absolute top-0 left-0 h-16 w-16 rounded-full border-t-4 border-b-4 border-purple-500 animate-spin opacity-70" style={{ animationDirection: 'reverse', animationDuration: '1s' }}></div>
@@ -228,19 +228,19 @@ function AdminDashboard() {
     };
 
     return (
-        <div className="flex h-screen bg-slate-50 dark:bg-slate-950 font-poppins selection:bg-blue-500 selection:text-white overflow-hidden">
+        <div className="flex h-screen bg-background text-foreground font-poppins selection:bg-primary selection:text-white overflow-hidden">
             {/* Mobile Hamburger Button */}
             {isMobile && !isMobileOpen && (
                 <>
                     <button
-                        className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
+                        className="fixed top-4 left-4 z-50 p-2 bg-card rounded-lg shadow-md border border-border text-foreground"
                         onClick={() => setIsMobileOpen(true)}
                     >
                         <Menu size={24} />
                     </button>
                     <div ref={mobileNotifRef} className="fixed top-4 right-4 z-50">
                         <button
-                            className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 relative"
+                            className="p-2 bg-card rounded-lg shadow-md border border-border text-foreground relative"
                             onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
                         >
                             <Bell size={24} />
@@ -716,10 +716,10 @@ function OverviewTab({ adminInfo, stats, setActiveTab }) {
 
 function MetricCard({ icon: Icon, label, value, change, color }) {
     return (
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between hover:-translate-y-1 transition-transform duration-300">
+        <div className="bg-card p-6 rounded-2xl shadow-sm border border-border flex items-center justify-between hover:-translate-y-1 transition-transform duration-300">
             <div>
-                <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">{label}</p>
-                <h4 className="text-2xl font-bold text-slate-800 dark:text-white">{value}</h4>
+                <p className="text-muted-foreground text-sm font-medium mb-1">{label}</p>
+                <h4 className="text-2xl font-bold text-foreground">{value}</h4>
                 {change && <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full mt-2 inline-block">{change}</span>}
             </div>
             <div className={`p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 ${color}`}>
@@ -733,7 +733,7 @@ function StatCard({ icon: Icon, title, description, color, delay, onClick }) {
     return (
         <div
             onClick={onClick}
-            className={`group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900/50 dark:backdrop-blur-md border border-slate-100 dark:border-slate-800 p-6 shadow-sm transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer animate__animated animate__fadeInUp ${delay}`}
+            className={`group relative overflow-hidden rounded-2xl bg-card border border-border p-6 shadow-sm transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer animate__animated animate__fadeInUp ${delay}`}
         >
             <div className={`absolute top-0 right-0 p-4 opacity-20 dark:opacity-10 group-hover:opacity-30 transition-opacity duration-500 transform group-hover:rotate-12 group-hover:scale-125`}>
                 <Icon size={80} className="text-slate-900 dark:text-white" />
@@ -741,8 +741,8 @@ function StatCard({ icon: Icon, title, description, color, delay, onClick }) {
             <div className={`w-14 h-14 ${color} rounded-2xl flex items-center justify-center text-white shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
                 <Icon size={28} />
             </div>
-            <h4 className="text-lg font-bold text-slate-800 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{title}</h4>
-            <p className="text-sm text-slate-500 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors">{description}</p>
+            <h4 className="text-lg font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{title}</h4>
+            <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{description}</p>
 
             {/* Hover Glow Effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
@@ -1108,7 +1108,7 @@ function StudentsTab({ isMobile, adminInfo }) {
                         placeholder="Search students..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-800 dark:text-white placeholder:text-slate-400"
+                        className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground placeholder:text-muted-foreground"
                     />
                 </div>
             </div>

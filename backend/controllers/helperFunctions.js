@@ -102,12 +102,21 @@ export const sendEmail = async (to, subject, html) => {
 // Internal Helper for OTP (uses the generic function)
 const sendOtpEmail = async (email, otp) => {
   const html = `
-    <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-      <h2 style="color: #2563eb;">Sarvottam Institute</h2>
-      <p>Your Verification Code:</p>
-      <h1 style="letter-spacing: 5px; font-size: 32px; color: #000;">${otp}</h1>
-      <p>This code will expire in 5 minutes.</p>
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+  <div style="background-color: #2563eb; padding: 24px; text-align: center;">
+    <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Sarvottam Institute</h1>
+  </div>
+  <div style="padding: 32px; background-color: #ffffff;">
+    <p style="color: #4b5563; font-size: 16px; margin-bottom: 24px;">Confirm your email address,</p>
+    <p style="color: #4b5563; font-size: 16px; margin-bottom: 8px;">Your verification code is:</p>
+    <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; text-align: center; margin-bottom: 24px;">
+      <h2 style="letter-spacing: 8px; font-size: 32px; color: #111827; margin: 0;">${otp}</h2>
     </div>
+    <p style="color: #6b7280; font-size: 14px; margin-bottom: 24px;">This code will expire in 10 minutes. For security, please do not share this code with anyone.</p>
+    <hr style="border: 0; border-top: 1px solid #e5e7eb; margin-bottom: 24px;" />
+    <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 0;">&copy; ${new Date().getFullYear()} Sarvottam Institute. All rights reserved.</p>
+  </div>
+</div>
   `;
   return await sendEmail(email, "Your Verification Code", html);
 };
@@ -119,7 +128,7 @@ export const checkUserExists = async (email) => {
   return user;
 };
 
-// SEND OTP (MojoAuth)
+// SEND OTP (Now exclusively using Nodemailer)
 export const sendOtp = async (user, type = "signup") => {
   try {
     const { name, email, password, class: userClass } = user;
@@ -157,54 +166,32 @@ export const sendOtp = async (user, type = "signup") => {
       await redis.set(`tempUser:${email}`, JSON.stringify(tempData), { ex: 600 }); // 10 min expiry
     }
 
-    console.log(`[MojoAuth] Sending OTP to ${email}`);
+    console.log(`[Nodemailer] Generating local OTP for ${email}`);
+    const localOtp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+      specialChars: false,
+      lowerCaseAlphabets: false
+    });
 
-    // MojoAuth: Send OTP
-    const response = await mojoAuth.mojoAPI.signinWithEmailOTP(email, {});
+    console.log(`[Nodemailer] Sending OTP to ${email}`);
+    await sendOtpEmail(email, localOtp);
 
-    // Check for error in response
-    if (!response || !response.state_id) {
-      const errorMsg = response?.description || response?.message || "MojoAuth did not return a state_id";
-      throw new Error(errorMsg);
-    }
+    // Store local state with specialized prefix to maintain compatibility with verifyMojoAuthToken
+    await redis.set(`mojoState:${email}`, `LOCAL:${localOtp}`, { ex: 300 }); // 5 min
 
-    // Store "state_id" in Redis to verify later
-    // MojoAuth response usually contains { state_id: "..." }
-    // We map email -> state_id
-    await redis.set(`mojoState:${email}`, response.state_id, { ex: 300 }); // 5 min
-
-    return { success: true, status: 200, message: "OTP sent to email" };
+    return { success: true, status: 200, message: "OTP sent to email via Nodemailer" };
   } catch (err) {
-    console.error(`[MojoAuth] Error sending OTP for ${user?.email}:`, err.message);
-
-    // Fallback: Try EmailJS directly with local OTP
-    try {
-      console.log("[MojoAuth] Falling back to local EmailJS...");
-      const localOtp = otpGenerator.generate(6, {
-        upperCaseAlphabets: false,
-        specialChars: false,
-        lowerCaseAlphabets: false
-      });
-
-      await sendOtpEmail(user.email, localOtp);
-
-      // Store local state with specialized prefix
-      await redis.set(`mojoState:${user.email}`, `LOCAL:${localOtp}`, { ex: 300 }); // 5 min
-
-      return { success: true, status: 200, message: "OTP sent via alternative method" };
-    } catch (fallbackErr) {
-      console.error("[EmailJS] Fallback failed:", fallbackErr);
-      return {
-        success: false,
-        status: 500,
-        message: `MojoAuth Limit Reached AND Fallback Failed. Mojo: ${err.message}. EmailJS: ${fallbackErr.message}`,
-        error: fallbackErr.message
-      };
-    }
+    console.error(`[Nodemailer] Error sending OTP for ${user?.email}:`, err.message);
+    return {
+      success: false,
+      status: 500,
+      message: `Failed to send OTP: ${err.message}`,
+      error: err.message
+    };
   }
 };
 
-// RESEND OTP (MojoAuth)
+// RESEND OTP (Now exclusively using Nodemailer)
 export const resendOtp = async (req, res) => {
   try {
     const { email, type } = req.body;
@@ -221,71 +208,47 @@ export const resendOtp = async (req, res) => {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    console.log(`[MojoAuth] Resending OTP to ${email}`);
-    const response = await mojoAuth.mojoAPI.signinWithEmailOTP(email, {});
+    console.log(`[Nodemailer] Resending OTP to ${email}`);
+    const localOtp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+      specialChars: false,
+      lowerCaseAlphabets: false
+    });
 
+    await sendOtpEmail(email, localOtp);
+    await redis.set(`mojoState:${email}`, `LOCAL:${localOtp}`, { ex: 300 }); // 5 min
 
-    if (response && response.state_id) {
-      await redis.set(`mojoState:${email}`, response.state_id, { ex: 300 }); // 5 min
-      return res.status(200).json({ success: true, message: "OTP sent to email" });
-    } else {
-      throw new Error("MojoAuth did not return a state_id");
-    }
-
+    return res.status(200).json({ success: true, message: "OTP sent to email via Nodemailer" });
   } catch (err) {
-    console.error("resendOtp error:", err);
+    console.error("[Nodemailer] resendOtp error:", err);
     return res.status(500).json({ success: false, message: "Failed to resend OTP", error: err.message });
   }
 };
 
 
-// Core Verification Logic (Reusable)
+// Core Verification Logic (Now only handles local OTPs)
 export const verifyMojoAuthToken = async (otp, state_id) => {
   try {
-    // Check for Local Fallback OTP
-    if (state_id && state_id.startsWith("LOCAL:")) {
-      console.log(`[MojoAuth] Verifying LOCAL OTP`);
-      const expectedOtp = state_id.split(":")[1];
-      if (String(otp) === String(expectedOtp)) {
-        return {
-          authenticated: true,
-          user: { email: "verified@local" }, // minimal mock
-          description: "Local Verification Successful"
-        };
-      } else {
-        throw new Error("Invalid OTP");
-      }
+    if (!state_id) throw new Error("Verification session expired");
+
+    // All OTPs are now local
+    let expectedOtp = state_id;
+    if (state_id.startsWith("LOCAL:")) {
+      expectedOtp = state_id.split(":")[1];
     }
 
-    console.log(`[MojoAuth] Verifying OTP for state ${state_id}`);
-    const verifyResponse = await axios.post(
-      "https://api.mojoauth.com/users/emailotp/verify",
-      { otp, state_id },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-Key": process.env.MOJOAUTH_API_KEY
-        }
-      }
-    );
-
-    const data = verifyResponse.data;
-    const isAuthenticated = data && (
-      data.authenticated === true ||
-      data.user ||
-      data.access_token ||
-      data.oauth_token ||
-      data.refresh_token
-    );
-
-    if (!isAuthenticated) {
-      throw new Error("Verification failed: Valid authentication tokens missing in response");
+    console.log(`[Nodemailer] Verifying local OTP`);
+    if (String(otp) === String(expectedOtp)) {
+      return {
+        authenticated: true,
+        user: { email: "verified@local" },
+        description: "Verification Successful"
+      };
+    } else {
+      throw new Error("Invalid OTP code. Please check your email.");
     }
-
-    return data;
   } catch (error) {
-    const msg = error.response?.data?.description || error.message;
-    throw new Error(msg);
+    throw new Error(error.message);
   }
 };
 

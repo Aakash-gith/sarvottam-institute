@@ -68,10 +68,12 @@
 }
 
 .dark {
-    --sidebar-bg: #0f172a;
-    --sidebar-left-bg: #1e293b;
-    --sidebar-foreground: #f8fafc;
-    --border-color: #334155;
+    --sidebar-bg: #1c2b4a;
+    --sidebar-left-bg: #141E30;
+    --sidebar-foreground: #ffffff;
+    --border: #2d4a7a;
+    --sidebar-item-bg: #0f172a;
+    --sidebar-icon-bg: #1e293b;
 }
 
 /* Logo / User Avatar in Left */
@@ -86,7 +88,7 @@
     /* Circular */
     cursor: pointer;
     transition: transform 0.2s;
-    background: white;
+    background: transparent;
     /* Ensure transparency doesn't look weird if logo is png */
     padding: 2px;
     /* Optional padding */
@@ -143,15 +145,16 @@
     display: flex !important;
     flex-direction: column !important;
     gap: 4px !important;
-    background: white;
+    background: var(--card, white);
     border-radius: 16px;
     padding: 8px !important;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border);
 }
 
 .dark .profile-dropdown-menu {
-    background: #0f172a;
-    border-color: #334155;
+    background: var(--sidebar-bg);
+    border-color: var(--border);
 }
 
 .profile-menu-item {
@@ -166,7 +169,7 @@
     border-radius: 12px !important;
     margin: 0 !important;
     background: transparent !important;
-    color: #475569 !important;
+    color: var(--foreground, #475569) !important;
     text-align: left !important;
     font-size: 14px !important;
     font-weight: 500 !important;
@@ -247,7 +250,7 @@
 }
 
 .sidebar .right .buttons button .icon-box {
-    background: var(--secondary, #f0f4f8);
+    background: var(--sidebar-icon-bg, #f0f4f8);
     width: 36px;
     height: 36px;
     border-radius: 10px;
@@ -317,6 +320,7 @@
         /* Hidden by default */
         box-shadow: none;
         /* Shadow handled by open state or none */
+        overflow: visible !important;
     }
 
     /* Open State */

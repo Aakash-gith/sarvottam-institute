@@ -139,7 +139,7 @@ function Courses() {
     };
 
     return (
-        <div className="flex min-h-screen bg-[#F5F7FA] dark:bg-slate-900 transition-colors duration-300">
+        <div className="flex min-h-screen bg-background transition-colors duration-300">
             <Sidebar />
 
             <div className="flex-1 transition-all duration-300 ml-0 md:ml-[120px]">
@@ -157,7 +157,7 @@ function Courses() {
                                 </p>
                             </div>
 
-                            <div className="flex items-center gap-3 w-full md:w-auto bg-white dark:bg-slate-800 p-2 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700">
+                            <div className="flex items-center gap-3 w-full md:w-auto bg-card p-2 rounded-xl shadow-sm border border-border">
                                 <Search className="text-gray-400 ml-2" size={20} />
                                 <input
                                     type="text"
@@ -202,7 +202,7 @@ function Courses() {
                                 const originalPrice = Math.round(course.price * 1.4); // Mock original price
 
                                 return (
-                                    <div key={course._id} className="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
+                                    <div key={course._id} className="group bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
                                         {/* Image Section */}
                                         <div className="relative h-48 bg-slate-200 dark:bg-slate-700">
                                             {course.thumbnail ? (

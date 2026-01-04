@@ -98,6 +98,7 @@ export const login = async (req, res) => {
         class: user.class,
         streak: user.streak,
         profilePicture: user.profilePicture,
+        theme: user.theme || 'light',
       },
     });
   } catch (err) {

@@ -1,5 +1,6 @@
 import User from "../models/Users.js";
 import Notification from "../models/Notification.js";
+import bcrypt from "bcrypt";
 
 import QuizAttempt from "../models/QuizAttempt.js";
 import imagekit from "../conf/imagekit.js";
@@ -12,7 +13,7 @@ export const getProfileStats = async (req, res) => {
     const userId = req.user.id;
 
     // Get user data
-    const user = await User.findById(userId).select('name email class streak bestStreak lastLoginDate profilePicture');
+    const user = await User.findById(userId).select('name email class streak bestStreak lastLoginDate profilePicture theme notificationPrefs language privacy refreshTokens');
 
     if (!user) {
       return res.status(404).json({
@@ -80,6 +81,12 @@ export const getProfileStats = async (req, res) => {
         currentStreak: user.streak || 0,
         bestStreak: user.bestStreak || user.streak || 0,
         profilePicture: user.profilePicture || null,
+        theme: user.theme || 'system',
+        lastLogin: user.lastLoginDate,
+        activeSessions: user.refreshTokens?.length || 0,
+        notificationPrefs: user.notificationPrefs,
+        language: user.language,
+        privacy: user.privacy,
         totalQuizzes,
         bestScore,
         averageScore,
@@ -117,7 +124,7 @@ export const updateName = async (req, res) => {
       userId,
       { name: name.trim() },
       { new: true }
-    ).select('name email semester streak');
+    ).select('name email semester streak theme');
 
     if (!user) {
       return res.status(404).json({
@@ -235,6 +242,106 @@ export const updateClass = async (req, res) => {
       message: "Failed to update class",
       error: error.message
     });
+  }
+};
+
+// Update user theme
+export const updateTheme = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { theme } = req.body;
+
+    if (!theme || (theme !== 'light' && theme !== 'dark')) {
+      return res.status(400).json({
+        success: false,
+        message: "Theme must be either 'light' or 'dark'"
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { theme },
+      { new: true }
+    ).select('theme');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Theme updated successfully",
+      data: {
+        theme: user.theme
+      }
+    });
+  } catch (error) {
+    console.error("Update theme error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update theme",
+      error: error.message
+    });
+  }
+};
+
+// Change password
+export const changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) return res.status(400).json({ success: false, message: "Incorrect current password" });
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    res.json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Change password error:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+// Update Settings (Theme, Notifications, Language, Privacy)
+export const updateSettings = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { notificationPrefs, language, privacy, theme } = req.body;
+
+    const updateData = {};
+    if (notificationPrefs) updateData.notificationPrefs = notificationPrefs;
+    if (language) updateData.language = language;
+    if (privacy) updateData.privacy = privacy;
+    if (theme) updateData.theme = theme;
+
+    const user = await User.findByIdAndUpdate(userId, { $set: updateData }, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({
+      success: true,
+      message: "Settings updated successfully",
+      data: {
+        notificationPrefs: user.notificationPrefs,
+        language: user.language,
+        privacy: user.privacy,
+        theme: user.theme
+      }
+    });
+  } catch (error) {
+    console.error("Update settings error:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 

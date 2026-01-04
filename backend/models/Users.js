@@ -81,7 +81,24 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       default: []
-    }]
+    }],
+    theme: {
+      type: String,
+      enum: ['light', 'dark', 'system'],
+      default: 'system'
+    },
+    notificationPrefs: {
+      email: { type: Boolean, default: true },
+      inApp: { type: Boolean, default: true }
+    },
+    language: {
+      type: String,
+      default: 'English'
+    },
+    privacy: {
+      profileVisible: { type: Boolean, default: true },
+      emailVisible: { type: Boolean, default: false }
+    }
   },
   { timestamps: true }
 );

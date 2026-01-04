@@ -98,9 +98,9 @@ const AdminDirectory = ({ currentUser }) => {
     return (
         <div className="space-y-6">
             {/* Header / Search */}
-            <div className="flex flex-col sm:flex-row justify-between items-center bg-white dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800 gap-4">
-                <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <Shield className="text-purple-600" /> Admin Directory
+            <div className="flex flex-col sm:flex-row justify-between items-center bg-card p-4 rounded-xl border border-border gap-4">
+                <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+                    <Shield className="text-primary" /> Admin Directory
                 </h3>
                 <div className="relative w-full sm:w-64">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -117,7 +117,7 @@ const AdminDirectory = ({ currentUser }) => {
             {/* Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredAdmins.map((admin) => (
-                    <div key={admin._id} className={`bg-white dark:bg-slate-900/50 rounded-xl shadow-sm border p-6 flex flex-col relative overflow-hidden group ${admin.userId?.isLocked ? 'border-red-400 bg-red-50/10' : 'border-slate-100 dark:border-slate-800'}`}>
+                    <div key={admin._id} className={`bg-card rounded-xl shadow-sm border p-6 flex flex-col relative overflow-hidden group ${admin.userId?.isLocked ? 'border-red-400 bg-red-50/10' : 'border-border'}`}>
                         {/* Status Badges */}
                         <div className="absolute top-4 right-4 flex flex-col gap-2 items-end">
                             {admin.userId?.isLocked && (
@@ -136,9 +136,9 @@ const AdminDirectory = ({ currentUser }) => {
                                 {admin.userId?.name?.[0]?.toUpperCase() || 'A'}
                             </div>
                             <div>
-                                <h4 className="font-bold text-slate-800 dark:text-white">{admin.userId?.name}</h4>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">{admin.userId?.email}</p>
-                                <span className="text-xs px-2 py-0.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-md mt-1 inline-block capitalize border border-blue-100 dark:border-blue-800">
+                                <h4 className="font-bold text-foreground">{admin.userId?.name}</h4>
+                                <p className="text-xs text-muted-foreground">{admin.userId?.email}</p>
+                                <span className="text-xs px-2 py-0.5 bg-accent/20 text-accent rounded-md mt-1 inline-block capitalize border border-border">
                                     {admin.role.replace('_', ' ')}
                                 </span>
                             </div>

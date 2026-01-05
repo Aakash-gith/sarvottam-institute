@@ -9,7 +9,17 @@ const messageSchema = new mongoose.Schema({
     receiver: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: function () { return this.conversationType === 'direct'; }
+    },
+    groupReceiver: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Group',
+        required: function () { return this.conversationType === 'group'; }
+    },
+    conversationType: {
+        type: String,
+        enum: ['direct', 'group'],
+        default: 'direct'
     },
     content: {
         type: String,

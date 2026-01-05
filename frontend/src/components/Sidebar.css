@@ -269,8 +269,8 @@
 }
 
 .sidebar .right .buttons button:hover {
-    color: var(--primary, #0fb4b3);
-    background: var(--accent, #eef2ff);
+    color: white;
+    background: var(--primary, #0fb4b3);
     border-color: var(--primary, #0fb4b3);
     transform: translateY(-2px);
 }

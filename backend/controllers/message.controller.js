@@ -1,36 +1,87 @@
 import Message from '../models/Message.js';
 import User from '../models/Users.js';
+import Group from '../models/Group.js';
+
+// Create a new group
+export const createGroup = async (req, res) => {
+    try {
+        const { name, description, members, avatar } = req.body;
+        const creatorId = req.user._id;
+
+        if (!name || !members || !Array.isArray(members)) {
+            return res.status(400).json({ success: false, message: "Missing required fields" });
+        }
+
+        const allMembers = [...new Set([...members, creatorId.toString()])];
+
+        const newGroup = new Group({
+            name,
+            description,
+            members: allMembers,
+            admins: [creatorId],
+            createdBy: creatorId,
+            avatar
+        });
+        const savedGroup = await newGroup.save();
+
+        try {
+            // Create an initial system message
+            const systemMessage = new Message({
+                sender: creatorId,
+                groupReceiver: savedGroup._id,
+                content: `Group "${name}" created`,
+                conversationType: 'group',
+                status: 'sent'
+            });
+            await systemMessage.save();
+        } catch (msgError) {
+            console.error("System message failed but group was created:", msgError);
+        }
+
+        res.status(201).json({ success: true, data: savedGroup });
+    } catch (error) {
+        console.error("Error creating group - FULL DETAILS:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+    }
+};
 
 // Send a new message
 export const sendMessage = async (req, res) => {
     try {
-        const { receiverId, content, file } = req.body;
+        const { receiverId, groupId, content, file } = req.body;
         const senderId = req.user._id;
 
-        // Check for blocks
-        const senderUser = await User.findById(senderId);
-        const receiverUser = await User.findById(receiverId);
-
-        if (!receiverUser) {
-            return res.status(404).json({ success: false, message: "Receiver not found" });
+        if (!receiverId && !groupId) {
+            return res.status(400).json({ success: false, message: "Missing recipient" });
         }
 
-        if (senderUser.blockedUsers?.includes(receiverId)) {
-            return res.status(403).json({ success: false, message: "You have blocked this user" });
-        }
-        if (receiverUser.blockedUsers?.includes(senderId)) {
-            return res.status(403).json({ success: false, message: "This user has blocked you" });
-        }
+        if (receiverId) {
+            // Check for blocks
+            const senderUser = await User.findById(senderId);
+            const receiverUser = await User.findById(receiverId);
 
-        console.log(`[Chat] Sending message from ${senderId} to ${receiverId}`);
+            if (!receiverUser) {
+                return res.status(404).json({ success: false, message: "Receiver not found" });
+            }
 
-        if (!receiverId || (!content && !file)) {
-            return res.status(400).json({ success: false, message: "Missing required fields" });
+            if (senderUser.blockedUsers?.includes(receiverId)) {
+                return res.status(403).json({ success: false, message: "You have blocked this user" });
+            }
+            if (receiverUser.blockedUsers?.includes(senderId)) {
+                return res.status(403).json({ success: false, message: "This user has blocked you" });
+            }
         }
 
         const newMessage = new Message({
             sender: senderId,
-            receiver: receiverId,
+            receiver: receiverId || undefined,
+            groupReceiver: groupId || undefined,
+            conversationType: groupId ? 'group' : 'direct',
             content,
             file: file ? {
                 url: file.url,
@@ -41,8 +92,6 @@ export const sendMessage = async (req, res) => {
         });
 
         const savedMessage = await newMessage.save();
-        console.log(`[Chat] Message saved with ID: ${savedMessage._id}`);
-
         res.status(201).json({ success: true, data: savedMessage });
     } catch (error) {
         console.error("Error sending message:", error);
@@ -53,46 +102,45 @@ export const sendMessage = async (req, res) => {
 // Get conversation with a specific user
 export const getMessages = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { userId } = req.params; // or groupId
+        const { type } = req.query; // 'direct' or 'group'
         const myId = req.user._id;
 
-        // Check if user has cleared this chat
         const currentUser = await User.findById(myId);
         if (!currentUser) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
 
-        const deletionInfo = currentUser.deletedChats?.find(d => d.userId.toString() === userId.toString());
-        const deleteThreshold = deletionInfo ? deletionInfo.deletedAt : new Date(0);
+        let query = {};
+        if (type === 'group') {
+            query = { groupReceiver: userId, conversationType: 'group' };
+        } else {
+            const deletionInfo = currentUser.deletedChats?.find(d => d.userId.toString() === userId.toString());
+            const deleteThreshold = deletionInfo ? deletionInfo.deletedAt : new Date(0);
+            query = {
+                $or: [
+                    { sender: myId, receiver: userId },
+                    { sender: userId, receiver: myId }
+                ],
+                createdAt: { $gt: deleteThreshold },
+                conversationType: 'direct'
+            };
+        }
 
-        console.log(`[Chat] Fetching messages between ${myId} and ${userId} after ${deleteThreshold}`);
+        const messages = await Message.find(query).sort({ createdAt: 1 }).populate('sender', 'name profilePicture');
 
-        // Fetch messages
-        const messages = await Message.find({
-            $or: [
-                { sender: myId, receiver: userId },
-                { sender: userId, receiver: myId }
-            ],
-            createdAt: { $gt: deleteThreshold }
-        }).sort({ createdAt: 1 });
+        // Mark unread as read if direct
+        if (type !== 'group') {
+            const unreadMsgIds = messages
+                .filter(msg => msg.sender?._id.toString() === userId.toString() && msg.status !== 'read')
+                .map(msg => msg._id);
 
-        console.log(`[Chat] Found ${messages.length} messages`);
-
-        // Mark unread as delivered
-        const unreadMsgIds = messages
-            .filter(msg => msg.sender.toString() === userId.toString() && msg.status === 'sent')
-            .map(msg => msg._id);
-
-        if (unreadMsgIds.length > 0) {
-            await Message.updateMany(
-                { _id: { $in: unreadMsgIds } },
-                { $set: { status: 'delivered' } }
-            );
-            messages.forEach(msg => {
-                if (unreadMsgIds.some(id => id.toString() === msg._id.toString())) {
-                    msg.status = 'delivered';
-                }
-            });
+            if (unreadMsgIds.length > 0) {
+                await Message.updateMany(
+                    { _id: { $in: unreadMsgIds } },
+                    { $set: { status: 'read' } }
+                );
+            }
         }
 
         res.status(200).json({ success: true, data: messages });
@@ -107,83 +155,79 @@ export const getConversations = async (req, res) => {
     try {
         const myId = req.user._id;
 
-        // Find all messages involving the user
-        const messages = await Message.find({
-            $or: [{ sender: myId }, { receiver: myId }]
+        // Fetch user context for pins/mutes/deletions
+        const currentUser = await User.findById(myId);
+        if (!currentUser) return res.status(404).json({ success: false, message: "User not found" });
+
+        // 1. Direct Conversations
+        const directMessages = await Message.find({
+            $or: [{ sender: myId, conversationType: 'direct' }, { receiver: myId, conversationType: 'direct' }]
         })
             .sort({ createdAt: -1 })
             .populate('sender receiver', 'name email profilePicture');
 
-        const currentUser = await User.findById(myId);
-        if (!currentUser) {
-            return res.status(404).json({ success: false, message: "User not found" });
-        }
-
         const conversationsMap = new Map();
 
-        messages.forEach(msg => {
-            // Determine who the "other" person is
-            // Note: msg.sender/receiver might be IDs if populate failed, or Objects if it succeeded
+        directMessages.forEach(msg => {
             const senderId = (msg.sender?._id || msg.sender)?.toString();
             const receiverId = (msg.receiver?._id || msg.receiver)?.toString();
-
             if (!senderId || !receiverId) return;
 
             const isMeSender = senderId === myId.toString();
             const otherUserId = isMeSender ? receiverId : senderId;
             const otherUser = isMeSender ? msg.receiver : msg.sender;
 
-            // Check if chat was deleted and message is before deletion
-            if (currentUser.deletedChats) {
-                const deletionInfo = currentUser.deletedChats.find(d => d.userId.toString() === otherUserId);
-                if (deletionInfo && msg.createdAt <= deletionInfo.deletedAt) return;
-            }
+            // Deletion check
+            const deletionInfo = currentUser.deletedChats ? currentUser.deletedChats.find(d => d.userId.toString() === otherUserId) : null;
+            if (deletionInfo && msg.createdAt <= deletionInfo.deletedAt) return;
 
             if (!conversationsMap.has(otherUserId)) {
-                // If otherUser is just an ID (populate failed), use a placeholder
-                const hasPopulated = typeof otherUser === 'object' && otherUser !== null && otherUser.name;
-
-                const isPinned = currentUser.pinnedChats?.includes(otherUserId);
-                const isMuted = currentUser.mutedChats?.includes(otherUserId);
-                const isMarkedUnread = currentUser.markedUnreadChats?.includes(otherUserId);
-
                 conversationsMap.set(otherUserId, {
                     id: otherUserId,
-                    name: hasPopulated ? otherUser.name : "User",
-                    email: hasPopulated ? otherUser.email : "",
-                    avatar: (hasPopulated && otherUser.name ? otherUser.name : "U").split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase(),
-                    profilePicture: hasPopulated ? otherUser.profilePicture : null,
+                    type: 'direct',
+                    name: otherUser?.name || "User",
+                    profilePicture: otherUser?.profilePicture || null,
                     lastMessage: msg.content || (msg.file ? "Sent a file" : ""),
                     time: msg.createdAt,
                     unread: 0,
-                    status: 'online',
-                    isBlocked: currentUser.blockedUsers && currentUser.blockedUsers.includes(otherUserId),
-                    isPinned,
-                    isMuted,
-                    isMarkedUnread
+                    isPinned: currentUser.pinnedChats?.includes(otherUserId),
+                    isMuted: currentUser.mutedChats?.includes(otherUserId),
+                    isMarkedUnread: currentUser.markedUnreadChats?.includes(otherUserId)
                 });
             }
-
-            // Count unread if I am the receiver and status is not 'read'
             if (receiverId === myId.toString() && msg.status !== 'read') {
                 conversationsMap.get(otherUserId).unread += 1;
             }
         });
 
-        // Loop again to adjust unread count if marked unread manually
-        for (let [id, val] of conversationsMap) {
-            if (val.isMarkedUnread && val.unread === 0) {
-                val.unread = 1; // Force visual indicator
-            }
-        }
+        // 2. Group Conversations
+        const userGroups = await Group.find({ members: myId });
+        const groupConversations = await Promise.all(userGroups.map(async (group) => {
+            const lastMsg = await Message.findOne({ groupReceiver: group._id, conversationType: 'group' })
+                .sort({ createdAt: -1 })
+                .populate('sender', 'name');
 
-        const conversations = Array.from(conversationsMap.values()).sort((a, b) => {
-            // Pinned first
+            return {
+                id: group._id,
+                type: 'group',
+                name: group.name,
+                profilePicture: group.avatar,
+                lastMessage: lastMsg ? `${lastMsg.sender?.name}: ${lastMsg.content || "Sent a file"}` : "No messages yet",
+                time: lastMsg ? lastMsg.createdAt : group.createdAt,
+                unread: 0, // Simplified unread for groups for now
+                isPinned: false,
+                isMuted: false,
+                membersCount: group.members.length
+            };
+        }));
+
+        // Merge and sort
+        const conversations = [...Array.from(conversationsMap.values()), ...groupConversations].sort((a, b) => {
             if (a.isPinned && !b.isPinned) return -1;
             if (!a.isPinned && b.isPinned) return 1;
-            // Then logic: recent message time
             return new Date(b.time) - new Date(a.time);
         });
+
         res.status(200).json({ success: true, data: conversations });
     } catch (error) {
         console.error("Error fetching conversations:", error);
@@ -332,6 +376,46 @@ export const toggleUnread = async (req, res) => {
             await User.findByIdAndUpdate(myId, { $addToSet: { markedUnreadChats: userId } });
         }
         res.status(200).json({ success: true, message: `Marked as ${action}`, action });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error" });
+    }
+};
+
+// Mark ALL messages as read
+export const markAllAsRead = async (req, res) => {
+    try {
+        const myId = req.user._id;
+        await Message.updateMany(
+            { receiver: myId, status: { $ne: 'read' } },
+            { $set: { status: 'read' } }
+        );
+        await User.findByIdAndUpdate(myId, { $set: { markedUnreadChats: [] } });
+        res.status(200).json({ success: true, message: "All messages marked as read" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error" });
+    }
+};
+
+// Clear ALL conversations
+export const clearAllConversations = async (req, res) => {
+    try {
+        const myId = req.user._id;
+        const messages = await Message.find({
+            $or: [{ sender: myId }, { receiver: myId }]
+        });
+
+        const otherUserIds = [...new Set(messages.map(m =>
+            m.sender.toString() === myId.toString() ? m.receiver?.toString() : m.sender.toString()
+        ))].filter(id => id);
+
+        const now = new Date();
+        const deletions = otherUserIds.map(userId => ({ userId, deletedAt: now }));
+
+        await User.findByIdAndUpdate(myId, {
+            $set: { deletedChats: deletions }
+        });
+
+        res.status(200).json({ success: true, message: "All conversations cleared" });
     } catch (error) {
         res.status(500).json({ success: false, message: "Error" });
     }

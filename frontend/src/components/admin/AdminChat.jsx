@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     Search, Edit, MoreHorizontal,
     Smile, Paperclip, Send, Image, Lock, MessageSquare, X, File,
-    Check, CheckCheck, Trash2, Slash, Eraser, ChevronLeft
+    Check, CheckCheck, Trash2, Slash, Eraser, ChevronLeft, MailCheck
 } from 'lucide-react';
 import API from '../../api/axios';
 import EmojiPicker from 'emoji-picker-react';
@@ -20,6 +20,9 @@ const AdminChat = () => {
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
+    const emojiPickerRef = useRef(null);
+    const chatMenuRef = useRef(null);
+    const sidebarMenuRef = useRef(null);
     const scrollRef = useRef(null);
 
     // Search State
@@ -29,6 +32,15 @@ const AdminChat = () => {
 
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [showChatMenu, setShowChatMenu] = useState(false);
+    const [showSidebarMenu, setShowSidebarMenu] = useState(false);
+    const [showCreateGroup, setShowCreateGroup] = useState(false);
+
+    // Group Member Search State
+    const [memberSearchQuery, setMemberSearchQuery] = useState("");
+    const [memberSearchResults, setMemberSearchResults] = useState([]);
+    const [isSearchingMembers, setIsSearchingMembers] = useState(false);
+    const [selectedMemberObjects, setSelectedMemberObjects] = useState([]); // To display chips with names
+
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
     // Resize listener
@@ -46,7 +58,7 @@ const AdminChat = () => {
                 if (response.data.success) {
                     setChats(response.data.data.map(chat => ({
                         ...chat,
-                        time: new Date(chat.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        time: chat.time ? new Date(chat.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''
                     })));
                 }
             } catch (error) {
@@ -78,17 +90,30 @@ const AdminChat = () => {
         if (activeChat) {
             const fetchMessages = async () => {
                 try {
-                    const response = await API.get(`/message/${activeChat.id}`);
+                    const response = await API.get(`/message/${activeChat.id}?type=${activeChat.type || 'direct'}`);
                     if (response.data.success) {
                         const fetchedMessages = response.data.data;
-                        setMessages(fetchedMessages.map(msg => ({
-                            id: msg._id,
-                            text: msg.content,
-                            sender: (msg.sender?._id || msg.sender)?.toString() === activeChat.id.toString() ? 'them' : 'me',
-                            time: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                            status: msg.status,
-                            file: msg.file
-                        })));
+                        let currentUserId = null;
+                        try {
+                            const user = JSON.parse(localStorage.getItem('user'));
+                            currentUserId = user?._id;
+                        } catch (e) {
+                            console.error("Error parsing user from localStorage", e);
+                        }
+
+                        setMessages(fetchedMessages.map(msg => {
+                            const msgSenderId = (msg.sender?._id || msg.sender)?.toString();
+                            const isMe = currentUserId && msgSenderId === currentUserId.toString();
+                            return {
+                                id: msg._id,
+                                text: msg.content,
+                                sender: isMe ? 'me' : 'them',
+                                time: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                                status: msg.status,
+                                file: msg.file,
+                                senderName: msg.sender?.name
+                            };
+                        }));
 
                         // If there are unread messages from 'them', mark them as read
                         const hasUnread = fetchedMessages.some(m => (m.sender?._id || m.sender)?.toString() === activeChat.id.toString() && m.status !== 'read');
@@ -109,6 +134,35 @@ const AdminChat = () => {
             if (interval) clearInterval(interval);
         };
     }, [activeChat]);
+
+    // Handle click outside for Emoji Picker and Chat Menu
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showEmojiPicker && emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+                setShowEmojiPicker(false);
+            }
+            if (showChatMenu && chatMenuRef.current && !chatMenuRef.current.contains(event.target)) {
+                // Check if the click was on the toggle button
+                const toggleButton = event.target.closest('button');
+                const isToggleButton = toggleButton && toggleButton.contains(event.target) &&
+                    (toggleButton.querySelector('svg')?.classList.contains('lucide-more-horizontal') ||
+                        toggleButton.innerHTML.includes('lucide-more-horizontal'));
+
+                if (!isToggleButton) {
+                    setShowChatMenu(false);
+                }
+            }
+            // Close Sidebar Menu
+            if (showSidebarMenu && sidebarMenuRef.current && !sidebarMenuRef.current.contains(event.target)) {
+                setShowSidebarMenu(false);
+            }
+        };
+
+        if (showEmojiPicker || showChatMenu || showSidebarMenu) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [showEmojiPicker, showChatMenu]);
 
     // Debounced Search
     useEffect(() => {
@@ -133,12 +187,6 @@ const AdminChat = () => {
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
-    const getUserAvatarUrl = (user) => {
-        if (!user.profilePicture) return null;
-        if (user.profilePicture.startsWith('http')) return user.profilePicture;
-        const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000';
-        return `${baseUrl}${user.profilePicture}`;
-    };
 
     const getAvatarInitials = (name) => {
         return name?.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || '??';
@@ -155,7 +203,7 @@ const AdminChat = () => {
                 avatar: getAvatarInitials(user.name),
                 profilePicture: user.profilePicture, // Include profilePicture
                 lastMessage: "Start a conversation",
-                time: "Now",
+                time: new Date().toISOString(),
                 unread: 0,
                 status: 'online',
                 isBlocked: false
@@ -164,6 +212,12 @@ const AdminChat = () => {
             setActiveChat(newChat);
         }
         setSearchQuery("");
+    };
+
+    const getUserAvatarUrl = (user) => {
+        if (!user) return defaultUser;
+        if (user.type === 'group') return user.avatar || defaultUser;
+        return (typeof user.profilePicture === 'string' ? user.profilePicture : user.profilePicture?.url) || defaultUser;
     };
 
     // Helper for rendering avatar
@@ -213,7 +267,8 @@ const AdminChat = () => {
 
         try {
             const response = await API.post('/message/send', {
-                receiverId: activeChat.id,
+                receiverId: activeChat.type === 'direct' ? activeChat.id : undefined,
+                groupId: activeChat.type === 'group' ? activeChat.id : undefined,
                 content: contentVal,
                 file: optimisticMessage.file
             });
@@ -281,6 +336,99 @@ const AdminChat = () => {
         }
     };
 
+    const handleMarkAllRead = async () => {
+        try {
+            await API.put('/message/read-all');
+            setChats(prev => prev.map(c => ({ ...c, unread: 0 })));
+            toast.success("All messages marked as read");
+            setShowSidebarMenu(false);
+        } catch (error) {
+            toast.error("Failed to mark all as read");
+        }
+    };
+
+    const handleClearAllChats = async () => {
+        if (!window.confirm("Are you sure you want to clear all chat history?")) return;
+        try {
+            await API.delete('/message/clear-all');
+            setChats([]);
+            setActiveChat(null);
+            toast.success("All chats cleared");
+            setShowSidebarMenu(false);
+        } catch (error) {
+            toast.error("Failed to clear chats");
+        }
+    };
+
+    const [groupName, setGroupName] = useState("");
+    const [selectedMembers, setSelectedMembers] = useState([]);
+
+    // Debounced Member Search
+    useEffect(() => {
+        const timer = setTimeout(async () => {
+            if (memberSearchQuery.trim().length >= 2) {
+                setIsSearchingMembers(true);
+                try {
+                    const response = await API.get(`/user/search?q=${memberSearchQuery}`);
+                    if (response.data.success) {
+                        setMemberSearchResults(response.data.data);
+                    }
+                } catch (error) {
+                    console.error("Member search failed", error);
+                } finally {
+                    setIsSearchingMembers(false);
+                }
+            } else {
+                setMemberSearchResults([]);
+            }
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [memberSearchQuery]);
+
+    const handleCreateGroup = async () => {
+        if (!groupName || selectedMembers.length < 1) {
+            toast.error("Group name and members required");
+            return;
+        }
+        try {
+            const response = await API.post('/message/create-group', {
+                name: groupName,
+                members: selectedMembers
+            });
+            if (response.data.success) {
+                toast.success("Group created!");
+                setShowCreateGroup(false);
+                setGroupName("");
+                setSelectedMembers([]);
+                setSelectedMemberObjects([]);
+                setMemberSearchQuery("");
+                const refreshConv = await API.get('/message/conversations');
+                if (refreshConv.data.success) {
+                    setChats(refreshConv.data.data.map(chat => ({
+                        ...chat,
+                        time: chat.time ? new Date(chat.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''
+                    })));
+                }
+            }
+        } catch (error) {
+            const errorMsg = error.response?.data?.error || error.response?.data?.message || "Failed to create group";
+            toast.error(errorMsg);
+        }
+    };
+
+    const toggleMember = (user) => {
+        const userId = user._id || user.id;
+        if (selectedMembers.includes(userId)) {
+            setSelectedMembers(prev => prev.filter(id => id !== userId));
+            setSelectedMemberObjects(prev => prev.filter(u => (u._id || u.id) !== userId));
+        } else {
+            setSelectedMembers(prev => [...prev, userId]);
+            setSelectedMemberObjects(prev => [...prev, user]);
+        }
+        setMemberSearchQuery(""); // Clear search after selection
+        setMemberSearchResults([]);
+    };
+
     const onEmojiClick = (emojiData) => {
         setMessageInput(prev => prev + emojiData.emoji);
     };
@@ -305,16 +453,34 @@ const AdminChat = () => {
     };
 
     return (
-        <div className="flex-1 flex h-full min-h-0 bg-white lg:rounded-3xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] lg:border border-slate-100 overflow-hidden animate__animated animate__fadeIn">
+        <div className="flex-1 flex h-full min-h-0 bg-white dark:bg-slate-900 lg:rounded-3xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] lg:border border-slate-100 dark:border-slate-800 overflow-hidden animate__animated animate__fadeIn">
             {/* Chat List Side (Hidden on mobile if a chat is active) */}
-            <div className={`${isMobile && activeChat ? 'hidden' : 'flex'} w-full lg:w-80 bg-white border-r border-gray-200 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10`}>
-                <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-white">
-                    <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Chat</h2>
+            <div className={`${isMobile && activeChat ? 'hidden' : 'flex'} w-full lg:w-80 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10`}>
+                <div className="p-5 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center bg-transparent">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">Chat</h2>
                     <div className="flex gap-1">
-                        <button className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors">
-                            <MoreHorizontal size={20} />
-                        </button>
-                        <button className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors">
+                        <div className="relative">
+                            <button
+                                onClick={() => setShowSidebarMenu(!showSidebarMenu)}
+                                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-500 transition-colors"
+                            >
+                                <MoreHorizontal size={20} />
+                            </button>
+                            {showSidebarMenu && (
+                                <div ref={sidebarMenuRef} className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-100 dark:border-slate-700 py-2 z-50">
+                                    <button onClick={handleMarkAllRead} className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3">
+                                        <MailCheck size={16} /> Mark all as read
+                                    </button>
+                                    <button onClick={handleClearAllChats} className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3">
+                                        <Trash2 size={16} /> Clear all chats
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                        <button
+                            onClick={() => setShowCreateGroup(true)}
+                            className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-500 transition-colors"
+                        >
                             <Edit size={20} />
                         </button>
                     </div>
@@ -326,7 +492,7 @@ const AdminChat = () => {
                         <input
                             type="text"
                             placeholder="Search students..."
-                            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-lg focus:bg-white focus:border-gray-200 focus:ring-2 focus:ring-[#6264A7]/20 focus:outline-none text-sm transition-all shadow-sm"
+                            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-slate-800 border border-transparent dark:border-slate-700 rounded-lg focus:bg-white dark:focus:bg-slate-700 focus:border-gray-200 focus:ring-2 focus:ring-[#6264A7]/20 focus:outline-none text-sm transition-all shadow-sm text-gray-900 dark:text-gray-100"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -343,14 +509,14 @@ const AdminChat = () => {
                                 <div
                                     key={user._id}
                                     onClick={() => handleStartChat(user)}
-                                    className="flex items-center gap-3 p-3 h-[72px] min-h-[72px] flex-shrink-0 cursor-pointer rounded-xl hover:bg-gray-50 transition-all duration-200"
+                                    className="flex items-center gap-3 p-3 h-[72px] min-h-[72px] flex-shrink-0 cursor-pointer rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-all duration-200"
                                 >
                                     <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-xs text-blue-600 overflow-hidden">
                                         <img src={getUserAvatarUrl(user) || defaultUser} alt={user.name} className="w-full h-full object-cover" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="text-sm font-semibold text-gray-900 truncate">{user.name}</h3>
-                                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                                        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user.name}</h3>
+                                        <p className="text-xs text-gray-500 dark:text-gray-500 truncate">{user.email}</p>
                                     </div>
                                 </div>
                             ))}
@@ -370,18 +536,18 @@ const AdminChat = () => {
                                     key={chat.id}
                                     onClick={() => setActiveChat(chat)}
                                     className={`flex items-center gap-3 p-3 h-[72px] min-h-[72px] flex-shrink-0 cursor-pointer rounded-xl transition-all duration-200 ${activeChat?.id === chat.id
-                                        ? 'bg-[#E8EBFA]'
-                                        : 'hover:bg-gray-50'
+                                        ? 'bg-[#E8EBFA] dark:bg-[#6264A7]/20 shadow-sm'
+                                        : 'hover:bg-gray-50 dark:hover:bg-slate-800/50'
                                         }`}
                                 >
                                     {renderAvatar(chat, "w-12 h-12", "text-sm", true)}
 
                                     <div className="flex-1 min-w-0">
                                         <div className="flex justify-between items-baseline mb-0.5">
-                                            <h3 className={`text-sm font-semibold truncate ${activeChat?.id === chat.id ? 'text-[#6264A7]' : 'text-gray-900'}`}>{chat.name}</h3>
-                                            <span className={`text-[10px] ${activeChat?.id === chat.id ? 'text-[#6264A7]/70' : 'text-gray-400'}`}>{chat.time}</span>
+                                            <h3 className={`text-sm font-semibold truncate ${activeChat?.id === chat.id ? 'text-[#6264A7] dark:text-blue-400' : 'text-gray-900 dark:text-gray-100'}`}>{chat.name}</h3>
+                                            <span className={`text-[10px] ${activeChat?.id === chat.id ? 'text-[#6264A7]/70 dark:text-blue-400/70' : 'text-gray-400 dark:text-gray-500'}`}>{chat.time}</span>
                                         </div>
-                                        <p className={`text-xs truncate leading-tight ${chat.unread > 0 ? 'font-bold text-gray-900' : 'text-gray-500'}`}>
+                                        <p className={`text-xs truncate leading-tight ${chat.unread > 0 ? 'font-bold text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
                                             {chat.lastMessage}
                                         </p>
                                     </div>
@@ -398,10 +564,10 @@ const AdminChat = () => {
             </div>
 
             {/* Chat Window Side (Hidden on mobile if no chat is active) */}
-            <div className={`${isMobile && !activeChat ? 'hidden' : 'flex'} flex-1 flex flex-col bg-white overflow-hidden`}>
+            <div className={`${isMobile && !activeChat ? 'hidden' : 'flex'} flex-1 flex flex-col bg-white dark:bg-slate-900 overflow-hidden`}>
                 {activeChat ? (
                     <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                        <div className="h-16 lg:h-20 border-b border-gray-100 flex justify-between items-center px-4 lg:px-8 shadow-sm bg-white/50 backdrop-blur-md z-10">
+                        <div className="h-16 lg:h-20 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center px-4 lg:px-8 shadow-sm bg-white/50 dark:bg-slate-900/50 backdrop-blur-md z-10">
                             <div className="flex items-center gap-2 lg:gap-4 min-w-0">
                                 {isMobile && (
                                     <button
@@ -416,8 +582,11 @@ const AdminChat = () => {
 
                                 <div className="min-w-0">
                                     <h2 className="text-sm lg:text-lg font-bold text-gray-900 leading-tight truncate">{activeChat.name}</h2>
-                                    <p className={`text-[10px] lg:text-xs font-medium ${activeChat.status === 'online' ? 'text-green-600' : 'text-yellow-600'}`}>
-                                        {activeChat.status === 'online' ? 'Available' : 'Offline'}
+                                    <p className={`text-[10px] lg:text-xs font-medium ${activeChat.type === 'group' ? 'text-gray-500' : (activeChat.status === 'online' ? 'text-green-600' : 'text-yellow-600')}`}>
+                                        {activeChat.type === 'group'
+                                            ? `${activeChat.membersCount || 0} members`
+                                            : (activeChat.status === 'online' ? 'Available' : 'Offline')
+                                        }
                                         {activeChat.isBlocked && <span className="ml-2 text-red-500">(Blocked)</span>}
                                     </p>
                                 </div>
@@ -436,7 +605,7 @@ const AdminChat = () => {
                                     </button>
 
                                     {showChatMenu && (
-                                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate__animated animate__fadeIn animate__faster">
+                                        <div ref={chatMenuRef} className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate__animated animate__fadeIn animate__faster">
                                             <button
                                                 onClick={handleClearChat}
                                                 className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3"
@@ -523,9 +692,9 @@ const AdminChat = () => {
                             <div ref={scrollRef} />
                         </div>
 
-                        <div className="p-4 lg:p-6 bg-white border-t border-gray-100 relative">
+                        <div className="p-4 lg:p-6 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 relative">
                             {selectedFile && (
-                                <div className="absolute bottom-full left-6 mb-2 p-2 bg-white border border-gray-200 rounded-lg shadow-lg flex items-center gap-3">
+                                <div className="absolute bottom-full left-6 mb-2 p-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg flex items-center gap-3 text-gray-900 dark:text-gray-100">
                                     {selectedFile.type === 'image' ? (
                                         <img src={selectedFile.url} alt="Preview" className="w-12 h-12 object-cover rounded" />
                                     ) : (
@@ -540,22 +709,22 @@ const AdminChat = () => {
                             )}
 
                             {showEmojiPicker && (
-                                <div className="absolute bottom-24 left-6 z-20">
+                                <div ref={emojiPickerRef} className="absolute bottom-24 left-6 z-20">
                                     <EmojiPicker onEmojiClick={onEmojiClick} width={isMobile ? "100%" : 300} height={400} />
                                 </div>
                             )}
 
-                            <div className="flex flex-col border border-gray-200 rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-[#6264A7]/20 focus-within:border-[#6264A7] transition-all bg-white">
+                            <div className="flex flex-col border border-gray-200 dark:border-slate-700 rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-[#6264A7]/20 focus-within:border-[#6264A7] transition-all bg-white dark:bg-slate-800">
                                 <input
                                     type="text"
                                     placeholder="Type a message..."
-                                    className="w-full p-3 lg:p-4 bg-transparent outline-none text-sm lg:text-[15px] placeholder-gray-400 min-h-[50px] lg:min-h-[60px]"
+                                    className="w-full p-3 lg:p-4 bg-transparent outline-none text-sm lg:text-[15px] placeholder-gray-400 min-h-[50px] lg:min-h-[60px] text-gray-900 dark:text-gray-100"
                                     value={messageInput}
                                     onChange={(e) => setMessageInput(e.target.value)}
                                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                                 />
                                 <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileSelect} />
-                                <div className="flex justify-between items-center px-4 py-2 border-t border-gray-50 bg-[#F8F9FD] rounded-b-2xl">
+                                <div className="flex justify-between items-center px-4 py-2 border-t border-gray-50 dark:border-slate-700 bg-[#F8F9FD] dark:bg-slate-800/50 rounded-b-2xl">
                                     <div className="flex gap-1 text-gray-500">
                                         <button className="p-2 hover:bg-white hover:text-[#6264A7] rounded-lg transition-all" onClick={() => toast.success("Feature coming soon")}>
                                             <Edit size={18} />
@@ -591,6 +760,110 @@ const AdminChat = () => {
                     </div>
                 )}
             </div>
+
+            {/* Create Group Modal */}
+            {showCreateGroup && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
+                        <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Create Group</h3>
+                            <button onClick={() => setShowCreateGroup(false)} className="text-slate-400 hover:text-slate-600">
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Group Name</label>
+                                <input
+                                    type="text"
+                                    value={groupName}
+                                    onChange={(e) => setGroupName(e.target.value)}
+                                    placeholder="Enter group name..."
+                                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-gray-900 dark:text-gray-100 transition-all shadow-sm"
+                                />
+                            </div>
+
+                            {/* Selected Members Chips */}
+                            {selectedMemberObjects.length > 0 && (
+                                <div className="flex flex-wrap gap-2 py-2">
+                                    {selectedMemberObjects.map(user => {
+                                        const userId = user._id || user.id;
+                                        return (
+                                            <div key={userId} className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-lg text-sm font-medium border border-blue-100 dark:border-blue-800">
+                                                <span>{user.name}</span>
+                                                <button onClick={() => toggleMember(user)} className="hover:text-blue-800 dark:hover:text-white transition-colors">
+                                                    <X size={14} />
+                                                </button>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+
+                            <div className="relative">
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Search Members</label>
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-3 text-slate-400" size={18} />
+                                    <input
+                                        type="text"
+                                        value={memberSearchQuery}
+                                        onChange={(e) => setMemberSearchQuery(e.target.value)}
+                                        placeholder="Type name or email..."
+                                        className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-gray-900 dark:text-gray-100 transition-all shadow-sm"
+                                    />
+                                </div>
+
+                                {/* Search Results Dropdown */}
+                                {memberSearchQuery.trim().length >= 2 && (
+                                    <div className="absolute left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-[110] custom-scrollbar">
+                                        {isSearchingMembers ? (
+                                            <div className="p-4 text-center text-sm text-slate-500 dark:text-slate-400">Searching...</div>
+                                        ) : memberSearchResults.length > 0 ? (
+                                            memberSearchResults.map(user => (
+                                                <div
+                                                    key={user._id}
+                                                    onClick={() => !selectedMembers.includes(user._id) && toggleMember(user)}
+                                                    className={`flex items-center gap-3 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors ${selectedMembers.includes(user._id) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                >
+                                                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center font-bold text-[10px] text-blue-600 overflow-hidden">
+                                                        <img src={(typeof user.profilePicture === 'string' ? user.profilePicture : null) || defaultUser} className="w-full h-full object-cover" alt="" />
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="text-sm font-semibold text-slate-900 dark:text-white truncate">{user.name}</div>
+                                                        <div className="text-xs text-slate-500 dark:text-slate-400 truncate">{user.email}</div>
+                                                    </div>
+                                                    {selectedMembers.includes(user._id) && <Check size={16} className="text-green-500" />}
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="p-4 text-center text-sm text-slate-500 dark:text-slate-400">No users found</div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="p-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex gap-3">
+                            <button
+                                onClick={() => {
+                                    setShowCreateGroup(false);
+                                    setMemberSearchQuery("");
+                                    setMemberSearchResults([]);
+                                }}
+                                className="flex-1 px-4 py-3 font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleCreateGroup}
+                                disabled={!groupName || selectedMembers.length < 1}
+                                className="flex-1 px-4 py-3 font-bold text-white bg-blue-500 hover:bg-blue-600 disabled:opacity-50 rounded-xl shadow-lg transition-all"
+                            >
+                                Create Group
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

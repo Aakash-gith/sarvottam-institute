@@ -1,129 +1,113 @@
 # 🎓 Sarvottam Institute
 
-Sarvottam Institute is a state-of-the-art educational ecosystem designed to empower students and administrators with cutting-edge learning and management tools. Built with a focus on Grade 9-10 (Maths & Science) and College-level curriculum, it integrates AI-driven assessment, rigorous progress tracking, and a premium user experience.
+[![React](https://img.shields.io/badge/React-19-blue.svg)](https://reactjs.org/)
+[![Node](https://img.shields.io/badge/Node-20+-green.svg)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248.svg)](https://www.mongodb.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+**Sarvottam Institute** is a premium, full-stack educational ecosystem designed for the modern era. Specializing in Grade 9-10 (Mathematics & Science), the platform integrates advanced AI assessment, real-time progress tracking, and a high-performance learning environment.
 
 ---
 
-## ✨ Features
+## 🚀 Key Features
 
-### 🧠 AI-Powered Quiz System
-- **Intelligent Generation**: Dynamic quizzes powered by Groq AI (Llama 3.3-70b) on any requested topic.
-- **Precision Customization**: Define question count (1-50) and strict time limits.
-- **Adaptive Evaluation**: Real-time scoring with performance grades (A+ to F).
-- **Automated Insights**: Detailed answer keys and explanations sent via Nodemailer.
-- **Historical Analysis**: Comprehensive history of all attempts with performance trends.
+### 🧠 Intelligent Learning & Assessment
+- **AI Quiz Engine**: Dynamic quiz generation powered by **Groq (Llama 3)** and **Google Gemini**, offering tailored assessments on any topic.
+- **Adaptive Scoring**: Real-time evaluation with detailed performance analytics and historical trend tracking.
+- **Comprehensive Gradebook**: Automated results delivery via email with AI-generated feedback.
 
-### 👤 Student Learning Experience
-- **Personalized Dashboard**: Real-time stats on quiz performance, accuracy, and learning streaks.
-- **Video Learning Hub**: Dedicated, distraction-free section for Class 9 & 10 video lectures.
-- **Structured Digital Notes**: Premium HTML-based interactive notes for Science and Mathematics.
-- **Progress Tracking**: Subject-wise and chapter-wise completion indicators.
-- **Streak System**: Gamified daily login tracking to build consistent study habits.
+### 🎥 Modern Learning Experience
+- **Video Learning Hub**: A dedicated, distraction-free environment for Class 9 & 10 video lectures.
+- **Live Class Integration**: Seamless live sessions powered by **100ms** RoomKit.
+- **Interactive Notes**: Premium, structure-optimized HTML notes for Mathematics and Science.
+- **Progress Tracking**: Granular, weighted completion tracking for chapters and subjects.
+- **Gamified Streaks**: Motivation system to encourage daily learning consistency.
 
-### 🔐 Master Admin & Security
-- **Dynamic Account Controls**: Master Admins can instantly lock/unlock user accounts for security.
-- **Sensitive Reset Actions**: Administrative password reset functionality with secure OTP delivery.
-- **Role-Based Access**: Multi-tier permission levels (Student, Admin, Master Admin).
-- **Security Protocols**: JWT-based stateless authentication with secure refresh cycles.
+### 👤 Profile & Communication
+- **Media Management**: Fast, secure profile picture uploads integrated with **ImageKit.io**.
+- **Real-time Notifications**: Instant alerts for system updates and unread communications.
+- **Unified Messaging**: Integrated communication channels for students and mentors.
 
-### 📊 Advanced Admin Dashboard
-- **Student Analytics**: Deep-dive into individual student progress, quiz history, and activity graphs.
-- **User Directory**: Centralized management for students and sub-admins with quick-action toggles.
-- **System Metrics**: Visual reports on platform growth, resource distribution, and engagement.
-- **Global Settings**: Control over news tickers, event calendars, and platform-wide notifications.
-
-### 🎨 Premium UI/UX
-- **Modern Sidebar**: Dynamic, collapsible navigation with an integrated profile dropdown.
-- **Dark Mode First**: Sleek, eye-friendly design with premium purple and teal accents.
-- **Responsive Fluidity**: Seamless transition between high-density desktop views and streamlined mobile layouts.
-- **Micro-Animations**: Smooth transitions and interactive feedback for a premium feel.
+### 🔐 Administrative Excellence
+- **Master Admin Dashboard**: Full control over user accounts, including instant locking/unlocking and security resets.
+- **Deep Analytics**: Student-specific performance metrics, activity heatmaps, and progress reports.
+- **Global Configuration**: Manage platform-wide news tickers, event calendars, and resource distribution.
+- **Multi-tier Security**: JWT-based authentication with secure refresh cycles and role-based access control.
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ Technology Stack
+
+### **Frontend**
+- **React 19** & **Vite**: Ultra-fast, modern component architecture.
+- **Redux Toolkit**: Centralized global state management.
+- **Tailwind CSS 4**: Sophisticated, responsive layout design.
+- **Lucide React**: Modern, crisp iconography.
+- **Recharts**: Dynamic data visualization for student analytics.
+- **100ms SDK**: Professional-grade live video streaming.
+
+### **Backend**
+- **Node.js (LTS)** & **Express 5**: Robust, scalable server-side environment.
+- **MongoDB & Mongoose**: Flexible schema design with advanced aggregation pipelines.
+- **Upstash Redis**: High-performance caching and rate-limiting.
+- **Nodemailer**: Reliable transactional email infrastructure.
+- **Groq & Google AI**: Multi-model AI integration for intelligent features.
+- **ImageKit**: Cloud-based image optimization and CDN delivery.
+
+---
+
+## 🏁 Getting Started
 
 ### Prerequisites
-- Node.js (v18+)
-- MongoDB (Atlas or Community Edition)
-- Gmail App Password (for Nodemailer)
+- Node.js (v18 or higher)
+- MongoDB Atlas account
+- ImageKit.io account (for profile media)
+- Groq/Google AI API keys
+- Gmail App Password (for email features)
 
 ### Installation
-1. **Clone & Install**
+
+1. **Clone the Repository**
    ```bash
    git clone https://github.com/gp91bits/Sarvottam-Institute.git
    cd sarvottam-institiute
-   npm install # in both frontend and backend
    ```
 
-2. **Environment Configuration (Backend)**
-   Create a `.env` file in `backend/`:
-   ```env
-   PORT=3000
-   MONGODB_URI=your_mongodb_connection_string
-   ACCESS_TOKEN_SECRET=your_jwt_secret
-   REFRESH_TOKEN_SECRET=your_refresh_secret
-   
-   # Gmail/Nodemailer Config
-   MAIL_USER=your_email@gmail.com
-   MAIL_PASS=your_app_password
-   
-   # AI Integration
-   GROQ_API_KEY=your_groq_api_key
+2. **Backend Setup**
+   ```bash
+   cd backend
+   npm install
+   # Create .env with the following:
+   # PORT, MONGODB_URI, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET
+   # MAIL_USER, MAIL_PASS
+   # GROQ_API_KEY, GEMINI_API_KEY
+   # IMAGEKIT_PUBLIC_KEY, IMAGEKIT_PRIVATE_KEY, IMAGEKIT_URL_ENDPOINT
+   # REDIS_URL, REDIS_TOKEN
+   npm start
    ```
 
-3. **Environment Configuration (Frontend)**
-   Create a `.env` file in `frontend/`:
-   ```env
-   VITE_API_BASE_URL=http://localhost:3000/api
+3. **Frontend Setup**
+   ```bash
+   cd ../frontend
+   npm install
+   # Create .env with:
+   # VITE_API_BASE_URL=http://localhost:3000/api
+   npm run dev
    ```
 
-### Execution
-```bash
-# Backend
-cd backend && npm start
+---
 
-# Frontend
-cd frontend && npm run dev
-```
+## 📁 Project Structure
+- `frontend/`: React application with Vite, Tailwind, and Redux.
+- `backend/`: Express API with AI integrations and Mongoose models.
+- `grade9/ / grade10/`: Specialized static content for core subject notes.
+- `deploy-setup.sh`: Automated deployment configuration script.
 
 ---
 
-## 🛠️ Tech Stack
-
-### Frontend & Design
-- **React 18** (Vite-powered)
-- **TailwindCSS** for layout & sizing
-- **Vanilla CSS** for premium custom components (Sidebar, Modals)
-- **Redux Toolkit** (Global state management)
-- **Lucide React** (Modern iconography)
-
-### Backend & Infrastructure
-- **Node.js & Express**
-- **Mongoose** (Advanced aggregation for analytics)
-- **Nodemailer** (Robust email infrastructure)
-- **Groq AI SDK** (Llama 3 series)
-- **Upstash Redis** (Caching layer)
-
----
-
-## 📁 Key Directories
-- `backend/controllers`: Core business logic and AI integration.
-- `frontend/src/components/admin`: Specialized administrative tools.
-- `frontend/src/pages/Student`: Personalized student learning modules.
-- `grade9/grade10`: Static content repository for core school subjects.
-
----
-
-## 📝 Administrative API (Master Admin)
-- `PUT /api/admin/users/:userId/lock` - Toggle user access status.
-- `PUT /api/admin/users/:userId/reset-password` - Generate and mail temporary credentials.
-- `GET /api/admin/users/:userId/analytics` - Fetch deep-dive performance metrics for a student.
-
----
-
-## 📄 License
-This project is licensed under the MIT License.
+## 📝 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👨‍💻 Developed By
-**Sarvottam Institute Engineering Team**
-*Empowering the next generation of learners.*
+**Sarvottam Institute Engineering Team**  
+*Building the future of digital education.*

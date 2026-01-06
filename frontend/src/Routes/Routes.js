@@ -32,6 +32,7 @@ export const myCourses = "/my-courses";
 export const courseLearning = "/course/:courseId/learn";
 export const liveClassHost = "/live-class/:classId/host";
 export const notifications = "/notifications";
+export const supportTickets = "/support-tickets";
 
 // Admin routes
 export const adminLogin = "/admin/login";

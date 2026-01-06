@@ -20,6 +20,10 @@ import messageRoutes from "./routes/message.routes.js";
 import courseRoutes from "./routes/course.routes.js";
 import liveClassRoutes from "./routes/liveClass.routes.js";
 
+import supportRoutes from "./routes/support.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
+import uploadRoutes from "./routes/upload.routes.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -98,10 +102,9 @@ console.log("Mounting /api/message routes...");
 app.use("/api/message", messageRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/live-classes", liveClassRoutes);
-import paymentRoutes from "./routes/payment.routes.js";
 app.use("/api/payment", paymentRoutes);
-import uploadRoutes from "./routes/upload.routes.js";
 app.use("/api/upload", uploadRoutes);
+app.use("/api/support", supportRoutes);
 
 const grade10Path = path.join(__dirname, "../grade10");
 const grade9Path = path.join(__dirname, "../grade9");

@@ -42,6 +42,7 @@ import {
   courseLearning,
   liveClassHost,
   notifications,
+  supportTickets,
 } from "./Routes/Routes";
 
 import conf from "./conf/conf";
@@ -80,6 +81,7 @@ const Courses = React.lazy(() => import("./pages/Courses"));
 const MyCourses = React.lazy(() => import("./pages/MyCourses"));
 const CourseLearning = React.lazy(() => import("./pages/CourseLearning"));
 const LiveClassHost = React.lazy(() => import("./pages/LiveClassHost"));
+const SupportTickets = React.lazy(() => import("./pages/SupportTickets"));
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Skeleton } from "./components/Skeleton"; // Use our new Skeleton component
@@ -154,6 +156,7 @@ function App() {
           <Route path={quizHistory} element={<ProtectedRoute><QuizHistory /></ProtectedRoute>} />
           <Route path={profile} element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path={notifications} element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+          <Route path={supportTickets} element={<ProtectedRoute><SupportTickets /></ProtectedRoute>} />
           <Route path={importantQuestions} element={<ProtectedRoute><ImportantQuestions /></ProtectedRoute>} />
           <Route path={ncertSolutions} element={<ProtectedRoute><NcertSolutions /></ProtectedRoute>} />
           <Route path={ncertExemplar} element={<ProtectedRoute><NcertExemplar /></ProtectedRoute>} />

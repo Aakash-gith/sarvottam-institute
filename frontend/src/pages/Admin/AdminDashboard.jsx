@@ -39,7 +39,8 @@ import {
     Unlock,
     Key,
     HelpCircle,
-    LayoutGrid
+    LayoutGrid,
+    Ticket
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import API from "../../api/axios";
@@ -53,6 +54,7 @@ import AdminManagement from "../../components/admin/AdminManagement"; // Added
 import AdminUserAnalytics from "../../components/admin/AdminUserAnalytics";
 import AdminChat from "../../components/admin/AdminChat";
 import AdminCourses from "../../components/admin/AdminCourses";
+import AdminSupport from "../../components/admin/AdminSupport";
 import ClockWidget from "../../components/clock-01";
 import ThemeToggle from "../../components/ThemeToggle";
 import logo from "../../assets/logo.png";
@@ -63,6 +65,7 @@ function AdminDashboard() {
     const [adminInfo, setAdminInfo] = useState(null);
     const [stats, setStats] = useState(null);
     const [activeTab, setActiveTab] = useState("dashboard");
+    const [activeProfileView, setActiveProfileView] = useState("account");
     const [activeCategory, setActiveCategory] = useState("manage");
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
@@ -175,7 +178,8 @@ function AdminDashboard() {
             title: "Overview",
             items: [
                 { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, visible: true },
-                { id: 'chat', label: 'Support Chat', icon: MessageSquare, visible: true },
+                { id: 'support', label: 'Support Inbox', icon: Ticket, visible: true },
+                { id: 'chat', label: 'Live Chat', icon: MessageSquare, visible: true },
             ]
         },
         courses: {
@@ -374,19 +378,16 @@ function AdminDashboard() {
 
                                 {/* 2. Menu Items */}
                                 <div className="py-2 space-y-1">
-                                    <button onClick={() => { setActiveTab('profile'); setShowProfileMenu(false); }} className="profile-menu-item">
+                                    <button onClick={() => { setActiveTab('profile'); setActiveProfileView('account'); setShowProfileMenu(false); }} className="profile-menu-item">
                                         <User size={18} /> <span>Account</span>
                                     </button>
-                                    <button className="profile-menu-item">
-                                        <LayoutGrid size={18} /> <span>Integrations</span>
-                                    </button>
-                                    <button onClick={() => { setActiveTab('profile'); setShowProfileMenu(false); }} className="profile-menu-item">
+                                    <button onClick={() => { setActiveTab('profile'); setActiveProfileView('settings'); setShowProfileMenu(false); }} className="profile-menu-item">
                                         <Settings size={18} /> <span>Settings</span>
                                     </button>
-                                    <button onClick={() => { setActiveTab('guide'); setShowProfileMenu(false); }} className="profile-menu-item">
+                                    <button onClick={() => { setActiveTab('profile'); setActiveProfileView('guide'); setShowProfileMenu(false); }} className="profile-menu-item">
                                         <BookOpen size={18} /> <span>Guide</span>
                                     </button>
-                                    <button onClick={() => { setActiveTab('help'); setShowProfileMenu(false); }} className="profile-menu-item">
+                                    <button onClick={() => { setActiveTab('profile'); setActiveProfileView('help'); setShowProfileMenu(false); }} className="profile-menu-item">
                                         <HelpCircle size={18} /> <span>Help</span>
                                     </button>
                                 </div>
@@ -514,18 +515,25 @@ function AdminDashboard() {
                         {/* Content rendering based on active tab */}
                         <div className={`animate__animated animate__fadeInUp animate__faster ${activeTab === 'chat' ? 'flex-1 flex flex-col min-h-0' : ''}`}>
                             {activeTab === "dashboard" && <OverviewTab adminInfo={adminInfo} stats={stats} setActiveTab={setActiveTab} />}
-                            {activeTab === "profile" && <ProfileTab adminInfo={adminInfo} onUpdate={fetchAdminInfo} />}
+                            {activeTab === "profile" && (
+                                <ProfileTab
+                                    adminInfo={adminInfo}
+                                    onUpdate={fetchAdminInfo}
+                                    activeView={activeProfileView}
+                                    setActiveView={setActiveProfileView}
+                                    handleLogout={handleLogout}
+                                />
+                            )}
                             {activeTab === "students" && <StudentsTab isMobile={isMobile} adminInfo={adminInfo} />}
                             {activeTab === "book-upload" && <NotesUpload />}
                             {activeTab === "pyq-upload" && <PYQUpload />}
                             {activeTab === "notifications" && <NotificationsManager />}
                             {activeTab === "chat" && <AdminChat />}
+                            {activeTab === "support" && <AdminSupport adminInfo={adminInfo} />}
                             {activeTab === "courses" && <AdminCourses />}
                             {activeTab === "admin" && (
                                 <AdminManagement adminInfo={adminInfo} />
                             )}
-                            {activeTab === "guide" && <GuideTab />}
-                            {activeTab === "help" && <HelpTab />}
                         </div>
                     </div>
                 </main>
@@ -752,7 +760,7 @@ function StatCard({ icon: Icon, title, description, color, delay, onClick }) {
     );
 }
 
-function ProfileTab({ adminInfo, onUpdate }) {
+function ProfileTab({ adminInfo, onUpdate, activeView, setActiveView, handleLogout }) {
     const [uploading, setUploading] = useState(false);
     const fileInputRef = React.useRef(null);
 
@@ -771,13 +779,11 @@ function ProfileTab({ adminInfo, onUpdate }) {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Check file type
         if (!file.type.startsWith('image/')) {
             toast.error("Please upload an image file");
             return;
         }
 
-        // Check file size (5MB)
         if (file.size > 5 * 1024 * 1024) {
             toast.error("File size should be less than 5MB");
             return;
@@ -825,105 +831,151 @@ function ProfileTab({ adminInfo, onUpdate }) {
     const profilePic = getProfilePictureUrl();
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Profile Card */}
-            <div className="md:col-span-1">
-                <div className="bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-3xl shadow-lg border border-slate-100 dark:border-slate-800 overflow-hidden relative transition-colors duration-300">
-                    <div className="h-32 bg-gradient-to-r from-blue-500 to-purple-600"></div>
-                    <div className="px-6 pb-6 text-center -mt-12 relative">
-                        <div className="w-24 h-24 mx-auto bg-white dark:bg-slate-900 rounded-full p-1 shadow-lg transition-colors duration-300 relative group">
+        <div className="flex flex-col lg:flex-row gap-8 animate__animated animate__fadeIn">
+            {/* Sub Sidebar */}
+            <aside className="w-full lg:w-72 shrink-0">
+                <div className="bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden sticky top-0 lg:top-6 shadow-sm">
+                    <div className="p-6 pb-4 flex flex-col items-center text-center">
+                        <div className="w-20 h-20 rounded-2xl border-2 border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden mb-4 relative group">
                             {profilePic ? (
-                                <img src={profilePic} alt="Admin" className="w-full h-full rounded-full object-cover" />
+                                <img src={profilePic} alt="Profile" className="w-full h-full object-cover" />
                             ) : (
-                                <div className="w-full h-full bg-slate-900 dark:bg-black text-white rounded-full flex items-center justify-center text-3xl font-bold">
-                                    {adminInfo?.userId?.name?.charAt(0).toUpperCase() || "A"}
+                                <div className="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                                    <User size={32} />
                                 </div>
                             )}
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 cursor-pointer" onClick={handleUploadClick}>
+                                <Camera size={16} className="text-white" />
+                            </div>
+                        </div>
+                        <h2 className="text-xl font-bold text-slate-800 dark:text-white truncate w-full">{adminInfo?.userId?.name}</h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 truncate w-full">{adminInfo?.userId?.email}</p>
+                    </div>
 
-                            {/* Hover Overlay */}
-                            <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 cursor-pointer" onClick={handleUploadClick}>
-                                <div className="p-1.5 bg-white text-slate-900 rounded-full hover:bg-blue-50 transition-colors" title="Upload Photo">
-                                    <Camera size={16} />
-                                </div>
-                                {profilePic && (
-                                    <div
-                                        className="p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                                        title="Remove Photo"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleRemovePicture();
-                                        }}
-                                    >
-                                        <Trash2 size={16} />
+                    <div className="px-3 pb-6">
+                        <div className="h-px bg-slate-100 dark:bg-slate-800 my-2" />
+                        <nav className="space-y-1">
+                            {[
+                                { id: 'account', label: 'Account', icon: User },
+                                { id: 'settings', label: 'Settings', icon: Settings },
+                                { id: 'guide', label: 'Guide', icon: BookOpen },
+                                { id: 'help', label: 'Help', icon: HelpCircle },
+                            ].map((item) => (
+                                <button
+                                    key={item.id}
+                                    onClick={() => setActiveView(item.id)}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${activeView === item.id
+                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
+                                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                                        }`}
+                                >
+                                    <item.icon size={20} />
+                                    {item.label}
+                                </button>
+                            ))}
+                            <div className="h-px bg-slate-100 dark:bg-slate-800 my-4" />
+                            <button
+                                onClick={handleLogout}
+                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all"
+                            >
+                                <LogOut size={20} />
+                                Sign Out
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+                <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
+            </aside>
+
+            {/* Main Content Area */}
+            <main className="flex-1 min-w-0">
+                {activeView === 'account' && (
+                    <div className="space-y-6">
+                        {/* Profile Header Card */}
+                        <div className="bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+                            <div className="h-32 bg-gradient-to-r from-blue-600 to-indigo-700 relative">
+                                <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+                            </div>
+                            <div className="px-8 pb-8 -mt-12 relative z-10">
+                                <div className="flex flex-col md:flex-row items-center md:items-end gap-6 mb-8 text-center md:text-left">
+                                    <div className="w-24 h-24 rounded-2xl border-4 border-white dark:border-slate-900 bg-white dark:bg-slate-800 shadow-xl overflow-hidden relative group">
+                                        {profilePic ? (
+                                            <img src={profilePic} alt="Profile" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                                                <User size={32} />
+                                            </div>
+                                        )}
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 cursor-pointer" onClick={handleUploadClick}>
+                                            <Camera size={16} className="text-white" />
+                                        </div>
                                     </div>
-                                )}
-                            </div>
-
-                            {uploading && (
-                                <div className="absolute inset-0 bg-white/60 dark:bg-slate-900/60 rounded-full flex items-center justify-center z-10">
-                                    <Loader2 className="animate-spin text-blue-500" size={24} />
+                                    <div className="flex-1">
+                                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">{adminInfo?.userId?.name}</h3>
+                                        <div className="flex flex-wrap items-center gap-3 justify-center md:justify-start">
+                                            <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-bold uppercase tracking-wider">
+                                                {adminInfo?.role?.replace('_', ' ')}
+                                            </span>
+                                            <span className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
+                                                <Mail size={14} /> {adminInfo?.userId?.email}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={handleUploadClick}
+                                        className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25 hover:bg-blue-700 transition-all flex items-center gap-2"
+                                    >
+                                        <Camera size={18} /> Edit Photo
+                                    </button>
                                 </div>
-                            )}
-                        </div>
 
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            className="hidden"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                        />
-
-                        <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-4">{adminInfo?.userId?.name || "Master Admin"}</h2>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">{adminInfo?.userId?.email || "admin@example.com"}</p>
-
-                        <div className="flex justify-center gap-2 mb-6">
-                            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold capitalize border border-blue-200">
-                                {adminInfo?.role?.replace('_', ' ')}
-                            </span>
-                        </div>
-
-                        <div className="space-y-4 text-left">
-                            <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                                <Mail size={18} className="text-blue-500" />
-                                <span className="text-sm font-medium">{adminInfo?.userId?.email}</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                                <Shield size={18} className="text-purple-500" />
-                                <span className="text-sm font-medium capitalize">{adminInfo?.role} Privileges</span>
+                                {/* Permissions Grid */}
+                                <div className="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                    <h4 className="text-lg font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
+                                        <Shield size={20} className="text-indigo-500" /> Administrative Privileges
+                                    </h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <PermissionItem name="Upload Notes" allowed={adminInfo?.permissions?.uploadNotes} />
+                                        <PermissionItem name="Upload PYQ" allowed={adminInfo?.permissions?.uploadPYQ} />
+                                        <PermissionItem name="Manage Events" allowed={adminInfo?.permissions?.manageEvents} />
+                                        <PermissionItem name="Send Notifications" allowed={adminInfo?.permissions?.sendNotifications} />
+                                        <PermissionItem name="Manage Admins" allowed={adminInfo?.permissions?.manageAdmins} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                )}
 
-            {/* Permissions & Details */}
-            <div className="md:col-span-2 space-y-8">
-                <div className="bg-white dark:bg-slate-900/50 dark:backdrop-blur-md rounded-3xl shadow-lg border border-slate-100 dark:border-slate-800 p-8 transition-colors duration-300">
-                    <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
-                        <Shield className="text-emerald-500" /> Access & Permissions
-                    </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <PermissionItem
-                            name="Upload Notes"
-                            allowed={adminInfo?.permissions?.uploadNotes}
-                        />
-                        <PermissionItem name="Upload PYQ" allowed={adminInfo?.permissions?.uploadPYQ} />
-                        <PermissionItem
-                            name="Manage Events"
-                            allowed={adminInfo?.permissions?.manageEvents}
-                        />
-                        <PermissionItem
-                            name="Send Notifications"
-                            allowed={adminInfo?.permissions?.sendNotifications}
-                        />
-                        <PermissionItem
-                            name="Manage Admins"
-                            allowed={adminInfo?.permissions?.manageAdmins}
-                        />
+                {activeView === 'settings' && (
+                    <div className="bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800 p-8 shadow-sm">
+                        <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
+                            <Settings size={28} className="text-blue-500" /> Account Settings
+                        </h2>
+                        <div className="space-y-6 max-w-2xl">
+                            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                                <h3 className="font-bold text-slate-800 dark:text-white mb-4">Security</h3>
+                                <button className="px-6 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all">
+                                    Change Password
+                                </button>
+                            </div>
+                            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                                <h3 className="font-bold text-slate-800 dark:text-white mb-4">Notifications</h3>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-slate-600 dark:text-slate-400">Email Alerts for Requests</span>
+                                    <div className="w-12 h-6 bg-blue-600 rounded-full relative cursor-pointer">
+                                        <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                )}
+
+
+                {activeView === 'guide' && <GuideTab />}
+                {activeView === 'help' && <HelpTab />}
+            </main>
         </div>
     );
 }

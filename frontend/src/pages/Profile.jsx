@@ -9,7 +9,7 @@ import {
   CheckCircle, XCircle, Clock, BarChart3, Camera, Upload, Trash2,
   ChevronUp, ChevronDown, Moon, Sun, ChevronRight, Bell, Shield, Settings,
   LogOut, LayoutGrid, HelpCircle, Lock, Globe, Eye, Smartphone, Laptop, Info, ChevronLeft,
-  Video, Book, MessageSquare, ShieldCheck
+  Video, Book, MessageSquare, ShieldCheck, Ticket, Plus, Loader2, Zap
 } from "lucide-react";
 import API from "../api/axios";
 import { login, logout } from "../store/authSlice";
@@ -35,6 +35,12 @@ function Profile() {
   const [profilePicture, setProfilePicture] = useState(null);
   const [showPictureMenu, setShowPictureMenu] = useState(false);
   const [showCameraModal, setShowCameraModal] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [supportStep, setSupportStep] = useState('choice'); // 'choice', 'ticket', 'email', 'success'
+  const [myTickets, setMyTickets] = useState([]);
+  const [isSubmittingTicket, setIsSubmittingTicket] = useState(false);
+  const [ticketForm, setTicketForm] = useState({ subject: '', category: 'General', description: '' });
+  const [lastCreatedTicketId, setLastCreatedTicketId] = useState("");
   const [uploadingPicture, setUploadingPicture] = useState(false);
 
   const [passwords, setPasswords] = useState({ current: "", new: "", confirm: "" });
@@ -82,7 +88,19 @@ function Profile() {
       return;
     }
     fetchProfileStats();
+    fetchTickets();
   }, [userData, navigate]);
+
+  const fetchTickets = async () => {
+    try {
+      const response = await API.get("/support/my-tickets");
+      if (response.data.success) {
+        setMyTickets(response.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch tickets:", error);
+    }
+  };
 
   const fetchProfileStats = async () => {
     try {
@@ -368,6 +386,31 @@ function Profile() {
     if (profilePicture.startsWith('http')) return profilePicture;
     const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000';
     return `${baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl}${profilePicture.startsWith('/') ? profilePicture : `/${profilePicture}`}`;
+  };
+
+  const handleCreateTicket = async (e) => {
+    e.preventDefault();
+    setIsSubmittingTicket(true);
+    try {
+      const response = await API.post("/support/tickets", {
+        ...ticketForm,
+        type: 'Ticket',
+        tags: {
+          class: userData?.class || 'N/A',
+          course: userData?.batch || 'N/A'
+        }
+      });
+      if (response.data.success) {
+        setLastCreatedTicketId(response.data.data.ticketId);
+        toast.success("Support ticket created!");
+        setSupportStep('success');
+        fetchTickets();
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to create ticket");
+    } finally {
+      setIsSubmittingTicket(false);
+    }
   };
 
   if (loading) {
@@ -688,11 +731,34 @@ function Profile() {
                         </div>
                       ))}
                     </div>
-                    <div className="p-6 bg-primary/5 rounded-2xl border border-primary/20 text-center">
-                      <p className="font-bold text-primary mb-4">Need further assistance?</p>
-                      <button className="px-8 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/25">
-                        Contact Support Team
-                      </button>
+                    {/* Support Actions */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-6 bg-primary/5 rounded-2xl border border-primary/20">
+                        <p className="font-bold text-primary mb-4">Facing an issue?</p>
+                        <button
+                          onClick={() => { setShowSupportModal(true); setSupportStep('choice'); }}
+                          className="w-full py-4 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-2"
+                        >
+                          <Plus size={20} />
+                          Contact Support
+                        </button>
+                      </div>
+
+                      <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-border">
+                        <p className="font-bold text-gray-700 dark:text-gray-300 mb-4">Existing Requests</p>
+                        <button
+                          onClick={() => navigate("/support-tickets")}
+                          className="w-full py-4 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-border rounded-xl font-bold hover:border-primary transition-all flex items-center justify-center gap-2"
+                        >
+                          <Ticket size={20} className="text-primary" />
+                          View All Tickets
+                          {myTickets.length > 0 && (
+                            <span className="ml-1 px-2 py-0.5 bg-primary/10 text-primary text-[10px] rounded-full">
+                              {myTickets.length}
+                            </span>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -718,6 +784,171 @@ function Profile() {
                 <button onClick={capturePhoto} className="px-8 py-3 bg-primary text-white rounded-xl transition-colors flex items-center gap-2 font-semibold shadow-lg shadow-primary/25">
                   <Camera size={20} /> Capture
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Support Modal */}
+        {showSupportModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
+            <div className="bg-card dark:bg-slate-900 rounded-3xl overflow-hidden max-w-xl w-full border border-border shadow-2xl animate-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between p-6 border-b border-border bg-gray-50/50 dark:bg-slate-800/50">
+                <h3 className="text-xl font-bold dark:text-white flex items-center gap-3">
+                  <HelpCircle size={24} className="text-primary" />
+                  Help & Support
+                </h3>
+                <button
+                  onClick={() => setShowSupportModal(false)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+                >
+                  <X size={20} className="text-gray-500" />
+                </button>
+              </div>
+
+              <div className="p-8">
+                {supportStep === 'choice' && (
+                  <div className="space-y-6">
+                    <p className="text-gray-500 dark:text-gray-400 text-center mb-8">How would you like to reach out to us today?</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button
+                        onClick={() => setSupportStep('ticket')}
+                        className="p-6 bg-blue-50 dark:bg-blue-900/10 border-2 border-transparent hover:border-primary/50 rounded-2xl text-left transition-all group"
+                      >
+                        <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                          <Ticket size={24} />
+                        </div>
+                        <h4 className="font-bold text-gray-900 dark:text-white mb-2">Create a Ticket</h4>
+                        <p className="text-xs text-gray-500 leading-relaxed">Most efficient for technical queries & status tracking.</p>
+                      </button>
+
+                      <button
+                        onClick={() => setSupportStep('email')}
+                        className="p-6 bg-purple-50 dark:bg-purple-900/10 border-2 border-transparent hover:border-purple-500/50 rounded-2xl text-left transition-all group"
+                      >
+                        <div className="w-12 h-12 bg-purple-500/10 text-purple-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                          <Mail size={24} />
+                        </div>
+                        <h4 className="font-bold text-gray-900 dark:text-white mb-2">Email Support</h4>
+                        <p className="text-xs text-gray-500 leading-relaxed">Direct communication via our official helpdesk email.</p>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {supportStep === 'ticket' && (
+                  <form onSubmit={handleCreateTicket} className="space-y-5">
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Issue Subject</label>
+                      <input
+                        required
+                        type="text"
+                        placeholder="Briefly describe the issue"
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-background dark:bg-slate-800 text-gray-900 dark:text-white outline-none focus:border-primary transition-all shadow-sm"
+                        value={ticketForm.subject}
+                        onChange={(e) => setTicketForm({ ...ticketForm, subject: e.target.value })}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Category</label>
+                        <select
+                          className="w-full px-4 py-3 rounded-xl border border-border bg-background dark:bg-slate-800 text-gray-900 dark:text-white outline-none focus:border-primary transition-all shadow-sm"
+                          value={ticketForm.category}
+                          onChange={(e) => setTicketForm({ ...ticketForm, category: e.target.value })}
+                        >
+                          <option>General</option>
+                          <option>Technical</option>
+                          <option>Academic</option>
+                          <option>Payment</option>
+                          <option>Batch/Class Change</option>
+                          <option>Other</option>
+                        </select>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Class Context</label>
+                        <input
+                          disabled
+                          type="text"
+                          className="w-full px-4 py-3 rounded-xl border border-border bg-gray-50 dark:bg-slate-800/50 text-gray-400 shadow-sm"
+                          value={`Class ${userData?.class || '9/10'}`}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Detailed Description</label>
+                      <textarea
+                        required
+                        rows={4}
+                        placeholder="Please provide details about your concern..."
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-background dark:bg-slate-800 text-gray-900 dark:text-white outline-none focus:border-primary transition-all shadow-sm resize-none"
+                        value={ticketForm.description}
+                        onChange={(e) => setTicketForm({ ...ticketForm, description: e.target.value })}
+                      />
+                    </div>
+                    <div className="flex gap-3 pt-4">
+                      <button
+                        type="button"
+                        onClick={() => setSupportStep('choice')}
+                        className="flex-1 py-3 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-xl font-bold transition-all hover:bg-gray-200 dark:hover:bg-slate-700"
+                      >
+                        Back
+                      </button>
+                      <button
+                        disabled={isSubmittingTicket}
+                        type="submit"
+                        className="flex-[2] py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                      >
+                        {isSubmittingTicket ? <Loader2 className="animate-spin" size={20} /> : <Plus size={20} />}
+                        Create Ticket
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {supportStep === 'email' && (
+                  <div className="text-center space-y-6 py-4">
+                    <div className="w-20 h-20 bg-purple-500/10 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Mail size={40} />
+                    </div>
+                    <h4 className="text-xl font-bold dark:text-white">Email Our Helpdesk</h4>
+                    <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto leading-relaxed">
+                      Send us an email directly at our official support address. We typically respond within 24 hours.
+                    </p>
+                    <a
+                      href={`mailto:support@sarvottaminstitute.com?subject=Support Request - ${userData?.name}&body=Class: ${userData?.class}%0D%0AUser ID: ${userData?._id}%0D%0A%0D%0ADescription:`}
+                      className="inline-flex py-3 px-10 bg-purple-600 text-white rounded-xl font-bold shadow-lg shadow-purple-500/25 hover:bg-purple-700 transition-all items-center gap-2"
+                    >
+                      <Mail size={20} /> Open Mail Client
+                    </a>
+                    <button
+                      onClick={() => setSupportStep('choice')}
+                      className="block w-full text-sm text-gray-400 hover:text-primary transition-colors mt-6"
+                    >
+                      Choose another method
+                    </button>
+                  </div>
+                )}
+
+                {supportStep === 'success' && (
+                  <div className="text-center space-y-6 py-8">
+                    <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                      <Zap size={40} />
+                    </div>
+                    <h4 className="text-2xl font-bold dark:text-white text-emerald-500">Ticket Submitted!</h4>
+                    <div className="bg-emerald-50 dark:bg-emerald-900/20 py-2 px-4 rounded-xl border border-emerald-100 dark:border-emerald-800 inline-block">
+                      <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">Ticket ID: #{lastCreatedTicketId}</p>
+                    </div>
+                    <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto leading-relaxed">
+                      Your support ticket has been created successfully. Our team will review it and get back to you shortly.
+                    </p>
+                    <button
+                      onClick={() => setShowSupportModal(false)}
+                      className="py-3 px-10 bg-emerald-600 text-white rounded-xl font-bold shadow-lg shadow-emerald-500/25 hover:bg-emerald-700 transition-all"
+                    >
+                      Got it, thanks!
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

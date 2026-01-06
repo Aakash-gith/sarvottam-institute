@@ -383,10 +383,10 @@ function AdminDashboard() {
                                     <button onClick={() => { setActiveTab('profile'); setShowProfileMenu(false); }} className="profile-menu-item">
                                         <Settings size={18} /> <span>Settings</span>
                                     </button>
-                                    <button className="profile-menu-item">
+                                    <button onClick={() => { setActiveTab('guide'); setShowProfileMenu(false); }} className="profile-menu-item">
                                         <BookOpen size={18} /> <span>Guide</span>
                                     </button>
-                                    <button className="profile-menu-item">
+                                    <button onClick={() => { setActiveTab('help'); setShowProfileMenu(false); }} className="profile-menu-item">
                                         <HelpCircle size={18} /> <span>Help</span>
                                     </button>
                                 </div>
@@ -524,6 +524,8 @@ function AdminDashboard() {
                             {activeTab === "admin" && (
                                 <AdminManagement adminInfo={adminInfo} />
                             )}
+                            {activeTab === "guide" && <GuideTab />}
+                            {activeTab === "help" && <HelpTab />}
                         </div>
                     </div>
                 </main>
@@ -1402,5 +1404,72 @@ function PermissionItem({ name, allowed }) {
     );
 }
 
+function GuideTab() {
+    return (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-card dark:bg-slate-900/50 rounded-2xl border border-border p-8 shadow-sm">
+                <h2 className="text-2xl font-bold dark:text-white mb-8 flex items-center gap-3">
+                    <BookOpen size={28} className="text-primary" />
+                    Admin Platform Guide
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[
+                        { step: 1, title: 'Manage Students', desc: 'Approve or lock student accounts and view their detailed analytics.', icon: Users },
+                        { step: 2, title: 'Upload Content', desc: 'Add new Notes, PYQs, and other study materials for students.', icon: Upload },
+                        { step: 3, title: 'Monitor Activity', desc: 'Track overall platform performance and recent student admissions.', icon: Activity },
+                        { step: 4, title: 'Batch Management', desc: 'Control course batches, set prices, and manage enrollments.', icon: Layers },
+                        { step: 5, title: 'Support System', desc: 'Respond to student queries in real-time through the Support Chat.', icon: MessageSquare },
+                        { step: 6, title: 'Settings', desc: 'Manage system configurations and integration with external tools.', icon: Settings },
+                    ].map((s) => (
+                        <div key={s.step} className="p-6 bg-background dark:bg-slate-800 rounded-2xl border border-border relative text-left transition-all hover:border-primary/50 group">
+                            <span className="absolute -top-4 -left-3 w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center font-bold shadow-lg group-hover:scale-110 transition-transform">{s.step}</span>
+                            <div className="text-primary mb-4 mt-2 group-hover:scale-110 transition-transform"><s.icon size={28} /></div>
+                            <h3 className="text-lg font-bold mb-2 dark:text-white">{s.title}</h3>
+                            <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function HelpTab() {
+    return (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-card dark:bg-slate-900/50 rounded-2xl border border-border p-8 shadow-sm">
+                <h2 className="text-2xl font-bold dark:text-white mb-8 flex items-center gap-3">
+                    <HelpCircle size={28} className="text-primary" />
+                    Admin Help Center
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-left">
+                    {[
+                        { q: 'How to approve new students?', a: 'Go to Notifications or Dashboard and check for Pending Requests.' },
+                        { q: 'How to reset student password?', a: 'Find the student in User Management and use the Reset icon in their card.' },
+                        { q: 'Can I delete content?', a: 'Only Master Admins can delete uploaded content at this time.' },
+                        { q: 'How to send announcements?', a: 'Use the Notifications section to send platform-wide push alerts.' },
+                        { q: 'Creating new batches?', a: 'Go to Course Management and click on "Add New Batch" button.' },
+                        { q: 'Permission levels?', a: 'Admins have specific permissions; Master Admins have full access.' },
+                        { q: 'Manage live classes?', a: 'You can update live class links in the dedicated Live Class section.' },
+                        { q: 'Payment reports?', a: 'Real-time payment and enrollment data is visible in the Revenue section.' },
+                    ].map((faq, i) => (
+                        <div key={i} className="p-4 bg-background dark:bg-slate-800 rounded-xl border border-border hover:border-primary/30 transition-colors">
+                            <h4 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                                <MessageSquare size={16} className="text-primary" /> {faq.q}
+                            </h4>
+                            <p className="text-sm text-gray-500 leading-relaxed">{faq.a}</p>
+                        </div>
+                    ))}
+                </div>
+                <div className="p-6 bg-primary/5 rounded-2xl border border-primary/20 text-center">
+                    <p className="font-bold text-primary mb-4">Technical Issues?</p>
+                    <button className="px-8 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/25">
+                        Contact System Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default AdminDashboard;

@@ -524,10 +524,10 @@ const Sidebar = () => {
                                             <button onClick={() => { navigate('/profile?view=settings'); setShowProfileMenu(false); }} className="profile-menu-item">
                                                 <Settings size={18} /> <span>Settings</span>
                                             </button>
-                                            <button className="profile-menu-item">
+                                            <button onClick={() => { navigate('/profile?view=guide'); setShowProfileMenu(false); }} className="profile-menu-item">
                                                 <BookOpen size={18} /> <span>Guide</span>
                                             </button>
-                                            <button className="profile-menu-item">
+                                            <button onClick={() => { navigate('/profile?view=help'); setShowProfileMenu(false); }} className="profile-menu-item">
                                                 <HelpCircle size={18} /> <span>Help</span>
                                             </button>
                                         </div>

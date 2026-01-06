@@ -646,10 +646,13 @@ function Profile() {
                         { step: 1, title: 'Access Courses', desc: 'Find curated subject-wise notes and videos in the Learning section.', icon: Book },
                         { step: 2, title: 'Attempt Quizzes', desc: 'Earn XP and maintain your streak by taking daily quizzes.', icon: Target },
                         { step: 3, title: 'Track Progress', desc: 'View performance analytics and previous attempts in the Dashboard.', icon: BarChart3 },
+                        { step: 4, title: 'Live Classes', desc: 'Join interactive live sessions with teachers according to your schedule.', icon: Video },
+                        { step: 5, title: 'Doubt Support', desc: 'Use the Chat feature to ask questions and get help from experts.', icon: MessageSquare },
+                        { step: 6, title: 'Resources', desc: 'Download NCERT solutions, Exemplars, and Previous Year Questions.', icon: LayoutGrid },
                       ].map((s) => (
-                        <div key={s.step} className="p-6 bg-background dark:bg-slate-800 rounded-2xl border border-border relative text-left">
-                          <span className="absolute -top-4 -left-3 w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center font-bold shadow-lg">{s.step}</span>
-                          <div className="text-primary mb-4 mt-2"><s.icon size={28} /></div>
+                        <div key={s.step} className="p-6 bg-background dark:bg-slate-800 rounded-2xl border border-border relative text-left transition-all hover:border-primary/50 group">
+                          <span className="absolute -top-4 -left-3 w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center font-bold shadow-lg group-hover:scale-110 transition-transform">{s.step}</span>
+                          <div className="text-primary mb-4 mt-2 group-hover:scale-110 transition-transform"><s.icon size={28} /></div>
                           <h3 className="text-lg font-bold mb-2 dark:text-white">{s.title}</h3>
                           <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
                         </div>
@@ -671,9 +674,13 @@ function Profile() {
                         { q: 'How to reset my password?', a: 'Go to Account > Security and use the password update form.' },
                         { q: 'Is my data secure?', a: 'We use industry-standard encryption for all your personal data.' },
                         { q: 'How to contact teacher?', a: 'Use the Chat section to message your respective subject teachers.' },
-                        { q: 'Can I change my class?', a: 'Class changes are restricted but can be done from the Account view.' },
+                        { q: 'Can I change my class?', a: 'Class changes are restricted but can be requested from the Account view.' },
+                        { q: 'How to join live classes?', a: 'Links for live classes appear in your batch dashboard when active.' },
+                        { q: 'What are Streaks/XP?', a: 'Consistent daily usage builds streaks and earns XP for ranking.' },
+                        { q: 'Accessing paid batches?', a: 'Once enrolled, paid batches will appear in the "My Batches" section.' },
+                        { q: 'Where are quiz results?', a: 'Detailed analysis of all attempts is available in your Dashboard.' },
                       ].map((faq, i) => (
-                        <div key={i} className="p-4 bg-background dark:bg-slate-800 rounded-xl border border-border">
+                        <div key={i} className="p-4 bg-background dark:bg-slate-800 rounded-xl border border-border hover:border-primary/30 transition-colors">
                           <h4 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                             <MessageSquare size={16} className="text-primary" /> {faq.q}
                           </h4>

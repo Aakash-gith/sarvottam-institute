@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
     LayoutDashboard,
     Users,
@@ -40,11 +40,19 @@ import {
     Key,
     HelpCircle,
     LayoutGrid,
-    Ticket
+    Ticket,
+    Sun,
+    Moon,
+    Laptop,
+    Globe,
+    Smartphone
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import API from "../../api/axios";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { login, logout } from "../../store/authSlice";
+import { setTheme } from "../../store/themeSlice";
 import NotesUpload from "../../components/admin/NotesUpload";
 import PYQUpload from "../../components/admin/PYQUpload";
 import EventsManager from "../../components/admin/EventsManager";
@@ -62,11 +70,12 @@ import defaultUser from "../../assets/default-user.png";
 import "../../components/Sidebar.css"; // Import shared Sidebar styles
 
 function AdminDashboard() {
+    const [searchParams, setSearchParams] = useSearchParams();
     const [adminInfo, setAdminInfo] = useState(null);
     const [stats, setStats] = useState(null);
-    const [activeTab, setActiveTab] = useState("dashboard");
-    const [activeProfileView, setActiveProfileView] = useState("account");
-    const [activeCategory, setActiveCategory] = useState("manage");
+    const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "dashboard");
+    const [activeProfileView, setActiveProfileView] = useState(searchParams.get("profileView") || "account");
+    const [activeCategory, setActiveCategory] = useState(searchParams.get("cat") || "manage");
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -74,6 +83,8 @@ function AdminDashboard() {
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const dispatch = useDispatch();
+    const mode = useSelector((state) => state.theme.mode);
 
     // Refs for click outside
     const mobileNotifRef = React.useRef(null);
@@ -122,6 +133,12 @@ function AdminDashboard() {
             const { data } = await API.get("/admin/info");
             if (data.success) {
                 setAdminInfo(data.data);
+                // Sync with Redux for theme persistence and global access
+                dispatch(login({
+                    user: data.data.userId,
+                    accessToken: localStorage.getItem("accessToken"),
+                    refreshToken: localStorage.getItem("refreshToken")
+                }));
             }
         } catch (error) {
             console.error("Failed to fetch admin info:", error);
@@ -157,10 +174,28 @@ function AdminDashboard() {
     }, []);
 
     const handleLogout = () => {
+        dispatch(logout());
         localStorage.clear();
         navigate("/admin/login");
         toast.success("Logged out successfully");
     };
+
+    // Keep state in sync with URL changes (e.g. back/forward button)
+    useEffect(() => {
+        const tab = searchParams.get("tab");
+        const cat = searchParams.get("cat");
+        const profileView = searchParams.get("profileView");
+
+        if (tab && tab !== activeTab) {
+            setActiveTab(tab);
+        }
+        if (cat && cat !== activeCategory) {
+            setActiveCategory(cat);
+        }
+        if (profileView && profileView !== activeProfileView) {
+            setActiveProfileView(profileView);
+        }
+    }, [searchParams]);
 
     if (loading) {
         return (
@@ -215,21 +250,30 @@ function AdminDashboard() {
     const currentCategoryItems = categoryMenus[activeCategory]?.items.filter(item => item.visible) || [];
 
     const handleTabChange = (tabId) => {
+        if (tabId === activeTab) return;
         setActiveTab(tabId);
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("tab", tabId);
+        setSearchParams(newParams);
         if (isMobile) setIsMobileOpen(false);
     };
 
     const handleCategoryClick = (catId) => {
+        if (catId === activeCategory) return;
         setActiveCategory(catId);
-        if (isMobile) {
-            // If it's a direct link to dashboard, close menu
-            if (catId === 'manage') {
-                // but usually user wants to see the submenu items on mobile?
-                // The current design shows a submenu in 'right' pane.
-                // So on mobile, clicking a category should stay in menu but update 'right' pane items.
-            }
-        }
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("cat", catId);
+        setSearchParams(newParams);
     };
+
+    const handleProfileViewChange = (view) => {
+        if (view === activeProfileView) return;
+        setActiveProfileView(view);
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("profileView", view);
+        setSearchParams(newParams);
+    };
+
 
     return (
         <div className="flex h-screen bg-background text-foreground font-poppins selection:bg-primary selection:text-white overflow-hidden">
@@ -520,7 +564,7 @@ function AdminDashboard() {
                                     adminInfo={adminInfo}
                                     onUpdate={fetchAdminInfo}
                                     activeView={activeProfileView}
-                                    setActiveView={setActiveProfileView}
+                                    setActiveView={handleProfileViewChange}
                                     handleLogout={handleLogout}
                                 />
                             )}
@@ -762,7 +806,52 @@ function StatCard({ icon: Icon, title, description, color, delay, onClick }) {
 
 function ProfileTab({ adminInfo, onUpdate, activeView, setActiveView, handleLogout }) {
     const [uploading, setUploading] = useState(false);
+    const [passwords, setPasswords] = useState({ current: "", new: "", confirm: "" });
+    const [changingPassword, setChangingPassword] = useState(false);
+    const [showPasswordForm, setShowPasswordForm] = useState(false);
+    const themeMode = useSelector((state) => state.theme.mode);
     const fileInputRef = React.useRef(null);
+
+    const handleUpdateSettings = async (updates) => {
+        try {
+            const res = await API.put("/user/update-settings", updates);
+            if (res.data.success) {
+                toast.success("Settings updated");
+                if (onUpdate) onUpdate();
+            }
+        } catch (error) {
+            toast.error("Failed to update settings");
+        }
+    };
+
+    const handleChangePassword = async (e) => {
+        e.preventDefault();
+        if (passwords.new !== passwords.confirm) {
+            toast.error("New passwords do not match");
+            return;
+        }
+        if (passwords.new.length < 6) {
+            toast.error("Password must be at least 6 characters");
+            return;
+        }
+
+        setChangingPassword(true);
+        try {
+            const res = await API.put("/user/change-password", {
+                currentPassword: passwords.current,
+                newPassword: passwords.new
+            });
+            if (res.data.success) {
+                toast.success("Password changed successfully");
+                setPasswords({ current: "", new: "", confirm: "" });
+                setShowPasswordForm(false);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to change password");
+        } finally {
+            setChangingPassword(false);
+        }
+    };
 
     const getProfilePictureUrl = () => {
         if (!adminInfo?.userId?.profilePicture) return null;
@@ -954,17 +1043,169 @@ function ProfileTab({ adminInfo, onUpdate, activeView, setActiveView, handleLogo
                         </h2>
                         <div className="space-y-6 max-w-2xl">
                             <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
-                                <h3 className="font-bold text-slate-800 dark:text-white mb-4">Security</h3>
-                                <button className="px-6 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all">
-                                    Change Password
-                                </button>
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="font-bold text-slate-800 dark:text-white">Security</h3>
+                                    {showPasswordForm && (
+                                        <button
+                                            onClick={() => setShowPasswordForm(false)}
+                                            className="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                                        >
+                                            Cancel
+                                        </button>
+                                    )}
+                                </div>
+
+                                {!showPasswordForm ? (
+                                    <button
+                                        onClick={() => setShowPasswordForm(true)}
+                                        className="px-6 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all"
+                                    >
+                                        Change Password
+                                    </button>
+                                ) : (
+                                    <form onSubmit={handleChangePassword} className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                                        <div className="text-left">
+                                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Current Password</label>
+                                            <input
+                                                type="password"
+                                                required
+                                                value={passwords.current}
+                                                onChange={(e) => setPasswords({ ...passwords, current: e.target.value })}
+                                                className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:text-white"
+                                                placeholder="••••••••"
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                                            <div>
+                                                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">New Password</label>
+                                                <input
+                                                    type="password"
+                                                    required
+                                                    value={passwords.new}
+                                                    onChange={(e) => setPasswords({ ...passwords, new: e.target.value })}
+                                                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:text-white"
+                                                    placeholder="••••••••"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Confirm New</label>
+                                                <input
+                                                    type="password"
+                                                    required
+                                                    value={passwords.confirm}
+                                                    onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
+                                                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:text-white"
+                                                    placeholder="••••••••"
+                                                />
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            disabled={changingPassword}
+                                            className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
+                                        >
+                                            {changingPassword ? <Loader2 size={18} className="animate-spin" /> : <Lock size={18} />}
+                                            Update Password
+                                        </button>
+                                    </form>
+                                )}
                             </div>
-                            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
-                                <h3 className="font-bold text-slate-800 dark:text-white mb-4">Notifications</h3>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-slate-600 dark:text-slate-400">Email Alerts for Requests</span>
-                                    <div className="w-12 h-6 bg-blue-600 rounded-full relative cursor-pointer">
-                                        <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm" />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* App Settings - Theme & Language */}
+                                <div className="space-y-6">
+                                    <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                                        <h3 className="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
+                                            <Sun size={18} className="text-orange-500" /> Appearance
+                                        </h3>
+                                        <div className="grid grid-cols-3 gap-3">
+                                            {[
+                                                { id: 'light', label: 'Light', icon: Sun },
+                                                { id: 'dark', label: 'Dark', icon: Moon },
+                                                { id: 'system', label: 'System', icon: Laptop },
+                                            ].map((t) => (
+                                                <button
+                                                    key={t.id}
+                                                    onClick={() => handleUpdateSettings({ theme: t.id })}
+                                                    className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${themeMode === t.id
+                                                        ? 'border-blue-500 bg-blue-500/5 text-blue-600 dark:text-blue-400'
+                                                        : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-500 hover:border-slate-300 dark:hover:border-slate-600'
+                                                        }`}
+                                                >
+                                                    <t.icon size={18} />
+                                                    <span className="text-[10px] font-bold uppercase tracking-wider">{t.label}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                                        <h3 className="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
+                                            <Globe size={18} className="text-blue-500" /> Language
+                                        </h3>
+                                        <select
+                                            value={adminInfo?.userId?.language || "English"}
+                                            onChange={(e) => handleUpdateSettings({ language: e.target.value })}
+                                            className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white font-medium focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                        >
+                                            <option value="English">English</option>
+                                            <option value="Hindi">Hindi (Beta)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Notifications Settings */}
+                                <div className="space-y-6">
+                                    <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                                        <h3 className="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
+                                            <Bell size={18} className="text-purple-500" /> Notifications
+                                        </h3>
+                                        <div className="space-y-4">
+                                            {[
+                                                { id: 'email', label: 'Email Alerts', icon: Mail, desc: 'Receive emails for new requests' },
+                                                { id: 'inApp', label: 'System Alerts', icon: Bell, desc: 'Real-time dashboard alerts' },
+                                            ].map((n) => (
+                                                <div key={n.id} className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-700">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                                                            <n.icon size={16} className="text-slate-600 dark:text-slate-400" />
+                                                        </div>
+                                                        <div className="text-left">
+                                                            <div className="text-xs font-bold text-slate-800 dark:text-white">{n.label}</div>
+                                                            <div className="text-[10px] text-slate-500">{n.desc}</div>
+                                                        </div>
+                                                    </div>
+                                                    <label className="relative inline-flex items-center cursor-pointer">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={adminInfo?.userId?.notificationPrefs?.[n.id]}
+                                                            onChange={(e) => handleUpdateSettings({
+                                                                notificationPrefs: {
+                                                                    ...adminInfo?.userId?.notificationPrefs,
+                                                                    [n.id]: e.target.checked
+                                                                }
+                                                            })}
+                                                            className="sr-only peer"
+                                                        />
+                                                        <div className="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                                        <h3 className="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
+                                            <Smartphone size={18} className="text-emerald-500" /> Device Sync
+                                        </h3>
+                                        <div className="flex items-center justify-between">
+                                            <div className="text-left">
+                                                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block">Push Notifications</span>
+                                                <span className="text-[10px] text-slate-500">Sync with your mobile device</span>
+                                            </div>
+                                            <div className="w-10 h-5 bg-blue-600 rounded-full relative cursor-pointer">
+                                                <div className="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

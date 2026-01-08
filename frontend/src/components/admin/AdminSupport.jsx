@@ -3,7 +3,7 @@ import {
     Search, Filter, Ticket, Mail, Clock, CheckCircle2,
     AlertCircle, User, MessageSquare, Send,
     History, ChevronRight, Loader2,
-    Check, X, Shield, Lock, FileText, ExternalLink
+    Check, X, Shield, Lock, FileText, ExternalLink, Plus
 } from "lucide-react";
 import API from "../../api/axios";
 import toast from "react-hot-toast";
@@ -36,7 +36,7 @@ const AdminSupport = ({ adminInfo }) => {
                 }
             });
             if (response.data.success) {
-                setTickets(response.data.data);
+                setTickets(response.data.data || []);
             }
         } catch (error) {
             console.error("Failed to fetch tickets:", error);
@@ -147,11 +147,15 @@ const AdminSupport = ({ adminInfo }) => {
         }
     };
 
-    const filteredTickets = tickets.filter(t =>
-        t.subject.toLowerCase().includes(search.toLowerCase()) ||
-        t.user?.name?.toLowerCase().includes(search.toLowerCase()) ||
-        t.user?.email?.toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredTickets = (tickets || []).filter(t => {
+        const searchLower = search.toLowerCase();
+        const subjectMatch = t.subject?.toLowerCase()?.includes(searchLower) || false;
+        const nameMatch = t.user?.name?.toLowerCase()?.includes(searchLower) || false;
+        const emailMatch = t.user?.email?.toLowerCase()?.includes(searchLower) || false;
+        const idMatch = t.ticketId?.toLowerCase()?.includes(searchLower) || false;
+
+        return subjectMatch || nameMatch || emailMatch || idMatch;
+    });
 
     const getStatusStyle = (status) => {
         switch (status) {
@@ -264,62 +268,80 @@ const AdminSupport = ({ adminInfo }) => {
                         <div className="flex-1 flex items-center justify-center">
                             <Loader2 className="animate-spin text-purple-600" />
                         </div>
-                    ) : (
+                    ) : ticketDetails ? (
                         <>
                             {/* Detail Header */}
                             <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
                                         <div className="flex items-center gap-3 mb-1">
-                                            <h2 className="text-xl font-bold text-slate-900 dark:text-white">{ticketDetails.subject}</h2>
-                                            <span className={`text-xs px-2.5 py-1 rounded-full border font-bold ${getStatusStyle(ticketDetails.status)}`}>
-                                                {ticketDetails.status}
+                                            <h2 className="text-xl font-bold text-slate-900 dark:text-white">{ticketDetails?.subject}</h2>
+                                            <span className={`text-xs px-2.5 py-1 rounded-full border font-bold ${getStatusStyle(ticketDetails?.status)}`}>
+                                                {ticketDetails?.status}
                                             </span>
                                         </div>
                                         <p className="text-sm text-slate-500 flex items-center gap-2">
-                                            Category: <span className="text-slate-700 dark:text-slate-300 font-medium">{ticketDetails.category}</span>
+                                            Category: <span className="text-slate-700 dark:text-slate-300 font-medium">{ticketDetails?.category}</span>
                                             •
-                                            Type: <span className="text-slate-700 dark:text-slate-300 font-medium">{ticketDetails.type}</span>
+                                            Type: <span className="text-slate-700 dark:text-slate-300 font-medium">{ticketDetails?.type}</span>
                                             •
-                                            Class: <span className="text-slate-700 dark:text-slate-300 font-medium">{ticketDetails.tags?.join(", ") || "N/A"}</span>
+                                            Class: <span className="text-slate-700 dark:text-slate-300 font-medium">
+                                                {Array.isArray(ticketDetails?.tags)
+                                                    ? ticketDetails.tags.join(", ")
+                                                    : (ticketDetails?.tags?.class ? `${ticketDetails.tags.class}th` : (ticketDetails?.tags?.course || "N/A"))}
+                                            </span>
                                         </p>
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-2 relative">
                                         <select
-                                            className="text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500"
-                                            onChange={(e) => handleUpdateStatus(ticketDetails._id, e.target.value)}
-                                            value={ticketDetails.status}
+                                            className="text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-3 pr-8 py-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer transition-all hover:bg-slate-50 dark:hover:bg-slate-700"
+                                            onChange={(e) => handleUpdateStatus(ticketDetails?._id, e.target.value)}
+                                            value={ticketDetails?.status || "Open"}
                                         >
-                                            <option value="Open">Set Open</option>
-                                            <option value="In Progress">Set In Progress</option>
-                                            <option value="Resolved">Set Resolved</option>
+                                            <option value="Open" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Set Open</option>
+                                            <option value="In Progress" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Set In Progress</option>
+                                            <option value="Resolved" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Set Resolved</option>
                                         </select>
+                                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                            <ChevronRight size={14} className="rotate-90" />
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div className="flex flex-wrap gap-4 items-center text-sm bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
                                     <div className="flex items-center gap-2">
                                         <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 font-bold uppercase text-xs">
-                                            {ticketDetails.user?.name?.[0] || "?"}
+                                            {ticketDetails?.user?.name?.[0] || "?"}
                                         </div>
                                         <div>
-                                            <p className="font-bold text-slate-800 dark:text-white leading-none">{ticketDetails.user?.name}</p>
-                                            <p className="text-[10px] text-slate-500">{ticketDetails.user?.email}</p>
+                                            <p className="font-bold text-slate-800 dark:text-white leading-none">{ticketDetails?.user?.name}</p>
+                                            <p className="text-[10px] text-slate-500">{ticketDetails?.user?.email}</p>
                                         </div>
                                     </div>
                                     <div className="h-8 w-px bg-slate-100 dark:bg-slate-700 mx-2"></div>
-                                    <div className="flex-1">
-                                        <p className="text-[10px] text-slate-400 uppercase font-bold mb-0.5">Assigned To</p>
-                                        <select
-                                            className="w-full text-xs font-medium bg-transparent border-none p-0 focus:ring-0 text-slate-700 dark:text-slate-200"
-                                            value={ticketDetails.assignedTo?._id || ""}
-                                            onChange={(e) => handleAssign(e.target.value)}
-                                        >
-                                            <option value="">Unassigned</option>
-                                            {admins.map(admin => (
-                                                <option key={admin._id} value={admin._id}>{admin.userId?.name}</option>
-                                            ))}
-                                        </select>
+                                    <div className="flex-1 min-w-[150px]">
+                                        <p className="text-[10px] text-slate-400 uppercase font-bold mb-1">Assigned To</p>
+                                        <div className="relative">
+                                            <select
+                                                className="w-full text-xs font-bold bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 text-slate-800 dark:text-slate-100 cursor-pointer appearance-none transition-all hover:bg-slate-100 dark:hover:bg-slate-700"
+                                                value={ticketDetails?.assignedTo?._id || ""}
+                                                onChange={(e) => handleAssign(e.target.value)}
+                                            >
+                                                <option value="" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Unassigned</option>
+                                                {admins.map(admin => (
+                                                    <option
+                                                        key={admin._id}
+                                                        value={admin._id}
+                                                        className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                                                    >
+                                                        {admin.userId?.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                                <ChevronRight size={14} className="rotate-90" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -331,9 +353,9 @@ const AdminSupport = ({ adminInfo }) => {
                                     <div className="flex items-center gap-2 mb-3 text-slate-400">
                                         <FileText size={16} />
                                         <span className="text-xs font-bold uppercase">Initial Request</span>
-                                        <span className="text-[10px] ml-auto">{new Date(ticketDetails.createdAt).toLocaleString()}</span>
+                                        <span className="text-[10px] ml-auto">{ticketDetails?.createdAt ? new Date(ticketDetails.createdAt).toLocaleString() : ""}</span>
                                     </div>
-                                    <p className="text-slate-700 dark:text-slate-200 text-sm whitespace-pre-wrap">{ticketDetails.description}</p>
+                                    <p className="text-slate-700 dark:text-slate-200 text-sm whitespace-pre-wrap">{ticketDetails?.description}</p>
                                 </div>
 
                                 {/* Conversation */}
@@ -435,6 +457,13 @@ const AdminSupport = ({ adminInfo }) => {
                                 </div>
                             </div>
                         </>
+                    ) : (
+                        <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-12 text-center">
+                            <AlertCircle size={40} className="mb-4 opacity-20" />
+                            <h3 className="text-lg font-bold mb-2">Error Loading Details</h3>
+                            <p className="text-sm">We couldn't load the full details for this ticket. Please try refreshing or select another ticket.</p>
+                            <button onClick={() => fetchTicketDetails(selectedTicket._id)} className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-bold">Retry</button>
+                        </div>
                     )
                 ) : (
                     <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-12 text-center">

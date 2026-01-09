@@ -17,22 +17,22 @@
 - **Comprehensive Gradebook**: Automated results delivery via email with AI-generated feedback.
 
 ### 🎥 Modern Learning Experience
-- **Video Learning Hub**: A dedicated, distraction-free environment for Class 9 & 10 video lectures.
-- **Live Class Integration**: Seamless live sessions powered by **100ms** RoomKit.
-- **Interactive Notes**: Premium, structure-optimized HTML notes for Mathematics and Science.
-- **Progress Tracking**: Granular, weighted completion tracking for chapters and subjects.
-- **Gamified Streaks**: Motivation system to encourage daily learning consistency.
+- **Video Learning Hub**: A dedicated, distraction-free environment for Class 9 & 10 video lectures with subject-wise organization.
+- **Live Class Integration**: Seamless live sessions powered by **100ms** RoomKit for real-time interaction.
+- **Interactive Notes**: Premium, structure-optimized HTML notes for Mathematics and Science, accessible across all devices.
+- **Progress Tracking**: Granular, weighted completion tracking for chapters, subjects, and entire courses.
+- **Gamified Streaks**: Motivation system with daily learning streaks to encourage consistency.
 
-### 👤 Profile & Communication
-- **Media Management**: Fast, secure profile picture uploads integrated with **ImageKit.io**.
-- **Real-time Notifications**: Instant alerts for system updates and unread communications.
-- **Unified Messaging**: Integrated communication channels for students and mentors.
+### 💳 Financial & Support Infrastructure
+- **Razorpay Integration**: Professional-grade payment gateway for secure course enrollments and automated invoicing.
+- **Advanced Support Framework**: Real-time ticketing system for student queries and dedicated chat channels.
+- **Instant Media Management**: High-speed profile media handling via **ImageKit.io** CDN.
 
 ### 🔐 Administrative Excellence
-- **Master Admin Dashboard**: Full control over user accounts, including instant locking/unlocking and security resets.
-- **Deep Analytics**: Student-specific performance metrics, activity heatmaps, and progress reports.
-- **Global Configuration**: Manage platform-wide news tickers, event calendars, and resource distribution.
-- **Multi-tier Security**: JWT-based authentication with secure refresh cycles and role-based access control.
+- **Master Admin Dashboard**: Comprehensive control over user accounts, including security resets and instant lock/unlock features.
+- **Deep Analytics**: Student-specific performance heatmaps, activity tracking, and comprehensive progress reports.
+- **Content Management**: Global control over news tickers, event calendars, and curriculum distribution.
+- **Multi-tier Security**: JWT-based authentication with secure rotation, refresh cycles, and role-based access control.
 
 ---
 
@@ -41,18 +41,19 @@
 ### **Frontend**
 - **React 19** & **Vite**: Ultra-fast, modern component architecture.
 - **Redux Toolkit**: Centralized global state management.
-- **Tailwind CSS 4**: Sophisticated, responsive layout design.
+- **Tailwind CSS 4**: Sophisticated, responsive layout design with premium aesthetics.
 - **Lucide React**: Modern, crisp iconography.
-- **Recharts**: Dynamic data visualization for student analytics.
-- **100ms SDK**: Professional-grade live video streaming.
+- **Recharts**: High-fidelity data visualization for student analytics.
+- **100ms SDK**: Professional-grade live video streaming infrastructure.
 
 ### **Backend**
 - **Node.js (LTS)** & **Express 5**: Robust, scalable server-side environment.
-- **MongoDB & Mongoose**: Flexible schema design with advanced aggregation pipelines.
-- **Upstash Redis**: High-performance caching and rate-limiting.
-- **Nodemailer**: Reliable transactional email infrastructure.
-- **Groq & Google AI**: Multi-model AI integration for intelligent features.
-- **ImageKit**: Cloud-based image optimization and CDN delivery.
+- **MongoDB & Mongoose**: Flexible schema design with advanced aggregation pipelines for analytics.
+- **Upstash Redis**: High-performance caching and distributed rate-limiting.
+- **Nodemailer**: Reliable transactional email infrastructure for receipts and reports.
+- **Groq & Google AI**: Multi-model AI integration for intelligent learning features.
+- **ImageKit**: Cloud-native image optimization and global CDN delivery.
+- **Razorpay SDK**: Secure payment processing and subscription management.
 
 ---
 
@@ -63,7 +64,9 @@
 - MongoDB Atlas account
 - ImageKit.io account (for profile media)
 - Groq/Google AI API keys
-- Gmail App Password (for email features)
+- Razorpay API credentials
+- Upstash Redis account
+- Gmail App Password (for transactional emails)
 
 ### Installation
 
@@ -79,9 +82,8 @@
    npm install
    # Create .env with the following:
    # PORT, MONGODB_URI, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET
-   # MAIL_USER, MAIL_PASS
-   # GROQ_API_KEY, GEMINI_API_KEY
-   # IMAGEKIT_PUBLIC_KEY, IMAGEKIT_PRIVATE_KEY, IMAGEKIT_URL_ENDPOINT
+   # MAIL_USER, MAIL_PASS, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET
+   # GROQ_API_KEY, GEMINI_API_KEY, IMAGEKIT_PUBLIC_KEY, IMAGEKIT_PRIVATE_KEY
    # REDIS_URL, REDIS_TOKEN
    npm start
    ```
@@ -110,4 +112,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Developed By
 **Sarvottam Institute Engineering Team**  
-*Building the future of digital education.*
+*Building the future of digital education with precision and passion.*

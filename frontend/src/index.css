@@ -23,6 +23,8 @@ body {
   min-height: 100vh;
   /* background-color: #f5f7fa; Handled by base layer */
   overflow-y: auto;
+  overscroll-behavior-y: contain;
+  /* Prevents browser pull-to-refresh */
 }
 
 html {
@@ -32,6 +34,29 @@ html {
 
 #root {
   min-height: 100vh;
+  -webkit-overflow-scrolling: touch;
+  /* Smooth inertia scrolling */
+}
+
+/* Native App Interaction Fixes */
+@media (pointer: coarse) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  input,
+  textarea,
+  [contenteditable="true"] {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  img {
+    -webkit-user-drag: none;
+  }
 }
 
 .font-poppins {

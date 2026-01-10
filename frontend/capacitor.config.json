@@ -1,0 +1,24 @@
+{
+  "appId": "com.sarvottam.app",
+  "appName": "Sarvottam Institute",
+  "webDir": "dist",
+  "server": {
+    "url": "https://sarvottam-institiute.vercel.app",
+    "cleartext": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 3000,
+      "launchAutoHide": true,
+      "backgroundColor": "#ffffff",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "splashFullScreen": true,
+      "splashImmersive": true
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0fb4b3"
+    }
+  }
+}

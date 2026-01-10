@@ -19,22 +19,24 @@ import {
   ShieldCheck,
   MessageCircle,
   Activity,
-  Play
+  Play,
+  ArrowUp
 } from "lucide-react";
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import ThemeToggle from "../components/ThemeToggle";
 import Footer from "../components/Footer";
 
 // Teacher Assets
-import teacher1 from "../assets/teachers/teacher1.jpg";
-import teacher2 from "../assets/teachers/teacher2.jpg";
+import teacher1 from "../assets/teachers/teacher1_pro.png";
+import teacher2 from "../assets/teachers/teacher2_pro.png";
 
 function Home() {
   const { status } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col min-h-screen bg-background transition-colors duration-500 font-poppins">
+    <div className="flex flex-col min-h-screen bg-background transition-colors duration-500 font-poppins relative">
       <Helmet>
         <title>Home | Sarvottam Institute</title>
         <meta name="description" content="Sarvottam Institute - Premium Learning for Grades 9 & 10" />
@@ -42,24 +44,7 @@ function Home() {
 
       {status && <Sidebar />}
 
-      {/* Persistent Theme Toggle */}
-      <div className="fixed top-6 right-6 z-[100] flex items-center gap-4">
-        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-2 rounded-2xl shadow-2xl border border-slate-200/50 dark:border-slate-800/50 flex items-center gap-2">
-          <ThemeToggle />
-          {!status && (
-            <>
-              <div className="h-6 w-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
-              <button
-                onClick={() => navigate("/auth/login")}
-                className="flex items-center gap-2 px-4 py-1.5 text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
-              >
-                <User size={16} />
-                <span>Login</span>
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+      {/* Theme Toggle moved inside page flow */}
 
       <div className={`flex-1 ${status ? 'pt-20 lg:pt-8 ml-0 lg:ml-[100px] w-full lg:w-[calc(100%-100px)]' : 'w-full'}`}>
         {status ? (
@@ -70,6 +55,14 @@ function Home() {
           <div className="animate-in fade-in duration-700">
             {/* 1. Hero Section */}
             <section className="relative pt-24 pb-20 px-4 overflow-hidden">
+              {/* Non-fixed Theme Toggle centered in hero relative space */}
+              {!status && (
+                <div className="absolute top-6 right-6 z-50">
+                  <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-slate-200/50 dark:border-slate-800/50">
+                    <ThemeToggle />
+                  </div>
+                </div>
+              )}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 opacity-30 dark:opacity-20 pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full"></div>
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/20 blur-[120px] rounded-full"></div>
@@ -124,15 +117,15 @@ function Home() {
                     image={teacher1}
                     name="Aakash Ranjan"
                     subject="Mathematics Expert"
-                    experience="10+ Years Experience"
+                    experience="5+ Years Experience"
                     specialization="Advanced Algebra & Geometry Specialist"
                   />
                   <TeacherCard
                     image={teacher2}
                     name="Ujjwal Ranjan"
                     subject="Science Specialist"
-                    experience="8+ Years Experience"
-                    specialization="Expert in Physics & Chemistry Fundamentals"
+                    experience="5+ Years Experience"
+                    specialization="Expert in Physics, Chemistry & Biology Fundamentals"
                   />
                 </div>
               </div>
@@ -188,12 +181,12 @@ function Home() {
             </section>
 
             {/* 4. Freemium Content Section (Free vs Locked) */}
-            <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
+            <section className="py-24 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white relative overflow-hidden transition-colors duration-500">
               <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
               <div className="max-w-7xl mx-auto px-4 relative z-10">
                 <div className="text-center mb-20">
-                  <h2 className="text-4xl md:text-5xl font-black mb-4">Start for Free, Master the Rest</h2>
-                  <p className="text-slate-400 text-lg max-w-2xl mx-auto">Get a taste of premium education before you commit to the full journey.</p>
+                  <h2 className="text-4xl md:text-5xl font-black mb-4 text-slate-900 dark:text-white">Start for Free, Master the Rest</h2>
+                  <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto">Get a taste of premium education before you commit to the full journey.</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -215,10 +208,10 @@ function Home() {
                       <Lock className="text-red-400" /> Premium Content
                     </h3>
                     <div className="space-y-4 relative">
-                      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] z-10 rounded-2xl flex items-center justify-center">
+                      <div className="absolute inset-0 bg-slate-200/40 dark:bg-slate-900/40 backdrop-blur-[2px] z-10 rounded-2xl flex items-center justify-center">
                         <button
                           onClick={() => navigate("/auth/signup")}
-                          className="px-6 py-3 bg-white text-slate-900 font-bold rounded-xl shadow-2xl hover:scale-105 transition-transform"
+                          className="px-6 py-3 bg-primary text-white dark:bg-white dark:text-slate-900 font-bold rounded-xl shadow-2xl hover:scale-105 transition-transform"
                         >
                           Unlock Full Access
                         </button>
@@ -262,12 +255,49 @@ function Home() {
             </section>
           </div>
         )}
+        <Footer />
       </div>
 
-      <Footer />
+      {!status && <ScrollToTop />}
     </div>
   );
 }
+
+// Scroll to Top Component
+const ScrollToTop = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.pageYOffset > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
+  return (
+    <div className={`fixed bottom-8 right-8 z-[100] transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
+      <button
+        onClick={scrollToTop}
+        className="p-4 bg-primary text-white rounded-2xl shadow-2xl shadow-primary/40 hover:bg-primary/90 transition-all hover:-translate-y-1"
+        aria-label="Scroll to top"
+      >
+        <ArrowUp size={24} />
+      </button>
+    </div>
+  );
+};
 
 // Helper Components
 const TeacherCard = ({ image, name, subject, experience, specialization }) => (
@@ -290,30 +320,59 @@ const TeacherCard = ({ image, name, subject, experience, specialization }) => (
   </div>
 );
 
-const FeatureCard = ({ icon: Icon, title, desc, color }) => (
-  <div className="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-    <div className={`w-14 h-14 ${color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform`}>
-      <Icon size={28} />
+const FeatureCard = ({ icon: Icon, title, desc, color }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  return (
+    <div
+      className="perspective-1000 h-64 cursor-pointer group"
+      onClick={() => setIsFlipped(!isFlipped)}
+    >
+      <div className={`relative w-full h-full transition-all duration-700 preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+
+        {/* Front Side */}
+        <div className="absolute inset-0 backface-hidden bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-center justify-center text-center group-hover:shadow-xl transition-all">
+          <div className={`w-16 h-16 ${color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
+            <Icon size={32} />
+          </div>
+          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white leading-tight tracking-tight">{title}</h3>
+          <div className="mt-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary opacity-40 group-hover:opacity-100 transition-all">
+            <span>Click to explore</span>
+            <div className="w-4 h-[1px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+          </div>
+        </div>
+
+        {/* Back Side */}
+        <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-primary to-accent p-8 rounded-3xl shadow-2xl flex flex-col items-center justify-center text-center text-white">
+          <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+            <Icon size={24} />
+          </div>
+          <h3 className="text-xl font-bold mb-3 tracking-tight">{title}</h3>
+          <p className="text-sm font-medium leading-relaxed opacity-90 px-2">
+            {desc}
+          </p>
+          <div className="mt-6 px-5 py-2.5 bg-white text-primary rounded-xl shadow-lg shadow-black/10 transition-all hover:scale-105 active:scale-95 text-[10px] font-black uppercase tracking-widest cursor-pointer">
+            Dismiss
+          </div>
+        </div>
+
+      </div>
     </div>
-    <h3 className="text-xl font-black text-slate-900 dark:text-white mb-3">{title}</h3>
-    <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-      {desc}
-    </p>
-  </div>
-);
+  );
+};
 
 const ResourceItem = ({ icon: Icon, title, type, isLocked }) => (
-  <div className={`p-4 rounded-2xl flex items-center justify-between transition-all group border ${isLocked ? 'border-slate-800 bg-slate-900/30' : 'bg-slate-800/50 border-slate-700 hover:border-primary'}`}>
+  <div className={`p-4 rounded-2xl flex items-center justify-between transition-all group border ${isLocked ? 'border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/30' : 'bg-white dark:bg-slate-800/50 border-slate-100 dark:border-slate-700 hover:border-primary shadow-sm'}`}>
     <div className="flex items-center gap-4">
-      <div className={`p-2.5 rounded-xl ${isLocked ? 'bg-slate-800 text-slate-500' : 'bg-primary/20 text-primary'}`}>
+      <div className={`p-2.5 rounded-xl ${isLocked ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' : 'bg-primary/10 dark:bg-primary/20 text-primary'}`}>
         <Icon size={18} />
       </div>
       <div>
-        <h4 className={`font-bold text-sm ${isLocked ? 'text-slate-500 line-through' : 'text-slate-200'}`}>{title}</h4>
-        <span className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500">{type}</span>
+        <h4 className={`font-bold text-sm ${isLocked ? 'text-slate-400 dark:text-slate-500 line-through' : 'text-slate-700 dark:text-slate-200'}`}>{title}</h4>
+        <span className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-400 dark:text-slate-500">{type}</span>
       </div>
     </div>
-    {isLocked ? <Lock size={16} className="text-slate-600" /> : <Unlock size={16} className="text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />}
+    {isLocked ? <Lock size={16} className="text-slate-300 dark:text-slate-600" /> : <Unlock size={16} className="text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />}
   </div>
 );
 

@@ -320,7 +320,7 @@ const StudentDashboard = () => {
 
                             <button
                                 onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                                className={`p-2 md:p-3 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 text-white hover:bg-white/20 transition-all relative ${isNotificationsOpen ? 'z-[101] border-white/40 ring-4 ring-white/10' : 'z-10'}`}
+                                className={`hidden md:block p-2 md:p-3 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 text-white hover:bg-white/20 transition-all relative ${isNotificationsOpen ? 'z-[101] border-white/40 ring-4 ring-white/10' : 'z-10'}`}
                             >
                                 <Bell size={20} />
                                 {unreadCount > 0 && (

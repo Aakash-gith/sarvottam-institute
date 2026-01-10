@@ -33,6 +33,9 @@ export const courseLearning = "/course/:courseId/learn";
 export const liveClassHost = "/live-class/:classId/host";
 export const notifications = "/notifications";
 export const supportTickets = "/support-tickets";
+export const privacyPolicy = "/privacy-policy";
+export const termsOfService = "/terms-of-service";
+export const refundPolicy = "/refund-policy";
 
 // Admin routes
 export const adminLogin = "/admin/login";

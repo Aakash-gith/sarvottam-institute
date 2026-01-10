@@ -377,7 +377,7 @@ const Sidebar = () => {
                     >
                         <Menu size={24} />
                     </button>
-                    <div ref={mobileNotifRef} className="fixed top-4 right-4 z-50">
+                    <div ref={mobileNotifRef} className="absolute top-4 right-4 z-50">
                         <button
                             className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 relative"
                             onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}

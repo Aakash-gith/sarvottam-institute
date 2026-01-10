@@ -88,7 +88,7 @@
     /* Circular */
     cursor: pointer;
     transition: transform 0.2s;
-    background: transparent;
+    background: white;
     /* Ensure transparency doesn't look weird if logo is png */
     padding: 2px;
     /* Optional padding */

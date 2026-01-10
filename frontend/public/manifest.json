@@ -1,0 +1,23 @@
+{
+    "name": "Sarvottam Institute",
+    "short_name": "Sarvottam",
+    "description": "Nurturing Excellence for Grades 9 & 10",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0fb4b3",
+    "icons": [
+        {
+            "src": "assets/icon-192.jpg",
+            "sizes": "192x192",
+            "type": "image/jpeg",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/icon-512.jpg",
+            "sizes": "512x512",
+            "type": "image/jpeg",
+            "purpose": "any maskable"
+        }
+    ]
+}

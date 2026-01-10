@@ -43,6 +43,9 @@ import {
   liveClassHost,
   notifications,
   supportTickets,
+  privacyPolicy,
+  termsOfService,
+  refundPolicy,
 } from "./Routes/Routes";
 
 import conf from "./conf/conf";
@@ -82,6 +85,9 @@ const MyCourses = React.lazy(() => import("./pages/MyCourses"));
 const CourseLearning = React.lazy(() => import("./pages/CourseLearning"));
 const LiveClassHost = React.lazy(() => import("./pages/LiveClassHost"));
 const SupportTickets = React.lazy(() => import("./pages/SupportTickets"));
+const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfService = React.lazy(() => import("./pages/TermsOfService"));
+const RefundPolicy = React.lazy(() => import("./pages/RefundPolicy"));
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Skeleton } from "./components/Skeleton"; // Use our new Skeleton component
@@ -182,6 +188,10 @@ function App() {
           <Route path={courses} element={<ProtectedRoute><Courses /></ProtectedRoute>} />
           <Route path={myCourses} element={<ProtectedRoute><MyCourses /></ProtectedRoute>} />
           <Route path={courseLearning} element={<ProtectedRoute><CourseLearning /></ProtectedRoute>} />
+
+          <Route path={privacyPolicy} element={<PrivacyPolicy />} />
+          <Route path={termsOfService} element={<TermsOfService />} />
+          <Route path={refundPolicy} element={<RefundPolicy />} />
 
 
           <Route path={liveClassHost} element={<ProtectedRoute><LiveClassHost /></ProtectedRoute>} />

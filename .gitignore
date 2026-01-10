@@ -13,3 +13,7 @@ backend/.env
 # System
 .DS_Store
 .vscode
+
+# Android Keys
+*.jks
+*.keystore

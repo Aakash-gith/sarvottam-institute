@@ -23,6 +23,11 @@
 - **Progress Tracking**: Granular, weighted completion tracking for chapters, subjects, and entire courses.
 - **Gamified Streaks**: Motivation system with daily learning streaks to encourage consistency.
 
+### 📱 Multi-Platform Ecosystem
+- **Native Desktop App**: High-performance Windows application built with **Electron**, featuring secure hardware acceleration and distraction-free learning.
+- **Mobile PWA & TWA**: Fully responsive Progressive Web App with offline manifest support, optimized for Android and iOS.
+- **Cross-Device Sync**: Real-time synchronization of learning progress, streaks, and settings across web, desktop, and mobile.
+
 ### 💳 Financial & Support Infrastructure
 - **Razorpay Integration**: Professional-grade payment gateway for secure course enrollments and automated invoicing.
 - **Advanced Support Framework**: Real-time ticketing system for student queries and dedicated chat channels.
@@ -54,6 +59,11 @@
 - **Groq & Google AI**: Multi-model AI integration for intelligent learning features.
 - **ImageKit**: Cloud-native image optimization and global CDN delivery.
 - **Razorpay SDK**: Secure payment processing and subscription management.
+
+### **Desktop & Mobile**
+- **Electron**: Cross-platform desktop runtime for Windows integration.
+- **PWA (Service Workers)**: Offline capabilities and native-like mobile installability.
+- **Bubblewrap (TWA)**: Google Play Store ready Android integration.
 
 ---
 
@@ -97,11 +107,31 @@
    npm run dev
    ```
 
+### 🖥️ Building for Desktop (Windows)
+1. **Initialize Electron**
+   ```bash
+   cd desktop
+   npm install
+   ```
+2. **Launch Application**
+   ```bash
+   npm start
+   ```
+3. **Build Installer**
+   ```bash
+   npm run build
+   ```
+
+### 📱 Mobile PWA Installation
+- **Android**: Open the site in Chrome -> Select "Install App" or "Add to Home Screen".
+- **iOS**: Open the site in Safari -> Press "Share" -> "Add to Home Screen".
+
 ---
 
 ## 📁 Project Structure
 - `frontend/`: React application with Vite, Tailwind, and Redux.
 - `backend/`: Express API with AI integrations and Mongoose models.
+- `desktop/`: Electron wrapper and Windows-specific configuration.
 - `grade9/ / grade10/`: Specialized static content for core subject notes.
 - `deploy-setup.sh`: Automated deployment configuration script.
 

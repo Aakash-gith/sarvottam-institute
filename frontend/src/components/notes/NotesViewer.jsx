@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, Download, Share2, Bookmark, Lock, X } from "lucide-react";
+import { ArrowLeft, Download, Share2, Bookmark, Lock, X, Sparkles } from "lucide-react";
 
 function NotesViewer() {
     const { noteId } = useParams();
@@ -66,6 +66,10 @@ function NotesViewer() {
         }
     };
 
+    const handleGenerateMastery = () => {
+        navigate('/mastery-hub', { state: { generateFor: title } });
+    };
+
     if (!fileUrl) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -107,6 +111,14 @@ function NotesViewer() {
                     </div>
 
                     <div className="flex items-center gap-2">
+                        <button
+                            onClick={handleGenerateMastery}
+                            className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-amber-400 group relative"
+                            title="Generate Mastery Cards"
+                        >
+                            <Sparkles size={20} className="animate-pulse" />
+                            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">Mastery Hub AI</span>
+                        </button>
                         <button
                             onClick={handleBookmark}
                             className={`p-2 rounded-lg transition-colors ${isBookmarked

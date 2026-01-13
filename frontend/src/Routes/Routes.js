@@ -36,6 +36,8 @@ export const supportTickets = "/support-tickets";
 export const privacyPolicy = "/privacy-policy";
 export const termsOfService = "/terms-of-service";
 export const refundPolicy = "/refund-policy";
+export const masteryHub = "/mastery-hub";
+export const masterySet = "/mastery-hub/set/:setId";
 
 // Admin routes
 export const adminLogin = "/admin/login";

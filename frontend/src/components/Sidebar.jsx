@@ -26,7 +26,8 @@ import {
     Layers,
     LayoutGrid,
     HelpCircle,
-    Info
+    Info,
+    Gamepad2
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -329,6 +330,7 @@ const Sidebar = () => {
                 { name: "NCERT Sol", icon: Book, path: "/ncert-solutions" },
                 { name: "Exemplar", icon: Bookmark, path: "/ncert-exemplar" },
                 { name: "Books", icon: Library, path: "/books" },
+                { name: "Mastery Hub", icon: Gamepad2, path: "/mastery-hub" },
                 { name: "Video Learning", icon: MonitorPlay, path: "/video-learning" },
             ]
         },

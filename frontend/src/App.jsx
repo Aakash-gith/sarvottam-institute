@@ -46,6 +46,8 @@ import {
   privacyPolicy,
   termsOfService,
   refundPolicy,
+  masteryHub,
+  masterySet,
 } from "./Routes/Routes";
 
 import conf from "./conf/conf";
@@ -88,6 +90,8 @@ const SupportTickets = React.lazy(() => import("./pages/SupportTickets"));
 const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfService = React.lazy(() => import("./pages/TermsOfService"));
 const RefundPolicy = React.lazy(() => import("./pages/RefundPolicy"));
+const MasteryHub = React.lazy(() => import("./pages/MasteryHub"));
+const MasterySetView = React.lazy(() => import("./pages/MasterySetView"));
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Skeleton } from "./components/Skeleton"; // Use our new Skeleton component
@@ -188,6 +192,8 @@ function App() {
           <Route path={courses} element={<ProtectedRoute><Courses /></ProtectedRoute>} />
           <Route path={myCourses} element={<ProtectedRoute><MyCourses /></ProtectedRoute>} />
           <Route path={courseLearning} element={<ProtectedRoute><CourseLearning /></ProtectedRoute>} />
+          <Route path={masteryHub} element={<ProtectedRoute><MasteryHub /></ProtectedRoute>} />
+          <Route path={masterySet} element={<ProtectedRoute><MasterySetView /></ProtectedRoute>} />
 
           <Route path={privacyPolicy} element={<PrivacyPolicy />} />
           <Route path={termsOfService} element={<TermsOfService />} />

@@ -23,6 +23,7 @@ import liveClassRoutes from "./routes/liveClass.routes.js";
 import supportRoutes from "./routes/support.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 import uploadRoutes from "./routes/upload.routes.js";
+import masteryRoutes from "./routes/mastery.routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -105,6 +106,7 @@ app.use("/api/live-classes", liveClassRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/support", supportRoutes);
+app.use("/api/mastery", masteryRoutes);
 
 const grade10Path = path.join(__dirname, "../grade10");
 const grade9Path = path.join(__dirname, "../grade9");

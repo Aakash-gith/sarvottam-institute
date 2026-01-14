@@ -12,7 +12,7 @@ import {
   Video, Book, MessageSquare, ShieldCheck, Ticket, Plus, Loader2, Zap
 } from "lucide-react";
 import API from "../api/axios";
-import { login, logout } from "../store/authSlice";
+import { login, logout, updateUser } from "../store/authSlice";
 import { toggleTheme, setTheme } from "../store/themeSlice";
 import { toast } from "react-hot-toast";
 
@@ -109,6 +109,13 @@ function Profile() {
         setStats(response.data.data);
         setEditName(response.data.data.name || userData?.name || "");
         setProfilePicture(response.data.data.profilePicture || null);
+        // Important: Update global userData with fetched preferences to prevent reset on refresh
+        dispatch(updateUser({
+          theme: response.data.data.theme,
+          notificationPrefs: response.data.data.notificationPrefs,
+          language: response.data.data.language,
+          privacy: response.data.data.privacy
+        }));
       }
     } catch (error) {
       console.error("Failed to fetch profile stats:", error);
@@ -270,6 +277,8 @@ function Profile() {
         if (updates.theme) {
           dispatch(setTheme(updates.theme));
         }
+        // Update persistent userData in Redux/LocalStorage
+        dispatch(updateUser(updates));
         toast.success("Preferences updated");
       }
     } catch (error) {

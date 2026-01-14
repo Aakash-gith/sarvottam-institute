@@ -23,4 +23,7 @@ router.get("/set/:id", masteryController.getMasterySetById);
 router.post("/set/:setId/status", masteryController.updateCardStatus);
 router.post("/set/:setId/match", masteryController.updateMatchTime);
 
+// Delete a set
+router.delete("/set/:id", masteryController.deleteMasterySet);
+
 export default router;

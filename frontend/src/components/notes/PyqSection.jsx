@@ -87,7 +87,7 @@ function PyqSection() {
                     href={buildFileUrl(item.file)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-blue-700 bg-blue-50 px-3 py-2 rounded-lg hover:bg-blue-100 transition-colors"
+                    className="flex items-center gap-2 text-sm text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors border border-blue-100 dark:border-blue-900/20"
                 >
                     <FileText size={16} />
                     <span className="truncate">{item.label}</span>
@@ -97,19 +97,19 @@ function PyqSection() {
     };
 
     return (
-        <section className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200" id="pyqs">
+        <section className="bg-white dark:bg-card rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 dark:border-slate-800" id="pyqs">
             <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">PYQs (Previous Year Questions)</h2>
-                <p className="text-gray-500 mt-2">Direct access to the latest Maths and Science question papers in downloadable PDF format.</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">PYQs (Previous Year Questions)</h2>
+                <p className="text-gray-500 dark:text-slate-400 mt-2">Direct access to the latest Maths and Science question papers in downloadable PDF format.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {Object.keys(SUBJECT_META).map((subjectKey) => (
-                    <article className="border border-gray-200 rounded-xl p-5 bg-gray-50" data-subject={subjectKey} key={subjectKey}>
+                    <article className="border border-gray-200 dark:border-slate-800 rounded-xl p-5 bg-gray-50 dark:bg-slate-900/40" data-subject={subjectKey} key={subjectKey}>
                         <header className="mb-4">
-                            <h3 className="text-lg font-bold text-gray-900">{SUBJECT_META[subjectKey].title}</h3>
-                            <p className="text-sm text-gray-500">{SUBJECT_META[subjectKey].tagline}</p>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{SUBJECT_META[subjectKey].title}</h3>
+                            <p className="text-sm text-gray-500 dark:text-slate-400">{SUBJECT_META[subjectKey].tagline}</p>
                         </header>
-                        <div className="max-h-96 overflow-y-auto pr-2">
+                        <div className="max-h-96 overflow-y-auto pr-2 custom-scrollbar">
                             <ul className="flex flex-col gap-2">{renderList(subjectKey)}</ul>
                         </div>
                     </article>

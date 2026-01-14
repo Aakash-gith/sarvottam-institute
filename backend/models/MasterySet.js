@@ -41,6 +41,16 @@ const masterySetSchema = new mongoose.Schema(
             default: null,
         },
         cards: [cardSchema],
+        summary: {
+            type: String,
+            default: "",
+        },
+        keyQuestions: [
+            {
+                question: String,
+                answer: String,
+            }
+        ],
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "AdminUser",

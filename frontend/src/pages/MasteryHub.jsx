@@ -11,12 +11,17 @@ import {
     Plus,
     Play,
     Clock,
-    Trophy
+    Trophy,
+    X,
+    Sparkles,
+    Trash2
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { generateCards, createMasterySet } from "../api/mastery";
+import { generateCards, createMasterySet, deleteMasterySet } from "../api/mastery";
 import toast from "react-hot-toast";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const MasteryHub = () => {
     const [sets, setSets] = useState([]);
@@ -33,13 +38,33 @@ const MasteryHub = () => {
     // AI Modal State
     const [showAiModal, setShowAiModal] = useState(false);
     const [topic, setTopic] = useState("");
+    const [textContent, setTextContent] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
-    const [generatedCards, setGeneratedCards] = useState([]);
+    const [generatedContent, setGeneratedContent] = useState(null); // { cards, summary, keyQuestions }
+
+    const fetchHtmlContent = async (url) => {
+        try {
+            const res = await fetch(url);
+            const html = await res.text();
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const scripts = doc.querySelectorAll('script, style');
+            scripts.forEach(s => s.remove());
+            const text = doc.body.innerText || doc.body.textContent;
+            setTextContent(text);
+        } catch (error) {
+            console.error("Error fetching HTML content:", error);
+        }
+    };
 
     useEffect(() => {
         if (location.state?.generateFor) {
             setTopic(location.state.generateFor);
             setShowAiModal(true);
+
+            if (location.state.fileUrl && location.state.fileUrl.endsWith('.html')) {
+                fetchHtmlContent(location.state.fileUrl);
+            }
+
             // Clear state
             window.history.replaceState({}, document.title);
         }
@@ -70,9 +95,9 @@ const MasteryHub = () => {
         if (!topic) return;
         setIsGenerating(true);
         try {
-            const res = await generateCards({ topic, count: 12 });
+            const res = await generateCards({ topic, textContent, count: 12 });
             if (res.success) {
-                setGeneratedCards(res.data);
+                setGeneratedContent(res.data);
             }
         } catch (error) {
             toast.error("AI Generation failed");
@@ -88,7 +113,9 @@ const MasteryHub = () => {
                 description: `AI Generated set for ${topic}`,
                 subjectId: activeSubject || 1,
                 classId: currentClass,
-                cards: generatedCards
+                cards: generatedContent.cards,
+                summary: generatedContent.summary,
+                keyQuestions: generatedContent.keyQuestions
             });
             if (res.success) {
                 toast.success("Mastery Set Created!");
@@ -97,6 +124,22 @@ const MasteryHub = () => {
             }
         } catch (error) {
             toast.error("Failed to save set");
+        }
+    };
+
+    const handleDeleteSet = async (e, setId) => {
+        e.stopPropagation();
+        if (window.confirm("Are you sure you want to delete this mastery set?")) {
+            try {
+                const res = await deleteMasterySet(setId);
+                if (res.success) {
+                    toast.success("Set deleted successfully");
+                    fetchSets();
+                }
+            } catch (error) {
+                toast.error("Failed to delete set");
+                console.error(error);
+            }
         }
     };
 
@@ -128,13 +171,25 @@ const MasteryHub = () => {
                                 Elevate your understanding with AI-powered flashcards, timed challenges, and adaptive learning paths specifically for Class {currentClass}.
                             </p>
 
-                            <div className="flex gap-4 mt-8">
+                            <div className="flex flex-wrap gap-4 mt-8">
                                 <button
                                     onClick={() => navigate('/notes')}
                                     className="bg-white text-[#123b70] px-6 py-3 rounded-xl font-bold text-sm md:text-base hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
                                 >
                                     <BookOpen size={20} />
                                     Go to Notes
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setTopic("");
+                                        setTextContent("");
+                                        setGeneratedContent(null);
+                                        setShowAiModal(true);
+                                    }}
+                                    className="bg-amber-400 text-[#123b70] px-6 py-3 rounded-xl font-bold text-sm md:text-base hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
+                                >
+                                    <Sparkles size={20} className="fill-[#123b70]" />
+                                    Create with AI
                                 </button>
                             </div>
                         </div>
@@ -177,7 +232,7 @@ const MasteryHub = () => {
                                     placeholder="Search sets..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full md:w-64 pl-10 pr-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-900/50 border-none focus:ring-2 focus:ring-[#0fb4b3] text-sm transition-all"
+                                    className="w-full md:w-64 pl-10 pr-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-900/50 border-none focus:ring-2 focus:ring-[#0fb4b3] text-sm text-slate-900 dark:text-white transition-all"
                                 />
                             </div>
                             <div className="flex bg-slate-100 dark:bg-slate-900/50 p-1 rounded-lg">
@@ -221,13 +276,24 @@ const MasteryHub = () => {
                                             <div className={`p-3 rounded-2xl ${set.subjectId % 2 === 1 ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' : 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600'}`}>
                                                 {set.subjectId % 2 === 1 ? "Maths" : "Science"}
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400">
-                                                <Clock size={14} />
-                                                {set.cards?.length || 0} CARDS
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400">
+                                                    <Clock size={14} />
+                                                    {set.cards?.length || 0} CARDS
+                                                </div>
+                                                {(userData?._id === set.createdBy || userData?.role === 'admin') && (
+                                                    <button
+                                                        onClick={(e) => handleDeleteSet(e, set._id)}
+                                                        className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                                                        title="Delete Set"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
 
-                                        <h3 className="text-xl font-bold mb-2 group-hover:text-[#0fb4b3] transition-colors line-clamp-1">{set.title}</h3>
+                                        <h3 className="text-xl font-bold mb-2 text-[#123b70] dark:text-white group-hover:text-[#0fb4b3] transition-colors line-clamp-1">{set.title}</h3>
                                         <p className="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 mb-6 min-h-[40px]">
                                             {set.description || "Master the concepts with interactive study modes."}
                                         </p>
@@ -271,14 +337,19 @@ const MasteryHub = () => {
                     <div className="bg-slate-900 rounded-3xl p-8 md:p-10 text-white flex flex-col md:flex-row items-center gap-8 justify-between relative overflow-hidden">
                         <div className="relative z-10 flex-1">
                             <h2 className="text-2xl md:text-3xl font-bold mb-3 italic">Can't find what you need?</h2>
-                            <p className="text-slate-400">Use our AI Generator inside of any Chapter Notes to create your own custom Mastery Set in seconds.</p>
+                            <p className="text-slate-400">Generate your own custom Mastery Set for any topic in seconds using AI.</p>
                         </div>
                         <button
-                            onClick={() => navigate('/notes')}
+                            onClick={() => {
+                                setTopic("");
+                                setTextContent("");
+                                setGeneratedContent(null);
+                                setShowAiModal(true);
+                            }}
                             className="relative z-10 whitespace-nowrap bg-[#0fb4b3] px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-[#0fb4b3]/20"
                         >
-                            <Play size={20} className="fill-white" />
-                            Get Started
+                            <Sparkles size={20} className="fill-white" />
+                            Create New Set
                         </button>
 
                         <div className="absolute top-0 right-0 w-64 h-64 bg-[#0fb4b3]/10 blur-3xl rounded-full" />
@@ -297,21 +368,39 @@ const MasteryHub = () => {
                                 <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
                                     <Zap className="text-amber-500 fill-amber-500" size={24} />
                                 </div>
-                                <h2 className="text-2xl font-black">AI Mastery Creator</h2>
+                                <h2 className="text-2xl font-black text-[#123b70] dark:text-white">AI Mastery Creator</h2>
                             </div>
 
-                            {!generatedCards.length ? (
+                            {!generatedContent ? (
                                 <div className="flex flex-col gap-6">
-                                    <p className="text-slate-500 font-medium text-sm">
-                                        We'll use AI to analyze the topic below and generate a set of high-impact flashcards for you.
+                                    <p className="text-slate-500 dark:text-slate-300 font-medium text-sm">
+                                        We'll use AI to create a complete study set including <b>Flashcards</b>, <b>Revision Notes</b>, and <b>Expert Q&A</b>.
                                     </p>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Subject</label>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => setActiveSubject(1)}
+                                                className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${activeSubject === 1 ? 'bg-[#123b70] text-white shadow-lg' : 'bg-slate-100 dark:bg-slate-900/50 text-slate-500'}`}
+                                            >
+                                                Mathematics
+                                            </button>
+                                            <button
+                                                onClick={() => setActiveSubject(2)}
+                                                className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${activeSubject === 2 ? 'bg-[#123b70] text-white shadow-lg' : 'bg-slate-100 dark:bg-slate-900/50 text-slate-500'}`}
+                                            >
+                                                Science
+                                            </button>
+                                        </div>
+                                    </div>
                                     <div className="space-y-2">
                                         <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Topic / Chapter Name</label>
                                         <input
                                             type="text"
                                             value={topic}
                                             onChange={(e) => setTopic(e.target.value)}
-                                            className="w-full px-6 py-4 rounded-2xl bg-slate-100 dark:bg-slate-900/50 border-none focus:ring-2 focus:ring-[#0fb4b3] font-bold"
+                                            className="w-full px-6 py-4 rounded-2xl bg-slate-100 dark:bg-slate-900/50 border-none focus:ring-2 focus:ring-[#0fb4b3] font-bold text-slate-900 dark:text-white"
+                                            placeholder="e.g. Chemical Reactions and Equations"
                                         />
                                     </div>
                                     <button
@@ -322,31 +411,60 @@ const MasteryHub = () => {
                                         {isGenerating ? (
                                             <>
                                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                                Analyzing Topic...
+                                                Generating Complete Set...
                                             </>
                                         ) : (
                                             <>
                                                 <Play size={20} className="fill-white" />
-                                                Generate Cards
+                                                Generate Mastery Set
                                             </>
                                         )}
                                     </button>
                                 </div>
                             ) : (
                                 <div className="flex flex-col gap-6">
-                                    <p className="text-slate-500 font-medium text-sm">
-                                        AI has generated <span className="text-[#0fb4b3] font-bold">{generatedCards.length} cards</span>. Review them below:
-                                    </p>
-                                    <div className="max-h-[300px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">
-                                        {generatedCards.map((card, i) => (
-                                            <div key={i} className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
-                                                <p className="font-bold text-[#123b70] dark:text-[#0fb4b3] text-sm mb-1">{card.term}</p>
-                                                <p className="text-xs text-slate-500">{card.definition}</p>
-                                            </div>
-                                        ))}
+                                    <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                                        <p className="text-slate-500 dark:text-slate-300 font-medium text-sm">
+                                            AI has generated your study resources.
+                                        </p>
                                     </div>
+
+                                    <div className="max-h-[350px] overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+                                        <div className="space-y-2">
+                                            <h4 className="text-xs font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest">Flashcards ({generatedContent.cards?.length})</h4>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {generatedContent.cards?.slice(0, 4).map((card, i) => (
+                                                    <div key={i} className="p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-800 text-[10px] text-slate-700 dark:text-slate-200">
+                                                        <b>{card.term}</b>
+                                                    </div>
+                                                ))}
+                                                {generatedContent.cards?.length > 4 && <div className="text-[10px] text-slate-400 dark:text-slate-500 flex items-center pl-2">+{generatedContent.cards.length - 4} more...</div>}
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <h4 className="text-xs font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest">Revision Notes</h4>
+                                            <div className="p-3 bg-blue-50/30 dark:bg-blue-900/10 rounded-xl border border-blue-100/50 dark:border-blue-900/20 text-xs text-slate-600 dark:text-slate-200 line-clamp-3 italic prose prose-slate dark:prose-invert prose-xs">
+                                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                    {generatedContent.summary}
+                                                </ReactMarkdown>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <h4 className="text-xs font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest">Expert Q&A</h4>
+                                            <div className="space-y-2">
+                                                {generatedContent.keyQuestions?.slice(0, 2).map((q, i) => (
+                                                    <div key={i} className="text-[11px] text-slate-500 dark:text-slate-300">
+                                                        <b>Q:</b> {q.question}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="flex gap-4">
-                                        <button onClick={() => setGeneratedCards([])} className="flex-1 py-4 bg-slate-100 dark:bg-slate-900/50 text-slate-600 rounded-2xl font-bold">Try Again</button>
+                                        <button onClick={() => setGeneratedContent(null)} className="flex-1 py-4 bg-slate-100 dark:bg-slate-900/50 text-slate-600 rounded-2xl font-bold">Try Again</button>
                                         <button onClick={handleSaveSet} className="flex-1 py-4 bg-[#0fb4b3] text-white rounded-2xl font-bold shadow-lg shadow-[#0fb4b3]/30">Save Set</button>
                                     </div>
                                 </div>

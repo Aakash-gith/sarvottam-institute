@@ -36,3 +36,8 @@ export const createMasterySet = async (data) => {
     const response = await API.post(`/mastery/create`, data);
     return response.data;
 };
+
+export const deleteMasterySet = async (setId) => {
+    const response = await API.delete(`/mastery/set/${setId}`);
+    return response.data;
+};

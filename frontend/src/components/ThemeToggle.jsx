@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleTheme } from '../store/themeSlice';
+import { updateUser } from '../store/authSlice';
 import { Sun, Moon } from 'lucide-react';
 import API from '../api/axios';
 
@@ -12,6 +13,7 @@ const ThemeToggle = () => {
     const handleToggle = async () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
         dispatch(toggleTheme());
+        dispatch(updateUser({ theme: newTheme }));
 
         // Sync with backend if logged in
         if (status) {

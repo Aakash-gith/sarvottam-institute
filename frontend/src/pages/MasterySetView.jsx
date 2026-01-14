@@ -13,9 +13,13 @@ import {
     Dices,
     Info,
     Zap,
-    Play
+    Play,
+    Sparkles,
+    BookOpen
 } from "lucide-react";
 import toast from "react-hot-toast";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const MasterySetView = () => {
     const { setId } = useParams();
@@ -25,7 +29,7 @@ const MasterySetView = () => {
     const [loading, setLoading] = useState(true);
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
-    const [mode, setMode] = useState("flashcards"); // 'flashcards', 'learn', 'match'
+    const [mode, setMode] = useState("flashcards"); // 'flashcards', 'learn', 'match', 'summary', 'qa'
 
     useEffect(() => {
         fetchSet();
@@ -115,27 +119,41 @@ const MasterySetView = () => {
                     </div>
 
                     {/* Mode Switcher */}
-                    <div className="grid grid-cols-3 gap-2 bg-slate-100 dark:bg-slate-900/50 p-1.5 rounded-2xl w-full max-w-md">
+                    <div className="flex flex-wrap gap-2 bg-slate-100 dark:bg-slate-900/50 p-1.5 rounded-2xl w-full">
                         <button
                             onClick={() => setMode('flashcards')}
-                            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${mode === 'flashcards' ? 'bg-white dark:bg-[#123b70] shadow-md text-[#123b70] dark:text-white' : 'text-slate-500'}`}
+                            className={`flex-1 min-w-[120px] flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${mode === 'flashcards' ? 'bg-white dark:bg-[#123b70] shadow-md text-[#123b70] dark:text-white' : 'text-slate-500'}`}
                         >
                             <RotateCcw size={16} />
                             Flashcards
                         </button>
                         <button
-                            onClick={() => setMode('learn')}
-                            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${mode === 'learn' ? 'bg-white dark:bg-[#123b70] shadow-md text-[#123b70] dark:text-white' : 'text-slate-500'}`}
+                            onClick={() => setMode('summary')}
+                            className={`flex-1 min-w-[120px] flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${mode === 'summary' ? 'bg-white dark:bg-[#123b70] shadow-md text-[#123b70] dark:text-white' : 'text-slate-500'}`}
                         >
-                            <Play size={16} />
-                            Learn
+                            <Dices size={16} />
+                            Revision Notes
+                        </button>
+                        <button
+                            onClick={() => setMode('qa')}
+                            className={`flex-1 min-w-[120px] flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${mode === 'qa' ? 'bg-white dark:bg-[#123b70] shadow-md text-[#123b70] dark:text-white' : 'text-slate-500'}`}
+                        >
+                            <Info size={16} />
+                            Exam Q&A
                         </button>
                         <button
                             onClick={() => setMode('match')}
-                            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${mode === 'match' ? 'bg-white dark:bg-[#123b70] shadow-md text-[#123b70] dark:text-white' : 'text-slate-500'}`}
+                            className={`flex-1 min-w-[120px] flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${mode === 'match' ? 'bg-white dark:bg-[#123b70] shadow-md text-[#123b70] dark:text-white' : 'text-slate-500'}`}
                         >
                             <Zap size={16} />
                             Match
+                        </button>
+                        <button
+                            onClick={() => setMode('learn')}
+                            className={`flex-1 min-w-[120px] flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${mode === 'learn' ? 'bg-white dark:bg-[#123b70] shadow-md text-[#123b70] dark:text-white' : 'text-slate-500'}`}
+                        >
+                            <Play size={16} />
+                            Learn
                         </button>
                     </div>
 
@@ -220,6 +238,81 @@ const MasterySetView = () => {
 
                     {mode === 'match' && <MatchGame cards={set.cards} setId={setId} onFinish={fetchSet} />}
                     {mode === 'learn' && <LearnMode cards={set.cards} setId={setId} />}
+                    {mode === 'summary' && (
+                        <div className="bg-white dark:bg-card border border-slate-100 dark:border-slate-800 rounded-[32px] p-8 md:p-12 animate-in slide-in-from-bottom-4 duration-500 shadow-xl overflow-hidden relative">
+                            <div className="absolute top-0 right-0 p-8 text-[#0fb4b3] opacity-10">
+                                <BookOpen size={120} />
+                            </div>
+                            <div className="relative z-10 prose dark:prose-invert max-w-none">
+                                <h2 className="text-3xl font-black text-[#123b70] dark:text-white mb-6 flex items-center gap-3">
+                                    <Sparkles className="text-[#0fb4b3]" size={28} />
+                                    Revision Notes
+                                </h2>
+                                <div className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                                    {set.summary ? (
+                                        <div className="prose dark:prose-invert prose-slate max-w-none 
+                                            prose-headings:text-[#123b70] dark:prose-headings:text-white prose-headings:font-black prose-headings:mb-4
+                                            prose-p:text-slate-600 dark:prose-p:text-slate-400 prose-p:mb-4
+                                            prose-li:text-slate-600 dark:prose-li:text-slate-400
+                                            prose-strong:text-[#0fb4b3] dark:prose-strong:text-[#0fb4b3]
+                                            prose-ul:my-6 prose-li:my-1">
+                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                {set.summary}
+                                            </ReactMarkdown>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
+                                            <Info size={48} className="text-slate-200" />
+                                            <p className="max-w-xs uppercase tracking-widest text-[10px] font-black text-slate-400">No AI summary available for this set. Try regenerating with the newer AI model.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {mode === 'qa' && (
+                        <div className="flex flex-col gap-6 animate-in slide-in-from-bottom-4 duration-500">
+                            <div className="bg-gradient-to-r from-[#123b70] to-[#0fb4b3] p-8 rounded-[32px] text-white">
+                                <h2 className="text-3xl font-black mb-2 flex items-center gap-3">
+                                    <Zap className="text-amber-300 fill-amber-300" size={28} />
+                                    Expert Exam Q&A
+                                </h2>
+                                <p className="text-white/80 text-sm font-medium">Critical conceptual questions designed for Class 10 Board prep.</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-4">
+                                {set.keyQuestions?.length > 0 ? (
+                                    set.keyQuestions.map((qa, i) => (
+                                        <div key={i} className="bg-white dark:bg-card border border-slate-100 dark:border-slate-800 rounded-3xl p-6 md:p-8 hover:shadow-lg transition-all border-l-4 border-l-[#0fb4b3]">
+                                            <div className="flex items-start gap-4 mb-4">
+                                                <div className="w-10 h-10 rounded-2xl bg-[#0fb4b3]/10 flex items-center justify-center text-[#0fb4b3] font-black shrink-0">
+                                                    Q
+                                                </div>
+                                                <h3 className="text-lg font-bold text-[#123b70] dark:text-white pt-2 leading-tight">
+                                                    {qa.question}
+                                                </h3>
+                                            </div>
+                                            <div className="flex items-start gap-4">
+                                                <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-slate-400 font-black shrink-0">
+                                                    A
+                                                </div>
+                                                <div className="text-slate-600 dark:text-slate-400 font-medium leading-relaxed pt-2 prose dark:prose-invert prose-slate prose-sm max-w-none">
+                                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                        {qa.answer}
+                                                    </ReactMarkdown>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="bg-white dark:bg-card border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[32px] py-20 flex flex-col items-center justify-center text-center gap-4">
+                                        <Info size={48} className="text-slate-200" />
+                                        <p className="uppercase tracking-widest text-[10px] font-black text-slate-400">No expert questions found.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
 
                 </main>
             </div>

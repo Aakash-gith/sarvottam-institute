@@ -67,7 +67,7 @@ function NotesViewer() {
     };
 
     const handleGenerateMastery = () => {
-        navigate('/mastery-hub', { state: { generateFor: title } });
+        navigate('/mastery-hub', { state: { generateFor: title, fileUrl: fileUrl } });
     };
 
     if (!fileUrl) {

@@ -13,7 +13,7 @@ import {
   physicsChapters,
   notesChapter,
   notesViewer,
-  pyq,
+  boardReady,
   quiz,
   quizCreate,
   quizTake,
@@ -59,7 +59,7 @@ const Events = React.lazy(() => import("./pages/Events"));
 const Notes = React.lazy(() => import("./pages/Notes"));
 const SubjectNotes = React.lazy(() => import("./pages/SubjectNotes"));
 const NotesPage = React.lazy(() => import("./pages/NotesPage"));
-const PYQ = React.lazy(() => import("./pages/PYQ"));
+const BoardReady = React.lazy(() => import("./pages/BoardReady"));
 const Quiz = React.lazy(() => import("./pages/Quiz"));
 const Profile = React.lazy(() => import("./pages/Profile"));
 const ImportantQuestions = React.lazy(() => import("./pages/ImportantQuestions"));
@@ -170,7 +170,7 @@ function App() {
           <Route path={physicsChapters} element={<ProtectedRoute><PhysicsChapters /></ProtectedRoute>} />
           <Route path={notesChapter} element={<ProtectedRoute><NotesPage /></ProtectedRoute>} />
           <Route path={notesViewer} element={<ProtectedRoute><NotesViewer /></ProtectedRoute>} />
-          <Route path={pyq} element={<ProtectedRoute><PYQ /></ProtectedRoute>} />
+          <Route path={boardReady} element={<ProtectedRoute><BoardReady /></ProtectedRoute>} />
           <Route path={quiz} element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
           <Route path={quizCreate} element={<ProtectedRoute><CreateQuiz /></ProtectedRoute>} />
           <Route path={quizTake} element={<ProtectedRoute><TakeQuiz /></ProtectedRoute>} />

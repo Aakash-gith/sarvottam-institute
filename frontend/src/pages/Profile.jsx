@@ -9,9 +9,10 @@ import {
   CheckCircle, XCircle, Clock, BarChart3, Camera, Upload, Trash2,
   ChevronUp, ChevronDown, Moon, Sun, ChevronRight, Bell, Shield, Settings,
   LogOut, LayoutGrid, HelpCircle, Lock, Globe, Eye, Smartphone, Laptop, Info, ChevronLeft,
-  Video, Book, MessageSquare, ShieldCheck, Ticket, Plus, Loader2, Zap
+  Video, Book, MessageSquare, ShieldCheck, Ticket, Plus, Loader2, Zap, PieChart
 } from "lucide-react";
 import API from "../api/axios";
+import AnalyticsView from "../components/profile/AnalyticsView";
 import { login, logout, updateUser } from "../store/authSlice";
 import { toggleTheme, setTheme } from "../store/themeSlice";
 import { toast } from "react-hot-toast";
@@ -61,6 +62,7 @@ function Profile() {
     totalCorrect: 0,
     totalIncorrect: 0,
     totalQuestions: 0,
+    totalXP: 0,
     recentQuizzes: [],
     quizzesByMonth: [],
     favoriteTopics: [],
@@ -437,56 +439,59 @@ function Profile() {
         <div className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-10">
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
 
-            {/* Sub Sidebar */}
-            <aside className="w-full lg:w-72 shrink-0">
-              <div className="bg-card dark:bg-slate-900/50 rounded-2xl border border-border overflow-hidden sticky top-0 lg:top-6 shadow-sm">
-                <div className="p-6 pb-4 flex flex-col items-center text-center">
-                  <div className="w-20 h-20 rounded-2xl border-2 border-white dark:border-slate-800 shadow-xl overflow-hidden mb-4">
-                    {profilePicture ? (
-                      <img src={getProfilePictureUrl()} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
-                        <User size={32} />
-                      </div>
-                    )}
+            {/* Sub Sidebar - Hidden in Analytics view for full-width experience */}
+            {activeView !== 'analytics' && (
+              <aside className="w-full lg:w-72 shrink-0">
+                <div className="bg-card dark:bg-slate-900/50 rounded-2xl border border-border overflow-hidden sticky top-0 lg:top-6 shadow-sm">
+                  <div className="p-6 pb-4 flex flex-col items-center text-center">
+                    <div className="w-20 h-20 rounded-2xl border-2 border-white dark:border-slate-800 shadow-xl overflow-hidden mb-4">
+                      {profilePicture ? (
+                        <img src={getProfilePictureUrl()} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                          <User size={32} />
+                        </div>
+                      )}
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white truncate w-full">{userData?.name}</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate w-full">{userData?.email}</p>
                   </div>
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white truncate w-full">{userData?.name}</h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 truncate w-full">{userData?.email}</p>
-                </div>
 
-                <div className="px-3 pb-6">
-                  <div className="h-px bg-border my-2" />
-                  <nav className="space-y-1">
-                    {[
-                      { id: 'account', label: 'Account', icon: User },
-                      { id: 'settings', label: 'Settings', icon: Settings },
-                      { id: 'guide', label: 'Guide', icon: BookOpen },
-                      { id: 'help', label: 'Help', icon: HelpCircle },
-                    ].map((item) => (
+                  <div className="px-3 pb-6">
+                    <div className="h-px bg-border my-2" />
+                    <nav className="space-y-1">
+                      {[
+                        { id: 'account', label: 'Account', icon: User },
+                        { id: 'analytics', label: 'Analytics', icon: PieChart },
+                        { id: 'settings', label: 'Settings', icon: Settings },
+                        { id: 'guide', label: 'Guide', icon: BookOpen },
+                        { id: 'help', label: 'Help', icon: HelpCircle },
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => navigate(`/profile?view=${item.id}`)}
+                          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${activeView === item.id
+                            ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800'
+                            }`}
+                        >
+                          <item.icon size={20} />
+                          {item.label}
+                        </button>
+                      ))}
+                      <div className="h-px bg-border my-4" />
                       <button
-                        key={item.id}
-                        onClick={() => navigate(`/profile?view=${item.id}`)}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${activeView === item.id
-                          ? 'bg-primary text-white shadow-lg shadow-primary/25'
-                          : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800'
-                          }`}
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all"
                       >
-                        <item.icon size={20} />
-                        {item.label}
+                        <LogOut size={20} />
+                        Sign Out
                       </button>
-                    ))}
-                    <div className="h-px bg-border my-4" />
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all"
-                    >
-                      <LogOut size={20} />
-                      Sign Out
-                    </button>
-                  </nav>
+                    </nav>
+                  </div>
                 </div>
-              </div>
-            </aside>
+              </aside>
+            )}
 
             {/* Main Content Area */}
             <main className="flex-1 min-w-0">
@@ -625,6 +630,10 @@ function Profile() {
                     </div>
                   </div>
                 </div>
+              )}
+
+              {activeView === 'analytics' && (
+                <AnalyticsView stats={stats} userData={userData} />
               )}
 
               {activeView === 'settings' && (

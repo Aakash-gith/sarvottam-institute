@@ -47,7 +47,7 @@ function PyqSection() {
                 setStatus("success");
             } catch (error) {
                 console.error("Failed to load PYQs", error);
-                setErrorMessage(error.response?.data?.message || "Unable to load PYQ list.");
+                setErrorMessage(error.response?.data?.message || "Unable to load Board Ready papers.");
                 setStatus("error");
             }
         };
@@ -64,7 +64,7 @@ function PyqSection() {
 
         if (status === "loading") {
             return (
-                <li className="text-sm text-gray-500 animate-pulse">Fetching latest PYQs...</li>
+                <li className="text-sm text-gray-500 animate-pulse">Fetching Board Ready content...</li>
             );
         }
 
@@ -72,7 +72,7 @@ function PyqSection() {
             return (
                 <li className="text-sm text-red-500 flex items-center gap-2">
                     <AlertCircle size={16} />
-                    {errorMessage || "Unable to load PYQ list right now."}
+                    {errorMessage || "Unable to load Board Ready list right now."}
                 </li>
             );
         }
@@ -99,8 +99,8 @@ function PyqSection() {
     return (
         <section className="bg-white dark:bg-card rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 dark:border-slate-800" id="pyqs">
             <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">PYQs (Previous Year Questions)</h2>
-                <p className="text-gray-500 dark:text-slate-400 mt-2">Direct access to the latest Maths and Science question papers in downloadable PDF format.</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Board Ready (Past Papers)</h2>
+                <p className="text-gray-500 dark:text-slate-400 mt-2">Comprehensive exam preparation with direct access to the latest question papers.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {Object.keys(SUBJECT_META).map((subjectKey) => (

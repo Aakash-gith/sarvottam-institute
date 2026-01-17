@@ -234,7 +234,7 @@ function AdminDashboard() {
             title: "Content Control",
             items: [
                 { id: 'book-upload', label: 'Notes Upload', icon: Upload, visible: adminInfo?.permissions?.uploadNotes },
-                { id: 'pyq-upload', label: 'PYQ Upload', icon: FileText, visible: adminInfo?.permissions?.uploadPYQ },
+                { id: 'pyq-upload', label: 'Board Ready Upload', icon: FileText, visible: adminInfo?.permissions?.uploadPYQ },
                 { id: 'notifications', label: 'Notifications', icon: Bell, visible: adminInfo?.permissions?.sendNotifications },
             ]
         },
@@ -645,7 +645,7 @@ function OverviewTab({ adminInfo, stats, setActiveTab }) {
     if (!contentData || contentData.length === 0) {
         contentData = [
             { name: 'Notes', value: metrics.totalNotes || 0 },
-            { name: 'PYQs', value: 0 },
+            { name: 'Board Ready', value: 0 },
             { name: 'Tests', value: 0 }
         ];
     } else {
@@ -727,7 +727,7 @@ function OverviewTab({ adminInfo, stats, setActiveTab }) {
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <StatCard icon={BookOpen} title="Upload Notes" description="Share materials" color="bg-purple-600 dark:bg-purple-500" delay="delay-0" onClick={() => setActiveTab('book-upload')} />
-                    <StatCard icon={FileText} title="Upload PYQ" description="Add questions" color="bg-pink-600 dark:bg-pink-500" delay="delay-100" onClick={() => setActiveTab('pyq-upload')} />
+                    <StatCard icon={FileText} title="Upload Board Ready" description="Add board content" color="bg-pink-600 dark:bg-pink-500" delay="delay-100" onClick={() => setActiveTab('pyq-upload')} />
                     <StatCard icon={Bell} title="Send Notifications" description="Notify users" color="bg-purple-600 dark:bg-purple-500" delay="delay-300" onClick={() => setActiveTab('notifications')} />
                 </div>
             </div>

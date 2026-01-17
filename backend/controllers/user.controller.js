@@ -93,6 +93,7 @@ export const getProfileStats = async (req, res) => {
         totalCorrect,
         totalIncorrect,
         totalQuestions,
+        totalXP: Math.round(totalScore * 10), // XP calculation: totalScore * 10
         favoriteTopics,
         recentQuizzes
       }

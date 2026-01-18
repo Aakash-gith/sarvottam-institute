@@ -213,6 +213,7 @@ const Sidebar = () => {
         if (
             path.startsWith('/notes') ||
             path.startsWith('/board-ready') ||
+            path.startsWith('/exam-ready') ||
             path.startsWith('/important-questions') ||
             path.startsWith('/quiz') ||
             path.startsWith('/ncert') ||
@@ -324,7 +325,11 @@ const Sidebar = () => {
             title: "Learning Hub",
             items: [
                 { name: "Notes", icon: BookOpen, path: "/notes" },
-                { name: "Board Ready", icon: FileText, path: "/board-ready" },
+                {
+                    name: userData?.class == 9 ? "Exam Ready" : "Board Ready",
+                    icon: FileText,
+                    path: userData?.class == 9 ? "/exam-ready" : "/board-ready"
+                },
                 { name: "Imp. Ques", icon: Star, path: "/important-questions" },
                 { name: "Quiz", icon: Brain, path: "/quiz" },
                 { name: "NCERT Sol", icon: Book, path: "/ncert-solutions" },

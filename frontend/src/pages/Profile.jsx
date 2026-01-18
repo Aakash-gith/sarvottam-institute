@@ -159,6 +159,57 @@ function Profile() {
     setIsEditing(false);
   };
 
+  const handleConfirmClassChange = () => {
+    if (editClass === userData?.class) {
+      setIsEditingClass(false);
+      return;
+    }
+
+    toast((t) => (
+      <div className="flex flex-col gap-3 p-1 text-left">
+        <div className="flex items-center gap-2 text-primary">
+          <GraduationCap size={20} />
+          <span className="font-bold">Change Class?</span>
+        </div>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Are you sure you want to change your class to <b>{editClass}th</b>?
+          Your dashboard and curated content will be updated for Class {editClass}th syllabus.
+        </p>
+        <div className="flex gap-2 mt-2">
+          <button
+            onClick={async () => {
+              toast.dismiss(t.id);
+              await handleSaveClass();
+            }}
+            className="flex-1 px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+          >
+            Confirm Change
+          </button>
+          <button
+            onClick={() => {
+              toast.dismiss(t.id);
+              setEditClass(userData?.class || 9);
+              setIsEditingClass(false);
+            }}
+            className="flex-1 px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-bold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ), {
+      duration: 6000,
+      position: 'top-center',
+      style: {
+        background: 'var(--card, #fff)',
+        border: '1px solid var(--border, #e2e8f0)',
+        borderRadius: '16px',
+        padding: '12px',
+        boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)'
+      }
+    });
+  };
+
   const handleSaveClass = async () => {
     if (editClass !== 9 && editClass !== 10) {
       toast.error("Class must be either 9th or 10th");
@@ -539,26 +590,83 @@ function Profile() {
                         <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
                       </div>
 
-                      <div className="flex-1 text-center md:text-left">
-                        <div className="flex items-center justify-center md:justify-start gap-3">
-                          {isEditing ? (
-                            <input
-                              value={editName}
-                              onChange={(e) => setEditName(e.target.value)}
-                              className="text-2xl font-bold bg-transparent border-b-2 border-primary focus:outline-none dark:text-white"
-                              autoFocus
-                            />
-                          ) : (
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{userData?.name}</h1>
-                          )}
-                          <button
-                            onClick={() => isEditing ? handleSaveName() : setIsEditing(true)}
-                            className="p-1.5 text-gray-400 hover:text-primary transition-colors"
-                          >
-                            {isEditing ? <Save size={18} /> : <Edit2 size={18} />}
-                          </button>
+                      <div className="flex-1 text-center md:text-left mt-4 md:mt-2">
+                        <div className="flex flex-col gap-1.5">
+                          {/* Name Row */}
+                          <div className="flex items-center justify-center md:justify-start gap-4">
+                            {isEditing ? (
+                              <div className="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md p-1 rounded-xl border border-primary/20">
+                                <input
+                                  value={editName}
+                                  onChange={(e) => setEditName(e.target.value)}
+                                  className="text-2xl md:text-3xl font-black bg-transparent px-3 py-1 focus:outline-none dark:text-white min-w-[200px]"
+                                  autoFocus
+                                />
+                                <button onClick={handleSaveName} className="p-2.5 bg-primary text-white rounded-lg shadow-lg hover:bg-primary/90 transition-all">
+                                  <Save size={18} />
+                                </button>
+                                <button onClick={handleCancelEdit} className="p-2.5 bg-slate-100 dark:bg-slate-700 text-slate-500 rounded-lg hover:bg-slate-200 transition-all">
+                                  <X size={18} />
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="group flex items-center gap-3">
+                                <h1 className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight">
+                                  {userData?.name}
+                                </h1>
+                                <button
+                                  onClick={() => setIsEditing(true)}
+                                  className="p-2 text-gray-400 opacity-0 group-hover:opacity-100 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
+                                >
+                                  <Edit2 size={18} />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Email & Class Row */}
+                          <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4">
+                            <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-xl border border-border">
+                              <Mail size={14} className="text-primary/70" />
+                              <span className="text-sm font-semibold">{userData?.email}</span>
+                            </div>
+
+                            <div className="hidden md:block w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
+
+                            <div className="flex items-center">
+                              {isEditingClass ? (
+                                <div className="flex items-center gap-1.5 bg-white dark:bg-slate-800 p-1 rounded-xl border border-primary/30 shadow-xl animate-in zoom-in-95 duration-200">
+                                  <select
+                                    value={editClass}
+                                    onChange={(e) => setEditClass(parseInt(e.target.value))}
+                                    className="text-xs font-black px-3 py-1.5 bg-transparent border-none focus:outline-none dark:text-white cursor-pointer"
+                                  >
+                                    <option value={9}>Class 9th</option>
+                                    <option value={10}>Class 10th</option>
+                                  </select>
+                                  <button onClick={handleConfirmClassChange} className="p-2 bg-primary text-white rounded-lg shadow-lg transition-all">
+                                    <CheckCircle size={14} />
+                                  </button>
+                                  <button onClick={() => setIsEditingClass(false)} className="p-2 bg-slate-100 dark:bg-slate-700 text-slate-500 rounded-lg transition-all">
+                                    <X size={14} />
+                                  </button>
+                                </div>
+                              ) : (
+                                <div
+                                  onClick={() => {
+                                    setEditClass(userData?.class || 9);
+                                    setIsEditingClass(true);
+                                  }}
+                                  className="group cursor-pointer flex items-center gap-2.5 px-4 py-1.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition-all shadow-md shadow-primary/20"
+                                >
+                                  <GraduationCap size={16} />
+                                  <span className="text-xs font-black tracking-widest uppercase italic">Class {userData?.class}th</span>
+                                  <Edit2 size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        <p className="text-gray-500 dark:text-gray-400">{userData?.email}</p>
                       </div>
                     </div>
                   </div>

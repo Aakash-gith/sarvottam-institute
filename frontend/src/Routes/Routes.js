@@ -10,6 +10,7 @@ export const physicsChapters = "/notes/physics/chapters";
 export const notesChapter = "/notes/chapter/:chapterId";
 export const notesViewer = "/notes/viewer/:noteId";
 export const boardReady = "/board-ready";
+export const examReady = "/exam-ready";
 export const quiz = "/quiz";
 export const quizCreate = "/quiz/create";
 export const quizTake = "/quiz/attempt/:attemptId";

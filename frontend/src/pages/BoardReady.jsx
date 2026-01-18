@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import {
     FileText,
@@ -27,6 +27,7 @@ import {
     Timer
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { examReadyData } from "./examReadyData";
 
 // --- DATA STRUCTURE ---
 const boardReadyData = {
@@ -791,17 +792,21 @@ const boardReadyData = {
     }
 };
 
-function BoardReady() {
+function BoardReady({ isClass9: isClass9Prop = false }) {
     const userData = useSelector((state) => state.auth.userData);
+    const location = useLocation();
     const navigate = useNavigate();
 
+    const isClass9 = isClass9Prop || location.pathname.includes("exam-ready");
+    const data = isClass9 ? examReadyData : boardReadyData;
     const [selectedSubject, setSelectedSubject] = useState("maths");
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [viewMode, setViewMode] = useState("chapters"); // "chapters" or "details"
     const [activePracticeTab, setActivePracticeTab] = useState(0);
+    const [activeCategory, setActiveCategory] = useState("ncert");
 
-    const classYear = userData?.class || 10;
-    const currentSubjectData = boardReadyData[selectedSubject];
+    const classYear = isClass9 ? 9 : (userData?.class || 10);
+    const currentSubjectData = data[selectedSubject];
     const chapters = currentSubjectData?.chapters || [];
 
     const handleChapterSelect = (chapterId) => {
@@ -809,6 +814,7 @@ function BoardReady() {
         setSelectedChapter(chapter);
         setViewMode("details");
         setActivePracticeTab(0);
+        setActiveCategory("ncert");
         window.scrollTo(0, 0);
     };
 
@@ -824,8 +830,8 @@ function BoardReady() {
     return (
         <div className="flex flex-col min-h-screen bg-[#f8fafc] dark:bg-[#0b162b] transition-colors duration-500">
             <Helmet>
-                <title>Board Ready | Sarvottam Institute</title>
-                <meta name="description" content="CBSE Exam Preparation Hub - Become Board Ready" />
+                <title>{isClass9 ? "Exam Ready" : "Board Ready"} | Sarvottam Institute</title>
+                <meta name="description" content={isClass9 ? "Class 9th Exam Preparation Hub - Become Exam Ready" : "CBSE Exam Preparation Hub - Become Board Ready"} />
             </Helmet>
 
             <Sidebar />
@@ -844,12 +850,12 @@ function BoardReady() {
                             </button>
                             <div>
                                 <h1 className="text-3xl md:text-5xl font-black text-slate-800 dark:text-white tracking-tighter flex items-center gap-3">
-                                    {viewMode === "details" ? selectedChapter?.name : "Board Ready"}
-                                    <span className="text-xs font-bold px-3 py-1 bg-primary/10 text-primary rounded-full uppercase tracking-widest animate-pulse border border-primary/20">CBSE 2025</span>
+                                    {viewMode === "details" ? selectedChapter?.name : (isClass9 ? "Exam Ready" : "Board Ready")}
+                                    <span className="text-xs font-bold px-3 py-1 bg-primary/10 text-primary rounded-full uppercase tracking-widest animate-pulse border border-primary/20">{isClass9 ? "Class 9th" : "CBSE 2025"}</span>
                                 </h1>
                                 <p className="text-slate-500 dark:text-slate-400 mt-1 font-semibold flex items-center gap-2">
                                     <Target size={16} className="text-primary" />
-                                    {viewMode === "details" ? "Exam Blueprint & Practice" : "Your personal board exam architect"}
+                                    {viewMode === "details" ? "Exam Blueprint & Practice" : (isClass9 ? "Your personal class 9th exam architect" : "Your personal board exam architect")}
                                 </p>
                             </div>
                         </div>
@@ -889,10 +895,10 @@ function BoardReady() {
                                             <Award size={14} className="text-yellow-400" /> Premium Exam Architect
                                         </div>
                                         <h2 className="text-5xl md:text-6xl font-black leading-tight tracking-tighter">
-                                            Become <br />Exam Ready.
+                                            Become <br />{isClass9 ? "Exam" : "Board"} Ready.
                                         </h2>
                                         <p className="text-white/80 font-medium text-lg leading-relaxed max-w-md mx-auto xl:mx-0">
-                                            Unlock the expert blueprint, past paper analysis, and marks-specific practice curated by board examiners.
+                                            Unlock the expert blueprint, past paper analysis, and marks-specific practice curated by {isClass9 ? "subject teachers" : "board examiners"}.
                                         </p>
                                         <div className="flex flex-wrap justify-center xl:justify-start gap-4 pt-4">
                                             <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/30 text-xs font-black uppercase tracking-widest shadow-xl shadow-black/5 hover:bg-white hover:text-black transition-all cursor-default">
@@ -912,8 +918,8 @@ function BoardReady() {
                                                 <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl ring-1 ring-white/30">
                                                     <Timer size={32} className="text-white animate-pulse" />
                                                 </div>
-                                                <span className="block font-black text-4xl mb-1 tracking-tighter">32 Days</span>
-                                                <span className="text-white/60 font-black uppercase tracking-[0.2em] text-[10px]">Left for Boards</span>
+                                                <span className="block font-black text-4xl mb-1 tracking-tighter">{isClass9 ? "Finals" : "32 Days"}</span>
+                                                <span className="text-white/60 font-black uppercase tracking-[0.2em] text-[10px]">{isClass9 ? "Approaching Soon" : "Left for Boards"}</span>
                                                 <div className="mt-6 pt-6 border-t border-white/10">
                                                     <div className="flex items-center justify-between mb-2">
                                                         <span className="text-[10px] font-black uppercase opacity-60">Syllabus Covered</span>
@@ -1033,8 +1039,8 @@ function BoardReady() {
                                 <div className="mt-12 p-6 bg-primary/5 rounded-[32px] border border-primary/20 relative overflow-hidden group">
                                     <div className="relative z-10">
                                         <HelpCircle className="text-primary mb-4" />
-                                        <h5 className="font-black text-sm uppercase mb-2">Expert Hotline</h5>
-                                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 leading-relaxed mb-4">Unclear about a pattern? Ask our board specialists directly.</p>
+                                        <h5 className="font-black text-sm uppercase mb-2">{isClass9 ? "Learning" : "Expert"} Hotline</h5>
+                                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 leading-relaxed mb-4">Unclear about a pattern? Ask our {isClass9 ? "teachers" : "board specialists"} directly.</p>
                                         <button className="text-[10px] font-black text-primary uppercase tracking-widest border-b-2 border-primary pb-1 group-hover:gap-2 flex items-center transition-all">Start Chat</button>
                                     </div>
                                 </div>
@@ -1042,227 +1048,225 @@ function BoardReady() {
                         </div>
                     </div>
                 ) : (
-                    <div className="space-y-16 animate-in fade-in slide-in-from-right-8 duration-700 pb-32">
-
-                        {/* 0. Subject Detail Header */}
+                    <div className="space-y-12 animate-in fade-in slide-in-from-right-8 duration-700 pb-32">
+                        {/* 0. Navigation Breadcrumbs */}
                         <div className="flex flex-wrap gap-4">
-                            <div className="px-6 py-2.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-3 text-slate-700 dark:text-white font-black text-sm uppercase tracking-widest shadow-sm">
-                                <Calculator size={18} className="text-primary" /> Maths
-                            </div>
-                            <div className="px-6 py-2.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-3 text-slate-700 dark:text-white font-black text-sm uppercase tracking-widest shadow-sm">
-                                <Target size={18} className="text-primary" /> {selectedChapter?.name}
+                            <button
+                                onClick={() => setSelectedChapter(null)}
+                                className="px-4 py-2.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-2 text-slate-500 hover:text-primary transition-all font-bold text-xs uppercase tracking-widest shadow-sm"
+                            >
+                                <ArrowLeft size={16} /> Back to Chapters
+                            </button>
+                            <div className="px-6 py-2.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-3 text-slate-700 dark:text-white font-black text-xs uppercase tracking-widest shadow-sm">
+                                <Target size={16} className="text-primary" /> {selectedChapter?.name}
                             </div>
                         </div>
 
-                        {/* 1. Important NCERT Question */}
-                        <section className="bg-white dark:bg-slate-900/40 rounded-[48px] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xl">
-                            <div className="p-8 md:p-12">
-                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-16 h-16 bg-blue-500 rounded-3xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20 rotate-[-5deg]">
-                                            <BookOpen size={32} />
-                                        </div>
-                                        <div>
-                                            <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">1. Important NCERT Questions</h2>
-                                            <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-1">Foundational concepts & repeaters</p>
-                                        </div>
+                        {/* Category Selector Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {[
+                                { id: "ncert", label: "NCERT Questions", icon: <BookOpen size={20} />, color: "blue", desc: "Foundational repeaters" },
+                                { id: "exemplar", label: "Exemplar Problems", icon: <Layout size={20} />, color: "emerald", desc: "HOTs & Conceptual" },
+                                { id: "practice", label: "Exam Practice", icon: <Award size={20} />, color: "primary", desc: "PYQs & Marks-wise" },
+                                { id: "patterns", label: "Repeated Patterns", icon: <Activity size={20} />, color: "slate", desc: "Analysis & Varients" }
+                            ].map((cat) => (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => setActiveCategory(cat.id)}
+                                    className={`p-6 rounded-3xl border transition-all duration-500 text-left group relative overflow-hidden ${activeCategory === cat.id
+                                        ? `bg-white dark:bg-slate-900 border-${cat.color === 'primary' ? 'primary' : cat.color + '-500'} shadow-2xl scale-[1.02] ring-2 ring-${cat.color === 'primary' ? 'primary' : cat.color + '-500'}/20`
+                                        : 'bg-white/50 dark:bg-slate-900/30 border-slate-200 dark:border-slate-800 hover:border-primary/50'}`}
+                                >
+                                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-all duration-500 ${activeCategory === cat.id
+                                        ? `bg-${cat.color === 'primary' ? 'primary' : cat.color + '-600'} text-white shadow-lg`
+                                        : 'bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:text-primary'}`}>
+                                        {cat.icon}
                                     </div>
-                                    <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800 mx-10 hidden lg:block"></div>
-                                    <span className="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-full text-xs font-black uppercase tracking-widest border border-blue-100 dark:border-blue-800">Must Do</span>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {selectedChapter?.ncert.map((item, idx) => (
-                                        <div key={idx} className="p-6 bg-slate-50 dark:bg-slate-800/20 rounded-3xl border border-slate-100 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 group transition-all duration-500">
-                                            <div className="flex justify-between items-start mb-4">
-                                                <span className="text-[10px] font-black px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-600 rounded-lg uppercase tracking-widest group-hover:bg-blue-600 group-hover:text-white transition-colors">{item.ex}</span>
-                                                <span className="text-lg font-black text-slate-300 dark:text-slate-700">#{idx + 1}</span>
-                                            </div>
-                                            <h4 className="text-lg font-black text-slate-800 dark:text-white leading-snug mb-4 group-hover:text-blue-600 transition-colors">{item.pattern}</h4>
+                                    <h4 className={`font-black text-sm uppercase tracking-tight mb-1 ${activeCategory === cat.id ? 'text-slate-800 dark:text-white' : 'text-slate-500'}`}>{cat.label}</h4>
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{cat.desc}</p>
 
-                                            {item.diagram && (
-                                                <div className="mb-6 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 flex justify-center" dangerouslySetInnerHTML={{ __html: item.diagram }} />
-                                            )}
+                                    {activeCategory === cat.id && (
+                                        <div className={`absolute bottom-0 right-0 w-16 h-16 bg-${cat.color === 'primary' ? 'primary' : cat.color + '-500'}/10 rounded-tl-full`}></div>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
 
-                                            <div className="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-tighter">
-                                                <Target size={14} /> Expected: {item.marks}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </section>
+                        {/* Content Area - Dynamically rendered based on activeCategory */}
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {activeCategory === "ncert" && (
+                                <section className="bg-white dark:bg-slate-900/40 rounded-[40px] border border-slate-200 dark:border-slate-800/50 overflow-hidden shadow-2xl">
+                                    <div className="p-8 md:p-12">
+                                        <div className="grid grid-cols-1 gap-8">
+                                            {selectedChapter?.ncert.map((item, idx) => (
+                                                <div key={idx} className="p-6 bg-slate-50/50 dark:bg-slate-800/20 rounded-[32px] border border-slate-100 dark:border-slate-800/50 hover:bg-white dark:hover:bg-slate-800 group transition-all duration-500">
+                                                    <div className="flex justify-between items-start mb-6">
+                                                        <span className="text-[10px] font-black px-3 py-1.5 bg-blue-100 dark:bg-blue-900/40 text-blue-600 rounded-xl uppercase tracking-widest group-hover:bg-blue-600 group-hover:text-white transition-colors">{item.ex}</span>
+                                                        <span className="text-sm font-black text-slate-300 dark:text-slate-700">#0{idx + 1}</span>
+                                                    </div>
+                                                    <h4 className="text-lg font-black text-slate-800 dark:text-white leading-snug mb-6 group-hover:text-blue-600 transition-colors">
+                                                        {item.pattern}
+                                                    </h4>
 
-                        {/* 2. Important Exemplar question */}
-                        <section className="bg-white dark:bg-slate-900/40 rounded-[48px] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xl">
-                            <div className="p-8 md:p-12">
-                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-16 h-16 bg-emerald-500 rounded-3xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 rotate-[5deg]">
-                                            <Target size={32} />
-                                        </div>
-                                        <div>
-                                            <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">2. Important Exemplar Question</h2>
-                                            <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-1">High order & conceptual thinking</p>
-                                        </div>
-                                    </div>
-                                    <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800 mx-10 hidden lg:block"></div>
-                                    <span className="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 rounded-full text-xs font-black uppercase tracking-widest border border-emerald-100 dark:border-emerald-800">Advanced</span>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {selectedChapter?.exemplar.map((item, idx) => (
-                                        <div key={idx} className="p-6 bg-slate-50 dark:bg-slate-800/20 rounded-3xl border border-slate-100 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 group transition-all duration-500">
-                                            <div className="flex items-start gap-6 mb-4">
-                                                <div className="w-12 h-12 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center font-black text-emerald-500 shadow-sm shrink-0 uppercase text-xs">HOTs</div>
-                                                <div className="flex-1">
-                                                    <h4 className="font-black text-slate-800 dark:text-white mb-2 group-hover:text-emerald-500 transition-colors uppercase tracking-tight">{item.pattern}</h4>
-                                                    <div className="flex gap-4">
-                                                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">{item.type}</span>
-                                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">🔥 Board Choice</span>
+                                                    <div className="flex flex-col md:flex-row gap-10 items-center">
+                                                        {item.diagram && (
+                                                            <div
+                                                                className="w-full md:w-auto p-6 bg-white dark:bg-slate-900 rounded-[24px] border border-slate-100 dark:border-slate-800 flex justify-center shadow-inner shrink-0"
+                                                                dangerouslySetInnerHTML={{ __html: item.diagram }}
+                                                            />
+                                                        )}
+
+                                                        <div className="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-widest">
+                                                            <Target size={12} className="text-blue-500" /> Expected: {item.marks}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            {item.diagram && (
-                                                <div className="mb-4 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 flex justify-center" dangerouslySetInnerHTML={{ __html: item.diagram }} />
-                                            )}
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </section>
+                                    </div>
+                                </section>
+                            )}
 
-                        {/* 3. PYQs (Previous Year Board Questions) */}
-                        <section className="bg-slate-50 dark:bg-slate-900 rounded-[56px] p-8 md:p-14 text-slate-800 dark:text-white relative overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl transition-colors duration-500">
-                            {/* Abstract Glow effect for Premium feel */}
-                            <div className="absolute top-0 right-0 p-64 bg-primary/20 blur-[130px] rounded-full translate-x-1/3 -translate-y-1/3 animate-pulse pointer-events-none"></div>
-
-                            <div className="relative z-10">
-                                <div className="flex flex-col lg:flex-row gap-14">
-                                    <div className="lg:w-1/2">
-                                        <div className="flex items-center gap-6 mb-12">
-                                            <div className="w-14 h-14 bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-primary border border-slate-200 dark:border-white/20 shadow-sm">
-                                                <Award size={32} />
-                                            </div>
-                                            <h2 className="text-3xl font-black uppercase tracking-tighter">3. Previous Year Questions</h2>
-                                        </div>
-                                        <div className="space-y-8">
-                                            {selectedChapter?.pyqs.map((item, idx) => (
-                                                <div key={idx} className="flex flex-col gap-4 p-6 rounded-3xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 group hover:border-primary/50 transition-all duration-500 shadow-sm">
-                                                    <div className="flex gap-6 items-start">
-                                                        <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center font-black text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500 shrink-0 uppercase text-xs shadow-inner">{idx + 1}</div>
-                                                        <div>
-                                                            <h4 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors tracking-tight text-slate-700 dark:text-white">{item.pattern}</h4>
-                                                            <div className="flex gap-6">
-                                                                <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-white/40"><Zap size={14} className="text-yellow-400" /> Frequency: {item.freq}</span>
-                                                                <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-white/40"><Target size={14} className="text-primary" /> Marks: {item.marks}</span>
+                            {activeCategory === "exemplar" && (
+                                <section className="bg-white dark:bg-slate-900/40 rounded-[40px] border border-slate-200 dark:border-slate-800/50 overflow-hidden shadow-2xl">
+                                    <div className="p-8 md:p-12">
+                                        <div className="grid grid-cols-1 gap-8">
+                                            {selectedChapter?.exemplar.map((item, idx) => (
+                                                <div key={idx} className="p-8 bg-emerald-50/30 dark:bg-emerald-900/5 rounded-[32px] border border-emerald-100/50 dark:border-emerald-900/20 hover:bg-white dark:hover:bg-slate-800 group transition-all duration-500">
+                                                    <div className="flex items-start gap-6">
+                                                        <div className="w-12 h-12 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center font-black text-emerald-500 shadow-sm shrink-0 uppercase text-[10px] tracking-widest">HOTs</div>
+                                                        <div className="flex-1">
+                                                            <h4 className="text-lg font-black text-slate-800 dark:text-white mb-3 group-hover:text-emerald-500 transition-colors uppercase tracking-tight">{item.pattern}</h4>
+                                                            <div className="flex items-center gap-4">
+                                                                <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-100 dark:bg-emerald-900/40 px-3 py-1 rounded-lg">{item.type}</span>
+                                                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-1.5"><Zap size={12} className="text-amber-500" /> Critical</span>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    {item.diagram && (
-                                                        <div className="mt-2 p-4 bg-slate-100 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-white/5 flex justify-center" dangerouslySetInnerHTML={{ __html: item.diagram }} />
-                                                    )}
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
+                                </section>
+                            )}
 
-                                    <div className="hidden lg:block w-px bg-slate-200 dark:bg-white/10 self-stretch"></div>
-
-                                    {/* 4. Repeated Topics & Question Pattern */}
-                                    <div className="lg:w-1/2">
-                                        <div className="flex items-center gap-6 mb-12">
-                                            <div className="w-14 h-14 bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-primary border border-slate-200 dark:border-white/20 shadow-sm">
-                                                <Activity size={32} />
+                            {activeCategory === "practice" && (
+                                <section className="bg-slate-900 dark:bg-slate-900 rounded-[48px] border border-slate-800 overflow-hidden shadow-2xl relative">
+                                    <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                                    <div className="p-8 md:p-14 relative z-10">
+                                        <div className="flex justify-end mb-8">
+                                            <div className="flex gap-2 bg-white/5 p-1 rounded-2xl border border-white/10">
+                                                {selectedChapter?.practice.map((item, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => setActivePracticeTab(idx)}
+                                                        className={`px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${activePracticeTab === idx ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:bg-white/5'}`}
+                                                    >
+                                                        {item.marks}
+                                                    </button>
+                                                ))}
                                             </div>
-                                            <h2 className="text-3xl font-black uppercase tracking-tighter">4. Repeated Patterns</h2>
                                         </div>
-                                        <div className="grid gap-6">
-                                            {selectedChapter?.repeatedPatterns.map((item, idx) => (
-                                                <div key={idx} className="p-8 bg-white dark:bg-white/5 rounded-[32px] border border-slate-200 dark:border-white/10 hover:border-primary dark:hover:border-primary hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-500 group relative shadow-sm">
-                                                    <div className="absolute top-4 right-6 text-[10px] font-black text-primary opacity-50 uppercase tracking-widest italic group-hover:opacity-100 transition-opacity underline">Board Favorite</div>
-                                                    <h4 className="text-xl font-black mb-4 tracking-tight uppercase text-slate-800 dark:text-white">{item.topic}</h4>
-                                                    <div className="space-y-4">
-                                                        <div className="flex flex-col">
-                                                            <span className="text-[10px] font-black text-slate-400 dark:text-white/40 uppercase tracking-widest mb-1">Standard Format</span>
-                                                            <p className="text-sm font-medium text-slate-600 dark:text-white/90">{item.preferred}</p>
+
+                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                                            {/* PYQs Sub-section */}
+                                            <div className="space-y-6">
+                                                <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">Board History (PYQs)</h5>
+                                                {selectedChapter?.pyqs.map((item, idx) => (
+                                                    <div key={idx} className="p-6 bg-white/5 rounded-[32px] border border-white/10 group hover:border-primary/50 transition-all">
+                                                        <div className="flex gap-4">
+                                                            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-xs font-black text-white group-hover:bg-primary transition-all uppercase">Q{idx + 1}</div>
+                                                            <div className="flex-1">
+                                                                <div className="flex flex-col md:flex-row gap-8 items-center">
+                                                                    {item.diagram && (
+                                                                        <div
+                                                                            className="w-full md:w-auto p-4 bg-white/5 rounded-2xl border border-white/10 flex justify-center shadow-inner shrink-0"
+                                                                            dangerouslySetInnerHTML={{ __html: item.diagram }}
+                                                                        />
+                                                                    )}
+                                                                    <div className="flex-1">
+                                                                        <p className="text-md font-bold text-white mb-3 leading-snug">{item.pattern}</p>
+                                                                        <div className="flex gap-4">
+                                                                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest border border-white/10 px-2 py-1 rounded-md">Rank: {item.freq}</span>
+                                                                            <span className="text-[9px] font-black text-primary uppercase tracking-widest border border-primary/20 px-2 py-1 rounded-md">{item.marks} Marks</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div className="flex flex-col">
-                                                            <span className="text-[10px] font-black text-slate-400 dark:text-white/40 uppercase tracking-widest mb-1">Common Variation</span>
-                                                            <p className="text-xs font-black text-primary italic">{item.variation}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Category Practice Sub-section */}
+                                            <div className="space-y-6">
+                                                <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">Curated Practice ({selectedChapter?.practice?.[activePracticeTab]?.marks})</h5>
+                                                <div className="bg-white/5 p-8 rounded-[40px] border border-white/10 space-y-8">
+                                                    {selectedChapter?.practice?.[activePracticeTab]?.questions?.map((q, i) => (
+                                                        <div key={i} className="flex gap-6 group">
+                                                            <div className="text-primary font-black text-xs shrink-0 mt-1">0{i + 1}.</div>
+                                                            <div className="flex-1 flex flex-col md:flex-row gap-6 items-center">
+                                                                {q.diagram && (
+                                                                    <div
+                                                                        className="w-full md:w-auto p-4 bg-white/5 rounded-2xl border border-white/10 flex justify-center shadow-inner shrink-0"
+                                                                        dangerouslySetInnerHTML={{ __html: q.diagram }}
+                                                                    />
+                                                                )}
+                                                                <p className="text-slate-300 font-medium leading-relaxed group-hover:text-white transition-colors">{q.text || q}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                    <button className="w-full py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform mt-4">
+                                                        Master Solution Logic
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            )}
+
+                            {activeCategory === "patterns" && (
+                                <section className="bg-white dark:bg-slate-900/40 rounded-[40px] border border-slate-200 dark:border-slate-800/50 overflow-hidden shadow-2xl">
+                                    <div className="p-8 md:p-12">
+                                        <div className="grid grid-cols-1 gap-8">
+                                            {selectedChapter?.repeatedPatterns.map((item, idx) => (
+                                                <div key={idx} className="p-8 bg-slate-50/50 dark:bg-slate-800/20 rounded-[40px] border border-slate-100 dark:border-slate-800/50 hover:border-primary group transition-all">
+                                                    <div className="flex justify-between items-start mb-6">
+                                                        <h4 className="text-lg font-black text-slate-800 dark:text-white uppercase tracking-tight">{item.topic}</h4>
+                                                        <Zap size={16} className="text-amber-500 animate-pulse" />
+                                                    </div>
+                                                    <div className="space-y-6">
+                                                        <div>
+                                                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Standard Format</span>
+                                                            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{item.preferred}</p>
+                                                        </div>
+                                                        <div className="p-4 bg-primary/5 dark:bg-primary/20 rounded-2xl border border-primary/10">
+                                                            <span className="text-[9px] font-black text-primary uppercase tracking-widest mb-1 block">Expected Variation</span>
+                                                            <p className="text-xs font-black text-primary/80 italic">{item.variation}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* 5. Board-Specific Practice Section (Interactive) */}
-                        <section className="bg-white dark:bg-slate-900 rounded-[64px] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-2xl">
-                            <div className="bg-primary/5 p-12 lg:p-16">
-                                <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-                                    <div className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-white rounded-full text-xs font-black uppercase tracking-widest shadow-xl shadow-primary/20">
-                                        <Calculator size={14} /> <span>Subject: {selectedSubject}</span>
-                                    </div>
-                                    <h2 className="text-4xl md:text-5xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">5. Board Practice</h2>
-                                    <p className="text-slate-500 dark:text-slate-400 font-bold italic">
-                                        “Select the chapter above and solve these board-level questions categorized by marks.”
-                                    </p>
-                                </div>
-
-                                <div className="flex flex-wrap justify-center gap-3 mb-12">
-                                    {selectedChapter?.practice.map((item, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => setActivePracticeTab(idx)}
-                                            className={`px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-500 border ${activePracticeTab === idx ? 'bg-primary text-white border-primary shadow-xl shadow-primary/25 translate-y-[-4px]' : 'bg-white dark:bg-slate-800 text-slate-400 border-slate-100 dark:border-slate-700 hover:border-primary/50'}`}
-                                        >
-                                            {item.marks} Questions
-                                        </button>
-                                    ))}
-                                </div>
-
-                                <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 p-8 md:p-12 rounded-[48px] shadow-sm border border-slate-100 dark:border-slate-700 min-h-[300px] animate-in slide-in-from-bottom-5 duration-500">
-                                    <h4 className="text-xl font-black text-primary uppercase tracking-widest mb-8 flex items-center justify-center gap-4">
-                                        <div className="h-px flex-1 bg-primary/20"></div>
-                                        Board Style: {selectedChapter?.practice?.[activePracticeTab]?.marks} Category
-                                        <div className="h-px flex-1 bg-primary/20"></div>
-                                    </h4>
-                                    <div className="space-y-10">
-                                        {selectedChapter?.practice?.[activePracticeTab]?.questions?.map((q, i) => (
-                                            <div key={i} className="flex flex-col md:flex-row gap-8 group">
-                                                <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center font-black text-slate-800 dark:text-white shrink-0 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-500">Q{i + 1}</div>
-                                                <div className="flex-1 space-y-4">
-                                                    <p className="text-xl md:text-2xl font-black text-slate-700 dark:text-gray-200 leading-snug tracking-tight">
-                                                        {q.text || q}
-                                                    </p>
-                                                    {q.diagram && (
-                                                        <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-[32px] border border-slate-100 dark:border-slate-800 inline-block" dangerouslySetInnerHTML={{ __html: q.diagram }} />
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="mt-16 text-center">
-                                        <button className="px-10 py-4 bg-slate-900 text-white rounded-[20px] font-black uppercase text-xs tracking-widest hover:bg-primary transition-colors duration-500 shadow-xl">
-                                            Check Solution Logic
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+                                </section>
+                            )}
+                        </div>
 
                         {/* Chapter Tips */}
-                        <div className="p-12 bg-amber-50 dark:bg-amber-900/10 rounded-[48px] border border-amber-200/50 dark:border-amber-800/30">
-                            <h3 className="text-2xl font-black text-amber-800 dark:text-amber-500 uppercase tracking-tighter mb-8 flex items-center gap-4">
-                                <Layout size={28} /> Board-Ready Presentation Tips
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="p-10 bg-amber-50 dark:bg-amber-900/10 rounded-[48px] border border-amber-200/50 dark:border-amber-800/30 flex flex-col md:flex-row items-center gap-10">
+                            <div className="shrink-0 text-center md:text-left">
+                                <h3 className="text-xl font-black text-amber-800 dark:text-amber-500 uppercase tracking-tighter mb-2 flex items-center justify-center md:justify-start gap-3">
+                                    <Layout size={24} /> {isClass9 ? "Exam" : "Board"} Master Tips
+                                </h3>
+                                <p className="text-[10px] font-black text-amber-600/60 uppercase tracking-widest">Writing style & approach</p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                                 {selectedChapter?.tips.map((tip, idx) => (
-                                    <div key={idx} className="flex gap-4 p-6 bg-white dark:bg-slate-900 rounded-[32px] shadow-sm border border-amber-100 dark:border-amber-900/50 transition-all hover:translate-y-[-5px]">
-                                        <CheckCircle2 className="text-amber-600 shrink-0 mt-1" />
-                                        <p className="text-sm font-bold text-slate-600 dark:text-slate-300 italic">"{tip}"</p>
+                                    <div key={idx} className="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-amber-100 dark:border-amber-900/50">
+                                        <CheckCircle2 size={16} className="text-amber-600 shrink-0 mt-0.5" />
+                                        <p className="text-xs font-bold text-slate-600 dark:text-slate-300 italic">"{tip}"</p>
                                     </div>
                                 ))}
                             </div>

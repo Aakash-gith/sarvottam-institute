@@ -564,9 +564,9 @@ const StudentDashboard = () => {
                             <Brain className="text-purple-600 dark:text-purple-400 mb-2 group-hover:scale-110 transition-transform" size={24} />
                             <span className="text-xs md:text-sm font-semibold text-slate-700 dark:text-slate-300">Quizzes</span>
                         </Link>
-                        <Link to="/board-ready" className="flex flex-col items-center justify-center py-3 md:py-4 px-3 md:px-4 rounded-xl bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 transition text-center group">
+                        <Link to={userData?.class == 9 ? "/exam-ready" : "/board-ready"} className="flex flex-col items-center justify-center py-3 md:py-4 px-3 md:px-4 rounded-xl bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 transition text-center group">
                             <FileText className="text-orange-600 dark:text-orange-400 mb-2 group-hover:scale-110 transition-transform" size={24} />
-                            <span className="text-xs md:text-sm font-semibold text-slate-700 dark:text-slate-300">Board Ready</span>
+                            <span className="text-xs md:text-sm font-semibold text-slate-700 dark:text-slate-300">{userData?.class == 9 ? "Exam Ready" : "Board Ready"}</span>
                         </Link>
                         <Link to="/events" className="flex flex-col items-center justify-center py-3 md:py-4 px-3 md:px-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition text-center group">
                             <Calendar className="text-emerald-600 dark:text-emerald-400 mb-2 group-hover:scale-110 transition-transform" size={24} />

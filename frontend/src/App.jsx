@@ -14,6 +14,7 @@ import {
   notesChapter,
   notesViewer,
   boardReady,
+  examReady,
   quiz,
   quizCreate,
   quizTake,
@@ -171,6 +172,7 @@ function App() {
           <Route path={notesChapter} element={<ProtectedRoute><NotesPage /></ProtectedRoute>} />
           <Route path={notesViewer} element={<ProtectedRoute><NotesViewer /></ProtectedRoute>} />
           <Route path={boardReady} element={<ProtectedRoute><BoardReady /></ProtectedRoute>} />
+          <Route path={examReady} element={<ProtectedRoute><BoardReady isClass9={true} /></ProtectedRoute>} />
           <Route path={quiz} element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
           <Route path={quizCreate} element={<ProtectedRoute><CreateQuiz /></ProtectedRoute>} />
           <Route path={quizTake} element={<ProtectedRoute><TakeQuiz /></ProtectedRoute>} />

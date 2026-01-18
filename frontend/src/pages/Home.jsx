@@ -172,8 +172,8 @@ function Home() {
                   />
                   <FeatureCard
                     icon={ShieldCheck}
-                    title="Board Prep Specialist"
-                    desc="Curated content designed specifically for scoring high in board exams."
+                    title="Exam Prep Specialist"
+                    desc="Curated content designed specifically for scoring high in school & board exams."
                     color="bg-sky-100 text-sky-600 dark:bg-sky-900/30"
                   />
                 </div>
